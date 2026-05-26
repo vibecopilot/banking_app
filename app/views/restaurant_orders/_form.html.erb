@@ -1,0 +1,52 @@
+<%= form_with(model: restaurant_order, local: true) do |form| %>
+  <% if restaurant_order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(restaurant_order.errors.count, "error") %> prohibited this restaurant_order from being saved:</h2>
+
+      <ul>
+      <% restaurant_order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :restaurant_id %>
+    <%= form.number_field :restaurant_id, id: :restaurant_order_restaurant_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ondate %>
+    <%= form.date_select :ondate, id: :restaurant_order_ondate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ontime %>
+    <%= form.time_select :ontime, id: :restaurant_order_ontime %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :restaurant_order_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_status %>
+    <%= form.text_field :payment_status, id: :restaurant_order_payment_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :total_amount %>
+    <%= form.text_field :total_amount, id: :restaurant_order_total_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status, id: :restaurant_order_status %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

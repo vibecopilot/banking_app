@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Aminity Bookings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Aminity</th>
+      <th>Comment</th>
+      <th>Cancellation policy</th>
+      <th>Terms and conditions</th>
+      <th>Payment method</th>
+      <th>User</th>
+      <th>Status</th>
+      <th>Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @aminity_bookings.each do |aminity_booking| %>
+      <tr>
+        <td><%= aminity_booking.date %></td>
+        <td><%= aminity_booking.aminity_id %></td>
+        <td><%= aminity_booking.comment %></td>
+        <td><%= aminity_booking.cancellation_policy %></td>
+        <td><%= aminity_booking.terms_and_conditions %></td>
+        <td><%= aminity_booking.payment_method %></td>
+        <td><%= aminity_booking.user_id %></td>
+        <td><%= aminity_booking.status %></td>
+        <td><%= aminity_booking.created_by_id %></td>
+        <td><%= link_to 'Show', aminity_booking %></td>
+        <td><%= link_to 'Edit', edit_aminity_booking_path(aminity_booking) %></td>
+        <td><%= link_to 'Destroy', aminity_booking, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Aminity Booking', new_aminity_booking_path %>

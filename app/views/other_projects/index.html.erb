@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Other Projects</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Address</th>
+      <th>Company</th>
+      <th>Contact us</th>
+      <th>Amenities</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @other_projects.each do |other_project| %>
+      <tr>
+        <td><%= other_project.title %></td>
+        <td><%= other_project.description %></td>
+        <td><%= other_project.address %></td>
+        <td><%= other_project.company_id %></td>
+        <td><%= other_project.contact_us %></td>
+        <td>
+          <% other_project.other_p_amenities.each do |a| %>
+            <% if a.amenity_icon&.document_url.present? %>
+              <%= image_tag a.amenity_icon.document_url, width: 20 %>
+            <% end %>
+            <%= a.name %><br>
+          <% end %>
+        </td>
+        <td><%= link_to 'Show', other_project %></td>
+        <td><%= link_to 'Edit', edit_other_project_path(other_project) %></td>
+        <td><%= link_to 'Destroy', other_project, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Other Project', new_other_project_path %>

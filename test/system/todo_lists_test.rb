@@ -1,0 +1,55 @@
+require "application_system_test_case"
+
+class TodoListsTest < ApplicationSystemTestCase
+  setup do
+    @todo_list = todo_lists(:one)
+  end
+
+  test "visiting the index" do
+    visit todo_lists_url
+    assert_selector "h1", text: "Todo Lists"
+  end
+
+  test "creating a Todo list" do
+    visit todo_lists_url
+    click_on "New Todo List"
+
+    fill_in "End at", with: @todo_list.end_at
+    fill_in "Relation", with: @todo_list.relation
+    fill_in "Relation", with: @todo_list.relation_id
+    fill_in "Site", with: @todo_list.site_id
+    fill_in "Start at", with: @todo_list.start_at
+    fill_in "Status", with: @todo_list.status
+    fill_in "Title", with: @todo_list.title
+    click_on "Create Todo list"
+
+    assert_text "Todo list was successfully created"
+    click_on "Back"
+  end
+
+  test "updating a Todo list" do
+    visit todo_lists_url
+    click_on "Edit", match: :first
+
+    fill_in "End at", with: @todo_list.end_at
+    fill_in "Relation", with: @todo_list.relation
+    fill_in "Relation", with: @todo_list.relation_id
+    fill_in "Site", with: @todo_list.site_id
+    fill_in "Start at", with: @todo_list.start_at
+    fill_in "Status", with: @todo_list.status
+    fill_in "Title", with: @todo_list.title
+    click_on "Update Todo list"
+
+    assert_text "Todo list was successfully updated"
+    click_on "Back"
+  end
+
+  test "destroying a Todo list" do
+    visit todo_lists_url
+    page.accept_confirm do
+      click_on "Destroy", match: :first
+    end
+
+    assert_text "Todo list was successfully destroyed"
+  end
+end

@@ -1,0 +1,51 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Loi Services</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Service detail</th>
+      <th>Product description</th>
+      <th>Quantity</th>
+      <th>Rate</th>
+      <th>Uom</th>
+      <th>Expected date</th>
+      <th>Amount</th>
+      <th>Total amount</th>
+      <th>Kind attention</th>
+      <th>Subject</th>
+      <th>Description</th>
+      <th>Terms and conditions</th>
+      <th>Service order</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @loi_services.each do |loi_service| %>
+      <tr>
+        <td><%= loi_service.service_detail_id %></td>
+        <td><%= loi_service.product_description %></td>
+        <td><%= loi_service.quantity %></td>
+        <td><%= loi_service.rate %></td>
+        <td><%= loi_service.uom %></td>
+        <td><%= loi_service.expected_date %></td>
+        <td><%= loi_service.amount %></td>
+        <td><%= loi_service.total_amount %></td>
+        <td><%= loi_service.kind_attention %></td>
+        <td><%= loi_service.subject %></td>
+        <td><%= loi_service.description %></td>
+        <td><%= loi_service.terms_and_conditions %></td>
+        <td><%= loi_service.service_order_id %></td>
+        <td><%= link_to 'Show', loi_service %></td>
+        <td><%= link_to 'Edit', edit_loi_service_path(loi_service) %></td>
+        <td><%= link_to 'Destroy', loi_service, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Loi Service', new_loi_service_path %>

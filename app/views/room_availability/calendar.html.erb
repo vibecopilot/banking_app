@@ -1,0 +1,347 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Room Availability Calendar</h4>
+          <div>
+            <%= link_to 'Add Availability', new_room_availability_path, class: 'btn btn-primary btn-sm' %>
+            <%= link_to 'Back to List', room_availability_index_path, class: 'btn btn-secondary btn-sm' %>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Filter Controls -->
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <label for="room-filter" class="form-label">Filter by Room:</label>
+              <select id="room-filter" class="form-control">
+                <option value="">All Rooms</option>
+                <% Room.includes(:site).each do |room| %>
+                  <option value="<%= room.id %>"><%= room.name %> (<%= room.site.name %>)</option>
+                <% end %>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="site-filter" class="form-label">Filter by Site:</label>
+              <select id="site-filter" class="form-control">
+                <option value="">All Sites</option>
+                <% Site.all.each do |site| %>
+                  <option value="<%= site.id %>"><%= site.name %></option>
+                <% end %>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="month-picker" class="form-label">Month/Year:</label>
+              <input type="month" id="month-picker" class="form-control" value="<%= Date.current.strftime('%Y-%m') %>">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">&nbsp;</label>
+              <div>
+                <button type="button" id="refresh-calendar" class="btn btn-info btn-block">Refresh Calendar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar Container -->
+          <div id="availability-calendar-container">
+            <div class="text-center">
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <p>Loading availability calendar...</p>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Calendar Legend</h6>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="d-flex align-items-center mb-2">
+                        <div class="bg-success" style="width: 20px; height: 20px; margin-right: 10px;"></div>
+                        <span>Fully Available</span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="d-flex align-items-center mb-2">
+                        <div class="bg-warning" style="width: 20px; height: 20px; margin-right: 10px;"></div>
+                        <span>Partially Available</span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="d-flex align-items-center mb-2">
+                        <div class="bg-danger" style="width: 20px; height: 20px; margin-right: 10px;"></div>
+                        <span>Not Available</span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="d-flex align-items-center mb-2">
+                        <div class="bg-light border" style="width: 20px; height: 20px; margin-right: 10px;"></div>
+                        <span>No Data</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Availability Details Modal -->
+<div class="modal fade" id="availabilityModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Availability Details</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="availability-modal-body">
+        <!-- Content will be loaded dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.calendar-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.calendar-table th,
+.calendar-table td {
+  border: 1px solid #dee2e6;
+  padding: 8px;
+  text-align: center;
+  vertical-align: top;
+  height: 80px;
+  position: relative;
+}
+
+.calendar-table th {
+  background-color: #f8f9fa;
+  height: 40px;
+  font-weight: bold;
+}
+
+.availability-cell {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.availability-cell:hover {
+  opacity: 0.8;
+  transform: scale(1.02);
+}
+
+.availability-info {
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 3px;
+}
+
+.room-name {
+  font-size: 10px;
+  color: #6c757d;
+}
+
+.date-number {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.other-month {
+  color: #adb5bd;
+  background-color: #f8f9fa;
+}
+
+.availability-ratio {
+  font-size: 10px;
+  margin-top: 2px;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+  loadAvailabilityCalendar();
+
+  // Event handlers
+  $('#refresh-calendar, #month-picker, #room-filter, #site-filter').on('change', function() {
+    loadAvailabilityCalendar();
+  });
+
+  $('#refresh-calendar').on('click', function() {
+    loadAvailabilityCalendar();
+  });
+
+  function loadAvailabilityCalendar() {
+    const month = $('#month-picker').val();
+    const roomId = $('#room-filter').val();
+    const siteId = $('#site-filter').val();
+    
+    $('#availability-calendar-container').html(`
+      <div class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <p>Loading availability calendar...</p>
+      </div>
+    `);
+
+    // Simulate API call (replace with actual AJAX call)
+    setTimeout(function() {
+      generateCalendar(month, roomId, siteId);
+    }, 1000);
+  }
+
+  function generateCalendar(month, roomId, siteId) {
+    const [year, monthNum] = month.split('-');
+    const firstDay = new Date(year, monthNum - 1, 1);
+    const lastDay = new Date(year, monthNum, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - startDate.getDay());
+    
+    let calendarHtml = '<table class="calendar-table table">';
+    
+    // Header
+    calendarHtml += '<thead><tr>';
+    ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
+      calendarHtml += `<th>${day}</th>`;
+    });
+    calendarHtml += '</tr></thead><tbody>';
+
+    // Generate weeks
+    const currentDate = new Date(startDate);
+    while (currentDate <= lastDay || currentDate.getDay() !== 0) {
+      calendarHtml += '<tr>';
+      
+      for (let i = 0; i < 7; i++) {
+        const isCurrentMonth = currentDate.getMonth() === firstDay.getMonth();
+        const dateStr = currentDate.toISOString().split('T')[0];
+        const cellClass = isCurrentMonth ? 'availability-cell' : 'availability-cell other-month';
+        
+        // Mock availability data (replace with actual data from server)
+        const mockAvailability = isCurrentMonth ? generateMockAvailability() : null;
+        const availabilityClass = mockAvailability ? getAvailabilityClass(mockAvailability) : 'bg-light';
+        
+        calendarHtml += `
+          <td class="${cellClass} ${availabilityClass}" data-date="${dateStr}" 
+              data-availability='${JSON.stringify(mockAvailability)}'>
+            <div class="date-number">${currentDate.getDate()}</div>
+            ${mockAvailability ? `
+              <div class="availability-info">
+                ${mockAvailability.available}/${mockAvailability.total}
+              </div>
+              <div class="availability-ratio">
+                ${((mockAvailability.available / mockAvailability.total) * 100).toFixed(0)}%
+              </div>
+            ` : ''}
+            <div class="room-name">${roomId ? 'Selected Room' : 'All Rooms'}</div>
+          </td>
+        `;
+        
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      
+      calendarHtml += '</tr>';
+      
+      if (currentDate > lastDay && currentDate.getDay() === 0) break;
+    }
+    
+    calendarHtml += '</tbody></table>';
+    
+    $('#availability-calendar-container').html(calendarHtml);
+    
+    // Add click handlers for availability cells
+    $('.availability-cell').on('click', function() {
+      const date = $(this).data('date');
+      const availability = $(this).data('availability');
+      showAvailabilityDetails(date, availability);
+    });
+  }
+
+  function generateMockAvailability() {
+    const total = Math.floor(Math.random() * 20) + 5; // 5-25 total rooms
+    const available = Math.floor(Math.random() * (total + 1)); // 0 to total available
+    return { total, available };
+  }
+
+  function getAvailabilityClass(availability) {
+    const ratio = availability.available / availability.total;
+    if (ratio === 0) return 'bg-danger text-white';
+    if (ratio < 0.3) return 'bg-warning text-dark';
+    return 'bg-success text-white';
+  }
+
+  function showAvailabilityDetails(date, availability) {
+    let modalBody = `
+      <div class="row">
+        <div class="col-md-6">
+          <h6>Date</h6>
+          <p>${new Date(date).toLocaleDateString()}</p>
+        </div>
+        <div class="col-md-6">
+          <h6>Day of Week</h6>
+          <p>${new Date(date).toLocaleDateString('en-US', { weekday: 'long' })}</p>
+        </div>
+      </div>
+    `;
+
+    if (availability) {
+      modalBody += `
+        <div class="row">
+          <div class="col-md-4">
+            <h6>Total Rooms</h6>
+            <p class="h5">${availability.total}</p>
+          </div>
+          <div class="col-md-4">
+            <h6>Available Rooms</h6>
+            <p class="h5 text-success">${availability.available}</p>
+          </div>
+          <div class="col-md-4">
+            <h6>Occupancy Rate</h6>
+            <p class="h5 text-info">${(((availability.total - availability.available) / availability.total) * 100).toFixed(1)}%</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h6>Actions</h6>
+            <a href="/room_availability/new?date=${date}" class="btn btn-primary btn-sm">Add Availability</a>
+            <a href="#" class="btn btn-info btn-sm ml-2">View Bookings</a>
+            <a href="#" class="btn btn-warning btn-sm ml-2">Edit Availability</a>
+          </div>
+        </div>
+      `;
+    } else {
+      modalBody += `
+        <div class="row">
+          <div class="col-md-12">
+            <div class="alert alert-info">
+              No availability data set for this date.
+            </div>
+            <h6>Actions</h6>
+            <a href="/room_availability/new?date=${date}" class="btn btn-primary btn-sm">Set Availability</a>
+          </div>
+        </div>
+      `;
+    }
+    
+    $('#availability-modal-body').html(modalBody);
+    $('#availabilityModal').modal('show');
+  }
+});
+</script>

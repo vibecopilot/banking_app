@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Prefix:</strong>
+  <%= @invoice.prefix %>
+</p>
+
+<p>
+  <strong>Next number:</strong>
+  <%= @invoice.next_number %>
+</p>
+
+<p>
+  <strong>Auto generate:</strong>
+  <%= @invoice.auto_generate %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @invoice.site_id %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @invoice.created_by %>
+</p>
+
+<%= link_to 'Edit', edit_invoice_path(@invoice) %> |
+<%= link_to 'Back', invoices_path %>

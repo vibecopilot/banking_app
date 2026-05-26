@@ -1,0 +1,74 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Employee name:</strong>
+  <%= @flight_request.employee_name %>
+</p>
+
+<p>
+  <strong>Employee:</strong>
+  <%= @flight_request.employee_id %>
+</p>
+
+<p>
+  <strong>Departure city:</strong>
+  <%= @flight_request.departure_city %>
+</p>
+
+<p>
+  <strong>Arrival city:</strong>
+  <%= @flight_request.arrival_city %>
+</p>
+
+<p>
+  <strong>Departure date:</strong>
+  <%= @flight_request.departure_date %>
+</p>
+
+<p>
+  <strong>Return date:</strong>
+  <%= @flight_request.return_date %>
+</p>
+
+<p>
+  <strong>Preferred airlines:</strong>
+  <%= @flight_request.preferred_airlines %>
+</p>
+
+<p>
+  <strong>Flight class:</strong>
+  <%= @flight_request.flight_class %>
+</p>
+
+<p>
+  <strong>Passenger name:</strong>
+  <%= @flight_request.passenger_name %>
+</p>
+
+<p>
+  <strong>Passport information:</strong>
+  <%= @flight_request.passport_information %>
+</p>
+
+<p>
+  <strong>Ticket confirmation number:</strong>
+  <%= @flight_request.ticket_confirmation_number %>
+</p>
+
+<p>
+  <strong>Booking status:</strong>
+  <%= @flight_request.booking_status %>
+</p>
+
+<p>
+  <strong>Manager approval:</strong>
+  <%= @flight_request.manager_approval %>
+</p>
+
+<p>
+  <strong>Booking confirmation email:</strong>
+  <%= @flight_request.booking_confirmation_email %>
+</p>
+
+<%= link_to 'Edit', edit_flight_request_path(@flight_request) %> |
+<%= link_to 'Back', flight_requests_path %>

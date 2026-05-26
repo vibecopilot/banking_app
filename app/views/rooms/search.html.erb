@@ -1,0 +1,267 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-search mr-2"></i>
+            Search Available Rooms
+          </h4>
+        </div>
+        
+        <div class="card-body">
+          <!-- Search Form -->
+          <%= form_with url: search_rooms_path, method: :get, local: true, id: "room_search_form" do |f| %>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <%= f.label :check_in, "Check-in Date *" %>
+                  <%= f.date_field :check_in, 
+                      value: params[:check_in] || Date.current, 
+                      min: Date.current,
+                      class: "form-control" %>
+                </div>
+              </div>
+              
+              <div class="col-md-3">
+                <div class="form-group">
+                  <%= f.label :check_out, "Check-out Date *" %>
+                  <%= f.date_field :check_out, 
+                      value: params[:check_out] || (Date.current + 1.day), 
+                      min: Date.current + 1.day,
+                      class: "form-control" %>
+                </div>
+              </div>
+              
+              <div class="col-md-2">
+                <div class="form-group">
+                  <%= f.label :adults, "Adults *" %>
+                  <%= f.number_field :adults, 
+                      value: params[:adults] || 1, 
+                      min: 1, max: 10,
+                      class: "form-control" %>
+                </div>
+              </div>
+              
+              <div class="col-md-2">
+                <div class="form-group">
+                  <%= f.label :children, "Children" %>
+                  <%= f.number_field :children, 
+                      value: params[:children] || 0, 
+                      min: 0, max: 10,
+                      class: "form-control" %>
+                </div>
+              </div>
+              
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label>&nbsp;</label>
+                  <%= f.submit "Search Rooms", class: "btn btn-primary btn-block" %>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Advanced Filters -->
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <%= f.label :room_type, "Room Type" %>
+                  <%= f.select :room_type, 
+                      options_for_select([
+                        ['Any Type', ''],
+                        ['Standard', 'standard'],
+                        ['Deluxe', 'deluxe'],
+                        ['Suite', 'suite'],
+                        ['Premium', 'premium'],
+                        ['Penthouse', 'penthouse']
+                      ], params[:room_type]), 
+                      {}, 
+                      { class: "form-control" } %>
+                </div>
+              </div>
+              
+              <div class="col-md-3">
+                <div class="form-group">
+                  <%= f.label :max_price, "Maximum Total Price" %>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">$</span>
+                    </div>
+                    <%= f.number_field :max_price, 
+                        value: params[:max_price], 
+                        step: 50,
+                        placeholder: "Any price",
+                        class: "form-control" %>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>&nbsp;</label>
+                  <div class="mt-2">
+                    <%= link_to "Clear Filters", search_rooms_path, class: "btn btn-outline-secondary" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Search Results -->
+      <% if params[:check_in].present? && params[:check_out].present? %>
+        <div class="card mt-4">
+          <div class="card-header">
+            <h5 class="mb-0">
+              Available Rooms 
+              <% if @search_params %>
+                <small class="text-muted">
+                  (<%= @search_params[:check_in] %> to <%= @search_params[:check_out] %> 
+                  for <%= @search_params[:adults] %> adult<%= 's' if @search_params[:adults].to_i > 1 %>
+                  <% if @search_params[:children].to_i > 0 %>
+                    and <%= @search_params[:children] %> child<%= 'ren' if @search_params[:children].to_i > 1 %>
+                  <% end %>)
+                </small>
+              <% end %>
+            </h5>
+          </div>
+          
+          <div class="card-body">
+            <% if @available_rooms.present? %>
+              <div class="row">
+                <% @available_rooms.each do |room| %>
+                  <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="card h-100 border-success">
+                      <div class="card-header bg-light">
+                        <h6 class="mb-0">
+                          <strong><%= room.display_name %></strong>
+                          <span class="badge badge-success float-right">Available</span>
+                        </h6>
+                      </div>
+                      
+                      <div class="card-body">
+                        <div class="row">
+                          <div class="col-6">
+                            <small class="text-muted">Type:</small><br>
+                            <strong><%= room.room_type.humanize %></strong>
+                          </div>
+                          <div class="col-6">
+                            <small class="text-muted">Capacity:</small><br>
+                            <strong><%= room.capacity %></strong>
+                          </div>
+                        </div>
+                        
+                        <% if room.description.present? %>
+                          <div class="mt-2">
+                            <small class="text-muted">Description:</small><br>
+                            <small><%= truncate(room.description, length: 100) %></small>
+                          </div>
+                        <% end %>
+                        
+                        <% if room.amenities.present? %>
+                          <div class="mt-2">
+                            <small class="text-muted">Amenities:</small><br>
+                            <% room.amenities.split(',').first(3).each do |amenity| %>
+                              <span class="badge badge-secondary badge-sm mr-1"><%= amenity.strip %></span>
+                            <% end %>
+                            <% if room.amenities.split(',').size > 3 %>
+                              <span class="badge badge-light badge-sm">+<%= room.amenities.split(',').size - 3 %> more</span>
+                            <% end %>
+                          </div>
+                        <% end %>
+                        
+                        <!-- Pricing Information -->
+                        <% if @search_params && @search_params[:check_in] && @search_params[:check_out] %>
+                          <div class="mt-3 p-2 bg-light rounded">
+                            <% 
+                              check_in = Date.parse(@search_params[:check_in])
+                              check_out = Date.parse(@search_params[:check_out])
+                              nights = (check_out - check_in).to_i
+                              total_price = room.total_price_for_stay(check_in, check_out)
+                              tax_amount = room.tax_amount_for_stay(check_in, check_out)
+                              total_with_tax = room.total_with_tax_for_stay(check_in, check_out)
+                            %>
+                            <div class="row">
+                              <div class="col-6">
+                                <small class="text-muted">Base Price:</small><br>
+                                <strong>$<%= room.base_price_per_night %>/night</strong>
+                              </div>
+                              <div class="col-6">
+                                <small class="text-muted">Total (<%= nights %> night<%= 's' if nights > 1 %>):</small><br>
+                                <strong class="text-success">$<%= total_with_tax %></strong>
+                                <% if tax_amount > 0 %>
+                                  <br><small class="text-muted">($<%= total_price %> + $<%= tax_amount %> tax)</small>
+                                <% end %>
+                              </div>
+                            </div>
+                          </div>
+                        <% end %>
+                      </div>
+                      
+                      <div class="card-footer">
+                        <div class="btn-group w-100">
+                          <%= link_to "View Details", room_path(room), class: "btn btn-sm btn-outline-primary" %>
+                          <% 
+                            book_params = {
+                              room_id: room.id,
+                              check_in: @search_params&.[](:check_in),
+                              check_out: @search_params&.[](:check_out),
+                              adults: @search_params&.[](:adults),
+                              children: @search_params&.[](:children)
+                            }.compact
+                          %>
+                          <%= link_to "Book Now", new_room_booking_path(book_params), class: "btn btn-sm btn-success" %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <div class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No rooms available</h5>
+                <p class="text-muted">
+                  No rooms match your search criteria for the selected dates.<br>
+                  Try adjusting your dates or search criteria.
+                </p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const checkInField = document.querySelector('input[name="check_in"]');
+  const checkOutField = document.querySelector('input[name="check_out"]');
+  
+  checkInField.addEventListener('change', function() {
+    const checkInDate = new Date(this.value);
+    const nextDay = new Date(checkInDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    
+    checkOutField.min = nextDay.toISOString().split('T')[0];
+    
+    if (new Date(checkOutField.value) <= checkInDate) {
+      checkOutField.value = nextDay.toISOString().split('T')[0];
+    }
+  });
+});
+</script>
+
+<style>
+.badge-sm {
+  font-size: 0.7em;
+}
+.card-footer .btn-group {
+  display: flex;
+}
+.card-footer .btn-group .btn {
+  flex: 1;
+}
+</style>

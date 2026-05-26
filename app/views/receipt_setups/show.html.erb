@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Prefix:</strong>
+  <%= @receipt_setup.prefix %>
+</p>
+
+<p>
+  <strong>Next number:</strong>
+  <%= @receipt_setup.next_number %>
+</p>
+
+<p>
+  <strong>Auto generate:</strong>
+  <%= @receipt_setup.auto_generate %>
+</p>
+
+<p>
+  <strong>Receipt number:</strong>
+  <%= @receipt_setup.receipt_number %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @receipt_setup.created_by %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @receipt_setup.site_id %>
+</p>
+
+<%= link_to 'Edit', edit_receipt_setup_path(@receipt_setup) %> |
+<%= link_to 'Back', receipt_setups_path %>

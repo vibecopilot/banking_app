@@ -1,0 +1,32 @@
+<%= form_with(model: additional_passenger, local: true) do |form| %>
+  <% if additional_passenger.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(additional_passenger.errors.count, "error") %> prohibited this additional_passenger from being saved:</h2>
+
+      <ul>
+      <% additional_passenger.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :additional_passenger_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :gender %>
+    <%= form.text_field :gender, id: :additional_passenger_gender %>
+  </div>
+
+  <div class="field">
+    <%= form.label :flight_request_id %>
+    <%= form.number_field :flight_request_id, id: :additional_passenger_flight_request_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

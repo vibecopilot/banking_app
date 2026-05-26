@@ -1,0 +1,226 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Edit Room Availability</h4>
+          <div>
+            <%= link_to 'View Details', @room_availability, class: 'btn btn-info btn-sm' %>
+            <%= link_to 'Back to List', room_availability_index_path, class: 'btn btn-secondary btn-sm' %>
+          </div>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: @room_availability, local: true, class: 'needs-validation', novalidate: true) do |form| %>
+            <% if @room_availability.errors.any? %>
+              <div class="alert alert-danger">
+                <h6><%= pluralize(@room_availability.errors.count, "error") %> prohibited this availability from being saved:</h6>
+                <ul class="mb-0">
+                  <% @room_availability.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :room_id, class: 'form-label' %>
+                  <%= form.collection_select :room_id, Room.includes(:site).all, :id, 
+                      ->(room) { "#{room.name} (#{room.site.name} - #{room.room_type})" }, 
+                      {}, 
+                      { class: 'form-control', required: true } %>
+                  <div class="invalid-feedback">
+                    Please select a room.
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :available_date, class: 'form-label' %>
+                  <%= form.date_field :available_date, class: 'form-control', required: true %>
+                  <div class="invalid-feedback">
+                    Please select an availability date.
+                  </div>
+                  <% if @room_availability.persisted? %>
+                    <small class="form-text text-warning">
+                      <i class="fas fa-exclamation-triangle"></i> 
+                      Changing the date may affect existing bookings
+                    </small>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :total_rooms, class: 'form-label' %>
+                  <%= form.number_field :total_rooms, min: 1, class: 'form-control', required: true %>
+                  <small class="form-text text-muted">Total number of rooms of this type</small>
+                  <div class="invalid-feedback">
+                    Please enter the total number of rooms.
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :available_rooms, class: 'form-label' %>
+                  <%= form.number_field :available_rooms, min: 0, class: 'form-control', required: true %>
+                  <small class="form-text text-muted">Number of rooms available for booking</small>
+                  <div class="invalid-feedback">
+                    Please enter the number of available rooms.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-check">
+                  <%= form.check_box :is_available, class: 'form-check-input' %>
+                  <%= form.label :is_available, 'Available for Booking', class: 'form-check-label' %>
+                  <small class="form-text text-muted">Uncheck to mark as unavailable</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <%= form.label :reason_for_unavailability, class: 'form-label' %>
+                  <%= form.text_area :reason_for_unavailability, rows: 3, 
+                      class: 'form-control', 
+                      placeholder: 'Specify reason if rooms are not available (e.g., maintenance, private event, etc.)...' %>
+                  <small class="form-text text-muted">Only required if marking as unavailable</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Show current bookings that might be affected -->
+            <% if @room_availability.persisted? %>
+            <div class="row mt-4">
+              <div class="col-md-12">
+                <div class="card bg-light">
+                  <div class="card-header">
+                    <h6 class="mb-0">Current Bookings for This Date</h6>
+                  </div>
+                  <div class="card-body">
+                    <% current_bookings = @room_availability.room.room_bookings.where(
+                         "check_in_date <= ? AND check_out_date > ?", 
+                         @room_availability.available_date, 
+                         @room_availability.available_date
+                       ) %>
+                    <% if current_bookings.any? %>
+                      <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Warning:</strong> There are <%= current_bookings.count %> existing booking(s) for this date.
+                        Reducing availability may affect these bookings.
+                      </div>
+                      <div class="table-responsive">
+                        <table class="table table-sm">
+                          <thead>
+                            <tr>
+                              <th>Booking ID</th>
+                              <th>Guest</th>
+                              <th>Check-in</th>
+                              <th>Check-out</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% current_bookings.each do |booking| %>
+                              <tr>
+                                <td><%= link_to "##{booking.id}", booking, class: 'text-primary' %></td>
+                                <td><%= booking.user.full_name rescue 'N/A' %></td>
+                                <td><%= booking.check_in_date.strftime('%d %b') %></td>
+                                <td><%= booking.check_out_date.strftime('%d %b') %></td>
+                                <td>
+                                  <span class="badge badge-<%= booking.booking_status == 'confirmed' ? 'success' : 'warning' %>">
+                                    <%= booking.booking_status.capitalize %>
+                                  </span>
+                                </td>
+                              </tr>
+                            <% end %>
+                          </tbody>
+                        </table>
+                      </div>
+                    <% else %>
+                      <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle"></i> No bookings found for this date.
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% end %>
+
+            <hr class="my-4">
+
+            <div class="form-group">
+              <%= form.submit 'Update Availability', class: 'btn btn-primary' %>
+              <%= link_to 'Cancel', @room_availability, class: 'btn btn-secondary ml-2' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Form validation
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      var forms = document.getElementsByClassName('needs-validation');
+      Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+  // Available rooms validation
+  $('#room_availability_total_rooms, #room_availability_available_rooms').on('input', function() {
+    var totalRooms = parseInt($('#room_availability_total_rooms').val()) || 0;
+    var availableRooms = parseInt($('#room_availability_available_rooms').val()) || 0;
+    
+    if (availableRooms > totalRooms) {
+      alert('Available rooms cannot be more than total rooms');
+      $('#room_availability_available_rooms').val(totalRooms);
+    }
+  });
+
+  // Availability status toggle
+  $('#room_availability_is_available').change(function() {
+    if (!$(this).is(':checked')) {
+      $('#room_availability_reason_for_unavailability').attr('required', true);
+    } else {
+      $('#room_availability_reason_for_unavailability').removeAttr('required');
+    }
+  });
+
+  // Warning for reducing availability when bookings exist
+  $('#room_availability_available_rooms').on('change', function() {
+    var availableRooms = parseInt($(this).val()) || 0;
+    var existingBookings = <%= @room_availability.persisted? ? @room_availability.room.room_bookings.where("check_in_date <= ? AND check_out_date > ?", @room_availability.available_date, @room_availability.available_date).count : 0 %>;
+    
+    if (existingBookings > 0 && availableRooms < existingBookings) {
+      if (!confirm('You are setting available rooms to ' + availableRooms + ' but there are ' + existingBookings + ' existing bookings. This may cause conflicts. Continue?')) {
+        $(this).focus();
+        return false;
+      }
+    }
+  });
+});
+</script>

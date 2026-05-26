@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Resour:</strong>
+  <%= @payment.resour_id %>
+</p>
+
+<p>
+  <strong>Resource type:</strong>
+  <%= @payment.resource_type %>
+</p>
+
+<p>
+  <strong>Total amount:</strong>
+  <%= @payment.total_amount %>
+</p>
+
+<p>
+  <strong>Paid amount:</strong>
+  <%= @payment.paid_amount %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @payment.user_id %>
+</p>
+
+<p>
+  <strong>Payment method:</strong>
+  <%= @payment.payment_method %>
+</p>
+
+<p>
+  <strong>Transaction:</strong>
+  <%= @payment.transaction_id %>
+</p>
+
+<p>
+  <strong>Paymen date:</strong>
+  <%= @payment.paymen_date %>
+</p>
+
+<%= link_to 'Edit', edit_payment_path(@payment) %> |
+<%= link_to 'Back', payments_path %>

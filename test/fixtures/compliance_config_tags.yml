@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  compliance_tag_id: 1
+  compliance_config_id: 1
+
+two:
+  compliance_tag_id: 1
+  compliance_config_id: 1

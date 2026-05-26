@@ -1,0 +1,87 @@
+<%= form_with(model: mail_room_outbound, local: true) do |form| %>
+  <% if mail_room_outbound.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(mail_room_outbound.errors.count, "error") %> prohibited this mail_room_outbound from being saved:</h2>
+
+      <ul>
+      <% mail_room_outbound.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :vendor_id %>
+    <%= form.number_field :vendor_id, id: :mail_room_outbound_vendor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sending_date %>
+    <%= form.date_select :sending_date, id: :mail_room_outbound_sending_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sender_id %>
+    <%= form.number_field :sender_id, id: :mail_room_outbound_sender_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :recipient_name %>
+    <%= form.text_field :recipient_name, id: :mail_room_outbound_recipient_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mobile_number %>
+    <%= form.text_field :mobile_number, id: :mail_room_outbound_mobile_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :awb_number %>
+    <%= form.number_field :awb_number, id: :mail_room_outbound_awb_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :recipient_email_id %>
+    <%= form.text_field :recipient_email_id, id: :mail_room_outbound_recipient_email_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :recipient_address_1 %>
+    <%= form.text_area :recipient_address_1, id: :mail_room_outbound_recipient_address_1 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :recipient_address_2 %>
+    <%= form.text_area :recipient_address_2, id: :mail_room_outbound_recipient_address_2 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :state %>
+    <%= form.text_field :state, id: :mail_room_outbound_state %>
+  </div>
+
+  <div class="field">
+    <%= form.label :city %>
+    <%= form.text_field :city, id: :mail_room_outbound_city %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pincode %>
+    <%= form.number_field :pincode, id: :mail_room_outbound_pincode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mail_outbound_type %>
+    <%= form.text_field :mail_outbound_type, id: :mail_room_outbound_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :mail_room_outbound_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

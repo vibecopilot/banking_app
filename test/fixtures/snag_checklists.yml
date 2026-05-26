@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  snag_audit_category_id: 1
+  snag_audit_sub_category_id: 1
+  active: 1
+  site_id: 1
+  company_id: 1
+  check_type: MyString
+  user_id: 1
+  resource_id: 1
+  resource_type: MyString
+
+two:
+  name: MyString
+  snag_audit_category_id: 1
+  snag_audit_sub_category_id: 1
+  active: 1
+  site_id: 1
+  company_id: 1
+  check_type: MyString
+  user_id: 1
+  resource_id: 1
+  resource_type: MyString

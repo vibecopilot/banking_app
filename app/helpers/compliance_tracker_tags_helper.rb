@@ -1,0 +1,2 @@
+module ComplianceTrackerTagsHelper
+end

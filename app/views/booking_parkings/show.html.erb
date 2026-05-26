@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Parking:</strong>
+  <%= @booking_parking.parking_id %>
+</p>
+
+<p>
+  <strong>Booking date:</strong>
+  <%= @booking_parking.booking_date %>
+</p>
+
+<p>
+  <strong>Booking start time:</strong>
+  <%= @booking_parking.booking_start_time %>
+</p>
+
+<p>
+  <strong>Booking end time:</strong>
+  <%= @booking_parking.booking_end_time %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @booking_parking.user_id %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @booking_parking.site_id %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @booking_parking.status %>
+</p>
+
+<%= link_to 'Edit', edit_booking_parking_path(@booking_parking) %> |
+<%= link_to 'Back', booking_parkings_path %>

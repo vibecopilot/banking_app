@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Asset Amcs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Vendor</th>
+      <th>Asset</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>Frequency</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @asset_amcs.each do |asset_amc| %>
+      <tr>
+        <td><%= asset_amc.vendor_id %></td>
+        <td><%= asset_amc.asset_id %></td>
+        <td><%= asset_amc.start_date %></td>
+        <td><%= asset_amc.end_date %></td>
+        <td><%= asset_amc.frequency %></td>
+        <td><%= link_to 'Show', asset_amc %></td>
+        <td><%= link_to 'Edit', edit_asset_amc_path(asset_amc) %></td>
+        <td><%= link_to 'Destroy', asset_amc, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Asset Amc', new_asset_amc_path %>

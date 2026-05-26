@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Booking Confirmation User</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<style type="text/css">
+body, table, td, a {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+table, td {
+  mso-table-lspace: 0pt;
+  mso-table-rspace: 0pt;
+}
+img {
+  -ms-interpolation-mode: bicubic;
+}
+.attachment {
+  width: 110px;
+  height: auto;
+  display: inline-block;
+  margin: 10px 5px 5px 0px;
+  border: 1px solid #ddd;
+  text-align: center;
+  vertical-align: middle;
+  padding: 5px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+}
+.attachment img {
+  width: 75%;
+}
+/* RESET STYLES */
+img {
+  border: 0;
+  height: auto;
+  line-height: 100%;
+  outline: none;
+  text-decoration: none;
+}
+table {
+  border-collapse: collapse !important;
+}
+body {
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  font-size: 13px !important;
+}
+/* iOS BLUE LINKS */
+a[x-apple-data-detectors] {
+  color: inherit !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+@media all and (max-width: 600px) {
+.floater {
+  width: 320px;
+}
+}
+
+    
+    /* MOBILE STYLES */
+    @media screen and (max-width:600px) {
+h1 {
+  font-size: 32px !important;
+  line-height: 32px !important;
+}
+h5, p {
+  margin: 0px !important;
+}
+}
+</style>
+</head>
+<body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
+    <%# <img class="img-fluid" id="logouserimage" width="50px" src="/raghav.jpeg" > %>
+  <%# <div style="text-align: end; margin: 10px;" > %>
+    <%# <img src="http://admin.vibecopilot.ai/public/raghav.jpeg" alt="logo" width="50" height="50" style="display: block;" border="0"> %>
+  <%# </div> %>
+
+<!-- HIDDEN PREHEADER TEXT -->
+<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family:Arial, Helvetica, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <!-- LOGO -->
+  <tr>
+    <td align="center"><!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+      
+      
+      
+      <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]--></td>
+  </tr>
+  <!-- HERO -->
+  <tr>
+    <td align="center" style="padding: 0px 10px 0px 10px;"><!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+      
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td bgcolor="#ffffff" align="left" valign="top" style="padding: 10px 20px 0px 30px; border-radius: 4px 4px 0px 0px; color: #111111; font-family:Arial, Helvetica, sans-serif;  font-size: 18px; font-weight: 400; letter-spacing: 1px; line-height:20px;"></td>
+        </tr>
+      </table>
+      
+      <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]--></td>
+  </tr>
+  <!-- COPY BLOCK -->
+  <tr>
+    <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;"><!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+      
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <!-- COPY --> 
+        
+        <!-- COPY -->
+        <tr>
+          <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-size:16px; font-weight: 600; line-height: 20px;" > Dear <%= @user.firstname %>  <%= @user.try(:lastname) %>,</td>
+        </tr>
+
+        <tr>
+          <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height: 20px;" > We're excited to welcome you to RAGHAV REALTY SERVICE MANAGEMENT PORTAL! This platform is designed to streamline your support experience and ensure that your queries/feedback/issues are addressed efficiently and effectively.</td>
+        </tr>
+
+        <tr>
+          <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height: 20px;" >Here's what you can expect from our Service Management Portal:</td>
+        </tr>
+
+        <tr>
+          <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height: 20px;" >1. Centralized Ticketing System: Our portal serves as a centralized hub for all your support needs. You can easily submit, track, and manage tickets from one convenient location.
+            <br>
+          2. Transparent Communication: You'll have full visibility into the status of your tickets throughout the support process. Our system keeps you informed every step of the way, from ticket creation to resolution.
+          <br>
+          3. Priority-Based Support: Tickets are prioritized based on urgency and impact, allowing us to allocate resources accordingly and provide timely assistance for critical issues.
+          <br>
+          4. 24/7 Accessibility: Our portal is available round the clock, ensuring that support is always within reach, no matter when or where you need it.
+
+        </td>
+        </tr>
+
+        <tr>
+          <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-size:13px; line-height: 20px;" >To access the Service Management Portal, simply follow the instructions provided below to log in:
+          <br>
+          1. Service Management Portal: https://app.vibecopilot.ai
+          <br>
+          2. Your login credentials:
+          <br>
+          ID - <%= @user.email %>
+          <br>
+          <% if @password.present? %>
+            Password: <%= @password %>
+          <% end %>
+          <br>
+          3. Log in using your credentials and click on the "Log in" button and follow the prompts to access your account.
+          <br>
+          4. Navigate to the "My Ticket" section to raise any query or concerns you may have.
+          </td>
+        </tr>
+
+        <tr>
+            <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-size:13px; font-weight: 400; line-height: 20px;" >We're committed to delivering exceptional support and ensuring your satisfaction with our products and services. 
+              <br>  
+              Once again, welcome to Myciti.life Portal. We look forward to serving you!</td>
+        </tr>
+
+        <tr>
+            <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-size:13px; font-weight: 400; line-height: 20px;" >Best regards,
+              <br>  
+              TEAM RAGHAV REALTY</td>
+        </tr>
+
+        </tr>
+      </table>
+      
+      <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]--></td>
+  </tr>
+  <!-- COPY CALLOUT -->
+  <tr>
+    <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;"><!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+      
+      
+      
+      <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]--></td>
+  </tr>
+  <tr>
+    <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;"><!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+      
+      <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]--></td>
+  </tr>
+  <tr>
+    <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;"><!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+      
+      
+      
+      <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]--></td>
+  </tr>
+  
+  <!-- SUPPORT CALLOUT -->
+  <%# <img class="img-fluid" id="logouserimage" width="50px" src="/VibeConnect.png" >  %>
+  <%# <div class="footer"> %>
+    
+    <%# <img src="http://admin.vibecopilot.ai/public/VibeConnect.png" alt="logo" width="50" height="50" style="display: block;" border="0"> %>
+  <%# </div> %>
+  <!-- FOOTER -->
+  
+</table>
+</body>
+</html>

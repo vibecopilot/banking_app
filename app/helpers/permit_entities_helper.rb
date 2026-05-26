@@ -1,0 +1,2 @@
+module PermitEntitiesHelper
+end

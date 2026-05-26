@@ -1,0 +1,28 @@
+<%= form_with(model: notice_user, local: true) do |form| %>
+  <% if notice_user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(notice_user.errors.count, "error") %> prohibited this notice_user from being saved:</h2>
+
+      <ul>
+      <% notice_user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :notice_id %>
+    <%= form.number_field :notice_id, id: :notice_user_notice_id %>
+    <input type="hidden" name="notice_users[site_id]" value="<%= current_user.current_site_id %>">
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :notice_user_user_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

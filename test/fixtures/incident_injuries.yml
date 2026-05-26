@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  injury_type: MyString
+  injury_number: 1
+  incident_id: 1
+  lost_time: 1
+  who_got_injured_id: 1
+  name: MyString
+  company_name: MyString
+  mobile: MyString
+
+two:
+  injury_type: MyString
+  injury_number: 1
+  incident_id: 1
+  lost_time: 1
+  who_got_injured_id: 1
+  name: MyString
+  company_name: MyString
+  mobile: MyString

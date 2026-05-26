@@ -1,0 +1,77 @@
+<%= form_with(model: grn_detail, local: true) do |form| %>
+  <% if grn_detail.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(grn_detail.errors.count, "error") %> prohibited this grn_detail from being saved:</h2>
+
+      <ul>
+      <% grn_detail.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :loi_detail_id %>
+    <%= form.number_field :loi_detail_id, id: :grn_detail_loi_detail_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vendor_id %>
+    <%= form.number_field :vendor_id, id: :grn_detail_vendor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_mode %>
+    <%= form.text_field :payment_mode, id: :grn_detail_payment_mode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :invoice_number %>
+    <%= form.text_field :invoice_number, id: :grn_detail_invoice_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :related_to %>
+    <%= form.text_field :related_to, id: :grn_detail_related_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :invoice_amount %>
+    <%= form.text_field :invoice_amount, id: :grn_detail_invoice_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :invoice_date %>
+    <%= form.datetime_select :invoice_date, id: :grn_detail_invoice_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :posting_date %>
+    <%= form.datetime_select :posting_date, id: :grn_detail_posting_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :other_expenses %>
+    <%= form.text_field :other_expenses, id: :grn_detail_other_expenses %>
+  </div>
+
+  <div class="field">
+    <%= form.label :loading_expenses %>
+    <%= form.text_field :loading_expenses, id: :grn_detail_loading_expenses %>
+  </div>
+
+  <div class="field">
+    <%= form.label :adjustment_amount %>
+    <%= form.text_field :adjustment_amount, id: :grn_detail_adjustment_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, id: :grn_detail_notes %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

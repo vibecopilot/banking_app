@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .container {
+      width: 100%;
+      padding: 40px 20px;
+    }
+    .card {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb, #06b6d4);
+      color: white;
+      padding: 40px 30px;
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .content {
+      padding: 30px 40px;
+      color: #444;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .btn {
+      display: inline-block;
+      background: #2563eb;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 20px 0;
+    }
+    .footer {
+      font-size: 12px;
+      color: #888;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <!-- Header -->
+      <% logo = @survey&.mail_logos&.active&.last %>
+      <% if logo.present? %>
+        <div style="text-align:center; padding: 20px 0;">
+          <img src="<%= logo.whole_path('admin.vibecopilot.ai') %>" 
+               alt="Client Logo" 
+               style="height:50px;">
+        </div>
+      <% end %>
+      <div>
+  <img 
+    src="<%= "https://admin.vibecopilot.ai/howexperience.jpeg" %>" 
+    alt="How was your experience" 
+    style="width:100%; max-width:600px; display:block; border-top-left-radius:10px; border-top-right-radius:10px;"
+  />
+</div>
+
+      <!-- Content -->
+      <div class="content">
+        <% if @message.present? %>
+          <div style="white-space: pre-line;"><%= @message.html_safe %></div>
+        <% else %>
+          <p>Dear Participant,</p>
+
+          <p>
+            We would like to invite you to take part in our survey. Your feedback
+            is extremely valuable and will help us improve our services and better
+            understand your experience.
+          </p>
+
+          <p>Please click the button below to begin the survey:</p>
+        <% end %>
+
+        <a href="<%= @survey_link %>" 
+          style="display:inline-block;
+          background:#2563eb;
+          color:#ffffff;
+          padding:12px 24px;
+          border-radius:6px;
+          text-decoration:none;
+          font-weight:600;
+          margin:20px 0;">
+          Take Survey
+        </a>
+
+        <p>
+          Alternatively, you may copy and paste the following link into your browser:
+        </p>
+
+        <p style="word-break: break-all;">
+          <%= @survey_link %>
+        </p>
+
+        <div class="footer">
+          This is an automated message. Please do not reply.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

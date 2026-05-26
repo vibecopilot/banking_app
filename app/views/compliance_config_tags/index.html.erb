@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Compliance Config Tags</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Compliance tag</th>
+      <th>Compliance config</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @compliance_config_tags.each do |compliance_config_tag| %>
+      <tr>
+        <td><%= compliance_config_tag.compliance_tag_id %></td>
+        <td><%= compliance_config_tag.compliance_config_id %></td>
+        <td><%= link_to 'Show', compliance_config_tag %></td>
+        <td><%= link_to 'Edit', edit_compliance_config_tag_path(compliance_config_tag) %></td>
+        <td><%= link_to 'Destroy', compliance_config_tag, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Compliance Config Tag', new_compliance_config_tag_path %>

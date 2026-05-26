@@ -1,0 +1,62 @@
+<%= form_with(model: compliance_tag, local: true) do |form| %>
+  <% if compliance_tag.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(compliance_tag.errors.count, "error") %> prohibited this compliance_tag from being saved:</h2>
+
+      <ul>
+      <% compliance_tag.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :compliance_tag_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :risk %>
+    <%= form.text_field :risk, id: :compliance_tag_risk %>
+  </div>
+
+  <div class="field">
+    <%= form.label :nature %>
+    <%= form.text_field :nature, id: :compliance_tag_nature %>
+  </div>
+
+  <div class="field">
+    <%= form.label :parent_id %>
+    <%= form.number_field :parent_id, id: :compliance_tag_parent_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :resource_id %>
+    <%= form.number_field :resource_id, id: :compliance_tag_resource_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :resource_type %>
+    <%= form.text_field :resource_type, id: :compliance_tag_resource_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.number_field :company_id, id: :compliance_tag_company_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tag_type %>
+    <%= form.text_field :tag_type, id: :compliance_tag_tag_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :critical %>
+    <%= form.check_box :critical, id: :compliance_tag_critical %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

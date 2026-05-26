@@ -1,0 +1,72 @@
+<%= form_with(model: transportation_allowance_request, local: true) do |form| %>
+  <% if transportation_allowance_request.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(transportation_allowance_request.errors.count, "error") %> prohibited this transportation_allowance_request from being saved:</h2>
+
+      <ul>
+      <% transportation_allowance_request.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :employee_name %>
+    <%= form.text_field :employee_name, id: :transportation_allowance_request_employee_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :employee_id %>
+    <%= form.number_field :employee_id, id: :transportation_allowance_request_employee_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :expense_category %>
+    <%= form.text_field :expense_category, id: :transportation_allowance_request_expense_category %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date_of_expense %>
+    <%= form.date_select :date_of_expense, id: :transportation_allowance_request_date_of_expense %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description_of_expense %>
+    <%= form.text_area :description_of_expense, id: :transportation_allowance_request_description_of_expense %>
+  </div>
+
+  <div class="field">
+    <%= form.label :amount_spent %>
+    <%= form.text_field :amount_spent, id: :transportation_allowance_request_amount_spent %>
+  </div>
+
+  <div class="field">
+    <%= form.label :approval_status %>
+    <%= form.text_field :approval_status, id: :transportation_allowance_request_approval_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reimbursement_amount %>
+    <%= form.text_field :reimbursement_amount, id: :transportation_allowance_request_reimbursement_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reimbursement_method %>
+    <%= form.text_field :reimbursement_method, id: :transportation_allowance_request_reimbursement_method %>
+  </div>
+
+  <div class="field">
+    <%= form.label :manager_approval %>
+    <%= form.check_box :manager_approval, id: :transportation_allowance_request_manager_approval %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reimbursement_confirmation_email %>
+    <%= form.text_field :reimbursement_confirmation_email, id: :transportation_allowance_request_reimbursement_confirmation_email %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

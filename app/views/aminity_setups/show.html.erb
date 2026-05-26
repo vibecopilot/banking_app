@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Aminity:</strong>
+  <%= @aminity_setup.aminity_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @aminity_setup.name %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @aminity_setup.site_id %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @aminity_setup.unit_id %>
+</p>
+
+<p>
+  <strong>Start time:</strong>
+  <%= @aminity_setup.start_time %>
+</p>
+
+<p>
+  <strong>End time:</strong>
+  <%= @aminity_setup.end_time %>
+</p>
+
+<p>
+  <strong>Slot frequency:</strong>
+  <%= @aminity_setup.slot_frequency %>
+</p>
+
+<%= link_to 'Edit', edit_aminity_setup_path(@aminity_setup) %> |
+<%= link_to 'Back', aminity_setups_path %>

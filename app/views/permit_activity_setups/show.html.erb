@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Permit type:</strong>
+  <%= @permit_activity_setup.permit_type_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @permit_activity_setup.name %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @permit_activity_setup.site_id %>
+</p>
+
+<%= link_to 'Edit', edit_permit_activity_setup_path(@permit_activity_setup) %> |
+<%= link_to 'Back', permit_activity_setups_path %>

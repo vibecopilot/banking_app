@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fit-Out Request ID <%= @fitout_request&.id || "N/A" %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #444;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+        strong {
+            color: #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <%= @fitout_request&.building_name || "Building Name" %>
+        </div>
+
+        <h1>Dear <%= @fitout_request&.user&.firstname %> <%= @fitout_request&.user&.lastname %>,</h1>
+
+        <p>This is in regards to your Fit-Out request (ID: <%= @fitout_request&.id || "N/A" %>) received for your <%= @fitout_request&.unit&.name %>, <%= @fitout_request&.building_name %>.</p>
+
+        <p>Please find the details of your payment and documents below:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>REQUEST TYPE</th>
+                    <th>STATUS</th>
+                    <th>AMOUNT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if @fitout_request&.fitout_request_categories&.any? %>
+                  <% @fitout_request.fitout_request_categories.each do |category| %>
+                  <tr>
+                      <td><%= category.category_type&.name || "Category" %></td>
+                      <td><%= category.status&.humanize || "Pending" %></td>
+                      <td>₹ 10,000</td>
+                  </tr>
+                  <% end %>
+                <% else %>
+                <tr>
+                    <td>Fitout Security Deposits</td>
+                    <td>Pending</td>
+                    <td>₹ 10,000</td>
+                </tr>
+                <% end %>
+            </tbody>
+        </table>
+
+        <p>Kindly upload a copy of all the applicable documents from the following link.</p>
+        <a href="#" class="button">Upload</a>
+
+        <p>We thank you for your association, and please let us know in case you need any further assistance.</p>
+
+        <p>Thanking You,<br>
+        <%= @fitout_request&.building_name || "Management" %></p>
+
+        <div class="footer">
+            <p>Powered by <strong>Vibecopilot.ai</strong></p>
+            <!-- <p><em>Note: This is an auto generated email. Please do not reply.</em></p> -->
+        </div>
+    </div>
+</body>
+</html>

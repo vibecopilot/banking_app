@@ -1,0 +1,29 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Soft Service Log") do |sheet|
+  # Add headers
+  headers = ["Start Time", "End Time", "Status", "Assigned To", "Checklist Name", "Frequency", "Total Questions", "Question", "Answer"]
+  sheet.add_row headers
+
+  # Add data rows
+  @excel_log_data.each do |activity|
+    # Main activity row
+    sheet.add_row [
+      activity[:start_time],
+      activity[:end_time],
+      activity[:status],
+      activity[:assigned_name],
+      activity[:checklist_name],
+      activity[:frequency],
+      activity[:total_questions]
+    ]
+
+    # Submission rows
+    activity[:submissions].each do |submission|
+      sheet.add_row ["", "", "", "", "", "", "", submission[:question_name], submission[:value]]
+    end
+
+    # Add an empty row for readability
+    sheet.add_row []
+  end
+end

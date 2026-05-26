@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Employee name:</strong>
+  <%= @transportation_allowance_request.employee_name %>
+</p>
+
+<p>
+  <strong>Employee:</strong>
+  <%= @transportation_allowance_request.employee_id %>
+</p>
+
+<p>
+  <strong>Expense category:</strong>
+  <%= @transportation_allowance_request.expense_category %>
+</p>
+
+<p>
+  <strong>Date of expense:</strong>
+  <%= @transportation_allowance_request.date_of_expense %>
+</p>
+
+<p>
+  <strong>Description of expense:</strong>
+  <%= @transportation_allowance_request.description_of_expense %>
+</p>
+
+<p>
+  <strong>Amount spent:</strong>
+  <%= @transportation_allowance_request.amount_spent %>
+</p>
+
+<p>
+  <strong>Approval status:</strong>
+  <%= @transportation_allowance_request.approval_status %>
+</p>
+
+<p>
+  <strong>Reimbursement amount:</strong>
+  <%= @transportation_allowance_request.reimbursement_amount %>
+</p>
+
+<p>
+  <strong>Reimbursement method:</strong>
+  <%= @transportation_allowance_request.reimbursement_method %>
+</p>
+
+<p>
+  <strong>Manager approval:</strong>
+  <%= @transportation_allowance_request.manager_approval %>
+</p>
+
+<p>
+  <strong>Reimbursement confirmation email:</strong>
+  <%= @transportation_allowance_request.reimbursement_confirmation_email %>
+</p>
+
+<%= link_to 'Edit', edit_transportation_allowance_request_path(@transportation_allowance_request) %> |
+<%= link_to 'Back', transportation_allowance_requests_path %>

@@ -1,0 +1,120 @@
+<section id="section-linemove-3" >
+  <div class="row">
+	  <div class="col-sm-12 text-right">
+	  	<a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myVendorSetup">Create Vendor</a>
+	  </div>
+  </div>
+  <div class="hr-line-dashed"></div>
+  <div class="row">
+	  <div class="col-sm-12">
+		  <div class="table-responsive">
+			<table class="ui celled structured table">
+			  <thead>
+					<tr>
+						<th>Sr.No.</th>
+					  <th>Name</th>
+					  <th>Email</th>
+					  <th>Mobile</th>
+					  <th>Company Name</th>
+					  <th>GSTIN Number</th>
+					  <th>PAN Number</th>
+					  <th></th>
+					</tr>
+			  </thead>
+			  <tbody>
+			  	<% @sr = 1 %>
+          <% @pms_suppliers.each do |pms_supplier| %>
+						<tr>
+							<td class="collapsing"> <%= @sr %></td>
+						  <td><%= pms_supplier.name %></td>
+						  <td><%= pms_supplier.email %></td>
+						  <td><%= pms_supplier.mobile1 %></td>
+						  <td><%= pms_supplier.company_name %></td>
+						  <td><%= pms_supplier.gstin_number %></td>
+						  <td><%= pms_supplier.pan_number %></td>
+						  <td><a href="<%= crm_admin_show_vendor_details_path(pms_supplier.id) %>" type="button" class="btn btn-xs btn-white" target="_blank"><i class="fa fa-eye"></i></a></td>
+						</tr>
+						<% @sr = @sr + 1 %>
+					<%end%>
+			  </tbody>
+			</table>
+		  </div>
+		</div>
+	</div>
+</section>
+
+<div class="modal fade" id="myVendorSetup" role="dialog">
+  <div class="modal-dialog" role="document">
+  	<div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="modal-title">Create Vendor</div>
+      </div>
+   <div class="modal-body">
+   	<%= form_for(Pms::Supplier.new, :url =>  crm_admin_create_pms_supplier_path ) do |f| %>
+    <%= f.hidden_field :society_id, :value => @curusoc.id_society %>
+    <input type="hidden" name="custom_redirect" value="/crm/admin/helpdesk_categories">
+	    <div class="row">
+	      <div class="col-sm-12">
+	        <div class="form-group col-sm-6 ">
+	          <label>First Name</label>
+	          <div class="ui input fluid">
+	            <input type="text" name="pms_supplier[first_name]" placeholder="">
+	          </div>
+	        </div>
+	        <div class="form-group col-sm-6">
+	          <label>Last Name</label>
+	          <div class="ui input fluid">
+	            <input type="text" name="pms_supplier[last_name]">
+	          </div>
+	        </div>
+	        <div class="form-group col-sm-6 ">
+	          <label>Email Address</label>
+	          <div class="ui input fluid">
+	            <input type="text" name="pms_supplier[email]">
+	          </div>
+	        </div>
+	        <div class="form-group col-sm-6 ">
+	          <label>Company Name</label>
+	          <div class="ui input fluid" name="pms_supplier[company_name]">
+	            <input type="text">
+	          </div>
+	        </div>
+	        <div class="form-group col-sm-6 ">
+	          <label>GSTIN Number</label>
+	          <div class="ui input fluid">
+	            <input type="text" name="pms_supplier[gstin_number]">
+	          </div>
+	        </div>
+	        <div class="form-group col-sm-6 ">
+	          <label>PAN Number</label>
+	          <div class="ui input fluid">
+	            <input type="text" name="pms_supplier[pan_number]">
+	          </div>
+	        </div>
+	        <div class="form-group col-sm-6 ">
+	          <label>Mobile Number</label>
+	          <div class="ui input fluid">
+	            <input type="text" name="pms_supplier[mobile1]">
+	          </div>
+	        </div>
+	        <div class="form-group col-sm-6 ">
+	          <label>Alternate Number</label>
+	          <div class="ui input fluid">
+	            <input type="text" name="pms_supplier[mobile2]">
+	          </div>
+	        </div>
+	        <div class="form-group col-sm-12 padding-left-0 ">
+	          <label>Address</label>
+	          <div class="ui form field">
+	            <textarea rows="3" name="pms_supplier[address]"></textarea>
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	    <div class="modal-footer text-center">
+		    <button type="submit" id="export-btn" class="btn btn-info btn-sm"> Submit</button>
+		  </div>
+		<%end%>
+  	</div>
+	</div>

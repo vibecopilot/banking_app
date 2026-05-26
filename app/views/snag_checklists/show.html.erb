@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @snag_checklist.name %>
+</p>
+
+<p>
+  <strong>Snag audit category:</strong>
+  <%= @snag_checklist.snag_audit_category_id %>
+</p>
+
+<p>
+  <strong>Snag audit sub category:</strong>
+  <%= @snag_checklist.snag_audit_sub_category_id %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @snag_checklist.active %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @snag_checklist.site_id %>
+</p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @snag_checklist.company_id %>
+</p>
+
+<p>
+  <strong>Check type:</strong>
+  <%= @snag_checklist.check_type %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @snag_checklist.user_id %>
+</p>
+
+<p>
+  <strong>Resource:</strong>
+  <%= @snag_checklist.resource_id %>
+</p>
+
+<p>
+  <strong>Resource type:</strong>
+  <%= @snag_checklist.resource_type %>
+</p>
+
+<%= link_to 'Edit', edit_snag_checklist_path(@snag_checklist) %> |
+<%= link_to 'Back', snag_checklists_path %>

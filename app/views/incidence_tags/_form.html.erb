@@ -1,0 +1,52 @@
+<%= form_with(model: incidence_tag, local: true) do |form| %>
+  <% if incidence_tag.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(incidence_tag.errors.count, "error") %> prohibited this incidence_tag from being saved:</h2>
+
+      <ul>
+      <% incidence_tag.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :incidence_tag_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.check_box :active, id: :incidence_tag_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :parent_id %>
+    <%= form.number_field :parent_id, id: :incidence_tag_parent_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tag_type %>
+    <%= form.text_field :tag_type, id: :incidence_tag_tag_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :resource_id %>
+    <%= form.number_field :resource_id, id: :incidence_tag_resource_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :resource_type %>
+    <%= form.text_field :resource_type, id: :incidence_tag_resource_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comment %>
+    <%= form.text_area :comment, id: :incidence_tag_comment %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Cam Bill Charges</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Charge</th>
+      <th>Charge amount</th>
+      <th>Sub amount</th>
+      <th>Cgst amount</th>
+      <th>Igst amount</th>
+      <th>Sgst amount</th>
+      <th>Description</th>
+      <th>Cam bill</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @cam_bill_charges.each do |cam_bill_charge| %>
+      <tr>
+        <td><%= cam_bill_charge.charge_id %></td>
+        <td><%= cam_bill_charge.charge_amount %></td>
+        <td><%= cam_bill_charge.sub_amount %></td>
+        <td><%= cam_bill_charge.cgst_amount %></td>
+        <td><%= cam_bill_charge.igst_amount %></td>
+        <td><%= cam_bill_charge.sgst_amount %></td>
+        <td><%= cam_bill_charge.description %></td>
+        <td><%= cam_bill_charge.cam_bill_id %></td>
+        <td><%= link_to 'Show', cam_bill_charge %></td>
+        <td><%= link_to 'Edit', edit_cam_bill_charge_path(cam_bill_charge) %></td>
+        <td><%= link_to 'Destroy', cam_bill_charge, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Cam Bill Charge', new_cam_bill_charge_path %>

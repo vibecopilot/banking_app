@@ -1,0 +1,32 @@
+<%= form_with(model: visitor_category, local: true) do |form| %>
+  <% if visitor_category.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(visitor_category.errors.count, "error") %> prohibited this visitor_category from being saved:</h2>
+
+      <ul>
+      <% visitor_category.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :visitor_category_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :code %>
+    <%= form.text_field :code, id: :visitor_category_code %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.check_box :active, id: :visitor_category_active %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

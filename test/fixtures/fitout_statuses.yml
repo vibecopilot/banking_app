@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  society_id: 1
+  name: MyString
+  color_code: MyString
+  fixed_state: MyString
+  active: 1
+  position: 1
+  of_phase: MyString
+  of_atype: MyString
+
+two:
+  society_id: 1
+  name: MyString
+  color_code: MyString
+  fixed_state: MyString
+  active: 1
+  position: 1
+  of_phase: MyString
+  of_atype: MyString

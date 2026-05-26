@@ -1,0 +1,2 @@
+module AmenitySlotsHelper
+end

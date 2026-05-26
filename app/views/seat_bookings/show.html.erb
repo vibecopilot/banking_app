@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Book type:</strong>
+  <%= @seat_booking.book_type %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @seat_booking.user_id %>
+</p>
+
+<p>
+  <strong>Booking date:</strong>
+  <%= @seat_booking.booking_date %>
+</p>
+
+<p>
+  <strong>Building:</strong>
+  <%= @seat_booking.building_id %>
+</p>
+
+<p>
+  <strong>Floor:</strong>
+  <%= @seat_booking.floor_id %>
+</p>
+
+<p>
+  <strong>Booking status:</strong>
+  <%= @seat_booking.booking_status %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @seat_booking.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_seat_booking_path(@seat_booking) %> |
+<%= link_to 'Back', seat_bookings_path %>

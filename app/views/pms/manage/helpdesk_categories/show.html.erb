@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Society:</strong>
+  <%= @helpdesk_category.society_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @helpdesk_category.name %>
+</p>
+
+<p>
+  <strong>Position:</strong>
+  <%= @helpdesk_category.position %>
+</p>
+
+<%= link_to 'Edit', edit_helpdesk_category_path(@helpdesk_category) %> |
+<%= link_to 'Back', helpdesk_categories_path %>

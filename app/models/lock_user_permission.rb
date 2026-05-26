@@ -1,0 +1,3 @@
+class LockUserPermission < ApplicationRecord
+  
+end

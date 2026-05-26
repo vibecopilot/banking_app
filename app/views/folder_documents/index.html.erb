@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Folder Documents</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Content</th>
+      <th>Folder</th>
+      <th>Site</th>
+      <th>Uploaded by</th>
+      <th>Folder type</th>
+      <th>Of phase</th>
+      <th>Unit</th>
+      <th>Heavy video url</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @folder_documents.each do |folder_document| %>
+      <tr>
+        <td><%= folder_document.content %></td>
+        <td><%= folder_document.folder_id %></td>
+        <td><%= folder_document.site_id %></td>
+        <td><%= folder_document.uploaded_by %></td>
+        <td><%= folder_document.folder_type %></td>
+        <td><%= folder_document.of_phase %></td>
+        <td><%= folder_document.unit_id %></td>
+        <td><%= folder_document.heavy_video_url %></td>
+        <td><%= link_to 'Show', folder_document %></td>
+        <td><%= link_to 'Edit', edit_folder_document_path(folder_document) %></td>
+        <td><%= link_to 'Destroy', folder_document, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Folder Document', new_folder_document_path %>

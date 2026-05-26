@@ -1,0 +1,51 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  site_id: 1
+  fac_type: MyString
+  fac_name: MyString
+  member_charges: 1
+  book_before: 1
+  disclaimer: MyText
+  cancellation_policy: MyText
+  cutoff_min: 1
+  return_percentage: 1
+  create_by: 1
+  active: 1
+  member_price_adult: 1
+  member_price_child: 1
+  guest_price_adult: 1
+  guest_price_child: 1
+  min_people: 1
+  max_people: 1
+  cancel_before: 1
+  terms: MyText
+  advance_min: 1
+  deposit: 1
+  description: MyText
+  max_slots: 1
+
+two:
+  site_id: 1
+  fac_type: MyString
+  fac_name: MyString
+  member_charges: 1
+  book_before: 1
+  disclaimer: MyText
+  cancellation_policy: MyText
+  cutoff_min: 1
+  return_percentage: 1
+  create_by: 1
+  active: 1
+  member_price_adult: 1
+  member_price_child: 1
+  guest_price_adult: 1
+  guest_price_child: 1
+  min_people: 1
+  max_people: 1
+  cancel_before: 1
+  terms: MyText
+  advance_min: 1
+  deposit: 1
+  description: MyText
+  max_slots: 1

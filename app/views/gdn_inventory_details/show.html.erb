@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Inventory:</strong>
+  <%= @gdn_inventory_detail.inventory %>
+</p>
+
+<p>
+  <strong>Current stock:</strong>
+  <%= @gdn_inventory_detail.current_stock %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @gdn_inventory_detail.quantity %>
+</p>
+
+<p>
+  <strong>Comments:</strong>
+  <%= @gdn_inventory_detail.comments %>
+</p>
+
+<p>
+  <strong>Gdn:</strong>
+  <%= @gdn_inventory_detail.gdn_id %>
+</p>
+
+<%= link_to 'Edit', edit_gdn_inventory_detail_path(@gdn_inventory_detail) %> |
+<%= link_to 'Back', gdn_inventory_details_path %>

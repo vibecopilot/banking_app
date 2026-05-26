@@ -1,0 +1,62 @@
+<%= form_with(model: meeting_room_booking, local: true) do |form| %>
+  <% if meeting_room_booking.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(meeting_room_booking.errors.count, "error") %> prohibited this meeting_room_booking from being saved:</h2>
+
+      <ul>
+      <% meeting_room_booking.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :book_type %>
+    <%= form.select :book_type, ["Self", "Others"], id: :meeting_room_booking_book_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.collection_select :user_id, User.all, :id, :full_name, prompt: "Select a user", id: :meeting_room_booking_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_date %>
+    <%= form.date_select :booking_date, id: :meeting_room_booking_booking_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :facility_type %>
+    <%= form.select :facility_type, ["Conference Room", "Cabin"], id: :meeting_room_booking_facility_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_mode %>
+    <%= form.select :payment_mode, ["PostPaid", "PrePaid"], id: :meeting_room_booking_payment_mode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :upi %>
+    <%= form.text_field :upi, id: :meeting_room_booking_upi %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comment %>
+    <%= form.text_area :comment, id: :meeting_room_booking_comment %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_status %>
+    <%= form.check_box :booking_status, id: :meeting_room_booking_booking_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :meeting_room_booking_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,87 @@
+<%= form_with(model: poll, local: true) do |form| %>
+  <% if poll.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(poll.errors.count, "error") %> prohibited this poll from being saved:</h2>
+      <ul>
+        <% poll.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.date_field :start_date, required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date %>
+    <%= form.date_field :end_date, required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :visibility %>
+    <%= form.select :visibility, ['Public', 'Private'], { prompt: 'Select visibility' } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :target_groups %>
+    <%= form.text_field :target_groups %>
+  </div>
+
+  <h3>Poll Options</h3>
+  <div id="poll_options">
+    <%= form.fields_for :poll_options do |poll_option| %>
+      <div class="poll-option-field">
+        <%= poll_option.label :content, "Poll option" %>
+        <%= poll_option.text_field :content %>
+        <button type="button" class="remove-poll-option">Remove</button>
+      </div>
+    <% end %>
+  </div>
+  <br>
+  <button type="button" id="add_poll_option">Add Poll Option</button>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var pollOptionsContainer = document.getElementById('poll_options');
+  var addButton = document.getElementById('add_poll_option');
+  var optionCount = <%= @poll.poll_options.size %>;
+
+  addButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    var newOption = `
+      <div class="poll-option-field">
+        <label for="poll_poll_options_attributes_${optionCount}_content">Poll option</label>
+        <input type="text" name="poll[poll_options_attributes][${optionCount}][content]" id="poll_poll_options_attributes_${optionCount}_content">
+        <button type="button" class="remove-poll-option">Remove</button>
+      </div>
+    `;
+    pollOptionsContainer.insertAdjacentHTML('beforeend', newOption);
+    optionCount++;
+  });
+
+  pollOptionsContainer.addEventListener('click', function(e) {
+    if (e.target && e.target.classList.contains('remove-poll-option')) {
+      e.preventDefault();
+      e.target.closest('.poll-option-field').remove();
+    }
+  });
+});
+</script>

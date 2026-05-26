@@ -1,0 +1,57 @@
+<%= form_with(model: restaurant_menu, local: true) do |form| %>
+  <% if restaurant_menu.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(restaurant_menu.errors.count, "error") %> prohibited this restaurant_menu from being saved:</h2>
+
+      <ul>
+      <% restaurant_menu.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :restaurant_id %>
+    <%= form.number_field :restaurant_id, id: :restaurant_menu_restaurant_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :restaurant_menu_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sku %>
+    <%= form.text_field :sku, id: :restaurant_menu_sku %>
+  </div>
+
+  <div class="field">
+    <%= form.label :price %>
+    <%= form.text_field :price, id: :restaurant_menu_price %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.check_box :active, id: :restaurant_menu_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :category_id %>
+    <%= form.number_field :category_id, id: :restaurant_menu_category_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sub_category_id %>
+    <%= form.number_field :sub_category_id, id: :restaurant_menu_sub_category_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :restaurant_menu_description %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

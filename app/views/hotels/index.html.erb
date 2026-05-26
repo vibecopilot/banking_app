@@ -1,0 +1,57 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Hotels</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Employee Name</th>
+      <th>Destination</th>
+      <th>Hotel name</th>
+      <th>Location</th>
+      <th>Hotel preferences</th>
+      <th>Special requests</th>
+      <th>Number of rooms</th>
+      <th>Room type</th>
+      <th>Check-in date</th>
+      <th>Check-out date</th>
+      <th>Booking confirmation number</th>
+      <th>Booking certification email</th>
+      <th>Booking status</th>
+      <th>Manager approval</th>
+      <th>Is available</th>
+      <th>Site</th>      
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @hotels.each do |hotel| %>
+      <tr>
+        <td><%= hotel.employee_name %></td>
+        <td><%= hotel.destination %></td>
+        <td><%= hotel.hotel_name %></td>
+        <td><%= hotel.location %></td>
+        <td><%= hotel.hotel_preferences %></td>
+        <td><%= hotel.special_requests %></td>
+        <td><%= hotel.number_of_rooms %></td>
+        <td><%= hotel.room_type %></td>
+        <td><%= hotel.check_in_date %></td>
+        <td><%= hotel.check_out_date %></td>
+        <td><%= hotel.booking_confirmation_number %></td>
+        <td><%= hotel.booking_certification_email %></td>
+        <td><%= hotel.booking_status %></td>
+        <td><%= hotel.manager_approval %></td>
+        <td><%= hotel.is_available %></td>
+        <td><%= hotel.site_id %></td>
+        <td><%= link_to 'Show', hotel %></td>
+        <td><%= link_to 'Edit', edit_hotel_path(hotel) %></td>
+        <td><%= link_to 'Destroy', hotel, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Hotel', new_hotel_path %>

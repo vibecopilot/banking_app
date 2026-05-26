@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  position: 1
+  society_id: 1
+  tat: 1
+  active: false
+  issue_type_id: 1
+  of_phase: MyString
+  of_atype: MyString
+  icon_file_name: MyString
+  icon_content_type: MyString
+  icon_file_size: 1
+  icon_updated_at: 2025-03-20 02:18:08
+  response_tat: MyText
+  project_tat: 1
+
+two:
+  name: MyString
+  position: 1
+  society_id: 1
+  tat: 1
+  active: false
+  issue_type_id: 1
+  of_phase: MyString
+  of_atype: MyString
+  icon_file_name: MyString
+  icon_content_type: MyString
+  icon_file_size: 1
+  icon_updated_at: 2025-03-20 02:18:08
+  response_tat: MyText
+  project_tat: 1

@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @folder.name %>
+</p>
+
+<p>
+  <strong>Parent:</strong>
+  <%= @folder.parent_id %>
+</p>
+
+<p>
+  <strong>Structure:</strong>
+  <%= @folder.structure %>
+</p>
+
+<p>
+  <strong>Date of upload:</strong>
+  <%= @folder.date_of_upload %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @folder.description %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @folder.site_id %>
+</p>
+
+<p>
+  <strong>Uploaded by:</strong>
+  <%= @folder.uploaded_by %>
+</p>
+
+<p>
+  <strong>Folder type:</strong>
+  <%= @folder.folder_type %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @folder.unit_id %>
+</p>
+
+<%= link_to 'Edit', edit_folder_path(@folder) %> |
+<%= link_to 'Back', folders_path %>

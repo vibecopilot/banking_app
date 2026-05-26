@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Forums</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Thread title</th>
+      <th>Thread category</th>
+      <th>Thread tags</th>
+      <th>Thread creators</th>
+      <th>Date</th>
+      <th>Thread description</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @forums.each do |forum| %>
+      <tr>
+        <td><%= forum.thread_title %></td>
+        <td><%= forum.thread_category %></td>
+        <td><%= forum.thread_tags %></td>
+        <td><%= forum.thread_creators %></td>
+        <td><%= forum.date %></td>
+        <td><%= forum.thread_description %></td>
+        <td><%= link_to 'Show', forum %></td>
+        <td><%= link_to 'Edit', edit_forum_path(forum) %></td>
+        <td><%= link_to 'Destroy', forum, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Forum', new_forum_path %>

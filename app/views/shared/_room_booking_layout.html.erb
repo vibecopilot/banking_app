@@ -1,0 +1,498 @@
+<!-- Room Booking Module Navigation -->
+<div class="container-fluid mb-4">
+  <div class="row">
+    <div class="col-md-12">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+        <span class="navbar-brand mb-0 h1">
+          <i class="fas fa-bed"></i> Room Booking Management
+        </span>
+        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#roomBookingNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="roomBookingNav">
+          <ul class="navbar-nav mr-auto">
+            <!-- Rooms Management -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="roomsDropdown" role="button" data-toggle="dropdown">
+                <i class="fas fa-door-open"></i> Rooms
+              </a>
+              <div class="dropdown-menu">
+                <%= link_to rooms_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-list"></i> All Rooms
+                <% end %>
+                <%= link_to new_room_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-plus"></i> Add New Room
+                <% end %>
+                <%= link_to rooms_search_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-search"></i> Search Rooms
+                <% end %>
+              </div>
+            </li>
+            
+            <!-- Bookings Management -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="bookingsDropdown" role="button" data-toggle="dropdown">
+                <i class="fas fa-calendar-check"></i> Bookings
+              </a>
+              <div class="dropdown-menu">
+                <%= link_to room_bookings_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-list"></i> All Bookings
+                <% end %>
+                <%= link_to new_room_booking_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-plus"></i> New Booking
+                <% end %>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="<%= room_bookings_path %>?status=pending">
+                  <i class="fas fa-clock text-warning"></i> Pending Bookings
+                </a>
+                <a class="dropdown-item" href="<%= room_bookings_path %>?status=confirmed">
+                  <i class="fas fa-check text-success"></i> Confirmed Bookings
+                </a>
+                <a class="dropdown-item" href="<%= room_bookings_path %>?status=cancelled">
+                  <i class="fas fa-times text-danger"></i> Cancelled Bookings
+                </a>
+              </div>
+            </li>
+            
+            <!-- Pricing Management -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="pricingDropdown" role="button" data-toggle="dropdown">
+                <i class="fas fa-tags"></i> Pricing
+              </a>
+              <div class="dropdown-menu">
+                <%= link_to room_pricing_index_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-list"></i> All Pricing
+                <% end %>
+                <%= link_to new_room_pricing_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-plus"></i> Add Pricing
+                <% end %>
+                <%= link_to room_pricing_calendar_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-calendar"></i> Pricing Calendar
+                <% end %>
+              </div>
+            </li>
+            
+            <!-- Availability Management -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="availabilityDropdown" role="button" data-toggle="dropdown">
+                <i class="fas fa-calendar-alt"></i> Availability
+              </a>
+              <div class="dropdown-menu">
+                <%= link_to room_availability_index_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-list"></i> All Availability
+                <% end %>
+                <%= link_to new_room_availability_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-plus"></i> Set Availability
+                <% end %>
+                <%= link_to room_availability_calendar_path, class: 'dropdown-item' do %>
+                  <i class="fas fa-calendar"></i> Availability Calendar
+                <% end %>
+              </div>
+            </li>
+          </ul>
+          
+          <!-- Quick Actions -->
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="reportsDropdown" role="button" data-toggle="dropdown">
+                <i class="fas fa-chart-bar"></i> Reports
+              </a>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-chart-line"></i> Occupancy Report
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-money-bill"></i> Revenue Report
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-users"></i> Guest Report
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-download"></i> Export Data
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Breadcrumb Navigation -->
+<div class="container-fluid mb-3">
+  <div class="row">
+    <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><%= link_to 'Dashboard', root_path %></li>
+          <li class="breadcrumb-item"><%= link_to 'Room Booking', rooms_path %></li>
+          <% if content_for?(:breadcrumb) %>
+            <%= yield(:breadcrumb) %>
+          <% end %>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Flash Messages -->
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <% if notice %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <i class="fas fa-check-circle"></i> <%= notice %>
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      <% end %>
+      
+      <% if alert %>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <i class="fas fa-exclamation-triangle"></i> <%= alert %>
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      <% end %>
+      
+      <% flash.each do |type, message| %>
+        <% next if type.to_s == 'notice' || type.to_s == 'alert' %>
+        <div class="alert alert-<%= type == 'error' ? 'danger' : type %> alert-dismissible fade show" role="alert">
+          <i class="fas fa-<%= type == 'error' ? 'exclamation-circle' : 'info-circle' %>"></i> <%= message %>
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Room Booking Module Specific Styles */
+.room-booking-module {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.room-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.room-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.booking-status-badge {
+  font-size: 0.8em;
+  padding: 0.3em 0.6em;
+}
+
+.price-display {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.availability-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.available { background-color: #28a745; }
+.partially-available { background-color: #ffc107; }
+.not-available { background-color: #dc3545; }
+
+.room-amenities {
+  font-size: 0.9em;
+}
+
+.room-amenities .amenity-tag {
+  background-color: #e9ecef;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-right: 5px;
+  margin-bottom: 3px;
+  display: inline-block;
+  font-size: 0.8em;
+}
+
+.quick-stats {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.quick-stats .stat-item {
+  text-align: center;
+}
+
+.quick-stats .stat-number {
+  font-size: 2em;
+  font-weight: bold;
+  display: block;
+}
+
+.quick-stats .stat-label {
+  font-size: 0.9em;
+  opacity: 0.9;
+}
+
+/* Calendar specific styles */
+.calendar-day {
+  min-height: 80px;
+  border: 1px solid #dee2e6;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.calendar-day:hover {
+  background-color: #f8f9fa;
+}
+
+.calendar-day.has-booking {
+  background-color: #fff3cd;
+  border-color: #ffeaa7;
+}
+
+.calendar-day.fully-booked {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .room-card {
+    margin-bottom: 1rem;
+  }
+  
+  .quick-stats .stat-item {
+    margin-bottom: 1rem;
+  }
+  
+  .navbar-nav .dropdown-menu {
+    position: static;
+    float: none;
+    box-shadow: none;
+    border: 0;
+    background-color: transparent;
+  }
+}
+
+/* Loading and transition effects */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Form enhancements */
+.form-group label.required::after {
+  content: " *";
+  color: #dc3545;
+}
+
+.form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+/* Button enhancements */
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  transform: translateY(-1px);
+}
+
+/* Table enhancements */
+.table-hover tbody tr:hover {
+  background-color: rgba(102, 126, 234, 0.1);
+}
+
+/* Modal enhancements */
+.modal-content {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 10px 10px 0 0;
+}
+
+/* Card enhancements */
+.card {
+  border: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px 10px 0 0;
+  border-bottom: 1px solid #dee2e6;
+}
+</style>
+
+<script>
+// Room Booking Module JavaScript
+$(document).ready(function() {
+  // Initialize tooltips
+  $('[data-toggle="tooltip"]').tooltip();
+  
+  // Initialize popovers
+  $('[data-toggle="popover"]').popover();
+  
+  // Auto-dismiss alerts after 5 seconds
+  setTimeout(function() {
+    $('.alert').fadeOut('slow');
+  }, 5000);
+  
+  // Add loading states to forms
+  $('form').on('submit', function() {
+    const submitBtn = $(this).find('input[type="submit"], button[type="submit"]');
+    const originalText = submitBtn.text();
+    submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processing...');
+    
+    // Re-enable after 10 seconds as fallback
+    setTimeout(function() {
+      submitBtn.prop('disabled', false).text(originalText);
+    }, 10000);
+  });
+  
+  // Add confirmation dialogs for delete actions
+  $('a[href*="delete"], input[value*="Delete"], button[data-action="delete"]').on('click', function(e) {
+    if (!confirm('Are you sure you want to delete this item? This action cannot be undone.')) {
+      e.preventDefault();
+      return false;
+    }
+  });
+  
+  // Format currency inputs
+  $('input[type="number"][step="0.01"]').on('blur', function() {
+    const value = parseFloat($(this).val());
+    if (!isNaN(value)) {
+      $(this).val(value.toFixed(2));
+    }
+  });
+  
+  // Auto-resize textareas
+  $('textarea').each(function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+  });
+  
+  // Add smooth scrolling to anchor links
+  $('a[href*="#"]').on('click', function(e) {
+    const target = $(this.getAttribute('href'));
+    if (target.length) {
+      e.preventDefault();
+      $('html, body').stop().animate({
+        scrollTop: target.offset().top - 70
+      }, 1000);
+    }
+  });
+  
+  // Add search functionality to select dropdowns
+  if (typeof $.fn.select2 !== 'undefined') {
+    $('select.form-control').select2({
+      theme: 'bootstrap4',
+      width: '100%'
+    });
+  }
+  
+  // Initialize date pickers with better UX
+  $('input[type="date"]').each(function() {
+    if (!$(this).attr('min')) {
+      $(this).attr('min', new Date().toISOString().split('T')[0]);
+    }
+  });
+  
+  // Add real-time validation feedback
+  $('input[required], select[required], textarea[required]').on('blur', function() {
+    if ($(this).val()) {
+      $(this).removeClass('is-invalid').addClass('is-valid');
+    } else {
+      $(this).removeClass('is-valid').addClass('is-invalid');
+    }
+  });
+});
+
+// Utility functions for room booking module
+window.RoomBookingUtils = {
+  formatCurrency: function(amount) {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR'
+    }).format(amount);
+  },
+  
+  formatDate: function(date) {
+    return new Date(date).toLocaleDateString('en-IN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  },
+  
+  calculateNights: function(checkIn, checkOut) {
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const startDate = new Date(checkIn);
+    const endDate = new Date(checkOut);
+    return Math.ceil((endDate - startDate) / msPerDay);
+  },
+  
+  showNotification: function(message, type = 'info') {
+    const alertClass = type === 'error' ? 'danger' : type;
+    const icon = type === 'error' ? 'exclamation-circle' : 'info-circle';
+    
+    const alert = `
+      <div class="alert alert-${alertClass} alert-dismissible fade show" role="alert">
+        <i class="fas fa-${icon}"></i> ${message}
+        <button type="button" class="close" data-dismiss="alert">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    `;
+    
+    $('#flash-messages').prepend(alert);
+    
+    setTimeout(function() {
+      $('.alert').first().fadeOut('slow');
+    }, 5000);
+  }
+};
+</script>

@@ -1,0 +1,148 @@
+<style type="text/css">
+  .user-info div {
+    padding: 5px;
+  }
+
+  .logout{
+    background-color: red;
+    color: #fff;
+  }
+
+  .logout > a{
+    color: #fff !important;
+  }
+
+  .logout a:hover {
+    color: #fff;
+    border: none !important;
+  }
+
+  .dropdown-menu {
+    box-shadow: 0 0 8px #ddd;
+    border-radius: 4px;
+  }
+
+  .profile-card{
+    box-shadow: 3px 3px 10px #00000029;
+    border-radius: 8px;
+    width: 350px;
+    margin-right: 10px;
+    padding: 1.5rem !important;
+    position: absolute;
+    z-index: 10000;
+  }
+
+  .profile-card b{
+    font-weight: bold !important;
+  }
+  .text-center{
+    text-align: center;
+  }
+
+  .img-new{
+    border-radius: 100px;
+  }
+  .logout-new{
+          justify-content: center !important;
+    text-align: center  !important;
+    display: flex  !important;
+  }
+
+  .logout-button{
+    width: 200px;
+    height: 35px;
+    text-align: center !important;
+    background: #1C3B6B;
+    color: #fff !important;
+    box-shadow: 1px 1px 4px #00000029;
+    border-radius: 17px !important;
+  }
+  .dropdown-menu > li > a.logout-button{
+    text-align: center !important;
+  }
+  .dropdown-menu > li > a.logout-button:hover{
+    
+    background: #1C3B6B !important;
+    border-bottom: none !important;
+    /*color: #fff !important;*/
+  }
+
+  /*.main-top-menu:hover {
+    border-bottom: 2px solid red;
+  }*/
+
+  .profile-card::before{  
+    content: "▲";
+    position: absolute;
+    top: -12px;
+    right: 28px;
+    color: #fff;
+  }
+  .bg-pink{
+    background-color: #F69380;
+    color: black;
+    width: 35px;
+    border-radius: 100px;
+    height: 35px;
+    margin-right: 15px;
+    color: white;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+  }
+  .bg-pink2{
+    background-color: #F69380;
+    color: black;
+    width: 100px;
+    border-radius: 100px;
+    height: 100px;
+    color: white;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    font-size: 50px;
+    font-weight: bold;
+  }
+</style>
+
+<div class="row hidden-xs">
+        <div class="col-sm-12 p-0">
+          <nav class="ui menu top-menu navbar navbar-static-top white-bg contain" role="navigation" style="margin-left: 5px;">
+
+            <ul class="nav navbar-top-links navbar-right assets-creation ">
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  <div class="bg-pink text-center">
+                    <span><%= current_user.present? ? current_user.firstname[0] : "L" %></span>
+                  </div>
+                  <%#= image_tag("profile.png", :class => "referral-thumb img-circle") %>
+                </a>
+
+                <ul class="dropdown-menu dropdown-messages profile-card" style="margin-top: -7px; margin-right: 15px;">
+                  <li class="user-info">
+                    <div class="text-center" style="    justify-content: center;    display: flex;">
+                      <div  class="bg-pink2 text-center" >
+                        <span><%= current_user.present? ? current_user.firstname[0] : "L" %></span>
+                      </div>
+                       <%#= image_tag("profile.png", :class => "referral-thumb img-new") %>
+                    </div>
+                    <div class="text-center"> 
+                      <b><%= current_user.try(:firstname) %>
+                      <%= current_user.try(:lastname) %> </b>
+                     <br>
+                       <%= current_user.try(:email) %>
+                    <br>
+                      <%= current_user.try(:mobile) %>
+                    </div>
+                  </li>
+
+                  <li class="logout-new">
+                    <%= link_to "Logout", destroy_user_session_path, :method => :delete ,:class =>"logout-button"%>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>

@@ -1,0 +1,583 @@
+<style>
+  .ui.toggle.checkbox input:checked ~ label::before {
+
+    background-color: rgb(26, 179, 148) !important;
+
+}
+
+.ui.toggle.checkbox label::before {
+
+    background-color: #e21d41 !important;
+
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2px;
+}
+.ibox-title{
+  border:0px !important;
+}
+
+  .attach-img{
+    display: inline-block !important;
+  }
+  .attach-img img {
+
+    width: 100px !important;
+    height: 100px !important;
+}
+
+.users-feedback {
+  display: grid;
+  grid-template-columns: repeat(5, 50px);
+  grid-gap: 25px;
+  margin: 10px 0;
+  justify-content: center;
+}
+
+.individual-feedback {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.feedback-icons {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 5px;
+}
+.ibox-content{
+  border-style: none;
+}
+</style>
+<% @complaint_logs = ComplaintLog.where(complaint_id: @complaint.id).where("changed_by is not null").order("id DESC") 
+  @complaint_comments = ComplaintComment.where(complaint_id: @complaint.id, complaint_log_id: nil)
+%>
+<div class="wrapper wrapper-content">
+  <section class="content">
+    <div class="ibox">
+      <div class="ibox-title">
+        <div class="ibox-tools">
+          <%= link_to 'Comment', 'javascript:void(0)', class: 'btn  btn-md pull-right custom-button', data: {toggle: "modal" , target: "#add-comment" }  %>
+            <% @complaint_status = ComplaintStatus.find_by_id(@complaint.issue_status) %>
+            <% if @complaint_status.fixed_state == "complete" && reopenstatus.present? && reopenstatus.time_seconds.present? %>
+                <% close_time = @complaint.complaint_logs.last.created_at
+                  closure_time = close_time + reopenstatus.time_seconds %>
+                  <% if Time.zone.now <= closure_time %>
+                  <a href="#" class="btn  btn-md pull-right custom-button"  data-toggle="modal" data-target="#reopen" style="margin-right: 10px;">Reopen</a>
+                 <% end %>                      
+                <% end %>
+              <h2><a href="/pms/complaints/<%= @complaint.id %>/feeds" class="btn  btn-md pull-right custom-button" style="margin-right: 15px;" >Feeds</a>
+        </div>
+      </div>
+
+      <div class="ibox-content">
+        <div class="row">
+          <div class="col-sm-12">
+              <div class="form-title" >
+                  <h3>Ticket Details</h3>
+                  <div class="grid-container">
+                    <dl class="dl-horizontal" style="margin-left:0px !important">
+                      <dt>Tower:</dt>
+                      <dd><%= @complaint.tower.try(:name) %></dd>
+                    </dl>
+                    <dl class="dl-horizontal" style="margin-left:0px !important">
+                      <dt>Floor:</dt>
+                      <dd><%= @complaint.floor.try(:name) %></dd>
+                    </dl>
+                    <dl class="dl-horizontal" style="margin-left:0px !important">
+                      <dt>Unit:</dt>
+                      <dd><%= @complaint.unit.try(:name) %></dd>
+                    </dl>
+                  </div>
+                  <div class="grid-container">
+                    <dl class="dl-horizontal" style="margin-left:0px !important">
+                      <dt>Title:</dt>
+                      <dd><%= @complaint.heading %></dd>
+                    </dl>
+                    <dl class="dl-horizontal" style="margin-left:0px !important">
+                      <dt>Ticket No:</dt>
+                      <dd><%= @complaint.ticket_number %></dd>
+                    </dl>
+                    <dl class="dl-horizontal" style="margin-left:0px !important">
+                      <dt>Created On:</dt>
+                      <dd><%= @complaint.created_at.strftime('%d/%m/%Y')%> <%= @complaint.created_at.strftime('%l:%M %p') %></dd>
+                    </dl>
+                    <dl class="dl-horizontal" style="margin-left:0px !important">
+                      <dt>Category:</dt>
+                      <dd><%= @complaint.category_type.try(:name) %></dd>
+                    </dl>
+                    <dl class="dl-horizontal" style="margin-left:0px !important">
+                      <dt>Subcategory:</dt>
+                      <dd><%= @complaint.sub_category.try(:name) %></dd>
+                    </dl>
+                    <dl class="dl-horizontal" style="margin-left:0px !important">
+                      <dt>Status:</dt>
+                      <% stat =  @complaint.issue_status.present? ? (ComplaintStatus.find_by_id(@complaint.issue_status).try(:name) || @complaint.issue_status ) : "pending" %>
+                      <dd><%= stat %></dd>
+                    </dl>
+                    <% if @user.available_site.try(:complaint_urgency_enabled?) %>
+                      <dl class="dl-horizontal" style="margin-left:0px !important">
+                        <dt>Customer Priority:</dt>
+                        <dd><%= @complaint.ticket_urgency.titleize %></dd>
+                      </dl>
+                    <% end %>
+                  </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-title">
+                <div class="grid-container">
+                  <dl class="dl-horizontal" style="margin-left:0px !important">
+                      <dt>Created By:</dt>
+                      <dd><%= User.find(@complaint.id_user).try(:full_name) %></dd>
+                    </dl>
+                </div>
+              </div>
+            </div>
+
+
+            <% comp_status = ComplaintStatus.find_by_id(@complaint.issue_status).try(:fixed_state) 
+            issue_stat = ComplaintStatus.find_by_id(@complaint.issue_status).try(:name)
+            %>
+            <% if comp_status.present? && comp_status == "closed" && issue_stat.present? && issue_stat == "Closed" %>
+              <div class="col-sm-12">
+                <div class="form-title">
+                  <h3><%= image_tag "attachment.svg" %>Feedback</h3>
+                  <div class="ibox-content">
+                    <h3>
+                      <% if @complaint.feedbacks.last.present?%>
+                      <% else %>
+                        <a href="#" class="btn btn-info btn-xs pull-right"  data-toggle="modal" data-target="#feedback" style="margin: 5px;">Add Feedback</a> 
+                      <% end %>
+                    </h3>
+                    <div style="margin: 5px;">
+                      <%if @complaint.feedbacks.last.try(:rating) == 1 %>
+                        <%= image_tag "Angry.png"%>
+                        <span>Terrible</span>
+                      <%elsif @complaint.feedbacks.last.try(:rating) == 2 %>
+                        <%= image_tag "Bad.png"%>
+                        <span>Bad</span>
+                      <%elsif @complaint.feedbacks.last.try(:rating) == 3 %>
+                        <%= image_tag "OK.png"%>
+                        <span>Ok</span>
+                      <%elsif @complaint.feedbacks.last.try(:rating) == 4 %>
+                        <%= image_tag "Happy.png"%>
+                        <span>Good</span>
+                      <%elsif @complaint.feedbacks.last.try(:rating) == 5 %>
+                        <%= image_tag "Great.png"%>
+                        <span>Great</span>
+                      <%end%>
+                    </div>
+                    <%if @complaint.feedbacks.last.try(:comment).present? %>
+                      <div style="margin: 5px;">
+                        <span style="font-weight: bold;">Review Text:</span>
+                        <span><%= @complaint.feedbacks.last.try(:comment) %></span>
+                      </div>
+                    <%end%>  
+                  </div>
+                </div>
+              </div>
+            <% end %>
+
+            <div class="col-sm-12">
+              <div class="form-title">
+                <h3>Attachments &nbsp;<span class="label label-info"><%= @complaint.attachments.count %></span></h3>
+                
+                <div class="ibox-content">
+                  <%= render "documents", object: @complaint.attachments %>
+                </div>
+                </div>
+                
+              </div>
+
+      <div class="col-sm-12">
+        <h5>Comments</h1>
+      </div>
+      <div class="col-sm-12">
+        <div class="lead-timeline">
+            <% ComplaintLog.where(complaint_id: @complaint.id).where("changed_by is not null").order("id DESC").each do |log| %>
+              <div class="timeline-item">
+                <div class="row">
+                    <div class="col-xs-3 date"> <i class="fa fa-calendar" aria-hidden="true"></i> <%= log.created_at.strftime("%I:%M %p")%><br/>
+                    </div>
+                      <div class="col-xs-7 content no-top-border">
+                        <div class="feed-element">
+                            <div class="media-body">
+                              <ul class="list-group">
+                                <% @complaint_comments = ComplaintComment.where(complaint_log_id: log.id) %>    
+                              <%if @complaint_comments.present? %>
+                                <div class="col-sm-9 nopadding">
+                                  <strong><%= log.user.try(:full_name) %></strong> - Commented
+                                  <div class="well">
+                                    <%= @complaint_comments.last.comment %>
+                                  </div>
+                                </div>
+                                <% img = Attachfile.where("relation = 'ComplaintComment' and relation_id = ?", @complaint_comments.last.id) %>
+                                <% if img.present? %>
+                                  <div class="col-sm-3">
+                                    <h5>Attachment</h5>
+                                    <div class="lightBoxGallery">
+                                      <% img.each do | image| %>
+                                        <a href="<%= image.present? ? image.document_url : '' %>" data-gallery="">
+                                        <img src="<%= image.present? ? image.document_url : '' %>"></a>
+                                        <div id="blueimp-gallery" class="blueimp-gallery">
+                                        <div class="slides"></div>
+                                        <h3 class="title"></h3>
+                                        <a class="prev">‹</a>
+                                        <a class="next">›</a>
+                                        <a class="close">×</a>
+                                        <a class="play-pause"></a>
+                                        <ol class="indicator"></ol>
+                                        </div>
+                                      <% end %>
+                                    </div>
+                                 </div>
+                                <% end %>
+                              <% end %>       
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                  </div>
+                </div>
+                <% end %>
+              </div>
+            </div>
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="modal fade" id="feedback" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Feedback</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <%= form_for(OsrLog.new(),  :url => "/crm/create_osr_log" ) do |f| %>
+      <div class="modal-body">
+        <%= f.hidden_field :cusdirect, :name => "cusdirect", :value => "/pms/admin/complaints/#{@complaint.id}" %>
+        <%= f.hidden_field :about, :value => "ComplaintFeedback" %>
+        <%= f.hidden_field :about_id, :value => @complaint.id %>
+        <%= f.hidden_field :user_id, :value => @user.id %>
+        <%= f.hidden_field :user_society_id, :value => @complaint.site_id %>
+
+        <div class="row">
+          <div class="col-sm-12"><h5 class="text-center"><%= @complaint.ticket_number %></h5></div>
+          <div class="col-sm-12"><h5><%= @complaint.heading %></h5></div> <!-- #take --> 
+          <ul class="col-sm-12 users-feedback">
+              <li class="individual-feedback" value="1">
+                <%= image_tag "Angry.png", class: "feedback-icons"%>
+                <span>Terrible</span>
+              </li>
+              <li class="individual-feedback" value="2">
+                <%= image_tag "Bad.png", class: "feedback-icons"%>
+                <span>Bad</span>
+              </li>
+              <li class="individual-feedback" value="3">
+                <%= image_tag "OK.png", class: "feedback-icons"%>
+                <span>Ok</span>
+              </li>
+              <li class="individual-feedback" value="4">
+                <%= image_tag "Happy.png", class: "feedback-icons"%>
+                <span>Good</span>
+              </li>
+              <li class="individual-feedback" name="osr_log[rating]" value="5">
+                <%= image_tag "Great.png", class: "feedback-icons"%>
+                <span>Great</span>
+              </li>
+          </ul>
+
+          <div class="col-sm-12"><h5>Write the review about the service </h5>
+            <textarea name="osr_log[comment]" id="feedback_comment" class="form-control" rows="5" placeholder="Please write the descriptive review here Thank you."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="submstatus btn btn-success btn-sm" data-dismiss="modal">Submit</button>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="add-comment" role="dialog">
+  <% @complaint_log = ComplaintLog.new %>
+  <%= form_for(@complaint_log, url: "/complaint_logs") do |f| %>
+  <%= f.hidden_field :complaint_id, :value => @complaint.id %>
+  <%= hidden_field_tag :save_and_show_detail, 'true' %> 
+  <%= hidden_field_tag "custom_redirect", pms_complaint_path(@complaint) %>
+  <div class="modal-dialog"> 
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add Comment</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12">
+
+            <div class="row form-group">
+                    <label class="col-sm-3 control-label">Comment</label>
+                      <div class="col-sm-9">
+                        <!-- <textarea class="form-control" rows="3">Comments</textarea>-->
+                        <div class="comment-box">
+                          <div class="well">
+                            <textarea class="form-control border pad10" id="" name="complaint_log[comment]" placeholder="Add Comment" rows="1"></textarea>
+                            <div class="text-right margin-t-10">
+                            
+                              <input type="file" name="complaint_comment[doc]" id="comment_doc" class="inputfile inputfile-2" data-multiple-caption="{count} files selected" multiple>
+                              <label for="comment_doc"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17">
+                                <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path>
+                                </svg> <span>Choose a file…</span></label>
+       
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button"  id="submitbtn" class="btn btn-success btn-sm">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
+          <%end%>
+
+</div>
+<div class="modal fade" id="reopen" role="dialog">
+  <% @complaint_log = ComplaintLog.new %>
+  <%= form_for(@complaint_log, :url => "/complaint_log/reopen") do |f| %>
+    <% @complaint_status_id = ComplaintStatus.where(society_id: @user.company_id).find_by(fixed_state: "reopen").try(:id) %>
+    <%= f.hidden_field :complaint_id, :value => @complaint.id %>
+    <%= f.hidden_field :complaint_status_id, :value => @complaint_status_id %>
+    <input type="hidden" name="complaint_log[soc_id]" value="<%=@user.company_id%>">
+    <input type="hidden" name="of_phase" value="pms">
+    <%= hidden_field_tag "custom_redirect", pms_complaint_path(@complaint) %>
+  <div class="modal-dialog"> 
+  
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Reopen</h4>
+      </div>
+      <div class="modal-body">
+       
+        <div class="row">
+          <div class="col-sm-12 form-horizontal">
+            
+            <div class="form-group">  
+              <label class="col-sm-2 control-label">Comment</label>
+              <div class="col-sm-9">
+                <textarea class="form-control" id="complaint_comment" name="complaint_log[comment]" rows="3"></textarea>
+              </div>
+            </div>
+          
+          <div class="form-group">
+                <div class="col-sm-offset-2 
+                  col-sm-9">
+                  <div class="well2"> </div>
+                </div>
+              </div>
+              </div>
+        </div>
+        </div> 
+        <div class="modal-footer">
+        <button type="button"  id="submitbutton" class="btn btn-success btn-sm submitbutton" data-dismiss="modal">Reopen</button>
+      </div>
+      </div>
+  </div>
+  <% end %> 
+
+  </div>
+
+<% #@jn = Hash.new
+  # if @ws.present?
+  # @ws.each do |cw|
+  #   arr = Hash.new
+  #   ss = SocietyStaff.where("id in (?)", cw.assign_to)
+  #   arr[cw.issue_type_id] = ss.map {|s| [(s.user ? s.user.full_name : s.full_name) + " - " + s.staff_type , s.id]}
+  #   @jn[cw.issue_type_id] = arr
+  # end 
+  # end 
+%>
+<script>
+//  $(document).ready(function(){
+//    $('.bxslider').bxSlider();
+//  });
+  var workers = '<%= @jn.to_json %>';
+  var wos = JSON.parse(workers.replace(/&quot;/g,'"'));
+  $("#issue_type").off("change");
+// $("#issue_type").change(function(){
+//  ops = wos[$(this).val()];
+//  $("#assigned_to").html("");
+//  if(typeof ops != 'undefined'){
+//    ops = wos[$(this).val()][$(this).val()];
+//    var str = "";
+//    for(var x=0; x<ops.length; x++){
+//      str += "<option value='" + ops[x][1] + "'>" + ops[x][0] + "</option>";
+//    }
+//    $("#assigned_to").html($(str));
+//  }else{
+//    alert("you have not set staff to work on this kind of issues");
+//  }
+// });
+
+  $("#location_tower").change(function(){
+    pms_wings_from_tower($(this), $("#location_wings")) 
+  });
+
+  $("#location_wings").change(function(){
+    pms_area_from_wing($(this), $("#location_area")) 
+  });
+
+  $("#submitbtn").click(function(e){
+      e.preventDefault();
+
+      if ($('[name="complaint_log[comment]"]').val() == "") {
+        toastr.error('Please enter comment');
+        return false;
+      }
+      if ($("#new_complaint_log").find('.well img').length > 0 && $('[name="complaint_log[comment]"]').val() == "") {
+        toastr.error('Please enter comment');
+        return false;
+      }
+      $("#new_complaint_log").find('.well img').each(function(){
+        console.log($(this));
+        pres = $(this).attr('src');
+        pres = pres.replace('data:image/png;base64,', "")
+        pres = pres.replace('data:image/jpg;base64,', "")
+        pres = pres.replace('data:image/jpeg;base64,', "")
+        $("#new_complaint_log").append($('<input type="hidden" name="complaint_comment[docs][]" value='+ pres +' > '))
+      });
+        $("#new_complaint_log").submit();
+      });
+
+  $(function () {
+    //Date picker
+    var nowDate = new Date();
+    var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), 
+      nowDate.getDate(), 0, 0, 0, 0);
+
+    $(".complaint_datepicker").datepicker({
+      // dateFormat: 'dd/mm/yy',
+      autoclose: true,
+      startDate : today
+    });
+  });
+
+  jQuery(document).ready(function(){
+  jQuery("#assigned_to").val(location.pathname)
+  });
+
+  jQuery(document).ready(function(){
+  jQuery("#issue_type").val(location.pathname)
+  });
+
+    jQuery("#effect").on("change",function(){
+        var x = $(this).val();
+        jQuery("#thumbGallery").data("nav_effect", x);
+    });
+
+    jQuery("#delay").on("change",function(){
+        var x = parseFloat($(this).val());
+        jQuery("#thumbGallery").data("nav_delay", x);
+    });
+
+    jQuery("#timing").on("change",function(){
+        var x = parseFloat($(this).val());
+        jQuery("#thumbGallery").data("nav_timing", x);
+    });
+
+  /* Initialize the gallery */
+  // jQuery("#thumbGallery").thumbGallery();
+
+  /* customizer */
+  // jQuery("#effect").on("change",function(){
+  //     var x = $(this).val();
+  //     jQuery("#thumbGallery").data("nav_effect", x);
+  // });
+
+  // jQuery("#delay").on("change",function(){
+  //     var x = parseFloat($(this).val());
+  //     jQuery("#thumbGallery").data("nav_delay", x);
+  // });
+
+  // jQuery("#timing").on("change",function(){
+  //     var x = parseFloat($(this).val());
+  //     jQuery("#thumbGallery").data("nav_timing", x);
+  // });
+
+  if(jQuery.isMobile){
+      jQuery("body").css({marginBottom: 140})
+  }
+
+  $('.ui.dropdown').dropdown();
+  var selefile;
+    $(document).ready(function() {
+       var readURL2 = function(input) {
+          if (input.files.length > 0) {
+            for (i = 0; f=input.files[i]; i++) {
+              var reader = new FileReader();
+              reader.onload = (function(f) {
+                return function(e) {
+                selefile = f;
+                if(selefile.type == "image/jpeg" || selefile.type == "image/png" || selefile.type == "image/jpg"){
+                  $('.well').append($('<div class="attach-img"><i class="fa fa-times remove-img" aria-hidden="true" ></i><img src="' + e.target.result + '" alt="" class="img-thumbnail"></div>'));
+                }else{
+                  $('.well').append($('<div class="attach-img"><i class="fa fa-times remove-img" aria-hidden="true" ></i><img src="/assets/default_file_image.png" title="' + selefile.name + '" class="img-thumbnail"></div>'));
+                }
+
+                  $(".remove-img").off("click");
+                  $(".remove-img").click(function(){ $(this).parent().remove(); });
+                };
+              })(f);
+              reader.readAsDataURL(f);
+          }
+       }
+      }    
+      $("#comment_doc").on('change', function(){
+        console.log('hjjj');
+        readURL2(this);
+      });
+    });
+  $(".submitbutton").click(function(e){
+    e.preventDefault();
+    if ($('#complaint_comment').val() == "") {
+      toastr.error('Please enter comment');
+      return false;
+    }
+    $(this).parents("form").submit();
+   });
+$(".submstatus").click(function(e){
+  e.preventDefault();
+  if ($('#feedback_comment').val() == "") {
+    toastr.error('Please enter review text');
+    return false;
+  }
+  $(this).parents("form").submit();
+});
+
+$(".feedback-icons").click(function(e){
+  e.preventDefault();
+  $(".feedback-icons").width(30);
+  $(".feedback-icons").height(30);
+  $(this).width(50);
+  $(this).height(50);
+  var rate_val=$(this).parent().val()
+  $(this).parents("form").append($('<input type="hidden" name="osr_log[rating]" value='+rate_val+' > '))
+});
+</script> 

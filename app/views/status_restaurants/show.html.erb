@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @status_restaurant.status %>
+</p>
+
+<p>
+  <strong>Display name:</strong>
+  <%= @status_restaurant.display_name %>
+</p>
+
+<p>
+  <strong>Fixed state:</strong>
+  <%= @status_restaurant.fixed_state %>
+</p>
+
+<p>
+  <strong>Order:</strong>
+  <%= @status_restaurant.order %>
+</p>
+
+<p>
+  <strong>Color:</strong>
+  <%= @status_restaurant.color %>
+</p>
+
+<%= link_to 'Edit', edit_status_restaurant_path(@status_restaurant) %> |
+<%= link_to 'Back', status_restaurants_path %>

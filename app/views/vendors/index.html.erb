@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Example</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- Bootstrap JavaScript -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<p id="notice"><%= notice %></p>
+
+<div class="col-sm-12">
+  <h4 class="pull-left" style="width: 100%; text-align: left;"> Vendors  <hr></h4>
+</div>
+<div class="ml-2 mr-2">
+<div id="toolbar">
+  <%= link_to 'New Vendor', new_vendor_path,  :class => "create_user", :style => "float: left;" %>
+  <button type="button" class="create_user mr-2" data-toggle="modal" data-target="#vendor-bulkupload">
+    Import
+  </button>
+</div>
+<table class="table table-striped table-responsive " id="table" data-toggle="table" data-pagination="true" data-search="true" data-trim-on-search="false" data-show-columns="true" data-show-refresh="true" data-sortable="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">  <thead>
+    <tr>
+      <th>Vendor name</th>
+      <th>Company name</th>
+      <th>Mobile</th>
+      <th>Email</th>
+      <th>Site</th>
+      <th>Vtype</th>
+      <th>Notes</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @vendors.each do |vendor| %>
+      <tr>
+        <td><%= vendor.vendor_name %></td>
+        <td><%= vendor.company_name %></td>
+        <td><%= vendor.mobile %></td>
+        <td><%= vendor.email %></td>
+        <td><%= vendor.site_id %></td>
+        <td><%= vendor.notes %></td>
+        <td><%= link_to 'Show', vendor %></td>
+        <td><%= link_to 'Edit', edit_vendor_path(vendor) %></td>
+        <td><%= link_to 'Destroy', vendor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<div class="modal fade" id="vendor-bulkupload" tabindex="-2" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document"> 
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Bulk Upload</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag import_vendors_path, method: :post, multipart: true do %>
+          <div class="form-group">
+            <section class="upload-div"> Drag &amp; Drop or <%= file_field_tag :file, required: true %></section>
+          </div>
+      </div>
+      <div class='modal-footer'>
+        <div class="form-group">
+          <%= link_to "Download Sample Format", "/assets/vendor_import.xlsx", {download: 'vendor_import.xlsx', target:"_blank", :class => "create_user mr-2"} %>
+          <%= submit_tag "Import", class: 'create_user mr-2' %>
+        </div>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<%= link_to 'Back', setup_path %>

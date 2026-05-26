@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Meeting title:</strong>
+  <%= @field_sense_meeting_management.meeting_title %>
+</p>
+
+<p>
+  <strong>Meeting date and time:</strong>
+  <%= @field_sense_meeting_management.meeting_date_and_time %>
+</p>
+
+<p>
+  <strong>Participants:</strong>
+  <%= @field_sense_meeting_management.participants %>
+</p>
+
+<p>
+  <strong>Location:</strong>
+  <%= @field_sense_meeting_management.location %>
+</p>
+
+<p>
+  <strong>Travel mode:</strong>
+  <%= @field_sense_meeting_management.travel_mode %>
+</p>
+
+<p>
+  <strong>Expenses:</strong>
+  <%= @field_sense_meeting_management.expenses %>
+</p>
+
+<p>
+  <strong>Meeting agenda:</strong>
+  <%= @field_sense_meeting_management.meeting_agenda %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @field_sense_meeting_management.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_field_sense_meeting_management_path(@field_sense_meeting_management) %> |
+<%= link_to 'Back', field_sense_meeting_managements_path %>

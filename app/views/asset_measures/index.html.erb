@@ -1,0 +1,51 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Asset Measures</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Asset</th>
+      <th>Name</th>
+      <th>Min value</th>
+      <th>Max value</th>
+      <th>Alert below</th>
+      <th>Alert above</th>
+      <th>Active</th>
+      <th>Unit type</th>
+      <th>Multiplier factor</th>
+      <th>Meter tag</th>
+      <th>Meter unit</th>
+      <th>Cloned</th>
+      <th>Check previous reading</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @asset_measures.each do |asset_measure| %>
+      <tr>
+        <td><%= asset_measure.asset_id %></td>
+        <td><%= asset_measure.name %></td>
+        <td><%= asset_measure.min_value %></td>
+        <td><%= asset_measure.max_value %></td>
+        <td><%= asset_measure.alert_below %></td>
+        <td><%= asset_measure.alert_above %></td>
+        <td><%= asset_measure.active %></td>
+        <td><%= asset_measure.unit_type %></td>
+        <td><%= asset_measure.multiplier_factor %></td>
+        <td><%= asset_measure.meter_tag %></td>
+        <td><%= asset_measure.meter_unit_id %></td>
+        <td><%= asset_measure.cloned %></td>
+        <td><%= asset_measure.check_previous_reading %></td>
+        <td><%= link_to 'Show', asset_measure %></td>
+        <td><%= link_to 'Edit', edit_asset_measure_path(asset_measure) %></td>
+        <td><%= link_to 'Destroy', asset_measure, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Asset Measure', new_asset_measure_path %>

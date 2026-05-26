@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Transportations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>On behalf of</th>
+      <th>Pickup location</th>
+      <th>Dropoff location</th>
+      <th>Date</th>
+      <th>Time</th>
+      <th>No of passengers</th>
+      <th>Additional note</th>
+      <th>Transportation type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @transportations.each do |transportation| %>
+      <tr>
+        <td><%= transportation.on_behalf_of %></td>
+        <td><%= transportation.pickup_location %></td>
+        <td><%= transportation.dropoff_location %></td>
+        <td><%= transportation.date %></td>
+        <td><%= transportation.time %></td>
+        <td><%= transportation.no_of_passengers %></td>
+        <td><%= transportation.additional_note %></td>
+        <td><%= transportation.transportation_type %></td>
+        <td><%= link_to 'Show', transportation %></td>
+        <td><%= link_to 'Edit', edit_transportation_path(transportation) %></td>
+        <td><%= link_to 'Destroy', transportation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Transportation', new_transportation_path %>

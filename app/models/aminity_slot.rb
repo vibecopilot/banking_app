@@ -1,0 +1,2 @@
+class AminitySlot < ApplicationRecord
+end

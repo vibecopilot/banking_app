@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Compliance tracker:</strong>
+  <%= @compliance_tracker_tag.compliance_tracker_id %>
+</p>
+
+<p>
+  <strong>Submitted on:</strong>
+  <%= @compliance_tracker_tag.submitted_on %>
+</p>
+
+<p>
+  <strong>Submitted by:</strong>
+  <%= @compliance_tracker_tag.submitted_by_id %>
+</p>
+
+<p>
+  <strong>Compliance tag:</strong>
+  <%= @compliance_tracker_tag.compliance_tag_id %>
+</p>
+
+<p>
+  <strong>Observation:</strong>
+  <%= @compliance_tracker_tag.observation %>
+</p>
+
+<p>
+  <strong>Recommendtion:</strong>
+  <%= @compliance_tracker_tag.recommendtion %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @compliance_tracker_tag.comment %>
+</p>
+
+<p>
+  <strong>Compliance tag task:</strong>
+  <%= @compliance_tracker_tag.compliance_tag_task_id %>
+</p>
+
+<%= link_to 'Edit', edit_compliance_tracker_tag_path(@compliance_tracker_tag) %> |
+<%= link_to 'Back', compliance_tracker_tags_path %>

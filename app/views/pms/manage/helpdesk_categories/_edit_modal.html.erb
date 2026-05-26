@@ -1,0 +1,155 @@
+<div class="modal fade" id="esc_edit<%= @complaint_worker.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+  <div class="modal-dialog" role="document">
+  <%= form_for(ComplaintWorker.new,  :url => "/pms/admin/update_complaint_worker" ) do |f| %>
+  <%= f.hidden_field "id", :name => "id", :value => @complaint_worker.id %>
+    <%= f.hidden_field "custom_redirect", :name => "custom_redirect", :value =>  "/pms/admin/helpdesk_categories"  %>
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit</h4>
+      </div>
+      <div class="modal-body">
+       <div class="row">
+                
+                <div class="form-group col-sm-4">
+                  <label>Category Type</label>
+                  <%= select_tag 'complaint_worker[category_id]', options_for_select( @helpdesk_categories_mapped, :selected => @complaint_worker.category_id), :class=>"form-control" %>
+                </div>
+
+                <div class="clearfix"></div>
+                <hr>
+                <div class="divTable">
+                  <div class="divTableHeading">
+                    <div class="divTableRow">
+                      <div class="divTableCell width10">Levels</div>
+                      <div class="divTableCell width40">Escalation To</div>
+                      <div class="divTableCell width10">P1</div>
+                      <div class="divTableCell width10">P2</div>
+                      <div class="divTableCell width10">P3</div>
+                      <div class="divTableCell width10">P4</div>
+                      <div class="divTableCell width10">P5</div>
+                    </div>
+                  </div>
+                  <div class="divTableBody">
+                    <div class="divTableRow">
+                    <% e1 = @complaint_worker.escalations.where(name: "E1").try(:last) %>
+                      <div class="divTableCell">E1<input type="hidden" name="escalation_matrix[e1][name]" value="E1"></div>
+                      <div class="divTableCell">
+                        <%= select_tag 'escalation_matrix[e1][escalate_to_users][]', options_for_select( @usmapped, :selected => e1.try(:escalate_to_users)), :class=>" ui fluid search dropdown multiple", :multiple =>true %>
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e1][p1]" class="form-control" value="<%= e1.try(:p1) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e1][p2]" class="form-control" value="<%= e1.try(:p2) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e1][p3]" class="form-control" value="<%= e1.try(:p3) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e1][p4]" class="form-control" value="<%= e1.try(:p4) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e1][p5]" class="form-control"  value="<%= e1.try(:p5) %>">
+                      </div>
+                    </div>
+                    <div class="divTableRow">
+                    <% e2 = @complaint_worker.escalations.where(name: "E2").try(:last) %>
+                      <div class="divTableCell">E2<input type="hidden" name="escalation_matrix[e2][name]" value="E2"></div>
+                      <div class="divTableCell">
+                        <%= select_tag 'escalation_matrix[e2][escalate_to_users][]', options_for_select( @usmapped, :selected => e2.try(:escalate_to_users)), :class=>" ui fluid search dropdown multiple", :multiple =>true %>
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e2][p1]" class="form-control" value="<%= e2.try(:p1) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e2][p2]" class="form-control" value="<%= e2.try(:p2) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e2][p3]" class="form-control" value="<%= e2.try(:p3) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e2][p4]" class="form-control" value="<%= e2.try(:p4) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e2][p5]" class="form-control" value="<%= e2.try(:p5) %>">
+                      </div>
+                    </div>
+                    <div class="divTableRow">
+                    <% e3 = @complaint_worker.escalations.where(name: "E3").try(:last) %>
+                      <div class="divTableCell">E3<input type="hidden" name="escalation_matrix[e3][name]" value="E3"></div>
+                      <div class="divTableCell">
+                        <%= select_tag 'escalation_matrix[e3][escalate_to_users][]', options_for_select( @usmapped, :selected => e3.try(:escalate_to_users)), :class=>" ui fluid search dropdown multiple", :multiple =>true %>
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e3][p1]" class="form-control" value="<%= e3.try(:p1) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e3][p2]" class="form-control"  value="<%= e3.try(:p2) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e3][p3]" class="form-control" value="<%= e3.try(:p3) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e3][p4]" class="form-control" value="<%= e3.try(:p4) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e3][p5]" class="form-control" value="<%= e3.try(:p5) %>">
+                      </div>
+                    </div>
+                    <div class="divTableRow">
+                    <% e4 = @complaint_worker.escalations.where(name: "E4").try(:last) %>
+                      <div class="divTableCell">E4<input type="hidden" name="escalation_matrix[e4][name]" value="E4"></div>
+                      <div class="divTableCell">
+                        <%= select_tag 'escalation_matrix[e4][escalate_to_users][]', options_for_select( @usmapped, :selected => e4.try(:escalate_to_users)), :class=>" ui fluid search dropdown multiple", :multiple =>true %>
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e4][p1]" class="form-control" value="<%= e4.try(:p1) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e4][p2]" class="form-control"  value="<%= e4.try(:p2) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e4][p3]" class="form-control" value="<%= e4.try(:p3) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e4][p4]" class="form-control" value="<%= e4.try(:p4) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e4][p5]" class="form-control" value="<%= e4.try(:p5) %>">
+                      </div>
+                    </div>
+                    <div class="divTableRow">
+                    <% e5 = @complaint_worker.escalations.where(name: "E5").try(:last) %>
+                      <div class="divTableCell">E5<input type="hidden" name="escalation_matrix[e5][name]" value="E5"></div>
+                      <div class="divTableCell">
+                        <%= select_tag 'escalation_matrix[e5][escalate_to_users][]', options_for_select( @usmapped, :selected => e5.try(:escalate_to_users)), :class=>" ui fluid search dropdown multiple", :multiple =>true %>
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e5][p1]" class="form-control" value="<%= e5.try(:p1) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e5][p2]" class="form-control"  value="<%= e5.try(:p2) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e5][p3]" class="form-control" value="<%= e5.try(:p3) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e5][p4]" class="form-control" value="<%= e5.try(:p4) %>">
+                      </div>
+                      <div class="divTableCell">
+                        <input type="text" name="escalation_matrix[e5][p5]" class="form-control" value="<%= e5.try(:p5) %>">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Update</button>
+      </div>
+    </div>
+    <% end %>
+  </div>
+</div>

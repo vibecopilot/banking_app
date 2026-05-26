@@ -1,0 +1,57 @@
+<%= form_with(model: cam_bill_charge, local: true) do |form| %>
+  <% if cam_bill_charge.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(cam_bill_charge.errors.count, "error") %> prohibited this cam_bill_charge from being saved:</h2>
+
+      <ul>
+      <% cam_bill_charge.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :charge_id %>
+    <%= form.number_field :charge_id, id: :cam_bill_charge_charge_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :charge_amount %>
+    <%= form.text_field :charge_amount, id: :cam_bill_charge_charge_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sub_amount %>
+    <%= form.text_field :sub_amount, id: :cam_bill_charge_sub_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cgst_amount %>
+    <%= form.text_field :cgst_amount, id: :cam_bill_charge_cgst_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :igst_amount %>
+    <%= form.text_field :igst_amount, id: :cam_bill_charge_igst_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sgst_amount %>
+    <%= form.text_field :sgst_amount, id: :cam_bill_charge_sgst_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_field :description, id: :cam_bill_charge_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cam_bill_id %>
+    <%= form.number_field :cam_bill_id, id: :cam_bill_charge_cam_bill_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

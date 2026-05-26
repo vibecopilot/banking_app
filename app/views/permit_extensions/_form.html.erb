@@ -1,0 +1,47 @@
+<%= form_with(model: permit_extension, local: true) do |form| %>
+  <% if permit_extension.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(permit_extension.errors.count, "error") %> prohibited this permit_extension from being saved:</h2>
+
+      <ul>
+      <% permit_extension.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :permit_id %>
+    <%= form.number_field :permit_id, id: :permit_extension_permit_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :permit_extension_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reason %>
+    <%= form.text_area :reason, id: :permit_extension_reason %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ext_date %>
+    <%= form.date_select :ext_date, id: :permit_extension_ext_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ext_time %>
+    <%= form.time_select :ext_time, id: :permit_extension_ext_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :assign_to_ids %>
+    <%= form.text_area :assign_to_ids, id: :permit_extension_assign_to_ids %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  risk: MyString
+  nature: MyString
+  parent_id: 1
+  resource_id: 1
+  resource_type: MyString
+  company_id: 1
+  tag_type: MyString
+  critical: false
+
+two:
+  name: MyString
+  risk: MyString
+  nature: MyString
+  parent_id: 1
+  resource_id: 1
+  resource_type: MyString
+  company_id: 1
+  tag_type: MyString
+  critical: false

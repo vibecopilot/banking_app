@@ -1,0 +1,37 @@
+workbook = xlsx_package.workbook
+workbook.styles do |style|
+  project_heading = style.add_style(b: true, sz: 14)
+  heading = style.add_style(b: true)
+  dates = ['Days']
+  end_day = Time.days_in_month(params[:month].split('-')[1].to_i)
+  start_day = 1
+  (start_day..end_day).to_a.each do |a|
+    dates << a
+  end
+  Site.where(id: params[:site_id]).each do |site|
+    workbook.add_worksheet(name: "#{site.name}") do |sheet|
+      date1 = Date.parse("#{params[:month]}-1").strftime("%b %d, %Y")
+      date2 = Date.parse("#{params[:month]}-1").end_of_month.strftime("%b %d, %Y")
+      sheet.add_row ["#{date1} - #{date2}"], style: project_heading
+      sheet.add_row ["Site: #{site.name}"], style: heading
+      sheet.add_row []
+      sheet.add_row dates
+      sheet.add_row []
+      @users.each do |user|
+        present_days = Attendance.present_days(user.id, params[:month].split('-')[1].to_i)
+        sheet.add_row ["Employee: #{user.try(:full_name)}", 'Total Days', "#{end_day}", 'Present Days', "#{present_days}", 'Absent Days', "#{end_day - present_days}"], style: heading
+        sheet.add_row []
+        %w(InTime OutTime Duration).each do |col|
+          rows = ["#{col}"]
+          (start_day..end_day).to_a.each do |a|
+            date = "#{params[:month]}-#{a}"
+            att = Attendance.attendance_for(date, user.try(:id))
+            rows << att["#{col}".to_sym]
+          end
+          sheet.add_row rows
+        end
+        sheet.add_row []
+      end
+    end
+  end
+end

@@ -1,0 +1,1 @@
+json.partial! "field_sense_leads_managements/field_sense_leads_management", field_sense_leads_management: @field_sense_leads_management

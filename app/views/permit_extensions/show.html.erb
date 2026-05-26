@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Permit:</strong>
+  <%= @permit_extension.permit_id %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @permit_extension.site_id %>
+</p>
+
+<p>
+  <strong>Reason:</strong>
+  <%= @permit_extension.reason %>
+</p>
+
+<p>
+  <strong>Ext date:</strong>
+  <%= @permit_extension.ext_date %>
+</p>
+
+<p>
+  <strong>Ext time:</strong>
+  <%= @permit_extension.ext_time %>
+</p>
+
+<p>
+  <strong>Assign to ids:</strong>
+  <%= @permit_extension.assign_to_ids %>
+</p>
+
+<%= link_to 'Edit', edit_permit_extension_path(@permit_extension) %> |
+<%= link_to 'Back', permit_extensions_path %>

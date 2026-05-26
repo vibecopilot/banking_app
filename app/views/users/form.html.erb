@@ -1,0 +1,247 @@
+<% user = @newuser %>
+<%= form_with(model: user, local: true, url: "/users/create", method: :post) do |form| %>
+  <% if user.errors.any? %>
+    <div id="error_explanation">
+      <h5><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h5>
+      <ul>
+      <% user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <div class="col-sm-12">
+    <input type="hidden" name="id" value="<%= user.id %>">
+    <div class="row">
+
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :user_courtesy %>
+          <%= form.select :user_courtesy, options_for_select([["Select", ""], ["Mr.", "Mr."], ["Ms.", "Ms."], ["Mrs.", "Mrs."]], @user&.user_courtesy), class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :firstname %>
+          <%= form.text_field :firstname, id: :user_name, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :lastname %>
+          <%= form.text_field :lastname, id: :user_region, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :email %>
+          <%= form.text_field :email, id: :user_active, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :mobile %>
+          <%= form.text_field :mobile, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :password %>
+          <%= form.password_field :password, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :user_type %>
+          <%= form.select :user_type, options_for_select([["Admin", "pms_admin"],["FM Admin", "fm_admin"], ["RMB Member", "rmb_member"],["RMB Admin", "rmb_admin"],["Technician", "pms_technician"], ["Unit Owner", "pms_occupant_admin"], ["Unit Resident", "pms_occupant"], ["Face Scanner", "face_scanner"], ["Approving Authority", "Tm"], ["Security Guard", "security_guard"], ["House Keeping", "house_keeping"], ["Employee", "employee"],["Auditor", "auditor"],["Vendor", "vendor"]], selected: user.user_type), { include_blank: "Select Type" }, { class: 'form-control' } %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :building_id %>
+          <%= form.select :building_id, options_for_select(Building.where(site_id: @user&.current_site_id).map { |e| [e.name, e.id] }, user.building_id), { include_blank: "Select Building" }, { class: 'form-control' } %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :unit_id %>
+          <%= form.select :unit_id, options_for_select(Unit.where(site_id: @user&.current_site_id).map { |e| [e.name, e.id] }, user.unit_id), { include_blank: "Select Unit" }, { class: 'form-control' } %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :site_ids, "Associated Sites" %>
+          <%= form.select :site_ids,
+            options_for_select(
+              Site.all.map { |e| [e.name_with_region, e.id] },
+              (params[:site_ids] || user&.sites&.pluck(:id) || [])
+            ),
+            { include_blank: "Select Site" },
+            { class: "ui dropdown form-control", multiple: true, required: true } %>
+        </div>
+      </div>
+
+      
+      <!-- New Fields -->
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :user_phase %>
+          <%= form.select :user_phase, options_for_select([["Select", ""], ["Post Sales", "post sales"], ["Post Possession", "post possession"]], @user&.user_phase), class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class ="field text-left mb-3">
+          <%= form.label :user_status %>
+          <%= form.select :user_status, options_for_select([["Select", ""], ["Approved", "approved"], ["Pending", "pending"]], @user&.user_status), class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :user_category_id %>
+          <%= form.select :user_category_id, UserCategory.all.map { |uc| [uc.name, uc.id] }, { include_blank: "Select User Category" }, { class: 'form-control', selected: @user&.user_category_id } %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :user_address %>
+          <%= form.text_area :user_address, value: @user&.user_address, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :resident_type %>
+          <%= form.radio_button :resident_type, "Tenant", checked: @user&.resident_type == "Tenant" %> Tenant
+          <%= form.radio_button :resident_type, "Owner", checked: @user&.resident_type == "Owner" %> Owner
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :membership_type %>
+          <%= form.radio_button :membership_type, "primary", checked: @user&.membership_type == "primary" %> Primary
+          <%= form.radio_button :membership_type, "secondary", checked: @user&.membership_type == "secondary" %> Secondary
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :lives_here %>
+          <%= form.radio_button :lives_here, "yes", checked: @user&.lives_here == "yes" %> Yes
+          <%= form.radio_button :lives_here, "no", checked: @user&.lives_here == "no" %> No
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :allow_fitout %>
+          <%= form.radio_button :allow_fitout, "yes", checked: @user&.allow_fitout == "yes" %> Yes
+          <%= form.radio_button :allow_fitout, "no", checked: @user&.allow_fitout == "no" %> No
+        </div>
+      </div>
+    </div>  
+    <br>
+    <h4>Additional Info</h4>
+    <br>
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :birth_date %>
+          <%= form.date_field :birth_date, value: @user&.birth_date, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :anniversary %>
+          <%= form.date_field :anniversary, value: @user&.anniversary, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :spouse_birth_date %>
+          <%= form.date_field :spouse_birth_date, value: @user&.spouse_birth_date, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :primary_email %>
+          <%= form.text_field :email_1, value: @user&.email_1, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :alternate_email %>
+          <%= form.text_field :email_2, value: @user&.email_2, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :landline_number %>
+          <%= form.text_field :landline_number, value: @user&.landline_number, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :intercom_number %>
+          <%= form.text_field :intercom_number, value: @user&.intercom_number, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :gst_number %>
+          <%= form.text_field :gst_number, value: @user&.gst_number, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :pan_number %>
+          <%= form.text_field :pan_number, value: @user&.pan_number, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :vendor_id, "Vendor" %>
+          <%= form.select :vendor_id, Vendor.where(site_id: @user&.current_site_id).pluck(:vendor_name, :id), { prompt: "Select a Vendor" }, class: "form-control", selected: @user&.vendor_id %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :ev_connection %>
+          <%= form.select :ev_connection, options_for_select([["Select", ""], ["Self", "self"], ["Society", "society"]], @user&.ev_connection), class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :no_of_adults %>
+          <%= form.text_field :no_of_adults, value: @user&.no_of_adults, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :no_of_childrens %>
+          <%= form.text_field :no_of_childrens, value: @user&.no_of_childrens, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :no_of_pets %>
+          <%= form.text_field :no_of_pets, value: @user&.no_of_pets, class: "form-control" %>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="field text-left mb-3">
+          <%= form.label :differently_abled %>
+          <%= form.radio_button :differently_abled, "yes", checked: @user&.differently_abled == "yes" %> Yes
+          <%= form.radio_button :differently_abled, "no", checked: @user&.differently_abled == "no" %> No
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="actions">
+    <%= form.submit :class => "create_user" %>
+  </div>
+<% end %>
+</div>
+
+<script type="text/javascript">
+  $('.ui.dropdown').dropdown();
+</script>

@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Visitor category:</strong>
+  <%= @visitor_sub_category.visitor_category %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @visitor_sub_category.name %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @visitor_sub_category.active %>
+</p>
+
+<%= link_to 'Edit', edit_visitor_sub_category_path(@visitor_sub_category) %> |
+<%= link_to 'Back', visitor_sub_categories_path %>

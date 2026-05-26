@@ -1,0 +1,143 @@
+wb = xlsx_package.workbook
+wb.styles do |style|
+	highlight_cell = style.add_style(bg_color: "",
+                                 border: Axlsx::STYLE_THIN_BORDER,
+                                 alignment: { horizontal: :center },
+                                 num_fmt: 8)
+	rows =  ['Category','Carry over pevious month','Overall','Opened','Within TAT','TAT Breached','Total',
+	'Completed','Within TAT','TAT Breached','Total']
+	ops = HelpdeskOperation.site_ops(@user.selected_site_id)
+
+ 	if params[:report_type] == "report1"
+		wb.add_worksheet(name: 'Report1') do |sheet|
+			sheet.add_row ["Status for: #{params[:q][:created_at_gteq]}-#{params[:q][:created_at_lteq]}","Status for: #{params[:q][:created_at_gteq]}-#{params[:q][:created_at_lteq]}","Status for: #{params[:q][:created_at_gteq]}-#{params[:q][:created_at_lteq]}","Open Cases","Open Cases","Open Cases","Open Cases","Closed Cases","Closed Cases","Closed Cases","Closed Cases"],style: [highlight_cell]*14
+			sheet.merge_cells "A1:C1"
+			sheet.merge_cells "D1:G1"
+			sheet.merge_cells "H1:K1"
+		  sheet.add_row rows
+		  HelpdeskCategory.pms.active.where(society_id: @user.company_id).each do |category|
+		  	carry_over_previous_month = @carry_over_previous_month.ransack({category_type_id_eq: category.id}).result
+				overall_complaints = @overall_complaints.ransack({category_type_id_eq: category.id}).result
+
+		  	opened = @complaints_open.ransack({category_type_id_eq: category.id}).result
+		  	completed = @complaints_closed.ransack({category_type_id_eq: category.id}).result
+
+		  	complaint_open_tat = Complaint.resolution_tat_calculation(opened,ops)
+		  	complaint_closed_tat = Complaint.resolution_tat_calculation(completed,ops)
+
+		  	open_resolution_tat_sum = Complaint.resolution_tat_sum(complaint_open_tat)
+		  	closed_resolution_tat_sum = Complaint.resolution_tat_sum(complaint_closed_tat)
+
+		  	this_row = [category.name.titleize,carry_over_previous_month.count,overall_complaints.count,opened.count,(complaint_open_tat.present? ? complaint_open_tat[:within_tat] : nil),(complaint_open_tat.present? ? complaint_open_tat[:tat_breached] : nil),open_resolution_tat_sum,
+		  				completed.count,(complaint_closed_tat.present? ? complaint_closed_tat[:within_tat] : nil),(complaint_closed_tat.present? ? complaint_closed_tat[:tat_breached] : nil),closed_resolution_tat_sum]
+		  	sheet.add_row this_row
+		  end
+		  # sheet.add_row ["Total","=SUM(B3:B4)","=SUM(C3:C4)","=SUM(D3:D4)","=SUM(E3:E4)","=SUM(F3:F4)","=SUM(G3:G4)","=SUM(H3:H4)","=SUM(I3:I4)","=SUM(J3:J4)","=SUM(K3:K4)","=SUM(L3:L4)","=SUM(M3:M4)","=SUM(N3:N4)"]
+		  # sheet.add_row ["Total",0,0,0,0,0,0,0,0,0,0,0,0,0]
+		  # sheet.add_row ["Percentage",0,0,0,0,0,0,0,0,0,0,0,0,0]
+		end
+	end
+
+	aging_rules = AgingRule.active.where(site_id: @user.selected_site_id)
+
+	dynamic_headers = HelpdeskCategory.get_dynamic_header(aging_rules)
+	open_cells = HelpdeskCategory.get_dynamic_rowspan(aging_rules)
+	closed_cells = HelpdeskCategory.get_dynamic_rowspan(aging_rules)
+
+	if params[:report_type] == "report2"
+		report2_rows = ['Priority','Overall','Percentage']
+		["Open","Closed"].each do |type|
+			aging_rules.each do |aging_rule|
+				report2_rows << aging_rule.aging_rule_string_concatenate
+			end
+			report2_rows << 'Within TAT' << 'TAT Breached' << 'Total'
+		end
+		wb.add_worksheet(name: 'Report2') do |sheet|
+			sheet.add_row ["Status for: #{params[:q][:created_at_gteq]}-#{params[:q][:created_at_lteq]}","Status for: #{params[:q][:created_at_gteq]}-#{params[:q][:created_at_lteq]}","Status for: #{params[:q][:created_at_gteq]}-#{params[:q][:created_at_lteq]}"] + (dynamic_headers != [] ? dynamic_headers : []),style: [highlight_cell]*((aging_rules.count+3)+(aging_rules.count+3))
+			sheet.merge_cells "A1:C1"
+			sheet.merge_cells open_cells.present? ? open_cells[:open_cell_header_values] : ""
+			sheet.merge_cells closed_cells.present? ? closed_cells[:closed_cell_header_values] : ""
+
+		  sheet.add_row report2_rows
+		  ["P1", "P2", "P3", "P4", "P5"].each do |priority|
+		  	carry_over_previous_month = @carry_over_previous_month.ransack({priority_eq: priority}).result
+				overall_complaints = @overall_complaints.ransack({priority_eq: priority}).result
+
+		  	percentage = (@overall_complaints.count > 0 && overall_complaints.count > 0) ? ((overall_complaints.count.to_f / @overall_complaints.count) * 100).to_f.round(2) : nil
+
+		  	opened = @complaints_open.ransack({priority_eq: priority}).result
+		  	completed = @complaints_closed.ransack({priority_eq: priority}).result
+
+		  	complaint_open_tat = Complaint.resolution_tat_calculation(opened,ops)
+		  	complaint_closed_tat = Complaint.resolution_tat_calculation(completed,ops)
+
+		  	open_resolution_tat_sum = Complaint.resolution_tat_sum(complaint_open_tat)
+		  	closed_resolution_tat_sum = Complaint.resolution_tat_sum(complaint_closed_tat)
+
+		  	opened_aging_rule_complaint_count = Complaint.resolution_tat_calculation(opened,ops,@user.selected_site_id, @user.selected_site_id)
+		  	opened_aging_rule_array = opened_aging_rule_complaint_count.present? ? opened_aging_rule_complaint_count[:complaint_counts_rulewise].flatten : []
+
+		  	completed_aging_rule_complaint_count = Complaint.resolution_tat_calculation(completed,ops,@user.selected_site_id, @user.selected_site_id)
+		  	completed_aging_rule_array = completed_aging_rule_complaint_count.present? ? completed_aging_rule_complaint_count[:complaint_counts_rulewise].flatten : []
+
+		  	opened_aging_array = AgingRule.aging_rule_values(aging_rules,opened_aging_rule_array)
+		  	completed_aging_array = AgingRule.aging_rule_values(aging_rules,completed_aging_rule_array)
+
+		  	this_row = [priority,overall_complaints.count,percentage] + opened_aging_array.to_a + [(complaint_open_tat.present? ? complaint_open_tat[:within_tat] : nil),(complaint_open_tat.present? ? complaint_open_tat[:tat_breached] : nil),open_resolution_tat_sum] + completed_aging_array + [(complaint_closed_tat.present? ? complaint_closed_tat[:within_tat] : nil),(complaint_closed_tat.present? ? complaint_closed_tat[:tat_breached] : nil),closed_resolution_tat_sum]
+
+		  	sheet.add_row this_row
+		  end
+		end
+	end
+
+	if params[:report_type] == "report3"
+		report3_rows = ['Category','Overall','Percentage']
+		["Open","Closed"].each do |type|
+			aging_rules.each do |aging_rule|
+				report3_rows << aging_rule.aging_rule_string_concatenate
+			end
+			report3_rows << 'Within TAT' << 'TAT Breached' << 'Total'
+		end
+		wb.add_worksheet(name: 'Report3') do |sheet|
+			sheet.add_row ["Status for: #{params[:q][:created_at_gteq]}-#{params[:q][:created_at_lteq]}","Status for: #{params[:q][:created_at_gteq]}-#{params[:q][:created_at_lteq]}","Status for: #{params[:q][:created_at_gteq]}-#{params[:q][:created_at_lteq]}"] + (dynamic_headers != [] ? dynamic_headers : []),style: [highlight_cell]*((aging_rules.count+3)+(aging_rules.count+3))
+			sheet.merge_cells "A1:C1"
+			sheet.merge_cells open_cells.present? ? open_cells[:open_cell_header_values] : ""
+			sheet.merge_cells closed_cells.present? ? closed_cells[:closed_cell_header_values] : ""
+
+		  sheet.add_row report3_rows
+
+		  total_overall = @overall_complaints
+		  @helpdesk_categories = HelpdeskCategory.where(society_id: @user.company_id,id: total_overall.pluck(:category_type_id).uniq)
+
+		  @helpdesk_categories.each do |helpdesk_category|
+		  	carry_over_previous_month = @carry_over_previous_month.ransack({category_type_id_eq: helpdesk_category.id}).result
+				overall_complaints = @overall_complaints.ransack({category_type_id_eq: helpdesk_category.id}).result
+
+		  	percentage = (total_overall.count > 0 && overall_complaints.count > 0) ? ((overall_complaints.count.to_f / total_overall.count) * 100).to_f.round(2) : nil
+
+		  	opened = @complaints_open.ransack({category_type_id_eq: helpdesk_category.id}).result
+		  	completed = @complaints_closed.ransack({category_type_id_eq: helpdesk_category.id}).result
+
+		  	complaint_open_tat = Complaint.resolution_tat_calculation(opened,ops)
+		  	complaint_closed_tat = Complaint.resolution_tat_calculation(completed,ops)
+
+		  	open_resolution_tat_sum = Complaint.resolution_tat_sum(complaint_open_tat)
+		  	closed_resolution_tat_sum = Complaint.resolution_tat_sum(complaint_closed_tat)
+
+		  	opened_aging_rule_complaint_count = Complaint.resolution_tat_calculation(opened,ops,@user.selected_site_id, @user.selected_site_id)
+		  	opened_aging_rule_array = opened_aging_rule_complaint_count.present? ? opened_aging_rule_complaint_count[:complaint_counts_rulewise].flatten : []
+
+		  	completed_aging_rule_complaint_count = Complaint.resolution_tat_calculation(completed,ops,@user.selected_site_id, @user.selected_site_id)
+		  	completed_aging_rule_array = completed_aging_rule_complaint_count.present? ? completed_aging_rule_complaint_count[:complaint_counts_rulewise].flatten : []
+
+		  	opened_aging_array = AgingRule.aging_rule_values(aging_rules,opened_aging_rule_array)
+		  	completed_aging_array = AgingRule.aging_rule_values(aging_rules,completed_aging_rule_array)
+
+		  	this_row = [helpdesk_category.name,overall_complaints.count,percentage] + opened_aging_array.to_a + [(complaint_open_tat.present? ? complaint_open_tat[:within_tat] : nil),(complaint_open_tat.present? ? complaint_open_tat[:tat_breached] : nil),open_resolution_tat_sum] + completed_aging_array + [(complaint_closed_tat.present? ? complaint_closed_tat[:within_tat] : nil),(complaint_closed_tat.present? ? complaint_closed_tat[:tat_breached] : nil),closed_resolution_tat_sum]
+
+		  	sheet.add_row this_row
+		  end
+		end
+	end
+
+end

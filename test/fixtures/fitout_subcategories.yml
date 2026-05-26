@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  fitout_category_name: MyString
+  fitout_category_id: 1
+  name: MyString
+  position: 1
+  active: false
+  issue_type_id: 1
+  fitout_text: MyText
+
+two:
+  fitout_category_name: MyString
+  fitout_category_id: 1
+  name: MyString
+  position: 1
+  active: false
+  issue_type_id: 1
+  fitout_text: MyText

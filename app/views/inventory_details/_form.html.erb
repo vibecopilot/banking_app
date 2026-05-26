@@ -1,0 +1,107 @@
+<%= form_with(model: inventory_detail, local: true) do |form| %>
+  <% if inventory_detail.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(inventory_detail.errors.count, "error") %> prohibited this inventory_detail from being saved:</h2>
+
+      <ul>
+      <% inventory_detail.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :item_id %>
+    <%= form.number_field :item_id, id: :inventory_detail_item_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :expected_quantity %>
+    <%= form.number_field :expected_quantity, id: :inventory_detail_expected_quantity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :received_quantity %>
+    <%= form.number_field :received_quantity, id: :inventory_detail_received_quantity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :approved_quantity %>
+    <%= form.number_field :approved_quantity, id: :inventory_detail_approved_quantity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :rejected_quantity %>
+    <%= form.number_field :rejected_quantity, id: :inventory_detail_rejected_quantity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :rate %>
+    <%= form.text_field :rate, id: :inventory_detail_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :csgt_rate %>
+    <%= form.text_field :csgt_rate, id: :inventory_detail_csgt_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :csgt_amt %>
+    <%= form.text_field :csgt_amt, id: :inventory_detail_csgt_amt %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sgst_rate %>
+    <%= form.text_field :sgst_rate, id: :inventory_detail_sgst_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sgst_amt %>
+    <%= form.text_field :sgst_amt, id: :inventory_detail_sgst_amt %>
+  </div>
+
+  <div class="field">
+    <%= form.label :igst_rate %>
+    <%= form.text_field :igst_rate, id: :inventory_detail_igst_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :igst_amt %>
+    <%= form.text_field :igst_amt, id: :inventory_detail_igst_amt %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tcs_rate %>
+    <%= form.text_field :tcs_rate, id: :inventory_detail_tcs_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tcs_amt %>
+    <%= form.text_field :tcs_amt, id: :inventory_detail_tcs_amt %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tax_amt %>
+    <%= form.text_field :tax_amt, id: :inventory_detail_tax_amt %>
+  </div>
+
+  <div class="field">
+    <%= form.label :inventory_amount %>
+    <%= form.text_field :inventory_amount, id: :inventory_detail_inventory_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :total_amount %>
+    <%= form.text_field :total_amount, id: :inventory_detail_total_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :grn_id %>
+    <%= form.number_field :grn_id, id: :inventory_detail_grn_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

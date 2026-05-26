@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Loi Details</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Loi type</th>
+      <th>Reference</th>
+      <th>Loi date</th>
+      <th>Created by</th>
+      <th>Billing address</th>
+      <th>Delivery address</th>
+      <%# <th>Vendor</th> %>
+      <th>Transportation amount</th>
+      <th>Retention</th>
+      <th>Tds</th>
+      <th>Qc</th>
+      <th>Payment Tenure</th>
+      <th>Advance Amount</th>
+      <th>Related to</th>
+      <th>Terms</th>
+      <th>Is approved</th>
+      <th>Site</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @loi_details.each do |loi_detail| %>
+      <tr>
+        <td><%= loi_detail.loi_type %></td>
+        <td><%= loi_detail.reference %></td>
+        <td><%= loi_detail.loi_date %></td>
+        <td><%= loi_detail.created_by_id %></td>
+        <td><%= loi_detail.billing_address_id %></td>
+        <td><%= loi_detail.delivery_address_id %></td>
+        <%# <td><%= loi_detail.vendor_id </td>%>
+        <td><%= loi_detail.transportation_amount %></td>
+        <td><%= loi_detail.retention %></td>
+        <td><%= loi_detail.tds %></td>
+        <td><%= loi_detail.qc %></td>
+        <td><%= loi_detail.payment_tenure %></td>
+        <td><%= loi_detail.advance_amount %></td>
+        <td><%= loi_detail.related_to %></td>
+        <td><%= loi_detail.terms %></td>
+        <td><%= loi_detail.is_approved %></td>
+        <td><%= loi_detail.site_id %></td>
+        <td><%= link_to 'Show', loi_detail %></td>
+        <td><%= link_to 'Edit', edit_loi_detail_path(loi_detail) %></td>
+        <td><%= link_to 'Destroy', loi_detail, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Loi Detail', new_loi_detail_path %>

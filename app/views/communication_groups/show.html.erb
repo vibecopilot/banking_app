@@ -1,0 +1,11 @@
+<h1><%= @communication_group.name %></h1>
+<p><%= @communication_group.description %></p>
+<% if @communication_group.picture.attached? %>
+  <%= image_tag @communication_group.picture %>
+<% end %>
+<h2>Employees</h2>
+<ul>
+  <% @communication_group.users.each do |user| %>
+    <li><%= user.name %></li>
+  <% end %>
+</ul>

@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Mom Details</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Meeting date</th>
+      <th>Created by</th>
+      <th>Active</th>
+      <th>Company tag name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @mom_details.each do |mom_detail| %>
+      <tr>
+        <td><%= mom_detail.title %></td>
+        <td><%= mom_detail.meeting_date %></td>
+        <td><%= mom_detail.created_by_id %></td>
+        <td><%= mom_detail.active %></td>
+        <td><%= mom_detail.company_tag_name %></td>
+        <td><%= link_to 'Show', mom_detail %></td>
+        <td><%= link_to 'Edit', edit_mom_detail_path(mom_detail) %></td>
+        <td><%= link_to 'Destroy', mom_detail, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Mom Detail', new_mom_detail_path %>

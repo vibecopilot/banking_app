@@ -1,0 +1,61 @@
+wb = xlsx_package.workbook
+
+header_style = wb.styles.add_style(b: true, bg_color: "4472C4", fg_color: "FFFFFF", alignment: { horizontal: :center })
+note_style   = wb.styles.add_style(b: true, fg_color: "FF0000", alignment: { wrap_text: true })
+
+# ── Sheet 1: Import Template ────────────────────────────────────────────────
+wb.add_worksheet(name: "Soft Services") do |sheet|
+  sheet.add_row [
+    "Name", "Building Name", "Floor Name", "Unit Name", "Assigned To",
+    "Generic Info ID", "Generic Sub Info ID", "Longitude", "Latitude"
+  ], style: header_style
+
+  # Sample row
+  building_sample = @buildings.first&.name || "Block A"
+  floor_sample    = @floors.first&.name || "Ground Floor"
+  unit_sample     = @units.first&.name || "Unit 101"
+  user_sample     = @users.first ? "#{@users.first.firstname} #{@users.first.lastname}" : "John Doe"
+
+  sheet.add_row [
+    "Sample Service", building_sample, floor_sample, unit_sample, user_sample,
+    "", "", "", ""
+  ]
+
+  sheet.column_widths 25, 20, 20, 20, 25, 15, 18, 12, 12
+end
+
+# ── Sheet 2: Buildings Reference ─────────────────────────────────────────────
+wb.add_worksheet(name: "Buildings") do |sheet|
+  sheet.add_row ["Building ID", "Building Name"], style: header_style
+  @buildings.each do |b|
+    sheet.add_row [b.id, b.name]
+  end
+  sheet.column_widths 15, 30
+end
+
+# ── Sheet 3: Floors Reference ───────────────────────────────────────────────
+wb.add_worksheet(name: "Floors") do |sheet|
+  sheet.add_row ["Floor ID", "Floor Name", "Building ID"], style: header_style
+  @floors.each do |f|
+    sheet.add_row [f.id, f.name, f.building_id]
+  end
+  sheet.column_widths 15, 25, 15
+end
+
+# ── Sheet 4: Units Reference ────────────────────────────────────────────────
+wb.add_worksheet(name: "Units") do |sheet|
+  sheet.add_row ["Unit ID", "Unit Name", "Floor ID", "Building ID"], style: header_style
+  @units.each do |u|
+    sheet.add_row [u.id, u.name, u.floor_id, u.building_id]
+  end
+  sheet.column_widths 15, 25, 15, 15
+end
+
+# ── Sheet 5: Users Reference ────────────────────────────────────────────────
+wb.add_worksheet(name: "Users") do |sheet|
+  sheet.add_row ["User ID", "Full Name"], style: header_style
+  @users.each do |u|
+    sheet.add_row [u.id, "#{u.firstname} #{u.lastname}"]
+  end
+  sheet.column_widths 15, 30
+end

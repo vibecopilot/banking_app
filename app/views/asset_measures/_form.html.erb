@@ -1,0 +1,82 @@
+<%= form_with(model: asset_measure, local: true) do |form| %>
+  <% if asset_measure.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(asset_measure.errors.count, "error") %> prohibited this asset_measure from being saved:</h2>
+
+      <ul>
+      <% asset_measure.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :asset_id %>
+    <%= form.number_field :asset_id, id: :asset_measure_asset_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :asset_measure_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :min_value %>
+    <%= form.text_field :min_value, id: :asset_measure_min_value %>
+  </div>
+
+  <div class="field">
+    <%= form.label :max_value %>
+    <%= form.text_field :max_value, id: :asset_measure_max_value %>
+  </div>
+
+  <div class="field">
+    <%= form.label :alert_below %>
+    <%= form.text_field :alert_below, id: :asset_measure_alert_below %>
+  </div>
+
+  <div class="field">
+    <%= form.label :alert_above %>
+    <%= form.text_field :alert_above, id: :asset_measure_alert_above %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.number_field :active, id: :asset_measure_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit_type %>
+    <%= form.text_field :unit_type, id: :asset_measure_unit_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :multiplier_factor %>
+    <%= form.number_field :multiplier_factor, id: :asset_measure_multiplier_factor %>
+  </div>
+
+  <div class="field">
+    <%= form.label :meter_tag %>
+    <%= form.text_field :meter_tag, id: :asset_measure_meter_tag %>
+  </div>
+
+  <div class="field">
+    <%= form.label :meter_unit_id %>
+    <%= form.number_field :meter_unit_id, id: :asset_measure_meter_unit_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cloned %>
+    <%= form.check_box :cloned, id: :asset_measure_cloned %>
+  </div>
+
+  <div class="field">
+    <%= form.label :check_previous_reading %>
+    <%= form.check_box :check_previous_reading, id: :asset_measure_check_previous_reading %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

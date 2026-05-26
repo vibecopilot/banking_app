@@ -1,0 +1,42 @@
+wb = xlsx_package.workbook
+
+rows = ['Month']
+wb.add_worksheet(name: 'Summary') do |sheet|
+	@months.uniq.each do |m|
+    rows << m	
+	end
+	sheet.add_row rows
+	@cat = []
+	@categorywise_cost_approval.each do|key,val|
+		@sitedt = []  
+		key["data"].each do|k1|
+			k1.each do|k2,v2|
+				if k2 == "Total" 
+					@sitedt << [v2].join(", ")
+				end
+			end
+		end
+		sheet.add_row [key["sitenm"]] + @sitedt
+	end  
+end
+
+site_rows = ['Site Name']
+rows = ['Month']
+wb.add_worksheet(name: 'Cost Analysis') do |sheet|
+	@months.uniq.each do |m|
+	  @pms_categories.each do |c|
+	    rows << m	
+		end
+	   rows << m
+	end
+	sheet.add_row rows
+	dt = @categorywise_cost_approval[0]
+	@cat = dt["data"].map{|k| [k["data"].map{|x| x[:cat]}, "Total"]}.flatten
+	sheet.add_row site_rows + @cat
+
+	@categorywise_cost_approval.each do|dt|
+		@sitedt =[dt["sitenm"], dt["data"].map{|k| [k["data"].map{|x| x[:cost]}, k["Total"]]}.flatten].flatten
+		sheet.add_row @sitedt
+	end
+end
+

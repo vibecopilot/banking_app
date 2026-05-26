@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Compliance config:</strong>
+  <%= @compliance_tracker.compliance_config_id %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @compliance_tracker.status %>
+</p>
+
+<p>
+  <strong>Submitted on:</strong>
+  <%= @compliance_tracker.submitted_on %>
+</p>
+
+<p>
+  <strong>Submitted by:</strong>
+  <%= @compliance_tracker.submitted_by_id %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @compliance_tracker.site_id %>
+</p>
+
+<%= link_to 'Edit', edit_compliance_tracker_path(@compliance_tracker) %> |
+<%= link_to 'Back', compliance_trackers_path %>

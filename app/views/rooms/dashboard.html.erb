@@ -1,0 +1,359 @@
+<%= render 'shared/room_booking_layout' %>
+
+<% content_for :breadcrumb do %>
+  <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+<% end %>
+
+<div class="container-fluid room-booking-module">
+  <!-- Quick Stats Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="card-title">Total Rooms</h5>
+              <h2 class="mb-0"><%= Room.count %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-door-open fa-2x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <%= link_to 'View All', rooms_path, class: 'text-white' %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="card-title">Active Bookings</h5>
+              <h2 class="mb-0"><%= RoomBooking.where(booking_status: ['confirmed', 'checked_in']).count %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-calendar-check fa-2x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <%= link_to 'View All', room_bookings_path, class: 'text-white' %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card text-white bg-warning">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="card-title">Pending Bookings</h5>
+              <h2 class="mb-0"><%= RoomBooking.where(booking_status: 'pending').count %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-clock fa-2x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <%= link_to 'Review', room_bookings_path(status: 'pending'), class: 'text-white' %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-3">
+      <div class="card text-white bg-info">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h5 class="card-title">Today's Revenue</h5>
+              <h2 class="mb-0">₹<%= number_with_delimiter(RoomBooking.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day).sum(:total_price) || 0) %></h2>
+            </div>
+            <div class="align-self-center">
+              <i class="fas fa-rupee-sign fa-2x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <a href="#" class="text-white">View Report</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activities and Quick Actions -->
+  <div class="row">
+    <div class="col-md-8">
+      <!-- Recent Bookings -->
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Recent Bookings</h5>
+          <%= link_to 'View All', room_bookings_path, class: 'btn btn-sm btn-outline-primary' %>
+        </div>
+        <div class="card-body">
+          <% recent_bookings = RoomBooking.includes(:room, :user).order(created_at: :desc).limit(10) %>
+          <% if recent_bookings.any? %>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Booking ID</th>
+                    <th>Guest</th>
+                    <th>Room</th>
+                    <th>Check-in</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% recent_bookings.each do |booking| %>
+                    <tr>
+                      <td><%= link_to "##{booking.id}", booking, class: 'text-primary' %></td>
+                      <td><%= booking.user.full_name rescue 'N/A' %></td>
+                      <td><%= booking.room.name %></td>
+                      <td><%= booking.check_in_date.strftime('%d %b %Y') %></td>
+                      <td>
+                        <span class="badge badge-<%= booking.booking_status == 'confirmed' ? 'success' : booking.booking_status == 'pending' ? 'warning' : 'secondary' %>">
+                          <%= booking.booking_status.humanize %>
+                        </span>
+                      </td>
+                      <td>₹<%= number_with_delimiter(booking.total_price) %></td>
+                      <td>
+                        <%= link_to 'View', booking, class: 'btn btn-sm btn-outline-primary' %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <div class="text-center py-4">
+              <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+              <p class="text-muted">No bookings found</p>
+              <%= link_to 'Create First Booking', new_room_booking_path, class: 'btn btn-primary' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Occupancy Chart -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h5 class="mb-0">Occupancy Overview - Next 7 Days</h5>
+        </div>
+        <div class="card-body">
+          <div id="occupancy-chart">
+            <!-- Chart placeholder -->
+            <div class="row">
+              <% (0..6).each do |i| %>
+                <% date = Date.current + i.days %>
+                <% bookings_count = RoomBooking.where("check_in_date <= ? AND check_out_date > ?", date, date).count %>
+                <% total_rooms = Room.count %>
+                <% occupancy_percentage = total_rooms > 0 ? (bookings_count.to_f / total_rooms * 100).round(1) : 0 %>
+                <div class="col text-center">
+                  <div class="mb-2">
+                    <strong><%= date.strftime('%a') %></strong><br>
+                    <small class="text-muted"><%= date.strftime('%d %b') %></small>
+                  </div>
+                  <div class="progress mb-2" style="height: 100px; width: 20px; margin: 0 auto;">
+                    <div class="progress-bar bg-<%= occupancy_percentage > 80 ? 'danger' : occupancy_percentage > 50 ? 'warning' : 'success' %>" 
+                         role="progressbar" 
+                         style="height: <%= occupancy_percentage %>%"
+                         data-toggle="tooltip" 
+                         title="<%= occupancy_percentage %>% occupied">
+                    </div>
+                  </div>
+                  <small><%= occupancy_percentage %>%</small>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Quick Actions</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <%= link_to new_room_booking_path, class: 'btn btn-primary btn-block mb-2' do %>
+              <i class="fas fa-plus"></i> New Booking
+            <% end %>
+            <%= link_to new_room_path, class: 'btn btn-outline-primary btn-block mb-2' do %>
+              <i class="fas fa-door-open"></i> Add Room
+            <% end %>
+            <%= link_to new_room_pricing_path, class: 'btn btn-outline-success btn-block mb-2' do %>
+              <i class="fas fa-tags"></i> Set Pricing
+            <% end %>
+            <%= link_to new_room_availability_path, class: 'btn btn-outline-info btn-block mb-2' do %>
+              <i class="fas fa-calendar-plus"></i> Set Availability
+            <% end %>
+            <%= link_to rooms_search_path, class: 'btn btn-outline-secondary btn-block' do %>
+              <i class="fas fa-search"></i> Search Rooms
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room Status Summary -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h5 class="mb-0">Room Status Today</h5>
+        </div>
+        <div class="card-body">
+          <% 
+            total_rooms = Room.count
+            today = Date.current
+            occupied_rooms = RoomBooking.where("check_in_date <= ? AND check_out_date > ? AND booking_status IN (?)", today, today, ['confirmed', 'checked_in']).count
+            available_rooms = total_rooms - occupied_rooms
+          %>
+          
+          <div class="row text-center">
+            <div class="col-6">
+              <div class="border-right">
+                <h3 class="text-success"><%= available_rooms %></h3>
+                <p class="text-muted mb-0">Available</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <h3 class="text-danger"><%= occupied_rooms %></h3>
+              <p class="text-muted mb-0">Occupied</p>
+            </div>
+          </div>
+          
+          <div class="progress mt-3">
+            <div class="progress-bar bg-success" role="progressbar" 
+                 style="width: <%= total_rooms > 0 ? (available_rooms.to_f / total_rooms * 100).round(1) : 0 %>%">
+            </div>
+            <div class="progress-bar bg-danger" role="progressbar" 
+                 style="width: <%= total_rooms > 0 ? (occupied_rooms.to_f / total_rooms * 100).round(1) : 0 %>%">
+            </div>
+          </div>
+          
+          <div class="text-center mt-2">
+            <small class="text-muted">
+              Occupancy: <%= total_rooms > 0 ? (occupied_rooms.to_f / total_rooms * 100).round(1) : 0 %>%
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Check-ins -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h5 class="mb-0">Today's Check-ins</h5>
+        </div>
+        <div class="card-body">
+          <% todays_checkins = RoomBooking.where(check_in_date: Date.current, booking_status: 'confirmed').includes(:room, :user) %>
+          <% if todays_checkins.any? %>
+            <% todays_checkins.each do |booking| %>
+              <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                <div>
+                  <strong><%= booking.user.full_name rescue 'Guest' %></strong><br>
+                  <small class="text-muted"><%= booking.room.name %></small>
+                </div>
+                <div>
+                  <%= link_to 'View', booking, class: 'btn btn-sm btn-outline-primary' %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center py-3">
+              <i class="fas fa-user-check fa-2x text-muted mb-2"></i>
+              <p class="text-muted mb-0">No check-ins today</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Links -->
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Helpful Links</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <h6>Rooms</h6>
+              <ul class="list-unstyled">
+                <li><%= link_to 'All Rooms', rooms_path %></li>
+                <li><%= link_to 'Add New Room', new_room_path %></li>
+                <li><%= link_to 'Room Search', rooms_search_path %></li>
+              </ul>
+            </div>
+            <div class="col-md-3">
+              <h6>Bookings</h6>
+              <ul class="list-unstyled">
+                <li><%= link_to 'All Bookings', room_bookings_path %></li>
+                <li><%= link_to 'New Booking', new_room_booking_path %></li>
+                <li><%= link_to 'Pending Approvals', room_bookings_path(status: 'pending') %></li>
+              </ul>
+            </div>
+            <div class="col-md-3">
+              <h6>Management</h6>
+              <ul class="list-unstyled">
+                <li><%= link_to 'Pricing Calendar', room_pricing_calendar_path %></li>
+                <li><%= link_to 'Availability Calendar', room_availability_calendar_path %></li>
+                <li><%= link_to 'Set Pricing', new_room_pricing_path %></li>
+              </ul>
+            </div>
+            <div class="col-md-3">
+              <h6>Reports</h6>
+              <ul class="list-unstyled">
+                <li><a href="#">Occupancy Report</a></li>
+                <li><a href="#">Revenue Report</a></li>
+                <li><a href="#">Guest Analytics</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Initialize tooltips for progress bars
+  $('[data-toggle="tooltip"]').tooltip();
+  
+  // Auto-refresh data every 5 minutes
+  setTimeout(function() {
+    location.reload();
+  }, 300000);
+  
+  // Add real-time clock
+  function updateClock() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString();
+    const dateString = now.toLocaleDateString();
+    
+    if ($('#current-time').length === 0) {
+      $('.container-fluid').first().prepend(`
+        <div class="alert alert-info" id="current-time">
+          <i class="fas fa-clock"></i> Current Time: ${timeString} | Date: ${dateString}
+        </div>
+      `);
+    } else {
+      $('#current-time').html(`
+        <i class="fas fa-clock"></i> Current Time: ${timeString} | Date: ${dateString}
+      `);
+    }
+  }
+  
+  updateClock();
+  setInterval(updateClock, 1000);
+});
+</script>

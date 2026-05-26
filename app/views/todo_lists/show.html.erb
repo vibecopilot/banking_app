@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @todo_list.title %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @todo_list.status %>
+</p>
+
+<p>
+  <strong>Relation:</strong>
+  <%= @todo_list.relation_id %>
+</p>
+
+<p>
+  <strong>Relation:</strong>
+  <%= @todo_list.relation %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @todo_list.site_id %>
+</p>
+
+<p>
+  <strong>Start at:</strong>
+  <%= @todo_list.start_at %>
+</p>
+
+<p>
+  <strong>End at:</strong>
+  <%= @todo_list.end_at %>
+</p>
+
+<%= link_to 'Edit', edit_todo_list_path(@todo_list) %> |
+<%= link_to 'Back', todo_lists_path %>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Visitor List</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    body {
+        /*background: rgb(204,204,204);*/
+    }
+    page {
+      background: white;
+      display: block;
+      margin: 0 auto;
+      margin-bottom: 0.5cm;
+      box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+    }
+    page[size="A4"] {
+      width: 21cm;
+      height: 29.7cm;
+    }
+    page[size="A4"][layout="landscape"] {
+      width: 29.7cm;
+      height: 21cm;
+    }
+    .col-sm-6 {
+      width: 50%;
+      float: left;
+    }
+    .d-flex {
+      display: flex;
+    }
+    .d-flex div {
+      width: 50%;
+      padding: 5px;
+    }
+    .d-flex div:first-child {
+      width: 30%;
+    }
+    .col-sm-6 img {
+      width: 150px;
+    }
+    .border-1px {
+      border: 1px solid #ccc;
+      margin: 12px 7px;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .w50_new {
+      -ms-flex: 0 0 48%;
+      flex: 0 0 48%;
+      max-width: 48%;
+    }
+    .w30 {
+      width: 30%;
+    }
+    .w70 {
+      -ms-flex: 0 0 70%;
+      flex: 0 0 70%;
+      max-width: 70%;
+    }
+    table, tr, td {
+      border-top: none !important;
+    }
+    tr, td {
+      padding-top: 2px !important;
+      padding-bottom: 2px !important;
+    }
+    table { margin-bottom: 0px ! important; }
+    .border-1px {
+      border: 1px solid #ccc;
+      margin: 12px 7px;
+      padding: 12px;
+      height: 290px;
+    }
+  </style>
+</head>
+<body>
+  <div class="row" style="padding: 15px;">
+    <% @visitors.each do |visitor| %>
+      <div class="col-sm-6 border-1px w50_new">
+        <div class="text-center">
+          <% if visitor.qr_code_image.present? %>
+            <img src="<%= visitor.qr_code_image.image.url %>" alt="QR Code">
+          <% else %>
+            <p>No QR code</p>
+          <% end %>
+        </div>
+        <div>
+          <div class="table-responsive">
+            <table class="table">
+              <tr>
+                <td><b>Name:</b> <%= visitor.name %></td>
+              </tr>
+              <tr>
+                <td><b>Contact no:</b> <%= visitor.contact_no %></td>
+              </tr>
+              <tr>
+                <td><b>Purpose:</b> <%= visitor.purpose %></td>
+              </tr>
+              <tr>
+                <td><b>Site:</b> <%= visitor.site.name %></td>
+              </tr>
+              <tr>
+                <td><b>OTP:</b> <%= visitor.otp %></td>
+              </tr>
+              <tr>
+                <td><b>Status:</b> <%= visitor.status %></td>
+              </tr>
+              <tr>
+                <td><b>Start pass:</b> <%= visitor.start_pass&.strftime("%Y-%m-%d %H:%M") %></td>
+              </tr>
+              <tr>
+                <td><b>End pass:</b> <%= visitor.end_pass&.strftime("%Y-%m-%d %H:%M") %></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</body>
+</html>

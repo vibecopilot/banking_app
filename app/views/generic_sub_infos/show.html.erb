@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Generic info:</strong>
+  <%= @generic_sub_info.generic_info_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @generic_sub_info.name %>
+</p>
+
+<%= link_to 'Edit', edit_generic_sub_info_path(@generic_sub_info) %> |
+<%= link_to 'Back', generic_sub_infos_path %>

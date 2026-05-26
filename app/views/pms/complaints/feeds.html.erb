@@ -1,0 +1,89 @@
+<% lead_normal = { "first_name": "First Name", last_name: "Last Name", mobile: "Mobile", email: "Email",  lead_class: "Classification",  lead_sub_class: "Categorization", last_source: "Last Source", last_sub_source: "Last Sub Source", purpose: "Purpose" , lead_status: "Status", lead_sub_status: "Sub Status", lead_source: "Source", lead_sub_source: "Sub Source", "lead_owner": "Owner", assigned_to: "Assign to"  } %>
+<div class="ibox">
+  <div class="ibox-content">
+    <div class="row" id="lead">
+      <div class="col-sm-12">
+        <h1 class="account-title">Feeds</h1>
+      </div>
+      <div class="col-sm-12">
+        <div class="lead-timeline">
+          <% @abouts.each do |date, logs| %>
+            <div class="timeline-date"><%= date.strftime("%b %d, %Y")%></div>
+            <% logs.each do |log| %>
+              <div class="timeline-item">
+                  <div class="row">
+                    <% if log.log_of == "Complaint" %>
+                    <% elsif log.log_of == "EscHistory" %>
+                      <div class="col-xs-3 date"> <i class="fa fa-calendar" aria-hidden="true"></i> <%= log.created_at.strftime("%I:%M %p")%><br/>
+                      </div>
+                      <div class="col-xs-7 content no-top-border">
+                        <% eh = EscHistory.find_by(id: log.log_of_id) %>
+                        <% esc = eh.escalation_matrix %>
+                        <p class="m-b-xs"> <%= esc.complaint_worker.try(:esc_type).try(:capitalize)  %> Escalation </p>
+                        <p> <label class="label label-border"><%= esc.name  %></label> escalated to <strong class="font12"><%= UserSociety.where(id: esc.escalate_to_users).map { |e| e.user_full_name }.join(', ') %></strong></p>
+                      </div>
+                    <% elsif log.log_of == "ComplaintLog" %>
+                      <div class="col-xs-3 date"> <i class="fa fa-file-text" aria-hidden="true"></i> <%= log.created_at.strftime("%I:%M %p")%><br/>
+                      </div>
+                      <div class="col-xs-7 content no-top-border">
+                        <% complaint_log = ComplaintLog.find_by(id: log.log_of_id) %>
+                        <div class="feed-element">
+                            <div class="media-body"><strong>
+                              <%= complaint_log.user.try(:full_name) %></strong><%= (complaint_log.priority.present? || complaint_log.complaint_status_id.present?) ? ' made below changes' : ' commented' %>
+                              <ul class="list-group">
+                               <% if complaint_log.complaint_status_id.present?  %>
+                                <li><strong>Status</strong> - 
+
+                               <%= complaint_log.complaint_status.try(:name) %></li>
+                               <% end %>
+                                <% if complaint_log.priority.present?  %>
+                               <li><strong>Priority</strong> - <%= complaint_log.priority %>
+                               </li>
+                               <% end %>
+                              </ul>
+                              <% @complaint_comments = ComplaintComment.where(complaint_log_id: complaint_log.id) %>    
+                              <%if @complaint_comments.present? %>
+                                <div class="col-sm-9 nopadding">
+                                  <div class="well">
+                                    <%= @complaint_comments.last.comment %>
+                                  </div>
+                                </div>
+                              <% end %>
+                              <% if @complaint_comments.present? %>
+                                <% img = Attachfile.where("relation = 'ComplaintComment' and relation_id = ?", @complaint_comments.last.id) %>
+                                <% if img.present? %>
+                                  <div class="col-sm-3">
+                                    <h5>Attachment</h5>
+                                    <div class="lightBoxGallery">
+                                      <% img.each do | image| %>
+                                        <a href="<%= image.present? ? image.document_url : '' %>" data-gallery="">
+                                        <img src="<%= image.present? ? image.document_url : '' %>"></a>
+                                        <div id="blueimp-gallery" class="blueimp-gallery">
+                                        <div class="slides"></div>
+                                        <h3 class="title"></h3>
+                                        <a class="prev">‹</a>
+                                        <a class="next">›</a>
+                                        <a class="close">×</a>
+                                        <a class="play-pause"></a>
+                                        <ol class="indicator"></ol>
+                                        </div>
+                                      <% end %>
+                                    </div>
+                                 </div>
+                                <% end %>
+                              <% end %>                               
+                            </div>
+                          </div>
+
+
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

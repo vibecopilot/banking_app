@@ -1,0 +1,2 @@
+class PermitEntity < ApplicationRecord
+end

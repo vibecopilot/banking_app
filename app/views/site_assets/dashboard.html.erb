@@ -1,0 +1,626 @@
+<%= javascript_include_tag "highcharts.js" %>
+
+<style type="text/css">
+  @media (max-width: 767px) {
+    
+    .grid-6{
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .top-navbar {
+      margin: 0 !important;
+    }
+  }
+
+  .d-flex{
+  display: flex;
+}
+
+  .grid-6{
+    display: grid; grid-template-columns: repeat(5, 1fr); grid-gap: 15px; margin: 15px;
+  }
+
+
+  .bg-orange1{
+    background: darkorange !important;
+  }
+
+  .bg-pink{
+    background: #F69380 !important;
+  }
+
+  .nav > li > a{
+    padding: 10px;
+  }
+   .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+color: #fff !important;
+background-color: #1A237E !important;
+}.nav-pills>li>a {
+border-radius: 4px;
+background-color: #7e93a31f;
+color: #524e4e !important;
+border: 1px solid #1A237E;
+margin: 5px 13px !important;
+padding: 7px 11px !important;
+}.nav-pills>li>a {
+border-radius: 4px;
+background-color: #7e93a31f;
+color: #524e4e !important;
+border: 1px solid #1A237E;
+margin: 1px 5px !important;
+padding: 7px 11px !important;
+}.nav-pills>li.active {
+float: left;
+padding: 0 !important;
+margin: 0 !important;
+background-color: #fff !important;
+background-color: white !important;
+}ul.nav.nav-pills.responsive {
+border-bottom: 1px solid #cccccc26;
+padding: 7px 0px;
+}
+</style>
+<div id="wrapper">
+  <div class="white-bg">
+    <div class="wrapper wrapper-content">
+      <section class="content">
+        <div class="ibox">
+          <div class="ibox-content" style="padding:10px 6px;">
+
+            <ul class="nav nav-pills responsive">
+  <li class="<%= 'active' if params[:action] == 'reports' %>"><a href="/leads/reports?wv=<%=params[:wv]%>">Lead Infinity</a></li>
+  <li class="<%= 'active' if params[:action] == 'engi_reports' %>"><a href="/leads/engineering_reports?wv=<%=params[:wv]%>">Engineering </a></li>
+
+</ul>
+<br>
+
+
+            <div class="row">
+                  <%=  form_tag("/leads/reports", method: :get) do %>
+                  <%= hidden_field_tag :wv, params[:wv] %>
+                    <div class="col-md-12">
+                      <div class="col-sm-2" style="padding-left: 10px;">
+                        <div class="form-group">
+                          <%= select_tag 'project_id',options_for_select(@projects.collect{|p| [  p.name, p.id] }, selected: @project_id),:class=>"form-control" %>
+                        </div>
+                      </div>
+                      
+                      <div class="col-sm-2" style="padding-left: 10px;">
+                        <button type="submit" class="btn btn-success btn-sm">Submit</button>
+                        <!-- <a href="/leads/reports"><button type="button" class="btn btn-sm btn-warning">Reset</button></a> -->
+                      </div>
+                      
+                    </div>
+                  <% end %>  
+                </div>
+
+             <div class="row">
+               <div class="col-sm-12">
+                <div class="grid-6">
+                  
+                    <div class="">
+                      <div class="small-box">
+                        <div class="inner bg-yellow">
+                          <h3><%= Inventory.where(project_id: @project_id).count %></h3>
+                          <p>Total Inventory</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    
+
+                    <div class="">
+                      <div class="small-box">
+                        <div class="inner bg-orange">
+                          <h3><%= FlatReservation.where(project_id: @project_id, status: "confirm").count %></h3>
+                          <p>Total Sold Flats </p>
+                        </div>
+                      </div>
+                    </div>
+
+
+                                             
+
+                    <div class="">
+                      <div class="small-box">
+                        <div class="inner bg-green">
+                          <h3><%= FlatReservation.where(project_id: @project_id, status: "confirm", agreement_done: true).count %></h3>
+                          <p>Agreements Done </p>
+                        </div>
+                      </div>
+                    </div>
+
+                   
+ 
+                   <div class="">
+                      <div class="small-box">
+                        <div class="inner bg-red">
+                          <h3><%= FlatReservation.where(project_id: @project_id, status: "confirm", agreement_done: false).count%></h3>
+                          <p>Agreements Not Done</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="">
+                      <div class="small-box">
+                        <div class="inner bg-blue">
+                          <h3><%= FlatReservation.where(project_id: @project_id, status: "confirm").sum(:agreement_rupees)%></h3>
+                          <p>Total Sold Value</p>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="">
+                      <div class="small-box">
+                        <div class="inner bg-orange1">
+                          <h3><%= FlatReservation.where(project_id: @project_id, status: "confirm", agreement_done: true).sum(:agreement_rupees) %></h3>
+                          <p>Total Value of Flats (Agreements Done)</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="">
+                      <div class="small-box">
+                        <div class="inner bg-pink">
+                          <h3><%= FlatReservation.where(project_id: @project_id, status: "confirm", agreement_done: false).sum(:agreement_rupees)%></h3>
+                          <p>Total Value of Flats (Agreements Not Done)</p>
+                        </div>
+                      </div>
+                    </div>
+
+                  
+                 
+                  
+                   
+                </div>
+              </div>
+            </div>
+            <%= form_tag("/leads/reports", method: :get) do %>
+              <%= hidden_field_tag :project_id, @project_id %>
+               <div class="row">
+                <div class="col-sm-6 col-sm-offset-3" style="padding-left: 20px;">
+                  <div class="col-sm-3 form-group">
+                    <div class="input-group">
+                      <div class="input-group-addon"> <i class="fa fa-calendar"></i> 
+                      </div>
+                      <input class="form-control pull-right datepicker" placeholder="Select Date" name="q[created_at_gteq]" type="text" value="<%= params[:q].present? && params[:q][:created_at_gteq].present? ? params[:q][:created_at_gteq] : Date.today.beginning_of_month.strftime('%d/%m/%Y')%>">
+                    </div>
+                  </div>
+
+                  <div class="col-sm-3 form-group">
+                    <div class="input-group">
+                      <div class="input-group-addon"> <i class="fa fa-calendar"></i> 
+                      </div>
+                      <input class="form-control pull-right datepicker" placeholder="Select Date" name="q[created_at_lteq]" type="text" value="<%= params[:q].present? && params[:q][:created_at_lteq].present? ? params[:q][:created_at_lteq] : Date.today.end_of_month.strftime('%d/%m/%Y')%>">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="submit" name="commit" value="Apply" class="btn btn-success btn-sm">
+                    <a href="/leads/reports"><button class="btn btn-info btn-sm"> Reset</button></a>
+                  </div>
+                </div>
+              </div>
+            <%end%>
+            <br>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <div class="helpdesk-chart" id="highchart_canvas1"></div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="helpdesk-chart" id="highchart_canvas2"> </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <div class="helpdesk-chart" id="highchart_canvas3"></div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="helpdesk-chart" id="highchart_canvas4"> </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <div class="helpdesk-chart" id="highchart_canvas6"></div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="helpdesk-chart" id="highchart_canvas7"> </div>
+                </div>
+              </div>
+            </div>
+
+            
+
+           </div>
+
+          </div>
+
+        </section>
+
+       </div>
+
+     </div>
+
+   </div>
+
+
+<script>
+
+$(function () {
+    $('.datepicker').datepicker({
+      format: "dd/mm/yyyy"
+    });
+  });
+
+	Highcharts.theme = {
+	    colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', 
+	             '#FF9655', '#FFF263', '#6AF9C4'],
+	    chart: {
+	        backgroundColor: {
+	            linearGradient: [0, 0, 500, 500],
+	            stops: [
+	                [0, 'rgb(255, 255, 255)'],
+	                [1, 'rgb(240, 240, 255)']
+	            ]
+	        },
+	    },
+	    title: {
+	        style: {
+	            color: '#000',
+	            font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+	        }
+	    },
+	    subtitle: {
+	        style: {
+	            color: '#666666',
+	            font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
+	        }
+	    },
+
+	    legend: {
+	        itemStyle: {
+	            font: '9pt Trebuchet MS, Verdana, sans-serif',
+	            color: 'black'
+	        },
+	        itemHoverStyle:{
+	            color: 'gray'
+	        }   
+	    }
+	};
+
+	// Apply the theme
+	Highcharts.setOptions(Highcharts.theme);
+
+	function prepare_highchart1(ctx,chart_type, titletext, yaxistext,series,drilldown){
+	    var complaint_opts1 = {
+	          chart:  {
+	            type: chart_type,
+	            renderTo: 'container'
+	            // options3d: {
+	            //     enabled: true,
+	            //     alpha: 15,
+	            //     beta: 15,
+	            //     depth: 50,
+	            //     viewDistance: 25
+	            // }
+	          },
+	          title: {
+			        text: titletext
+			      },
+	          xAxis: {
+		          type: 'category',
+		          labels: {
+		            rotation: -50   
+		          }
+		        },
+	          yAxis: {
+				      title: {
+				        margin: 25,
+				        text: yaxistext
+				      },
+              stackLabels: {
+              enabled: true,
+              style: {
+                  fontWeight: 'bold',
+                  color: ( // theme
+                      Highcharts.defaultOptions.title.style &&
+                      Highcharts.defaultOptions.title.style.color
+                  ) || 'gray'
+              }
+            }
+				    },
+	          legend: {
+				        align: 'left',
+				        x: -10,
+				        verticalAlign: 'bottom',
+				        y: 12,
+				        floating: true,
+				        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+				        borderColor: '#CCC',
+				        borderWidth: 1,
+				        shadow: false,
+				        enabled: false
+				    },
+	          plotOptions: {
+				      series: {
+				          column: {
+				            depth: 40
+				          },
+				          borderWidth: 0,
+				          dataLabels: {
+				              enabled: true
+				              // ,
+				              // format: '{point.y:.1f}%'
+				          }
+				      }
+				    },
+	          tooltip: {
+			          headerFormat: '<span style="font-size:11px"><b>{series.name}</b></span><br>',
+			          pointFormat: '<span style="">{point.name}</span>: {point.y}<br/>'
+			      },
+	          series: series,
+	          drilldown: drilldown
+	        };
+	      console.log(JSON.stringify(complaint_opts1))
+	      var myHighChartReport1 =  Highcharts.chart(ctx, complaint_opts1);
+	      return myHighChartReport1;
+	}
+
+
+    function prepare_stack_highchart(ctx,title,yaxis_text,data_series){
+      var highchart_data_category = <%= raw @highchart_data_category.to_json %>;
+
+    var chart_opts = {
+      title: {
+        text: title
+    },
+
+    subtitle: {
+        text: ''
+    },
+
+    yAxis: {
+        title: {
+            text: yaxis_text
+        }
+    },
+
+    xAxis: {
+        categories: highchart_data_category
+    },
+
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            } 
+        }
+    },
+
+    series: data_series,
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+    };
+    var myHighChartStackReport =  Highcharts.chart(ctx, chart_opts);
+    return myHighChartStackReport;
+  }
+
+  var highchart_data_array1 = <%= raw @highchart_data_array1.to_json %>;
+
+  var highchart_title1 = "Lead Source Report";
+  var yaxistext1 = '<p style="font-weight:550;">Total Lead Counts Source wise (in nos)</p>';
+  var series1 = [
+        {
+          colorByPoint: true,
+          data: highchart_data_array1
+        }
+      ];
+
+  var drilldown1 = {
+          series:  <%= raw @highchart_drilldown1.to_json %>,
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+  var highchart_canvas1 = 'highchart_canvas1';
+  var report1 = prepare_highchart1(highchart_canvas1,'column', highchart_title1, yaxistext1,series1,drilldown1);
+
+
+  var highchart_data_array2 = <%= raw @highchart_data_array2.to_json %>;
+
+  var highchart_title2 = "Agent Calls";
+
+  var yaxistext2 = '<p style="font-weight:550;">Total Call counts Agent wise (in nos)</p>';
+
+  var series2 = [
+        {
+          colorByPoint: true,
+          data: highchart_data_array2
+        }
+      ];
+
+  var drilldown2 = {
+          series:  <%= raw @highchart_drilldown2.to_json %>,
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+  var highchart_canvas2 = 'highchart_canvas2';
+
+  var report2 = prepare_highchart1(highchart_canvas2,'column', highchart_title2, yaxistext2,series2,drilldown2);
+
+
+  var highchart_data_array3 = <%= raw @highchart_data_array3.to_json %>;
+
+
+  var highchart_title3 = "Source wise site visit";
+
+  var yaxistext3 = '<p style="font-weight:550;">Total site visit counts Source wise (in nos)</p>';
+
+  var series3 = [
+        {
+          colorByPoint: true,
+          data: highchart_data_array3
+        }
+      ];
+
+  var drilldown3 = {
+          series:  <%= raw @highchart_drilldown3.to_json %>,
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+  var highchart_canvas3 = 'highchart_canvas3';
+
+  var report3 = prepare_highchart1(highchart_canvas3,'column', highchart_title3, yaxistext3,series3,drilldown3);
+
+
+
+  var highchart_data_array4 = <%= raw @highchart_data_array4.to_json %>;
+
+
+  var highchart_title4 = "Classification wise lead count";
+
+  var yaxistext4 = '<p style="font-weight:550;">Classification wise lead counts (in nos)</p>';
+
+  var series4 = [
+        {
+          colorByPoint: true,
+          data: highchart_data_array4
+        }
+      ];
+
+  var drilldown4 = {
+          series:  <%= raw @highchart_drilldown4.to_json %>,
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+
+  var highchart_canvas4 = 'highchart_canvas4';
+
+  var report4 = prepare_highchart1(highchart_canvas4,'column', highchart_title4, yaxistext4,series4,drilldown4);
+  
+
+
+ //  var highchart_data_array5 = <%= raw @highchart_data_array5.to_json %>;
+
+ //  var highchart_title5 = "Source wise site visit";
+
+ //  var yaxistext5 = '<p style="font-weight:550;">Total leads counts Classification wise (in nos)</p>';  
+
+
+	// var series5 = [
+ //        {
+ //          colorByPoint: true,
+ //          data: highchart_data_array5
+ //        }
+ //      ];
+ //  var drilldown5 = {
+ //          series:  <%= raw @highchart_drilldown5.to_json %>,
+ //          activeAxisLabelStyle: {
+ //            textDecoration: 'none',
+ //            color: 'rgb(102, 102, 102)'
+ //          },
+ //          activeDataLabelStyle: {
+ //              textDecoration: 'none',
+ //              color: 'rgb(0, 0, 0)'
+ //          }
+ //        };
+
+ //  var highchart_canvas5 = 'highchart_canvas5';
+
+ //  var report5 = prepare_highchart1(highchart_canvas5,'column', highchart_title5, yaxistext5,series5,drilldown5);
+
+
+  var highchart_data_array6 = <%= raw @highchart_data_array6.to_json %>;
+
+  var highchart_title6 = "Lead Call Source Report";
+  var yaxistext6 = '<p style="font-weight:550;">Total Lead Counts Source wise (in nos)</p>';
+  var series6 = [
+        {
+          colorByPoint: true,
+          data: highchart_data_array6
+        }
+      ];
+
+  var drilldown6 = {
+          series:  <%= raw @highchart_drilldown6.to_json %>,
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+  var highchart_canvas6 = 'highchart_canvas6';
+  var report6 = prepare_highchart1(highchart_canvas6,'column', highchart_title6, yaxistext6,series6,drilldown6);
+
+
+var highchart_data_array7 = <%= raw @highchart_data_array7.to_json %>;
+
+  var highchart_title7 = "Sales Conversion Ratio";
+  var yaxistext7 = '<p style="font-weight:550;">Count</p>';
+  var highchart_canvas7 = 'highchart_canvas7';
+
+  prepare_stack_highchart(highchart_canvas7,highchart_title7,yaxistext7,highchart_data_array7);
+
+
+ </script>

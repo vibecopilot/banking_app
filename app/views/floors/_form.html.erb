@@ -1,0 +1,29 @@
+<%= form_with(model: floor, local: true) do |form| %>
+  <% if floor.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(floor.errors.count, "error") %> prohibited this floor from being saved:</h2>
+
+      <ul>
+      <% floor.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :floor_name %>
+  </div>
+
+  <div class="field">
+    <input type="hidden" name="floor[site_id]" value="<%= @user.current_site_id %>">
+    <%= form.label :building_id %>
+    <%= select_tag 'floor[building_id]', options_for_select( Building.where(site_id: @user.current_site_id).map { |e| [e.name, e.id] }, :selected => floor.building_id), :include_blank => "Select Building", :class=>"ui dropdown" %>
+  </div>
+  
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @tmp_checklist.site_id %>
+</p>
+
+<p>
+  <strong>Frequency:</strong>
+  <%= @tmp_checklist.frequency %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @tmp_checklist.user_id %>
+</p>
+
+<p>
+  <strong>Tmp name:</strong>
+  <%= @tmp_checklist.tmp_name %>
+</p>
+
+<p>
+  <strong>Occurs:</strong>
+  <%= @tmp_checklist.occurs %>
+</p>
+
+<p>
+  <strong>Ctype:</strong>
+  <%= @tmp_checklist.ctype %>
+</p>
+
+<p>
+  <strong>Patrolling:</strong>
+  <%= @tmp_checklist.patrolling_id %>
+</p>
+
+<p>
+  <strong>Weightage enabled:</strong>
+  <%= @tmp_checklist.weightage_enabled %>
+</p>
+
+<%= link_to 'Edit', edit_tmp_checklist_path(@tmp_checklist) %> |
+<%= link_to 'Back', tmp_checklists_path %>

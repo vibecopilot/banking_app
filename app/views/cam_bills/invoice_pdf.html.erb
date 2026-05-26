@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+<style type="text/css">
+  /* General Resets */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+<%#     border: 0 solid #e5e7eb; %>
+  }
+
+  html, body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+ <%#  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #e5e7eb;
+  } %>
+
+  /* Utility Classes */
+  .text-center {
+    text-align: center;
+  }
+
+.whitespace-nowrap{
+  white-space: nowrap;
+}
+
+.border-b{
+  border-bottom-width: 3px;
+}
+.border-t{
+  border-top-width: 1px;
+}
+
+.border-b-2{
+  border-bottom-width: 2px !important;
+}
+
+.border-r{
+  border-right-width: 1px !important;
+}
+
+.border-main{
+  border-color: #5c6ac4;
+}
+
+
+  .text-right {
+    text-align: right;
+  }
+
+  .text-sm {
+    font-size: 24px;
+  }
+
+  .text-xs {
+    font-size: 18px;
+  }
+
+  .font-bold {
+    font-weight: 999;
+  }
+
+  .italic {
+    font-style: italic;
+  }
+
+  .bg-main {
+    background: #5c6ac4;
+    color: #fff;
+  }
+
+  .bg-slate-100 {
+    background-color: #f1f5f9;
+  }
+
+  .text-main {
+    color: #5c6ac4;
+  }
+
+  .text-neutral-600 {
+    color: #525252;
+  }
+
+  .text-neutral-700 {
+    color: #404040;
+  }
+
+  .text-white {
+    color: #fff;
+  }
+
+  .p-3 {
+    padding: 12px;
+  }
+
+  .px-2 {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .py-3 {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .pb-3 {
+    padding-bottom: 12px;
+  }
+
+  .border-b {
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .border-main {
+    border-color: #5c6ac4;
+  }
+
+  .h-12 {
+    height: 48px;
+  }
+
+  .w-full {
+    width: 100%;
+  }
+
+  /* Print-specific styles */
+  @page {
+    margin: 0;
+  }
+
+  @media print {
+    body {
+      -webkit-print-color-adjust: exact; /* Ensure colors are printed accurately */
+    }
+  }
+  
+</style>
+
+</head>
+
+<body>
+<div>
+  <div class="py-4">
+    <div class="px-14 py-6">
+      <table class="w-full border-collapse border-spacing-0">
+        <tbody>
+          <tr>
+            <td class="w-full align-top">
+              <div>
+                <!-- <%# <img src="https://menkoff.com/assets/brand-sample.png" class="h-12" /> %> -->
+              </div>
+            </td>
+
+            <td class="align-top">
+              <div class="text-sm">
+                <table class="border-collapse border-spacing-0">
+                  <tbody>
+                    <tr>
+                      <td class="border-r pr-4">
+                        <div>
+                          <p class="whitespace-nowrap font-bold text-main text-right">
+                            <% build = Building.find(@invoice_receipt.cam_bill.address.try(:building_id)) %>
+                            Building: <%= build.try(:name) %></p>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="border-r pr-4">
+                        <div>
+                          <p class="whitespace-nowrap font-bold text-main text-right">
+                            Address: <%= @invoice_receipt.cam_bill.address.try(:address) %></p>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="pl-4">
+                        <div>
+                          <p class="whitespace-nowrap font-bold text-main text-right">
+                            Email: <%= @invoice_receipt.cam_bill.address.try(:email_address) %></p>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="pl-4">
+                        <div>
+                          <p class="whitespace-nowrap font-bold text-main text-right">
+                            Mobile: <%= @invoice_receipt.cam_bill.address.try(:phone_number) || "Na" %></p>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div>
+      <p class="w-1/2 text-sm align-top border-b text-main font-bold">
+        Tax Invoice
+      </p>
+    </div>
+    
+    <div class="bg-slate-100 px-14 py-6 text-sm">
+      <table class="w-full border-collapse border-spacing-0">
+        <tbody>
+          <tr>
+            <td class="w-1/2 align-top">
+              <div class="text-sm text-neutral-600 p-3">
+                <p>GSTIN: <%= @invoice_receipt.cam_bill.address.try(:gst_number) %></p>
+                <p>PAN: <%= @invoice_receipt.cam_bill.address.try(:pan_number) %></p>
+              </div>
+            </td>
+            <td class="w-1/2 align-top text-right">
+              <div class="text-sm text-neutral-600 p-3">
+                <p>Date of Supply: <%= @invoice_receipt.cam_bill.try(:supply_date) %></p>
+                <p>Billing Period: <%= @invoice_receipt.cam_bill.try(:bill_period_start_date) %> - <%= @invoice_receipt.cam_bill.try(:bill_period_end_date) %></p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="px-14 py-10 text-sm text-neutral-700">
+      <table class="w-full border-collapse border-spacing-0">
+        <thead>
+          <tr>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main">S.N.</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main">Description of Service/Goods</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main text-right">SAC/HSN Code</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-center">Qty</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-center">Unit</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-right">Rate</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-right">Total Value</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-right">Discount/Rebate</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-right">Taxable Value</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-right">CGST Rate</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-right">CGST Amount</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-right">SGST Rate</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-right">SGST Amount</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-right">IGST Rate</td>
+            <td class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap text-right">IGST Amount</td>
+          </tr>
+        </thead>
+        <tbody>
+          <% net_total = 0 %>
+          <% vat_total = 0 %>
+          <% grand_total = 0 %>
+
+          <% @invoice_receipt.cam_bill.cam_bill_charges.each_with_index do |charge, index| %>
+            <% total_value = charge.try(:total_value) || 0 %>
+            <% cgst_amount = charge.try(:cgst_amount) || 0 %>
+            <% sgst_amount = charge.try(:sgst_amount) || 0 %>
+            <% igst_amount = charge.try(:igst_amount) || 0 %>
+            <% vat_amount = cgst_amount + sgst_amount + igst_amount %>
+            <% taxable_value = charge.try(:taxable_value) || 0 %>
+
+            <% net_total += taxable_value %>
+            <% vat_total += vat_amount %>
+            <% grand_total += total_value %>
+
+            <tr>
+              <td class="border-b py-3 pl-3"><%= index + 1 %>.</td>
+              <td class="border-b py-3 pl-2"><%= charge.try(:description) %></td>
+              <td class="border-b py-3 pl-2 text-right"><%= charge.try(:hsn_id) || 'N/A' %></td>
+              <td class="border-b py-3 pl-2 text-center"><%= charge.try(:quantity) %></td>
+              <td class="border-b py-3 pl-2 text-center"><%= charge.try(:unit) %></td>
+              <td class="border-b py-3 pl-2 text-right"><%= number_to_currency(charge.try(:rate), unit: "", precision: 2) %></td>
+              <td class="border-b py-3 pl-2 text-right"><%= number_to_currency(total_value, unit: "", precision: 2) %></td>
+              <td class="border-b py-3 pl-2 text-right"><%= charge.try(:discount_percent) || 0 %>%</td>
+              <td class="border-b py-3 pl-2 text-right"><%= number_to_currency(taxable_value, unit: "", precision: 2) %></td>
+              <td class="border-b py-3 pl-2 text-right"><%= charge.try(:cgst_rate) || 0 %>%</td>
+              <td class="border-b py-3 pl-2 text-right"><%= number_to_currency(cgst_amount, unit: "", precision: 2) %></td>
+              <td class="border-b py-3 pl-2 text-right"><%= charge.try(:sgst_rate) || 0 %>%</td>
+              <td class="border-b py-3 pl-2 text-right"><%= number_to_currency(sgst_amount, unit: "", precision: 2) %></td>
+              <td class="border-b py-3 pl-2 text-right"><%= charge.try(:igst_rate) || 0 %>%</td>
+              <td class="border-b py-3 pl-2 text-right"><%= number_to_currency(igst_amount, unit: "", precision: 2) %></td>
+            </tr>
+          <% end %>
+
+          <!-- Totals Footer -->
+          <tr>
+            <td colspan="15" class="bg-main">
+              <table class="w-full border-collapse border-spacing-0">
+                <tbody>
+                  <tr>
+                    <td class="w-full"></td>
+                    <td>
+                      <table class="w-full border-collapse border-spacing-0">
+                        <tbody>
+                          <tr>
+                            <td class="border-b p-3">
+                              <div class="whitespace-nowrap font-bold text-white text-slate-400">Net total:</div>
+                            </td>
+                            <td class="border-b p-3 text-right">
+                              <div class="whitespace-nowrap font-bold text-white text-main">
+                                <%= number_to_currency(net_total, unit: "", precision: 2) %>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="p-3">
+                              <div class="whitespace-nowrap font-bold text-white">Total:</div>
+                            </td>
+                            <td class="p-3 text-right">
+                              <div class="whitespace-nowrap font-bold text-white">
+                                <%= number_to_currency(grand_total, unit: "", precision: 2) %>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="p-3">
+                              <div class="whitespace-nowrap font-bold text-white">Total Amount Due (In Figure):</div>
+                            </td>
+                            <td class="p-3 text-right">
+                              <div class="whitespace-nowrap font-bold text-white">
+                                <%= number_to_currency(grand_total, unit: "", precision: 2) %>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="px-14 text-sm text-neutral-700">
+      <p class="text-main font-bold border-b border-t">Details of Receiver of Supply</p>
+      <p>Name: <%= @invoice_receipt.cam_bill.user.try(:full_name) %></p>
+      <p>Address: <%= @invoice_receipt.cam_bill.user.try(:user_address) %></p>
+      <p>PAN: <%= @invoice_receipt.cam_bill.user.try(:pan_number) %></p>
+      <p>GSTIN/Unique ID: <%= @invoice_receipt.cam_bill.user.try(:gst_number) %></p>
+    </div>
+
+    <div class="px-14 py-10 text-sm text-neutral-700">
+      <p class="text-main font-bold">Notes</p>
+      <p class="italic"><%= @invoice_receipt.cam_bill.try(:note) %>.</p>
+    </div>
+
+    <footer class="fixed bottom-0 left-0 bg-slate-100 w-full text-neutral-600 text-center text-xs py-3">
+      <span class="text-slate-300 px-2">|</span>
+      Copyright © 2023 Digielves Tech Wizards Private Limited. All rights reserved
+      <span class="text-slate-300 px-2">|</span>
+    </footer>
+  </div>
+</div>
+
+</body>
+
+</html>

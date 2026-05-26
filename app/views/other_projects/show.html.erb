@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @other_project.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @other_project.description %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @other_project.address %>
+</p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @other_project.company_id %>
+</p>
+
+<p>
+  <strong>Contact us:</strong>
+  <%= @other_project.contact_us %>
+</p>
+
+<p>
+  <strong>Amenities:</strong>
+</p>
+<ul>
+  <% @other_project.other_p_amenities.each do |amenity| %>
+    <li>
+      <% if amenity.amenity_icon&.document_url.present? %>
+        <%= image_tag amenity.amenity_icon.document_url, width: 30 %>
+      <% end %>
+      <%= amenity.name %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to 'Edit', edit_other_project_path(@other_project) %> |
+<%= link_to 'Back', other_projects_path %>

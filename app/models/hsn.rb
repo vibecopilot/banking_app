@@ -1,0 +1,2 @@
+class Hsn < ApplicationRecord
+end

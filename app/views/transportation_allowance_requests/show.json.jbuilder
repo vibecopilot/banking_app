@@ -1,0 +1,1 @@
+json.partial! "transportation_allowance_requests/transportation_allowance_request", transportation_allowance_request: @transportation_allowance_request

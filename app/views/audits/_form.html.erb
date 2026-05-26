@@ -1,0 +1,127 @@
+<%= form_with(model: audit, local: true) do |form| %>
+  <% if audit.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(audit.errors.count, "error") %> prohibited this audit from being saved:</h2>
+
+      <ul>
+      <% audit.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :audit_for %>
+    <%= form.text_field :audit_for, id: :audit_audit_for %>
+  </div>
+
+  <div class="field">
+    <%= form.label :activity_name %>
+    <%= form.text_field :activity_name, id: :audit_activity_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :audit_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :allow_observations %>
+    <%= form.check_box :allow_observations, id: :audit_allow_observations %>
+  </div>
+
+  <div class="field">
+    <%= form.label :checklist_type %>
+    <%= form.text_field :checklist_type, id: :audit_checklist_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :asset_name %>
+    <%= form.number_field :asset_name, id: :audit_asset_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :service_name %>
+    <%= form.number_field :service_name, id: :audit_service_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vendor_name %>
+    <%= form.number_field :vendor_name, id: :audit_vendor_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :training_name %>
+    <%= form.text_field :training_name, id: :audit_training_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :assign_to %>
+    <%= form.number_field :assign_to, id: :audit_assign_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :scan_type %>
+    <%= form.text_field :scan_type, id: :audit_scan_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :plan_duration %>
+    <%= form.number_field :plan_duration, id: :audit_plan_duration %>
+  </div>
+
+  <div class="field">
+    <%= form.label :priority %>
+    <%= form.text_field :priority, id: :audit_priority %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email_trigger_rule %>
+    <%= form.text_field :email_trigger_rule, id: :audit_email_trigger_rule %>
+  </div>
+
+  <div class="field">
+    <%= form.label :supervisors %>
+    <%= form.number_field :supervisors, id: :audit_supervisors %>
+  </div>
+
+  <div class="field">
+    <%= form.label :category %>
+    <%= form.number_field :category, id: :audit_category %>
+  </div>
+
+  <div class="field">
+    <%= form.label :look_overdue_task %>
+    <%= form.text_field :look_overdue_task, id: :audit_look_overdue_task %>
+  </div>
+
+  <div class="field">
+    <%= form.label :frequency %>
+    <%= form.text_field :frequency, id: :audit_frequency %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_from %>
+    <%= form.datetime_select :start_from, id: :audit_start_from %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_at %>
+    <%= form.datetime_select :end_at, id: :audit_end_at %>
+  </div>
+
+  <div class="field">
+    <%= form.label :select_supplier %>
+    <%= form.number_field :select_supplier, id: :audit_select_supplier %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :audit_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

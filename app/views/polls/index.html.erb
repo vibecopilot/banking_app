@@ -1,0 +1,52 @@
+<h1 style="font-family: Arial, sans-serif;">Polls</h1>
+<%= link_to 'New Poll', new_poll_path, style: "display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #007bff; border-radius: 4px; text-decoration: none;" %>
+
+<table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-family: Arial, sans-serif; border: 1px solid #ddd;">
+  <thead>
+    <tr style="background-color: #f4f4f4; color: #333;">
+      <th style="padding: 10px; border: 1px solid #ddd;">Title</th>
+      <th style="padding: 10px; border: 1px solid #ddd;">Description</th>
+      <th style="padding: 10px; border: 1px solid #ddd;">Start Date</th>
+      <th style="padding: 10px; border: 1px solid #ddd;">End Date</th>
+      <th style="padding: 10px; border: 1px solid #ddd;">Visibility</th>
+      <th style="padding: 10px; border: 1px solid #ddd;">Groups</th>
+      <th style="padding: 10px; border: 1px solid #ddd;">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @polls.each do |poll| %>
+      <tr style="border-bottom: 1px solid #ddd;">
+        <td style="padding: 10px; border: 1px solid #ddd;"><%= poll.title %></td>
+        <td style="padding: 10px; border: 1px solid #ddd;"><%= poll.description %></td>
+        <td style="padding: 10px; border: 1px solid #ddd;"><%= poll.start_date %></td>
+        <td style="padding: 10px; border: 1px solid #ddd;"><%= poll.end_date %></td>
+        <td style="padding: 10px; border: 1px solid #ddd;"><%= poll.visibility %></td>
+        <td style="padding: 10px; border: 1px solid #ddd;"><%= poll.target_groups %></td>
+        <td style="padding: 10px; border: 1px solid #ddd;">
+          <%= link_to 'Show', poll, style: "display: inline-block; padding: 5px 10px; font-size: 14px; color: #fff; background-color: #17a2b8; border-radius: 4px; text-decoration: none; margin-right: 5px;" %>
+          <%= link_to 'Edit', edit_poll_path(poll), style: "display: inline-block; padding: 5px 10px; font-size: 14px; color: #212529; background-color: #ffc107; border-radius: 4px; text-decoration: none; margin-right: 5px;" %>
+          <%= link_to 'Delete', poll, method: :delete, data: { confirm: 'Are you sure?' }, style: "display: inline-block; padding: 5px 10px; font-size: 14px; color: #fff; background-color: #dc3545; border-radius: 4px; text-decoration: none; margin-right: 5px;" %>
+          <% if poll.active? %>
+            <%= form_with(model: [poll, PollVote.new], local: true, style: "display: inline-block;") do |form| %>
+              <% poll.poll_options.each do |option| %>
+                <div style="margin-bottom: 5px;">
+                  <%= form.radio_button :poll_option_id, option.id, id: "poll_option_#{option.id}", style: "margin-right: 5px;" %>
+                  <%= form.label :poll_option_id, option.content, value: option.id, for: "poll_option_#{option.id}" %>
+                </div>
+              <% end %>
+              <%= form.submit 'Vote', style: "padding: 5px 10px; font-size: 14px; color: #fff; background-color: #28a745; border-radius: 4px; border: none;" %>
+            <% end %>
+          <% else %>
+            <p style="color: #6c757d;">Poll not active</p>
+          <% end %>
+          <div>
+            <h5 style="margin-top: 10px;">Results</h5>
+            <% poll.results.each do |result| %>
+              <p><%= result[:option] %>: <%= result[:votes] %> votes</p>
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,19 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "Site Assets") do |sheet|
+ sheet.add_row [
+          "ID", "Asset", "Checklist", "Start Time", "End Time",
+          "Status", "Assigned To", "Created At", "Updated At", "Updated By",
+          "Soft Service", "Patrolling ID", "Checklist Group"
+        ]
+        # Add data rows
+        @activities.each do |activity|
+          last_submission = activity.submissions.order(updated_at: :desc).first
+          updated_by_name = last_submission&.user&.full_name || ""
+
+          sheet.add_row [
+            activity.id, activity.site_asset.try(:name), activity.checklist.try(:name), activity.start_time, activity.end_time,
+            activity.status, activity.user&.full_name || activity.checklist_users.map { |u| u.user&.full_name}.compact.join(", "), activity.created_at, activity.updated_at, updated_by_name,
+            activity.soft_service.try(:name), activity.patrolling_id, activity.checklist&.group&.name
+          ]
+end
+ end

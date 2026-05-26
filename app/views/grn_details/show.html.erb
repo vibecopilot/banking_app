@@ -1,0 +1,64 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Loi detail:</strong>
+  <%= @grn_detail.loi_detail_id %>
+</p>
+
+<p>
+  <strong>Vendor:</strong>
+  <%= @grn_detail.vendor_id %>
+</p>
+
+<p>
+  <strong>Payment mode:</strong>
+  <%= @grn_detail.payment_mode %>
+</p>
+
+<p>
+  <strong>Invoice number:</strong>
+  <%= @grn_detail.invoice_number %>
+</p>
+
+<p>
+  <strong>Related to:</strong>
+  <%= @grn_detail.related_to %>
+</p>
+
+<p>
+  <strong>Invoice amount:</strong>
+  <%= @grn_detail.invoice_amount %>
+</p>
+
+<p>
+  <strong>Invoice date:</strong>
+  <%= @grn_detail.invoice_date %>
+</p>
+
+<p>
+  <strong>Posting date:</strong>
+  <%= @grn_detail.posting_date %>
+</p>
+
+<p>
+  <strong>Other expenses:</strong>
+  <%= @grn_detail.other_expenses %>
+</p>
+
+<p>
+  <strong>Loading expenses:</strong>
+  <%= @grn_detail.loading_expenses %>
+</p>
+
+<p>
+  <strong>Adjustment amount:</strong>
+  <%= @grn_detail.adjustment_amount %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @grn_detail.notes %>
+</p>
+
+<%= link_to 'Edit', edit_grn_detail_path(@grn_detail) %> |
+<%= link_to 'Back', grn_details_path %>

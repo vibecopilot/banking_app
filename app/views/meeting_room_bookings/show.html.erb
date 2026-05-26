@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Book type:</strong>
+  <%= @meeting_room_booking.book_type %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @meeting_room_booking.user_id %>
+</p>
+
+<p>
+  <strong>Booking date:</strong>
+  <%= @meeting_room_booking.booking_date %>
+</p>
+
+<p>
+  <strong>Facility type:</strong>
+  <%= @meeting_room_booking.facility_type %>
+</p>
+
+<p>
+  <strong>Payment mode:</strong>
+  <%= @meeting_room_booking.payment_mode %>
+</p>
+
+<p>
+  <strong>Upi:</strong>
+  <%= @meeting_room_booking.upi %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @meeting_room_booking.comment %>
+</p>
+
+<p>
+  <strong>Booking status:</strong>
+  <%= @meeting_room_booking.booking_status %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @meeting_room_booking.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_meeting_room_booking_path(@meeting_room_booking) %> |
+<%= link_to 'Back', meeting_room_bookings_path %>

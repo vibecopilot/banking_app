@@ -1,0 +1,43 @@
+<%= form_with(model: event, local: true) do |form| %>
+  <% if event.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(event.errors.count, "error") %> prohibited this event from being saved:</h2>
+
+      <ul>
+      <% event.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :event_name %>
+    <%= form.text_field :event_name, id: :event_event_name %>
+    <input type="hidden" name="event[site_id]" value="<%= current_user.current_site_id %>">
+  </div>
+
+  <div class="field">
+    <%= form.label :venue %>
+    <%= form.text_field :venue, id: :event_venue %>
+  </div>
+
+  <div class="field">
+    <%= form.label :discription %>
+    <%= form.text_field :discription, id: :event_discription %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date_time %>
+    <%= form.datetime_select :start_date_time, id: :event_start_date_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date_time %>
+    <%= form.datetime_select :end_date_time, id: :event_end_date_time %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

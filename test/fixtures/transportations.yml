@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  on_behalf_of: MyString
+  pickup_location: MyString
+  dropoff_location: MyString
+  date: 2024-11-25
+  time: 2024-11-25 00:56:28
+  no_of_passengers: 1
+  additional_note: MyText
+  transportation_type: MyString
+
+two:
+  on_behalf_of: MyString
+  pickup_location: MyString
+  dropoff_location: MyString
+  date: 2024-11-25
+  time: 2024-11-25 00:56:28
+  no_of_passengers: 1
+  additional_note: MyText
+  transportation_type: MyString

@@ -1,0 +1,360 @@
+<style>
+.picupload{
+  height: 60px !important;
+}
+.main-footer{
+  position: fixed;
+}
+
+.chosen-container.chosen-container-single {
+          width: 175px !important;
+        }
+</style>
+
+<div style="display: flex; justify-content: center; align-items: center;padding-bottom: 200px;background: white;">
+  <div class="complaint-ticket-container">
+    <%= form_for([:manage, @complaint], :url => "/pms/admin/complaints", :html => { :multipart => true, :class => "form-horizontal" }) do |f| %>
+      <%= f.hidden_field :of_phase, :value => "pms" %>
+      <%= f.hidden_field :id_user, :value => @user.id %>
+      <%= f.hidden_field :site_id, :value => "#{@user.try(:current_site_id)}" %> 
+
+    <header>
+      <span class="main-title">New Ticket</span> 
+    </header>
+    <section>
+    <span style="display: inline-block; margin-left: 20px;"><h6 class="detail-title">On Behalf of</h6></span>
+      <div style="margin-right: 130px; margin-left: 9%; display: inline-block;">
+        <input type="radio" name="complaint[on_behalf_of]" value="admin" class="on_behalf_of" checked data-name="<%= @user.firstname + ' ' + @user.lastname %>" data-mobile="<%= @user.mobile %>" data-site_id="<%= @user.try(:current_site_id) %>" data-unit_id="<%= @user.try(:unit).try(:name) %>"> 
+        <label>Self</label>
+      </div>
+      <div style="display: inline-block;margin-right: 130px;">
+        <input type="radio" name="complaint[on_behalf_of]" value="user" class="on_behalf_of"> 
+        <label>Unit User</label>
+      </div>
+
+      <div id="blk-1" class="toHide">
+        <div class="col-sm-12 on_behalf_usr" style="display: block;">
+          <label class="col-sm-3 control-label">User</label>
+          <div class="col-sm-9">
+
+            <% @users = User.where(id: UserSite.where(site_id: @user.current_site_id).pluck(:user_id), user_type: ["pms_occupant", "pms_occupant_admin"]) %>
+            <% @fm_users = User.where(id: UserSite.where(site_id: @user.current_site_id).pluck(:user_id), user_type: ["pms_technician", "pms_admin"]) %>
+            
+            <select id='' name="sel_id_user" class="chosen-select select_user">
+              <option value="">Select User</option>
+              <% @users.each do |user| %>
+                <option value="<%= user.id %>" data-name="<%= user.firstname + ' ' + user.lastname %>" data-mobile="<%= user.mobile %>" data-unit_id="<%= user.try(:unit).try(:name) %>" ><%= user.firstname + ' ' + user.lastname %></option> 
+              <% end %>
+            </select>
+          </div>
+        </div>
+      </div>
+      <h6 class="detail-title">Requestor Details</h6>
+      <div class="primary-detail requestor-details">
+        <div class="grid">
+          <label class="fields change_user">Name :</label>
+          <span class="user-name"><%= @user.try(:firstname) %>
+            <%= @user.try(:lastname) %></span>
+        </div>
+        <div class="grid">
+          <label class="fields change_user">Contact Number :</label>
+          <span class="mobile"><%= @user.try(:mobile) %></span>
+        </div>
+        
+        <div class="grid">
+            <label class="fields">Unit :</label>
+            <span class="unit_id" name="complaint[unit_id]"><%= @user.try(:unit).try(:name) %></span>
+        </div>
+        
+      </div><br>
+
+      <div class="secondary-detail">
+        <div class="grid">
+          <label class="fields">Category Type :</label>
+          <% @helpdesk_categories = HelpdeskCategory.where(society_id: @user.current_site_id) %>
+          <%= f.select :category_type_id, options_for_select(@helpdesk_categories.map { |e| [e.name, e.id] }),{:include_blank=>"Select Category"},{:class => 'custom-dropdown selectpicker category-type'}%>
+        </div>
+        <div class="grid">
+          <label class="fields">Sub Category :</label>
+          <% @sbs = @complaint.category_type_id.present? ? HelpdeskCategory.find(@complaint.category_type_id).helpdesk_sub_categories : [] %>
+          <select class="custom-dropdown sub-categories sub_category" name="complaint[sub_category_id]" id="complaint_log_sub_category_id">
+            <option value="">Select Sub Category</option>
+            <% @sbs.each do |sc|%>
+              <option data-ht="<%= sc.helpdesk_text %>" value="<%= sc.id%>" <%= @complaint.sub_category_id == sc.id ? 'selected' : '' %>><%= sc.name %></option>
+            <% end %>
+          </select>
+        </div>
+
+        <div class="grid">
+          <label class="fields">Related To :</label>
+          <% @us = @user %>
+          <% @issue_types = IssueType.where(:society_id => @us.current_site_id, active: 1).collect { |p| [p.name, p.id] } %>
+          <% default_option = "Select Issue Type" %>
+          <%= f.select :issue_type_id, options_for_select([default_option] + @issue_types), {}, { :class => 'custom-dropdown chosen-select selectpicker' } %>
+          </select>
+        </div>
+
+
+
+        
+
+
+        <% users = @fm_users %>
+        <div class="grid">
+          <label class="fields"> Admin Priority :</label>
+          <%= f.select :priority, options_for_select(['P1','P2','P3','P4','P5'], :selected => @complaint.priority),{:include_blank => "Select Priority"},{:class => 'custom-dropdown selectpicker'}%>
+        </div>
+
+        <div class="grid">
+          <label class="fields"> Building :</label>
+          <%= f.select :tower_id, options_for_select( Building.where(site_id: @user.current_site_id).map { |e| [e.name, e.id] }),{:include_blank=>"Select Building"}, {:class => 'custom-dropdown chosen-select selectpicker'} %>
+        </div>
+
+        <div class="grid">
+          <label class="fields"> Floor :</label>
+    <%= f.select :wing_id, options_for_select( Floor.where(site_id: @user.current_site_id).map { |e| [e.name, e.id] }),{:include_blank=>"Select Floor"}, {:class => 'custom-dropdown chosen-select selectpicker'} %>
+          
+        </div>
+
+        <div class="grid">
+          <label class="fields"> Unit :</label>
+      <%= f.select :unit_id, options_for_select( Unit.where(site_id: @user.current_site_id).map { |e| [e.name, e.id] }),{:include_blank=>"Select Unit"}, {:class => 'custom-dropdown chosen-select selectpicker'} %>
+          
+        </div>
+
+
+
+        <div class="grid">
+          <label class="fields"> Assigned To :</label>
+          <%= f.hidden_field :society_staff_type, :value => "Spree::User" %>
+
+          <%= f.select :assigned_to, options_for_select(users.map { |e| [e.full_name, e.id] }),{:include_blank => "Select Assigned To"},{:class => 'custom-dropdown chosen-select selectpicker'}%>
+        </div> 
+      </div><br>
+
+      <div style="display: flex;padding: 10px;">
+        <label class="fields">Description :</label>
+        <%= f.text_area :heading, :placeholder => "Description", :class => "textbox desc", :rows => "4" %>
+      </div>
+ 
+      <div style="display: flex;padding: 10px;">
+        <label class="fields">Attachment :</label>
+        <div class="upload">
+          <ul id="media-list" class="clearfix">
+            <li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i>
+            <input type="file" name="attachments[]" click-type="type2" id="picupload2" class="picupload" multiple>
+          </span> </li>
+          </ul>
+        </div>
+      </div> 
+      <div class="button-group">
+        <button style="margin-right: 8px;" class="btn btn-info btn-sm" type="button" id="submitpms">Submit</button>
+        <a class="btn btn-primary btn-sm" href="/pms/admin/complaints/new">Reset</a>
+      </div><br>
+    </section>
+  <% end %>
+</div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+
+  <script>
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : { allow_single_deselect: true },
+      '.chosen-select-no-single' : { disable_search_threshold: 10 },
+      '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' },
+      '.chosen-select-rtl'       : { rtl: true },
+      '.chosen-select-width'     : { width: '95%' }
+    }
+
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+
+  $(".on_behalf_usr").hide();
+  $(".on_behalf_fm_user").hide();
+  $('[name="complaint[on_behalf_of]"]').change(function(){
+    if($(this).val() == "user"){
+      $(".requestor-details").hide();
+      $(".on_behalf_usr").show();
+      $(".on_behalf_fm_user").hide();
+      $(".select_user").val('');
+      $('.select_user').trigger("chosen:updated");
+      $(".user-name").html("");
+      $(".mobile").html("");
+      $(".site_id").html("");
+      $(".unit_id").html("");
+      $(".department_id").html("");
+    } else if ($(this).val() == "fm_user"){
+      $(".requestor-details").hide();
+      $(".on_behalf_fm_user").show();
+      $(".on_behalf_usr").hide();
+      $(".select_fm_user").val('');
+      $('.select_fm_user').trigger("chosen:updated");
+      $(".user-name").html("");
+      $(".mobile").html("");
+      $(".site_id").html("");
+      $(".unit_id").html("");
+      $(".department_id").html("");
+    } else {
+      $(".requestor-details").show();
+      $(".on_behalf_usr").hide();
+      $(".on_behalf_fm_user").hide();
+      $(".user-name").html($(this).data('name'));
+      $(".mobile").html($(this).data('mobile'));
+      $(".site_id").html($(this).data('site_id'));
+      $(".unit_id").html($(this).data('unit_id'));
+      $(".department_id").html($(this).data('department_id'));
+    }
+
+  });
+
+  var fewSeconds = 10;
+  $("#submitpms").click(function(e){
+    e.preventDefault();
+    console.log("clickedddd");
+    form = $(this).parents("form");
+    if($('[name="complaint[on_behalf_of]"]:checked').val() == "user"){
+
+     if ($('.select_user').val() == "") {
+        toastr.error("Please select user.");
+        return false;
+     }
+    }
+
+    if($('[name="complaint[on_behalf_of]"]:checked').val() == "fm_user"){
+
+     if ($('.select_fm_user').val() == "") {
+        toastr.error("Please select user.");
+        return false;
+     }
+    }
+    
+    var category_type_id = $("#complaint_category_type_id").val();
+    if(category_type_id == ""){
+      toastr.error("Please select category");
+      return false;
+    }
+
+    vl = form.find('.desc').val();
+    if(vl == "")   
+    {
+      toastr.error("Please enter description");
+      return;
+    }
+
+      form.submit();
+      
+      $(this).prop('disabled', true);
+      setTimeout(function(){
+          $(this).prop('disabled', false);
+      }, fewSeconds*1000);
+  });
+
+  $(".select_user, .select_fm_user").change(function (event) {
+    var selected = $(this).children("option:selected");
+    var option = selected[0];
+
+    if($(option).val()){
+      $(".user-name").html($(option).data('name'));
+      $(".mobile").html($(option).data('mobile'));
+      $(".site_id").html($(option).data('site_id'));
+      $(".unit_id").html($(option).data('unit_id'));
+      $(".department_id").html($(option).data('department_id'));
+      $(".requestor-details").show();
+    } else {
+      $(".user-name").html("");
+      $(".mobile").html("");
+      $(".site_id").html("");
+      $(".unit_id").html("");
+      $(".department_id").html("");
+      $(".requestor-details").hide();
+    }
+    
+  })
+
+
+  $('.category-type').change(function() {
+      var category_type_id = $(this).val();
+      var sub_categories_options = "<option value=''>Select Sub Category</option>";
+      if (category_type_id.length > 0) {
+        var url = "/pms/admin/get_sub_categories.json?category_type_id=" + category_type_id + "&token=" + gon.token;
+
+        $.ajax({
+          type: "GET",
+          url: url,
+          success: function(response){          
+            if(response.sub_categories.length > 0){
+              for (var i = 0; i < response.sub_categories.length; i++) {
+                var sub_category = response.sub_categories[i];
+                sub_categories_options += "<option data-ht='"+sub_category.helpdesk_text +"'  value='"+sub_category.id+"'>"+sub_category.name+"</option>"
+              }
+            }
+
+            $(".sub-categories").html(sub_categories_options);
+            $('#complaint_assigned_to').val(response.assigned_to);
+          }
+        });
+      } else {
+        $(".sub-categories").html(sub_categories_options);
+        $('#complaint_assigned_to').val('');
+      }
+  });
+
+</script>
+
+
+<script type="text/javascript">
+  $('[name="complaint[tower_id]"]').change(function() {
+    var cursel = $(this);
+    var targt = $('[name="complaint[wing_id]"]');
+    var sel_val = cursel.val();
+    var newoptions = "<option value=''>Select Floor</option>";
+    if (sel_val.length > 0) {
+      var url = "/floors.json?q[building_id_eq]=" + sel_val + "&token=" + gon.token;
+      $.ajax({
+        type: "GET",
+        url: url,
+        success: function(response){
+          if(response.length > 0){
+            for (var i = 0; i < response.length; i++) {
+              var res = response[i];
+              newoptions += "<option value='"+res.id+"'>"+res.name+"</option>"
+            }
+          }
+          targt.html(newoptions);
+        }
+      });
+    } else {
+      targt.html(newoptions);
+    }
+  });
+
+  $('[name="complaint[wing_id]"]').change(function() {
+    var cursel = $(this);
+    var targt = $('[name="complaint[unit_id]"]');
+    var sel_val = cursel.val();
+    var newoptions = "<option value=''>Select Unit</option>";
+    if (sel_val.length > 0) {
+      var url = "/units.json?q[floor_id_eq]=" + sel_val + "&token=" + gon.token;
+      $.ajax({
+        type: "GET",
+        url: url,
+        success: function(response){
+          if(response.length > 0){
+            for (var i = 0; i < response.length; i++) {
+              var res = response[i];
+              newoptions += "<option value='"+res.id+"'>"+res.name+"</option>"
+            }
+          }
+          targt.html(newoptions);
+        }
+      });
+    } else {
+      targt.html(newoptions);
+    }
+  });
+</script>

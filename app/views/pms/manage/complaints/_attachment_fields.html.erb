@@ -1,0 +1,12 @@
+<div class='nested-fields row form-group'>
+  <div class="field col-sm-8">
+    <%= f.file_field :document, class: "dropify", "data-default-file": f.object.image.present? ? f.object.image.url.to_s : "", :"data-height" =>  "100", :"data-weight" => "100", :"data-show-remove" => "false" %>
+  </div>
+  <div class = "col-sm-4">
+    <%= link_to_remove_association raw("<i class='fa fa-times'></i>"), f, class: "btn btn-xs btn-danger" %>
+  </div>
+</div>
+
+<script>
+	$('.dropify').dropify();
+</script>

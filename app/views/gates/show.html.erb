@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @gate.name %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @gate.site_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @gate.user_id %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @gate.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_gate_path(@gate) %> |
+<%= link_to 'Back', gates_path %>

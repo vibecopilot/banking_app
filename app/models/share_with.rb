@@ -1,0 +1,2 @@
+class ShareWith < ApplicationRecord
+end

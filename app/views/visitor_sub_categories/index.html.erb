@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Visitor Sub Categories</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Visitor category</th>
+      <th>Name</th>
+      <th>Active</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @visitor_sub_categories.each do |visitor_sub_category| %>
+      <tr>
+        <td><%= visitor_sub_category.visitor_category %></td>
+        <td><%= visitor_sub_category.name %></td>
+        <td><%= visitor_sub_category.active %></td>
+        <td><%= link_to 'Show', visitor_sub_category %></td>
+        <td><%= link_to 'Edit', edit_visitor_sub_category_path(visitor_sub_category) %></td>
+        <td><%= link_to 'Destroy', visitor_sub_category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Visitor Sub Category', new_visitor_sub_category_path %>

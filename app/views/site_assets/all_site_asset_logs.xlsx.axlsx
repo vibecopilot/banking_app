@@ -1,0 +1,51 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "All Site Asset Logs") do |sheet|
+  # Add headers
+  headers = [
+    "Asset Name", "Asset Type", "Site Name", "Site ID", "Building Name", "Building ID",
+    "Floor Name", "Floor ID", "Unit Name", "Unit ID", "Serial Number", "Model Number",
+    "Purchased On", "Purchase Cost", "Warranty Expiry", "Critical", "Breakdown",
+    "Is Meter", "Parent Asset ID", "Active", "Description", "OEM Name", "Capacity",
+    "Installation", "Warranty Start", "Remarks", "Vendor ID", "Vendor Name",
+    "Asset Group ID", "Asset Group Name", "UOM", "Activity ID", "Start Time", "End Time",
+    "Status", "Checklist Name", "Checklist Frequency", "Checklist Start Date",
+    "Checklist End Date", "Checklist Occurs", "Checklist Type", "Performed By",
+    "Assigned To", "Total Questions Performed",
+    "Question", "Answer", "Comment", "Updated At"  # Added submission headers here
+  ]
+  sheet.add_row headers
+
+  # Add data
+  @excel_log_data.each do |data|
+    main_row = [
+      data[:asset_name], data[:asset_type], data[:site_name], data[:site_id],
+      data[:building_name], data[:building_id], data[:floor_name], data[:floor_id],
+      data[:unit_name], data[:unit_id], data[:serial_number], data[:model_number],
+      data[:purchased_on], data[:purchase_cost], data[:warranty_expiry],
+      data[:critical], data[:breakdown], data[:is_meter], data[:parent_asset_id],
+      data[:active], data[:description], data[:oem_name], data[:capacity],
+      data[:installation], data[:warranty_start], data[:remarks], data[:vendor_id],
+      data[:vendor_name], data[:asset_group_id], data[:asset_group_name], data[:uom],
+      data[:activity_id], data[:start_time], data[:end_time], data[:status],
+      data[:checklist_name], data[:checklist_frequency], data[:checklist_start_date],
+      data[:checklist_end_date], data[:checklist_occurs], data[:checklist_type],
+      data[:performed_by], data[:assigned_to], data[:total_questions_performed]
+    ]
+
+    if data[:submissions].empty?
+      # If no submissions, add a single row with empty submission data
+      sheet.add_row main_row + ['', '', '', '']
+    else
+      # Add a row for each submission
+      data[:submissions].each_with_index do |submission, index|
+        row_data = index.zero? ? main_row : Array.new(main_row.length, nil)
+        row_data += [submission[:question], submission[:answer], submission[:comment], submission[:updated_at]]
+        sheet.add_row row_data
+      end
+    end
+  end
+
+  # Apply some basic styling
+  sheet.auto_filter = "A1:AV1"  # Add filter to header row (adjusted to include all columns)
+  sheet.row_style 0, wb.styles.add_style(b: true)  # Make header row bold
+end

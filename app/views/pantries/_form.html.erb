@@ -1,0 +1,47 @@
+<%= form_with(model: pantry, local: true) do |form| %>
+  <% if pantry.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(pantry.errors.count, "error") %> prohibited this pantry from being saved:</h2>
+
+      <ul>
+      <% pantry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :item_name %>
+    <%= form.text_field :item_name, id: :pantry_item_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :stock %>
+    <%= form.number_field :stock, id: :pantry_stock %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :pantry_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :pantry_created_by_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.check_box :status, id: :pantry_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attachfiles %>
+    <%= form.file_field :attachfiles %>
+  </div>  
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

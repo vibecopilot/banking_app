@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta charset="utf-8">
+    <title>Facility Management</title>
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link  href="/font-awesome.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+    <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>
+    <script type="text/javascript">
+      <% @loggedin_user = User.current %>
+      var gon = {
+        <% if @loggedin_user.present? %>
+          token: "<%= @loggedin_user.try(:api_key) %>" 
+        <% end %>
+      }
+    </script>
+    <%= javascript_include_tag "jquery.min.js" %>
+    <%= javascript_include_tag "bootstrap-table" %>
+    <%= stylesheet_link_tag "bootstrap45.min" %>
+
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag "covid_styles.min" %>
+
+    <%= javascript_include_tag "metisMenu.min", 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag "jquery-ui.min.js" %>
+    <%= stylesheet_link_tag "bootstrap.css" %>
+    <%= stylesheet_link_tag "bootstrap.min_v2.css" %>
+    <%= javascript_include_tag "moment.min.js" %>
+    <%= stylesheet_link_tag "daterangepicker" %>
+    <%= javascript_include_tag "daterangepicker.js" %>
+    <%= javascript_include_tag "calender.js" %>
+    <%= stylesheet_link_tag "calender.css" %>
+    <%= javascript_include_tag "semantic.js" %>
+    <%= stylesheet_link_tag "datepicker3" %>
+    <%#= javascript_include_tag "multiselect.min" %>
+    <%= stylesheet_link_tag "toastr.min" %>
+    <%= stylesheet_link_tag "animate.css" %>
+    <%= stylesheet_link_tag "meanmenu.min.css" %>
+    <%= stylesheet_link_tag "metisMenu.min.css" %>
+    <%= stylesheet_link_tag "metisMenu-vertical-hover.css" %>
+    <%= stylesheet_link_tag "bootstrap-table.css" %>
+    <%= stylesheet_link_tag "style_new_pms.css" %>
+    <%= stylesheet_link_tag "responsive.css" %>
+    <%= stylesheet_link_tag "font-awesome.min.css" %>
+    <%= stylesheet_link_tag "chosen.css" %>
+    <%= stylesheet_link_tag "tabs.css" %>
+    <%= stylesheet_link_tag "mainone.css" %>
+    <%= stylesheet_link_tag "jquery.cardtabs" %>
+    <%= stylesheet_link_tag "semantic.min" %>
+    <%= javascript_include_tag "color-picker" %>
+    <%= javascript_include_tag "bootstrap-datepicker" %>
+    <%= javascript_include_tag "toastr.min" %>
+    <%= javascript_include_tag "switchery" %>
+    <%= javascript_include_tag "cookie" %>
+    <%= javascript_include_tag "bootstrap-tagsinput" %>
+    <%= javascript_include_tag "cbpFWTabs" %>
+    <%= javascript_include_tag "jquery.cardtabs" %>
+    <%= javascript_include_tag "color-picker" %> 
+    <%= javascript_include_tag "multiple-select" %>
+    <%= stylesheet_link_tag "style_new_pms.css" %>
+    <%= stylesheet_link_tag "multiple-select" %>
+    <%= stylesheet_link_tag "pignose.calendar.min.css" %>
+    <%= javascript_include_tag "pignose.calendar.full.min.js" %>
+    <%= stylesheet_link_tag "blueimp-gallery.min" %>
+    <%= stylesheet_link_tag "dashboard" %>
+    <%= javascript_include_tag "jquery.blueimp-gallery.min" %>
+    <%= csrf_meta_tags %>
+
+    <style type="text/css">
+      /* Toastr custom styles for larger notifications */
+      .toast-error, .toast-success, .toast-info, .toast-warning {
+        min-width: 400px !important;
+        max-width: 600px !important;
+        padding: 20px 25px !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        white-space: pre-wrap !important;
+        word-wrap: break-word !important;
+      }
+      .toast-message {
+        word-break: break-word !important;
+      }
+      #toast-container > div {
+        opacity: 1 !important;
+      }
+
+      .simple_form label {
+        float: left;
+        text-align: right;
+        margin: 2px 10px;
+      }
+
+      .simple_form div.input {
+        margin-bottom: 10px;
+      }
+      .form-inline div {}
+      .active {
+        background: #cd5c5c;
+      }
+      .btn {
+        margin: 2px;
+      }
+      .pt-7, .py-7{
+        padding-top: 1rem!important;
+      }
+      .d-flex {
+        display: flex;
+      }
+      .user-profile-icon {
+          background: #F69380;
+          border-radius: 100%;
+          width: 30px;
+          height: 30px;
+          font-weight: bold;
+          color: #fff;
+          margin-right: 20px;
+          cursor: pointer;
+      }
+
+      .user-profile {
+          background: #fff;
+          box-shadow: 3px 3px 10px #00000029;
+          border-radius: 8px;
+          width: auto;
+          margin-right: 10px;
+          padding: 1.5rem;
+          position: absolute;
+          z-index: 10000;
+      }
+
+      .user-profile::before {
+          content: "▲";
+          position: absolute;
+          top: -12px;
+          right: 28px;
+          color: #fff;
+      }
+
+      .edit-profile-pic {
+          background: #F69380;
+          border-radius: 100%;
+          width: 70px;
+          height: 70px;
+          font-weight: bold;
+          color: #fff;
+          font-size: 50px;
+      }
+
+      .flex-center {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+      }
+
+      .flex-space-between {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+
+      .logout-button {
+          width: 200px;
+          height: 35px;
+          background: #1C3B6B;
+          color: #fff;
+          box-shadow: 1px 1px 4px #00000029;
+          border-radius: 17px;
+      }
+      html, body, #wrap {
+          height: 100%;
+      }
+      #wrap {
+          height: auto;
+          min-height: 75%;
+      }
+      .fixed-table-loading { display: none; }
+
+      .nav-item {
+          width: 90px;
+      }
+
+      *:focus {
+        outline: none;
+      }
+      .create_user {
+        background: #3c1581;
+        border: 0;
+        padding: 8px 20px;
+        border-radius: 5px;
+        color: white !important;
+        float: right;
+        margin-bottom: 12px;
+      }
+      .table td, .table th {
+        padding: 1rem !important;
+        vertical-align: top;
+        border: 1px solid #dee2e6 !important;
+        text-align: left;
+      }
+      .table th {
+        background-color: #d3d3d38f;
+      }
+    </style>
+  </head>
+  <body class="text-black bg-white" cz-shortcut-listen="true" style="margin: 0px !important;">
+    <%= render "layouts/menu" %>
+    <section id="wrap" class="pt-7 text-center">
+      <div class="container mt-5">
+          <%= yield %>
+        </div>
+    </section>
+    <script type="text/javascript">
+      <% if flash[:notice] %>
+        toastr.success("<%= flash[:notice] %>");
+      <% end %>
+      <% if flash[:alert] %>
+        toastr.error("<%= flash[:alert] %>");
+      <% end %>
+      $(document).load(function(){
+        $(function () {
+          $('#user_setup').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+          });
+        });
+      });
+    </script>
+    <section class="bg-dark pt-7 pb-5 text-white" style="display: none;">
+      <div class="container">
+        <div class="text-center ">
+          <span style="color: white; font-size: 19px;"> Facility Management Solutions by Logicon</span>
+          <p class="text-light">
+            Copyright 2021 All Rights Reserved.
+          </p>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

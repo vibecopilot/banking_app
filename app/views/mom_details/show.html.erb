@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @mom_detail.title %>
+</p>
+
+<p>
+  <strong>Meeting date:</strong>
+  <%= @mom_detail.meeting_date %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @mom_detail.created_by_id %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @mom_detail.active %>
+</p>
+
+<p>
+  <strong>Company tag name:</strong>
+  <%= @mom_detail.company_tag_name %>
+</p>
+
+<%= link_to 'Edit', edit_mom_detail_path(@mom_detail) %> |
+<%= link_to 'Back', mom_details_path %>

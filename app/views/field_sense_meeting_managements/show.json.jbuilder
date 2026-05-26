@@ -1,0 +1,1 @@
+json.partial! "field_sense_meeting_managements/field_sense_meeting_management", field_sense_meeting_management: @field_sense_meeting_management

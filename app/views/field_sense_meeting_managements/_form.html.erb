@@ -1,0 +1,57 @@
+<%= form_with(model: field_sense_meeting_management, local: true) do |form| %>
+  <% if field_sense_meeting_management.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(field_sense_meeting_management.errors.count, "error") %> prohibited this field_sense_meeting_management from being saved:</h2>
+
+      <ul>
+      <% field_sense_meeting_management.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :meeting_title %>
+    <%= form.text_field :meeting_title, id: :field_sense_meeting_management_meeting_title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :meeting_date_and_time %>
+    <%= form.datetime_select :meeting_date_and_time, id: :field_sense_meeting_management_meeting_date_and_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :participants %>
+    <%= form.number_field :participants, id: :field_sense_meeting_management_participants %>
+  </div>
+
+  <div class="field">
+    <%= form.label :location %>
+    <%= form.text_field :location, id: :field_sense_meeting_management_location %>
+  </div>
+
+  <div class="field">
+    <%= form.label :travel_mode %>
+    <%= form.text_field :travel_mode, id: :field_sense_meeting_management_travel_mode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :expenses %>
+    <%= form.text_field :expenses, id: :field_sense_meeting_management_expenses %>
+  </div>
+
+  <div class="field">
+    <%= form.label :meeting_agenda %>
+    <%= form.text_area :meeting_agenda, id: :field_sense_meeting_management_meeting_agenda %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :field_sense_meeting_management_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

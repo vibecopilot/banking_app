@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Compliance Tags</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Risk</th>
+      <th>Nature</th>
+      <th>Parent</th>
+      <th>Resource</th>
+      <th>Resource type</th>
+      <th>Company</th>
+      <th>Tag type</th>
+      <th>Critical</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @compliance_tags.each do |compliance_tag| %>
+      <tr>
+        <td><%= compliance_tag.name %></td>
+        <td><%= compliance_tag.risk %></td>
+        <td><%= compliance_tag.nature %></td>
+        <td><%= compliance_tag.parent_id %></td>
+        <td><%= compliance_tag.resource_id %></td>
+        <td><%= compliance_tag.resource_type %></td>
+        <td><%= compliance_tag.company_id %></td>
+        <td><%= compliance_tag.tag_type %></td>
+        <td><%= compliance_tag.critical %></td>
+        <td><%= link_to 'Show', compliance_tag %></td>
+        <td><%= link_to 'Edit', edit_compliance_tag_path(compliance_tag) %></td>
+        <td><%= link_to 'Destroy', compliance_tag, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Compliance Tag', new_compliance_tag_path %>

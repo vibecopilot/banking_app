@@ -1,0 +1,135 @@
+<p id="notice"><%= notice %></p>
+
+  <style>
+    .profile-picture {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  </style>
+
+<h1 style="text-align: center;">Staffs</h1>
+
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; margin: 0 auto; ">
+  <thead>
+    <tr>
+      <th style="text-align: center;">Profile Picture</th>
+      <th style="text-align: center;">Name</th>
+      <th style="text-align: center;">Email</th>
+      <th style="text-align: center;">Mobile no</th>
+      <th style="text-align: center;">Unit</th>
+      <th style="text-align: center;">Work type</th>
+      <th style="text-align: center;">Vendor</th>
+      <th style="text-align: center;">Valid from</th>
+      <th style="text-align: center;">Valid till</th>
+      <th style="text-align: center;">Status</th>
+      <th style="text-align: center;">Working Schedule</th>
+      <th style="text-align: center;">QR Code</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody style="text-align: center;">
+    <% @staffs.each do |staff| %>
+      <tr>
+        <td>
+          <% if staff.profile_picture.present? %>
+            <%= image_tag staff.profile_picture.image.url, class: 'profile-picture' %>
+          <% else %>
+            No profile picture
+          <% end %>
+        </td>
+        <td><%= staff.firstname %> <%= staff.lastname %></td>
+        <td><%= staff.email %></td>
+        <td><%= staff.mobile_no %></td>
+        <td><%= staff.unit_id %></td>
+        <td><%= staff.work_type %></td>
+        <td><%= staff.vendor_id %></td>
+        <td><%= staff.valid_from %></td>
+        <td><%= staff.valid_till %></td>
+        <td><%= staff.status %></td>
+        <td>
+          <% if staff.working_schedule.present? && staff.working_schedule.values.any? { |v| v['selected'] && v['start_time'].present? && v['end_time'].present? } %>
+            <% staff.working_schedule.select { |_, v| v['selected'] && v['start_time'].present? && v['end_time'].present? }.each do |day, schedule| %>
+              <%= "#{day}: #{schedule['start_time']}-#{schedule['end_time']}" %> <br>
+            <% end %>
+          <% else %>
+            Not set
+          <% end %>
+        </td>
+        <td>
+          <a href="#staff-qr-preview" data-toggle="modal" data-staff-id="<%= staff.id %>">
+            <img class="staffqr" src="<%= staff.qr_code_image.try(:document_url) %>" style="width:50px; height: 50px;">
+          </a>
+        </td>
+        <td><%= link_to 'Show', staff %></td>
+        <td><%= link_to 'Edit', edit_staff_path(staff) %></td>
+        <td><%= link_to 'Destroy', staff, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Staff', new_staff_path %>
+
+<!-- Staff QR Code Preview Modal -->
+<div class="modal fade" id="staff-qr-preview" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Staff QR Code</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="staff_qr_div">
+          <img src="" style="width: 200px; height: 200px">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="download-qr">Download QR Code</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var cursrc = "";
+    var currentStaffId = "";
+
+    $(".staffqr").click(function(e) {
+      e.preventDefault();
+      cursrc = $(this).attr("src");
+      currentStaffId = $(this).closest("a").data("staff-id");
+      $("#staff_qr_div").find("img").attr("src", cursrc);
+      $("#staff-qr-preview").modal('show');
+    });
+
+    $("#download-qr").click(function() {
+      if (cursrc) {
+        var link = document.createElement('a');
+        link.href = cursrc;
+        link.download = 'staff_qr_' + currentStaffId + '.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    });
+
+    // Add this part to handle the download button in the table
+    $("a[download]").click(function(e) {
+      e.preventDefault();
+      var link = document.createElement('a');
+      link.href = $(this).attr('href');
+      link.download = 'staff_qr_' + $(this).closest("tr").find("a[data-staff-id]").data("staff-id") + '.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  });
+</script>

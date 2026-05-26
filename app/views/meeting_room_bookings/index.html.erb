@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Meeting Room Bookings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Book type</th>
+      <th>User</th>
+      <th>Booking date</th>
+      <th>Facility type</th>
+      <th>Payment mode</th>
+      <th>Upi</th>
+      <th>Comment</th>
+      <th>Booking status</th>
+      <th>Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @meeting_room_bookings.each do |meeting_room_booking| %>
+      <tr>
+        <td><%= meeting_room_booking.book_type %></td>
+        <td><%= meeting_room_booking.user_id %></td>
+        <td><%= meeting_room_booking.booking_date %></td>
+        <td><%= meeting_room_booking.facility_type %></td>
+        <td><%= meeting_room_booking.payment_mode %></td>
+        <td><%= meeting_room_booking.upi %></td>
+        <td><%= meeting_room_booking.comment %></td>
+        <td><%= meeting_room_booking.booking_status %></td>
+        <td><%= meeting_room_booking.created_by_id %></td>
+        <td><%= link_to 'Show', meeting_room_booking %></td>
+        <td><%= link_to 'Edit', edit_meeting_room_booking_path(meeting_room_booking) %></td>
+        <td><%= link_to 'Destroy', meeting_room_booking, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Meeting Room Booking', new_meeting_room_booking_path %>

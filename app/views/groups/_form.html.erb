@@ -1,0 +1,57 @@
+<%= form_with(model: group, local: true) do |form| %>
+  <% if group.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(group.errors.count, "error") %> prohibited this group from being saved:</h2>
+
+      <ul>
+      <% group.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :group_name %>
+    <%= form.text_field :group_name, id: :group_group_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :group_type %>
+    <%= form.text_field :group_type, id: :group_group_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :group_admin %>
+    <%= form.number_field :group_admin, id: :group_group_admin %>
+  </div>
+
+  <div class="field">
+    <%= form.label :group_roles %>
+    <%= form.text_field :group_roles, id: :group_group_roles %>
+  </div>
+
+  <div class="field">
+    <%= form.label :group_permissions %>
+    <%= form.text_field :group_permissions, id: :group_group_permissions %>
+  </div>
+
+  <div class="field">
+    <%= form.label :group_activities %>
+    <%= form.text_field :group_activities, id: :group_group_activities %>
+  </div>
+
+  <div class="field">
+    <%= form.label :add_members %>
+    <%= form.number_field :add_members, id: :group_add_members %>
+  </div>
+
+  <div class="field">
+    <%= form.label :group_description %>
+    <%= form.text_area :group_description, id: :group_group_description %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

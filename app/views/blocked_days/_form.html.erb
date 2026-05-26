@@ -1,0 +1,47 @@
+<%= form_with(model: blocked_day, local: true) do |form| %>
+  <% if blocked_day.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(blocked_day.errors.count, "error") %> prohibited this blocked_day from being saved:</h2>
+
+      <ul>
+      <% blocked_day.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :restaurant_id %>
+    <%= form.number_field :restaurant_id, id: :blocked_day_restaurant_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.date_select :start_date, id: :blocked_day_start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.date_select :start_date, id: :blocked_day_start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reason %>
+    <%= form.text_area :reason, id: :blocked_day_reason %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_allowed %>
+    <%= form.check_box :booking_allowed, id: :blocked_day_booking_allowed %>
+  </div>
+
+  <div class="field">
+    <%= form.label :order_allowed %>
+    <%= form.check_box :order_allowed, id: :blocked_day_order_allowed %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

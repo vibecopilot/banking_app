@@ -1,0 +1,99 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Service order date:</strong>
+  <%= @service_order.service_order_date %>
+</p>
+
+<p>
+  <strong>Billing address:</strong>
+  <%= @service_order.billing_address_id %>
+</p>
+
+<p>
+  <strong>Retention:</strong>
+  <%= @service_order.retention %>
+</p>
+
+<p>
+  <strong>Tds:</strong>
+  <%= @service_order.tds %>
+</p>
+
+<p>
+  <strong>Qc:</strong>
+  <%= @service_order.qc %>
+</p>
+
+<p>
+  <strong>Payment tenure:</strong>
+  <%= @service_order.payment_tenure %>
+</p>
+
+<p>
+  <strong>Advance amount:</strong>
+  <%= @service_order.advance_amount %>
+</p>
+
+<p>
+  <strong>Related to:</strong>
+  <%= @service_order.related_to %>
+</p>
+
+<p>
+  <strong>Kind Attention:</strong>
+  <%= @service_order.kind_attention %>
+</p>
+
+<p>
+  <strong>Subject:</strong>
+  <%= @service_order.subject %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @service_order.description %>
+</p>
+
+<p>
+  <strong>Terms & Conditions:</strong>
+  <%= @service_order.terms_and_conditions %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @service_order.site_id %>
+</p>
+
+<p>
+  <strong>Vendor:</strong>
+  <%= @service_order.vendor_id %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @service_order.created_by_id %>
+</p>
+
+<p>
+  <strong>Reference:</strong>
+  <%= @service_order.reference %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @service_order.active %>
+</p>
+
+<p>
+  <strong>Approved status:</strong>
+  <%= @service_order.approved_status %>
+</p>
+
+<p>
+  <strong>Total amount:</strong>
+  <%= @service_order.total_amount %>
+</p>
+
+<%= link_to 'Edit', edit_service_order_path(@service_order) %> |
+<%= link_to 'Back', service_orders_path %>

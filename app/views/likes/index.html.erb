@@ -1,0 +1,21 @@
+<!--
+
+<button id="like-button" data-forum-id="1">Like</button>
+<span id="like-count">0</span>
+document.getElementById("like-button").addEventListener("click", function () {
+  const forumId = this.dataset.forumId;
+  fetch(`/forums/${forumId}/likes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        document.getElementById("like-count").textContent = data.like_count;
+      } else {
+        alert("Error: " + (data.errors || "Unable to like the forum."));
+      }
+    });
+});
+-->

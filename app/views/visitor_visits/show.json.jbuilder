@@ -1,0 +1,1 @@
+json.partial! 'visitor_visits/visitor_visit', visitor_visit: @visitor_visit

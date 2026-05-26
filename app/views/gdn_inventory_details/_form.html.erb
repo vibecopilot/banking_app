@@ -1,0 +1,42 @@
+<%= form_with(model: gdn_inventory_detail, local: true) do |form| %>
+  <% if gdn_inventory_detail.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(gdn_inventory_detail.errors.count, "error") %> prohibited this gdn_inventory_detail from being saved:</h2>
+
+      <ul>
+      <% gdn_inventory_detail.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :inventory %>
+    <%= form.number_field :inventory, id: :gdn_inventory_detail_inventory %>
+  </div>
+
+  <div class="field">
+    <%= form.label :current_stock %>
+    <%= form.number_field :current_stock, id: :gdn_inventory_detail_current_stock %>
+  </div>
+
+  <div class="field">
+    <%= form.label :quantity %>
+    <%= form.number_field :quantity, id: :gdn_inventory_detail_quantity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comments %>
+    <%= form.text_area :comments, id: :gdn_inventory_detail_comments %>
+  </div>
+
+  <div class="field">
+    <%= form.label :gdn_id %>
+    <%= form.number_field :gdn_id, id: :gdn_inventory_detail_gdn_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

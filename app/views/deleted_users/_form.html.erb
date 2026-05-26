@@ -1,0 +1,37 @@
+<%= form_with(model: deleted_user, local: true) do |form| %>
+  <% if deleted_user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(deleted_user.errors.count, "error") %> prohibited this deleted_user from being saved:</h2>
+
+      <ul>
+      <% deleted_user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email, id: :deleted_user_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mobile %>
+    <%= form.text_field :mobile, id: :deleted_user_mobile %>
+  </div>
+
+  <div class="field">
+    <%= form.label :first_name %>
+    <%= form.text_field :first_name, id: :deleted_user_first_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :last_name %>
+    <%= form.text_field :last_name, id: :deleted_user_last_name %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

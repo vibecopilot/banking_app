@@ -1,0 +1,2 @@
+class CabAndBusRequest < ApplicationRecord
+end

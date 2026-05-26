@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Compliance Tag Tasks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Weightage</th>
+      <th>Compliance tag</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @compliance_tag_tasks.each do |compliance_tag_task| %>
+      <tr>
+        <td><%= compliance_tag_task.name %></td>
+        <td><%= compliance_tag_task.weightage %></td>
+        <td><%= compliance_tag_task.compliance_tag_id %></td>
+        <td><%= link_to 'Show', compliance_tag_task %></td>
+        <td><%= link_to 'Edit', edit_compliance_tag_task_path(compliance_tag_task) %></td>
+        <td><%= link_to 'Destroy', compliance_tag_task, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Compliance Tag Task', new_compliance_tag_task_path %>

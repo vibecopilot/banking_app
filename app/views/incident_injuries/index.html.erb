@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Incident Injuries</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Injury type</th>
+      <th>Injury number</th>
+      <th>Incident</th>
+      <th>Lost time</th>
+      <th>Who got injured</th>
+      <th>Name</th>
+      <th>Company name</th>
+      <th>Mobile</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @incident_injuries.each do |incident_injury| %>
+      <tr>
+        <td><%= incident_injury.injury_type %></td>
+        <td><%= incident_injury.injury_number %></td>
+        <td><%= incident_injury.incident_id %></td>
+        <td><%= incident_injury.lost_time %></td>
+        <td><%= incident_injury.who_got_injured_id %></td>
+        <td><%= incident_injury.name %></td>
+        <td><%= incident_injury.company_name %></td>
+        <td><%= incident_injury.mobile %></td>
+        <td><%= link_to 'Show', incident_injury %></td>
+        <td><%= link_to 'Edit', edit_incident_injury_path(incident_injury) %></td>
+        <td><%= link_to 'Destroy', incident_injury, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Incident Injury', new_incident_injury_path %>

@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Vendor:</strong>
+  <%= @asset_amc.vendor_id %>
+</p>
+
+<p>
+  <strong>Asset:</strong>
+  <%= @asset_amc.asset_id %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @asset_amc.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @asset_amc.end_date %>
+</p>
+
+<p>
+  <strong>Frequency:</strong>
+  <%= @asset_amc.frequency %>
+</p>
+
+<%= link_to 'Edit', edit_asset_amc_path(@asset_amc) %> |
+<%= link_to 'Back', asset_amcs_path %>

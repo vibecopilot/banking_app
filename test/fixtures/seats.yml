@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  buiding_id: 1
+  floor_id: 1
+  unit_id: 1
+  seat: MyString
+  'no': 1
+  category_id: 1
+  site_id: 1
+
+two:
+  buiding_id: 1
+  floor_id: 1
+  unit_id: 1
+  seat: MyString
+  'no': 1
+  category_id: 1
+  site_id: 1

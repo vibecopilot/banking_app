@@ -1,0 +1,94 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Item:</strong>
+  <%= @inventory_detail.item_id %>
+</p>
+
+<p>
+  <strong>Expected quantity:</strong>
+  <%= @inventory_detail.expected_quantity %>
+</p>
+
+<p>
+  <strong>Received quantity:</strong>
+  <%= @inventory_detail.received_quantity %>
+</p>
+
+<p>
+  <strong>Approved quantity:</strong>
+  <%= @inventory_detail.approved_quantity %>
+</p>
+
+<p>
+  <strong>Rejected quantity:</strong>
+  <%= @inventory_detail.rejected_quantity %>
+</p>
+
+<p>
+  <strong>Rate:</strong>
+  <%= @inventory_detail.rate %>
+</p>
+
+<p>
+  <strong>Csgt rate:</strong>
+  <%= @inventory_detail.csgt_rate %>
+</p>
+
+<p>
+  <strong>Csgt amt:</strong>
+  <%= @inventory_detail.csgt_amt %>
+</p>
+
+<p>
+  <strong>Sgst rate:</strong>
+  <%= @inventory_detail.sgst_rate %>
+</p>
+
+<p>
+  <strong>Sgst amt:</strong>
+  <%= @inventory_detail.sgst_amt %>
+</p>
+
+<p>
+  <strong>Igst rate:</strong>
+  <%= @inventory_detail.igst_rate %>
+</p>
+
+<p>
+  <strong>Igst amt:</strong>
+  <%= @inventory_detail.igst_amt %>
+</p>
+
+<p>
+  <strong>Tcs rate:</strong>
+  <%= @inventory_detail.tcs_rate %>
+</p>
+
+<p>
+  <strong>Tcs amt:</strong>
+  <%= @inventory_detail.tcs_amt %>
+</p>
+
+<p>
+  <strong>Tax amt:</strong>
+  <%= @inventory_detail.tax_amt %>
+</p>
+
+<p>
+  <strong>Inventory amount:</strong>
+  <%= @inventory_detail.inventory_amount %>
+</p>
+
+<p>
+  <strong>Total amount:</strong>
+  <%= @inventory_detail.total_amount %>
+</p>
+
+<p>
+  <strong>Grn:</strong>
+  <%= @inventory_detail.grn_id %>
+</p>
+
+<%= link_to 'Edit', edit_inventory_detail_path(@inventory_detail) %> |
+<%= link_to 'Back', inventory_details_path %>

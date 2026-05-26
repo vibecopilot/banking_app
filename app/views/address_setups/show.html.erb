@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @address_setup.title %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @address_setup.address %>
+</p>
+
+<p>
+  <strong>Building:</strong>
+  <%= @address_setup.building_id %>
+</p>
+
+<p>
+  <strong>State:</strong>
+  <%= @address_setup.state %>
+</p>
+
+<p>
+  <strong>Phone number:</strong>
+  <%= @address_setup.phone_number %>
+</p>
+
+<p>
+  <strong>Fax number:</strong>
+  <%= @address_setup.fax_number %>
+</p>
+
+<p>
+  <strong>Email address:</strong>
+  <%= @address_setup.email_address %>
+</p>
+
+<p>
+  <strong>Registration no:</strong>
+  <%= @address_setup.registration_no %>
+</p>
+
+<p>
+  <strong>Pan number:</strong>
+  <%= @address_setup.pan_number %>
+</p>
+
+<p>
+  <strong>Cheque in favour of:</strong>
+  <%= @address_setup.cheque_in_favour_of %>
+</p>
+
+<p>
+  <strong>Gst number:</strong>
+  <%= @address_setup.gst_number %>
+</p>
+
+<%= link_to 'Edit', edit_address_setup_path(@address_setup) %> |
+<%= link_to 'Back', address_setups_path %>

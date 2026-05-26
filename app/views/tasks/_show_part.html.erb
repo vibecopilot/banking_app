@@ -1,0 +1,12 @@
+<tr>
+    <td style="width: 10%;"> <input type="checkbox" title="Mark Done" name="status" value="1" class="markdone" dpid= "<%= @project.id %>"data-task="<%= @task.id %>" <%= (@task.status == 1) ? 'checked' : '' %> ></td>
+    <td style="width: 80%;"><%= @task.name %> <div class="small" style="float: right;"><%= @task.tat ? "#{@task.tat} " : '' %><%= @task.priority ? "| p#{@task.priority}" : '' %></div> </td>
+    <td class="" style="width: 15%;">
+    	<a href="#" title="comments" data-toggle="modal" data-target="#cmtmd<%= @task.id %>"> <i class="fa fa-eye"></i> </a>
+    	<% if @task.status != 1 %>
+        <a class="edit"  data-toggle="modal" data-target="#taskmd<%= @task.id %>"  title="Edit" ><i class="material-icons icns">&#xE254;</i></a>
+        <%= link_to '', [@project,@task], method: :delete, data: { confirm: 'Are you sure?' }, :remote => true, :class => 'fa fa-trash-o text-red icns', :style => "font-size: 20px;", :title =>"Delete" %> 
+        <% end %>
+    </td>
+</tr>
+  

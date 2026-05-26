@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyText
+  meeting_date: 2025-03-30 14:26:09
+  created_by_id: 1
+  active: false
+  company_tag_name: MyString
+
+two:
+  title: MyText
+  meeting_date: 2025-03-30 14:26:09
+  created_by_id: 1
+  active: false
+  company_tag_name: MyString

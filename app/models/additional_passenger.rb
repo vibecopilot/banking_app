@@ -1,0 +1,2 @@
+class AdditionalPassenger < ApplicationRecord
+end

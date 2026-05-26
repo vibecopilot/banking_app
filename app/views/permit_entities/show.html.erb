@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @permit_entity.name %>
+</p>
+
+<p>
+  <strong>Permit:</strong>
+  <%= @permit_entity.permit_id %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @permit_entity.active %>
+</p>
+
+<%= link_to 'Edit', edit_permit_entity_path(@permit_entity) %> |
+<%= link_to 'Back', permit_entities_path %>

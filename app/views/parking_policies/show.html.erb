@@ -1,0 +1,69 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Who can park:</strong>
+  <%= @parking_policy.who_can_park %>
+</p>
+
+<p>
+  <strong>Max vechille per flat:</strong>
+  <%= @parking_policy.max_vechille_per_flat %>
+</p>
+
+<p>
+  <strong>Allowed vehicle type:</strong>
+  <%= @parking_policy.allowed_vehicle_type %>
+</p>
+
+<p>
+  <strong>Type of:</strong>
+  <%= @parking_policy.type_of %>
+</p>
+
+<p>
+  <strong>Payment type:</strong>
+  <%= @parking_policy.payment_type %>
+</p>
+
+<p>
+  <strong>Billing frequency:</strong>
+  <%= @parking_policy.billing_frequency %>
+</p>
+
+<p>
+  <strong>Ev charging available:</strong>
+  <%= @parking_policy.ev_charging_available %>
+</p>
+
+<p>
+  <strong>Charging type:</strong>
+  <%= @parking_policy.charging_type %>
+</p>
+
+<p>
+  <strong>Ev charge location:</strong>
+  <%= @parking_policy.ev_charge_location %>
+</p>
+
+<p>
+  <strong>Ev charge fee:</strong>
+  <%= @parking_policy.ev_charge_fee %>
+</p>
+
+<p>
+  <strong>Who can access:</strong>
+  <%= @parking_policy.who_Can_access %>
+</p>
+
+<p>
+  <strong>Visitor parking allowed:</strong>
+  <%= @parking_policy.visitor_parking_allowed %>
+</p>
+
+<p>
+  <strong>Terms and condition:</strong>
+  <%= @parking_policy.terms_and_condition %>
+</p>
+
+<%= link_to 'Edit', edit_parking_policy_path(@parking_policy) %> |
+<%= link_to 'Back', parking_policies_path %>

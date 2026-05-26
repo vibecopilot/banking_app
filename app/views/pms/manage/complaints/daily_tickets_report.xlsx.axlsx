@@ -1,0 +1,164 @@
+wb = xlsx_package.workbook
+rows = ['Id', 'Ticket Number',	'Created Date', 'Created Time',	'Updated Date',	'Updated Time',	'Closed Date',	'Closed Time',	'Ticket Title',	'Status',	'Category',	'Subcategory',	'Created By',	'Email Id',	'Contact Number',	'Country',	'Region',	'Zone',	'Site',	'Unit', 'Department',	'Admin Priority',	'Customer Priority',	'Assigned To',	'Associated To',	'Asset Name',	'Service Name',	'Proactive/Reactive',	'Response TAT',	'Response Time',	'Resolution TAT',	'Resolution Time', 'Response Escalation Level',	'Response Escalated To',	'Resolution Escalation Level',	'Resolution Escalated To',	'Mode',	'Preventive Action',	'Corrective Action',	'Root Cause',	'Impact',	'Service Type',	'Responsible Person',	'Review Tracking Date',	'Rating',	'Latest Comment',	'Feedback',	'Response Time Difference',	'Resolution Time Difference', 'Aging', 'Aging Rule']
+wb.add_worksheet(name: 'Report') do |sheet|
+	wb.styles do |style|
+		sheet.add_row rows
+		@user_allowed_sites.each do |user_site|
+		
+			begin
+				open_complaints_ids = eval($redis_site_wise.get("complaint_of_#{user_site}"))[:total_site_complaints_ids] - eval($redis_site_wise.get("complaint_of_#{user_site}"))[:closed_tickets_status_ids]
+				@total_complaints = Complaint.pms.where(id: open_complaints_ids)
+
+				@total_complaints.compact.each_with_index do |complaint, i|
+					@id = complaint.id
+					@ticket_number = complaint.ticket_number
+					@created_date = complaint.created_at.strftime("%d-%m-%Y")
+					@created_time = complaint.created_at.strftime('%l: %M %p')
+					@updated_date = complaint.updated_at.strftime("%d-%m-%Y")
+					@updated_time = complaint.updated_at.strftime('%l: %M %p')
+					comp_status = ComplaintStatus.find_by_id(complaint.issue_status) 
+				    if comp_status.try(:fixed_state) == "closed" 
+				      @closed_date = complaint.complaint_logs.last.present? ? complaint.complaint_logs.last.created_at.strftime('%d/%m/%Y') : ""
+				      @closed_time = complaint.complaint_logs.last.present? ? complaint.complaint_logs.last.created_at.strftime('%l: %M %p') : ""
+				    else
+				      @closed_date = ""
+				      @closed_time = ""
+				    end
+				    @ticket_title = complaint.heading
+				    cs = complaint.current_status
+		    		csn = cs.try(:name)
+				    @status = complaint.complaint_status.try(:name) || csn || "Pending"
+				    @category = complaint.category_type.present? ? complaint.category_type.name : ""
+				    @sub_category = complaint.sub_category.present? ? complaint.sub_category.name : ""
+				    @created_by = complaint.user.try(:full_name)
+				    @email = complaint.user.try(:email)
+				    @contact_number = complaint.user.try(:mobile)
+				    @site = Pms::Site.find(complaint.site_id)
+				    @country = @site.try(:headquarter).try(:name)
+				    @region = @site.try(:pms_region).try(:name)
+				    @zone = @site.try(:pms_zone).try(:name)
+				    @unit = Pms::Unit.find_by(id: complaint.unit_id).try(:unit_name)
+				    @department = Pms::Department.find_by(id: complaint.dept_id).try(:department_name)
+				    @admin_priority = complaint.try(:priority)
+				    @customer_priority = complaint.try(:external_priority)
+				    aging_rules = AgingRule.active.where(site_id: @site.id)
+				    @assigned_to = complaint.assigned_to.present? ? Spree::User.find(complaint.assigned_to).try(:full_name) : ""
+				    if complaint.asset_id.present?
+				      @assoc_to = "Asset"
+				      @asset_name = Pms::Asset.find_by(id: complaint.asset_id).name_with_code
+				    elsif complaint.service_id.present?  
+				      @assoc_to = "Service"
+				      @service_name = Pms::Service.find_by(id: complaint.service_id).name_with_code
+		    		end
+		    		@proactive_reactive = complaint.proactive_reactive
+		    		resp_tat_min = complaint.response_tat_for(complaint.ticket_urgency, @site.try(:id)).to_i
+		    		@response_tat_time = complaint.dhm_new(resp_tat_min.present? ? resp_tat_min : 0)
+		    		
+		    		@root_cause = complaint.root_cause
+		    		@impact = complaint.impact
+		    		@service_type = complaint.service_type
+
+		    		@rating = ''
+					    if complaint.feedbacks.present?
+					      if complaint.feedbacks.last.rating == 1
+					        @rating = "Terrible"
+					      elsif complaint.feedbacks.last.rating == 2
+					        @rating = "Bad"
+					      elsif complaint.feedbacks.last.rating == 3
+					        @rating = "Okay"
+					      elsif complaint.feedbacks.last.rating == 4
+					        @rating = "Good"
+					      elsif complaint.feedbacks.last.rating == 5
+					        @rating = "Great"
+					      end
+					    end
+					 @latest_comment = complaint.complaint_comments.last.try(:comment)   
+					 @feedback = complaint.feedbacks.present? ? complaint.feedbacks.last.comment : nil
+					 @mode = complaint.complaint_mode.try(:name)
+					 @preventinve_action = complaint.preventive_action
+					 @corrective_action = complaint.corrective_action
+					 @resp_person = User.find_by_id(complaint.person_id).try(:fullname)
+					 if complaint.review_tracking_date.present? 
+		     			@rv_date = complaint.review_tracking_date.strftime('%d/%m/%Y')
+		    		end
+
+		    		ops = HelpdeskOperation.site_ops(@site.id)
+		    		comp_logs = complaint.complaint_logs.where("complaint_status_id is not null")
+		    		clog = comp_logs.try(:second)
+		    		lastlog = comp_logs.try(:last)
+		    		crtime = complaint.created_at
+		    		if clog.present?
+				      if ops.present?
+				        resptime = HelpdeskOperation.op_time_diff(crtime, clog.created_at, ops).try(:to_i)
+				      else
+				        clogtime = clog.created_at
+				        resptime = ((clogtime - crtime) / 60).to_i
+				      end 
+		    		end
+		    		@resp_time = complaint.dhm_new(resptime.present? ? resptime : 0)
+		    		cws = ComplaintWorker.where("esc_type is null or esc_type = 'resolution'").where(issue_type_id: complaint.issue_type_id, category_id: complaint.category_type_id, society_id: complaint.site_id).try(:first)
+		    		reso = EscalationMatrix.where(cw_id: cws.try(:id)).try(:first)
+		    		resotat = reso.try(complaint.priority.try(:downcase).try(:to_sym))
+		    		@resolution_tat_time = complaint.dhm_new(resotat.present? ? resotat : 0)
+				    dsp = SocietyStaff.new
+				    escalations =
+				    EscalationMatrix.joins(:complaint_worker).active.where("complaint_workers.esc_type = 'resolution' or complaint_workers.esc_type is null").
+		      ransack({complaint_worker_issue_type_id_eq: complaint.issue_type_id, complaint_worker_category_id_eq: complaint.category_type_id, complaint_worker_society_id_eq: complaint.site_id}).result.first
+				    eh_response = complaint.esc_histories.ransack({escalation_matrix_complaint_worker_esc_type_eq: "response"}).result
+				    eh_resolution = complaint.esc_histories.ransack({m: "or",escalation_matrix_complaint_worker_esc_type_eq: "resolution", escalation_matrix_complaint_worker_esc_type_null: 1}).result
+					
+
+
+				    if lastlog.present? && lastlog.complaint_status_id.present? && lastlog.complaint_status.try(:fixed_state) == "closed"
+
+				      closed_on_date = lastlog.created_at.strftime('%d/%m/%Y')
+				      closed_on_time = lastlog.created_at.strftime('%l: %M %p')
+
+				      if ops.present?
+				        resolutime = HelpdeskOperation.op_time_diff(crtime, lastlog.created_at, ops).try(:to_i)
+				      else
+				        lasttime = lastlog.created_at
+				        resolutime = ((lasttime - crtime) / 60).to_i
+				      end
+				      elapsed_time = escalations.present? ? escalations.elapsed(complaint.priority) : nil
+				      resolution_breached = (elapsed_time.present? && elapsed_time > 0) && (elapsed_time < resolutime) ? "Yes" : "No"
+
+				      @aging = dsp.dhm_new(resolutime)
+
+				      aging_in_minutes = resolutime
+				    else
+				      resolution_breached = eh_resolution.present? ? "Yes" : "No"
+				      aging_value = ((Time.zone.now - crtime) / 60).to_i
+				      @aging = aging_value.present? ? dsp.dhm_new(aging_value) : 0
+				      aging_in_minutes = aging_value
+				    end
+				    @reso_time = complaint.dhm_new(resolutime.present? ? resolutime : 0)
+
+				    if eh_response.present?
+				        esc_response = EscalationMatrix.find(eh_response.last.esc_id)
+				        response_elevl = esc_response.try(:name)
+				        response_usersociety = UserSociety.where(id: esc_response.escalate_to_users)
+				        response_eleto = response_usersociety.present? ? Spree::User.where(id: response_usersociety.pluck(:id_user)).map{|p| "#{p.full_name}"}.compact.join(", ") : nil
+		      		end
+		      		if eh_resolution.present?
+				        esc_resolution = EscalationMatrix.find(eh_resolution.last.esc_id)
+				        resolution_elevl = esc_resolution.try(:name)
+				        resolution_usersociety = UserSociety.where(id: esc_resolution.escalate_to_users)
+				        resolution_eleto = resolution_usersociety.present? ? Spree::User.where(id: resolution_usersociety.pluck(:id_user)).map{|p| "#{p.full_name}"}.compact.join(", ") : nil
+				      end
+				      resp_time_differ = resptime.to_i - complaint.response_tat_for(complaint.ticket_urgency, complaint.site_id).to_i
+				      reso_time_differ = resolutime.to_i - resotat.to_i
+		      		 resp_time_diff = complaint.dhm_new(resp_time_differ.present? ? resp_time_differ : 0)
+		      		 reso_time_diff = complaint.dhm_new(reso_time_differ.present? ? reso_time_differ : 0)
+		      		 @aging_rule = AgingRule.compare_aging_value_with_rule(complaint.id,aging_in_minutes,aging_rules)
+				    this_row = [@id, @ticket_number,	@created_date, @created_time,	@updated_date,	@updated_time,	@closed_date,	@closed_time,	@ticket_title,	@status,	@category,	@sub_category,	@created_by, @email, @contact_number,	@country,	@region,	@zone,	@site.try(:name),	@unit, @department,	@admin_priority,	@customer_priority,	@assigned_to,	@assoc_to,	@asset_name,	@service_name,	@proactive_reactive,	@response_tat_time,	@resp_time,	@resolution_tat_time,	@reso_time, response_elevl,	response_eleto,	resolution_elevl,	resolution_eleto,	@mode,	@preventinve_action,	@corrective_action,	@root_cause,	@impact,	@service_type,	@resp_person,	@rv_date,	@rating,	@latest_comment,	@feedback,	resp_time_diff,	reso_time_diff, @aging, @aging_rule]
+
+		    		sheet.add_row this_row
+	    		rescue => e
+	    			PmsHelpdeskReportLog.create({resource_id: complaint.id, resource_type: "Complaint", message: e.message})
+	    			next
+	    		end
+			end
+		end
+	end
+end

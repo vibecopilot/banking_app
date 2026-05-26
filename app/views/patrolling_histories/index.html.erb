@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Patrolling Histories</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Patroling</th>
+      <th>Expected time</th>
+      <th>Actual time</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @patrolling_histories.each do |patrolling_history| %>
+      <tr>
+        <td><%= patrolling_history.user_id %></td>
+        <td><%= patrolling_history.patrolling_id %></td>
+        <td><%= patrolling_history.expected_time %></td>
+        <td><%= patrolling_history.actual_time %></td>
+        <td><%= link_to 'Show', patrolling_history %></td>
+        <td><%= link_to 'Edit', edit_patrolling_history_path(patrolling_history) %></td>
+        <td><%= link_to 'Destroy', patrolling_history, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Patrolling History', new_patrolling_history_path %>

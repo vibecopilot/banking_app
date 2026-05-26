@@ -1,0 +1,524 @@
+<style>
+  .ui.toggle.checkbox input:checked ~ label::before {
+
+    background-color: rgb(26, 179, 148) !important;
+
+}
+
+.ui.toggle.checkbox label::before {
+
+    background-color: #e21d41 !important;
+
+}
+
+.file .file-name i{
+    position: absolute !important;
+    right: 0px !important;
+    top: 4px !important;
+    font-size: 12px !important;
+    color: #555 !important;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2px;
+}
+.ibox-title{
+  border:0px !important;
+}
+table {
+  /*position: relative;*/
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #000 !important;
+}
+
+table thead tr th, table tbody tr td {
+  border: 1px solid #000 !important;
+  padding: 1.2rem !important;
+  vertical-align: top;
+}
+
+table thead tr th {
+  background: #e4e4e4 !important;/*
+  position: sticky;
+  top: 0;*/
+}
+
+.extra-bottom-padding{
+  padding-bottom: 100px;
+}
+</style>
+<% @complaint_logs = ComplaintLog.where(complaint_id: @complaint.id).where("changed_by is not null").order("id DESC") 
+  @complaint_comments = ComplaintComment.where(complaint_id: @complaint.id, complaint_log_id: nil)
+  @approved_status = ComplaintStatus.find_or_create_by(society_id: @user.current_site_id, name: "Approved", active: 1)
+  @approval_status = ComplaintStatus.find_or_create_by(society_id: @user.current_site_id, name: "Approval Pending", active: 1)
+  @complete_status = ComplaintStatus.find_or_create_by(society_id: @user.current_site_id, name: "Complete", active: 1)
+  @close_status = ComplaintStatus.find_or_create_by(society_id: @user.current_site_id, name: "Closed", active: 1)
+%>
+<div class="wrapper wrapper-content">
+  <section class="content">
+    <div class="ibox">
+      <div class="ibox-title">
+        <div class="ibox-tools">
+          <a href="/pms/admin/complaints/<%= @complaint.id %>/complaint_edit_form" class="btn  btn-md pull-right custom-button" style="margin-right: 15px;" >Edit</a>
+          <% if @complaint.issue_status.to_i == @approved_status.id && @user.id == @complaint.assigned_to%>
+            <button type="button" class="btn btn-md pull-right custom-button" style="width: auto; margin-right: 15px;" data-toggle="modal" data-target="#complete<%= @complaint.id %>" data-id="complete<%= @complaint.id %>">Complete Work</button>
+          <% elsif @complaint.issue_status.to_i == @complete_status.id && @complaint.territory_manager_id == @user.id %>
+            <button type="button" class="btn  btn-md pull-right custom-button" style="margin-right: 15px;" data-toggle="modal" data-target="#close<%= @complaint.id %>" data-id="close<%= @complaint.id %>">Close Ticket</button>
+          <% elsif !@complaint.ticket_items.present? && @user.id == @complaint.assigned_to%>
+            <button type="button" class="btn  btn-md pull-right custom-button" style="margin-right: 15px;" data-toggle="modal" data-target="#itemsModal<%= @complaint.id %>" data-id="itemsModal<%= @complaint.id %>">Add Items</button>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="ibox-content extra-bottom-padding" style="border: none !important">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-title" style="height: auto;">
+              <h3> Ticket Details</h3><%= @complaint.heading %>
+              <div class="grid-container">
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Tower:</dt>
+                  <dd><%= @complaint.tower.try(:name) %></dd>
+                </dl>
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Floor:</dt>
+                  <dd><%= @complaint.floor.try(:name) %></dd>
+                </dl>
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Unit:</dt>
+                  <dd><%= @complaint.unit.try(:name) %></dd>
+                </dl>
+              </div>
+              <div class="grid-container">
+               
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Ticket No:</dt>
+                  <dd><%= @complaint.ticket_number %></dd>
+                </dl>
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Created On:</dt>
+                  <dd><%= @complaint.created_at.strftime('%d/%m/%Y')%> <%= @complaint.created_at.strftime('%l:%M %p') %></dd>
+                </dl>
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Category:</dt>
+                  <dd><%= @complaint.category_type.try(:name) %></dd>
+                </dl>
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Status:</dt>
+                  <% stat =  @complaint.issue_status.present? ? (ComplaintStatus.find_by_id(@complaint.issue_status).try(:name) || @complaint.issue_status ) : "pending" %>
+                  <dd><%= stat %></dd>
+                </dl>
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Priority:</dt>
+                  <dd><%= @complaint.priority %></dd>
+                </dl>
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Subcategory:</dt>
+                  <dd><%= @complaint.sub_category_id.present? ? HelpdeskSubCategory.find_by_id(@complaint.sub_category_id).try(:name): " " %></dd>
+                </dl>
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Created By:</dt>
+                  <dd><%= User.find_by(id: @complaint.id_user).try(:full_name) %></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-12">
+            <div class="form-title" style="height: auto;">
+              <h3>Additional Info</h3>
+              <div class="grid-container">
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Assigned To:</dt>
+                  <dd><%= User.find_by(id: @complaint.assigned_to).try(:full_name) %></dd>
+                </dl>
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Approving Authority:</dt>
+                  <dd><%= @complaint.territory_manager_id.present? ? User.find_by(id: @complaint.territory_manager_id).try(:full_name) : "" %></dd>
+                </dl>
+                <dl class="dl-horizontal" style="margin-left:0px !important">
+                  <dt>Notes:</dt>
+                  <dd><%= @complaint.additional_notes %></dd>
+                </dl>
+                <br>
+              </div>
+            </div>
+          </div>
+            
+          <div class="col-sm-12">
+            <div class="form-title" style="height: auto;">
+              <h3>Attachments &nbsp;<span class="label label-info"><%= @complaint.attachments.count %></span></h3>
+              
+              <div class="ibox-content">
+                <%= render "pms/complaints/documents", object: @complaint.attachments %>
+              </div>
+            </div>
+          </div>
+          <% @items = TicketItem.where(ticket_id: @complaint.id) %>
+          <% if @items.present? %>
+            <div class="col-sm-12">
+              <div class="form-title" style="height: auto;">
+                <h3>Items &nbsp;</h3>
+                <% if @user.id == @complaint.territory_manager_id && @approval_status.present? && @complaint.issue_status.to_i == @approval_status.id %>
+                    <button type="button" class="btn  btn-md pull-right custom-button" style="margin-right: 15px;" data-toggle="modal" data-target="#itemsModalApprove<%= @complaint.id %>" data-id="itemsModalApprove<%= @complaint.id %>">Approve</button>
+                <% end %>
+                <table>
+                  <thead>
+                    <th>Item</th>
+                    <th>Rate</th>
+                  </thead>
+                  <% @items.each do |item| %>
+                    <tr>
+                      <td> <%= item.item.name %> </td>
+                      <td> <%= item.rate %> </td>
+                    </tr>
+                  <% end %>
+                </table>
+              </div>
+            </div>
+          <% end %>
+          <% if @complaint.esc_histories.present? %>
+          <div class="col-sm-12">
+            <div class="form-title" style="height: auto;">
+            <h3>Escalation History:</h3>
+            <table>
+              <thead>
+                <th>Type</th>
+                <th>Time</th>
+                <th>Sent To</th>
+              </thead>
+              <% @complaint.esc_histories.each do |esc| %>
+                <tr>
+                  <td> <%= esc.escalation_matrix.try(:name).to_s + " : " + esc.try(:escalation_matrix).try(:complaint_worker).try(:esc_type).to_s %></td>
+                  <td> <%= esc.created_at.strftime("%d/%m/%Y %l:%M %p") %></td>
+                  <td><%= Spree::User.where(id: esc.esc_to ).map { |e| e.full_name }.join(", ")%></td>
+                 </tr>
+               <% end%>
+            </table>
+            </div>
+          </div>
+          <% end %>
+          <% complaint_logs = ComplaintLog.where(complaint_id: @complaint.id, mode: ["Before", "During", "After"]) %>
+          <% if complaint_logs.present? %>
+            <div class="col-sm-12">
+              <div class="form-title" style="height: auto;">
+                <h3>Completion Logs</h3>
+                <div class="grid-container">
+                <% complaint_logs.each do |complaint_log| %>
+                  <% img = Attachfile.where(relation: "ComplaintLog#{complaint_log.mode}", relation_id: complaint_log.id) %>
+                  <% if img.present? %>
+                    <div class="col-sm-6">
+                      <h5> <%= complaint_log.mode %> Attachments</h5>
+                      <div class="ibox-content">
+                        <%= render "pms/manage/complaints/documents", object: img %>
+                     </div>
+                   </div>
+                  <% end %>
+                <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="col-sm-12">
+            <div class="form-title" style="height: auto;">
+              <h3>Logs:</h3>
+              <div class="lead-timeline">
+            <% complaint_logs = ComplaintLog.where(complaint_id: @complaint.id, mode: nil).order(id: :desc)%>
+            <%if complaint_logs.present?
+              complaint_logs.each do |complaint_log| %>
+                <div class="col-xs-3 date"> <i class="fa fa-file-text" aria-hidden="true"></i> <%= complaint_log.created_at.strftime("%d/%m/%Y %I:%M %p")%><br/>
+                </div>
+                <div class="col-xs-7 content no-top-border">
+                  <div class="feed-element" style="border:none;">
+                    <% if complaint_log.user.present?%>
+                       <strong><%= complaint_log.user.try(:full_name)%></strong><br/>
+                    <% end %>
+                    <% if complaint_log.complaint_status_id.present?  %>
+                      <strong>Status</strong> - 
+                      <%= complaint_log.complaint_status.try(:name) %><br/>
+                    <% end %>
+                    <% @complaint_comments = ComplaintComment.where(complaint_log_id: complaint_log.id) %>
+                    <% if @complaint_comments.present? %>
+                      <br/>
+                        <strong>Commented</strong> -  <%= @complaint_comments.last.comment %>
+                      <br/>
+                      <% img = Attachfile.where("relation = 'ComplaintComment' and relation_id = ?", @complaint_comments.last.id) %>
+                      <% if img.present? %>
+                        <div class="col-sm-6">
+                          <h5>Attachment</h5>
+                          <div class="ibox-content">
+                            <%= render "pms/manage/complaints/documents", object: img %>
+                         </div>
+                       </div>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="modal fade" id="complete<%= @complaint.id %>" role="dialog">
+  <div class="modal-dialog" role="document">
+    <% @complaint_log = ComplaintLog.new %>
+    <%= form_for(@complaint_log, url: "/complete_ticket", html: { multipart: true }) do |f| %>
+      <%= hidden_field_tag "custom_redirect" ,value = "/pms/admin/complaints/#{@complaint.id}"%>
+      <%= f.hidden_field :complaint_id, :value => @complaint.id %>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <label>Before</label>
+              <input type="hidden" name="logs[][mode]" value="Before">
+              <div class="form-group col-sm-12">
+                <div class="upload">
+                  <ul id="media-list" class="clearfix">
+                    <li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i>
+                    <input type="file" name="logs[][attachments][]" click-type="type2" id="picupload2" class="picupload" multiple>
+                  </span> </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <label>During</label>
+              <input type="hidden" name="logs[][mode]" value="During">
+              <div class="form-group col-sm-12">
+                <div class="upload">
+                  <ul id="media-list" class="clearfix">
+                    <li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i>
+                    <input type="file" name="logs[][attachments][]" click-type="type2" id="picupload2" class="picupload" multiple>
+                  </span> </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <label>After</label>
+              <input type="hidden" name="logs[][mode]" value="After">
+              <div class="form-group col-sm-12">
+                <div class="upload">
+                  <ul id="media-list" class="clearfix">
+                    <li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i>
+                    <input type="file" name="logs[][attachments][]" click-type="type2" id="picupload2" class="picupload" multiple>
+                  </span> </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" style="width: auto;" class="btn  btn-md custom-button">Complete</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div class="modal fade" id="itemsModalApprove<%= @complaint.id %>" role="dialog">
+  <div class="modal-dialog" role="document">
+    <% @complaint_log = ComplaintLog.new %>
+    <%= form_for(@complaint_log, url: "/complaint_logs", html: { multipart: true }) do |f| %>
+      <%= hidden_field_tag "custom_redirect" ,value = "/pms/admin/complaints/#{@complaint.id}"%>
+      <%= f.hidden_field :complaint_id, :value => @complaint.id %>
+      <%= f.hidden_field :complaint_status_id, :value => @approved_status.id %>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group col-sm-12">
+                <div class="field text-left mb-3">
+                  <label>Remarks</label>
+                  <textarea name="comment"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" style="width: auto;" class="btn  btn-md custom-button">Approve</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div class="modal fade" id="close<%= @complaint.id %>" role="dialog">
+  <div class="modal-dialog" role="document">
+    <% @complaint_log = ComplaintLog.new %>
+    <%= form_for(@complaint_log, url: "/complaint_logs", html: { multipart: true }) do |f| %>
+      <%= hidden_field_tag "custom_redirect" ,value = "/pms/admin/complaints/#{@complaint.id}"%>
+      <%= f.hidden_field :complaint_id, :value => @complaint.id %>
+      <%= f.hidden_field :complaint_status_id, :value => @close_status.id %>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group col-sm-12">
+                <div class="field text-left mb-3">
+                  <label>Remarks</label>
+                  <textarea name="comment"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" style="width: auto;" class="btn  btn-md custom-button">Close Ticket</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<div class="modal fade" id="itemsModal<%= @complaint.id %>" role="dialog">
+  <div class="modal-dialog" role="document">
+    <% @complaint_log = ComplaintLog.new %>
+    <%= form_for(@complaint_log, url: "/pms/admin/complaint_items", html: { multipart: true }) do |f| %>
+    <input type="hidden" name="id" value="<%=@complaint.id%>">
+    <input type="hidden" name="custom_redirect" value="/pms/admin/helpdesk_categories">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group col-sm-12">
+                <div class="field text-left mb-3">
+                  <label>Select Items</label>
+                  <% @items = Item.where(site_id: @user.current_site_id) %>
+                  <%= select_tag 'item_ids', options_for_select( @items.map { |e| [e.name_with_rate, e.id] }, :selected => params[:item_ids] ), :include_blank => "Select Item", :class=>"ui dropdown form-control multiple", :multiple => true %>
+                </div>
+                <div class="field text-left mb-3">
+                  <label>Remarks</label>
+                  <textarea name="comment"></textarea>
+                </div>
+                <div class="upload">
+                  <ul id="media-list" class="clearfix">
+                    <li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i>
+                    <input type="file" name="complaint_comment[attachments][]" click-type="type2" id="picupload2" class="picupload" multiple>
+                  </span> </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" style="width: auto;" class="btn  btn-md custom-button">Request Approval</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<script>
+
+  var workers = '<%= @jn.to_json %>';
+  var wos = JSON.parse(workers.replace(/&quot;/g,'"'));
+  $("#issue_type").off("change");
+
+  $("#location_tower").change(function(){
+    pms_wings_from_tower($(this), $("#location_wings")) 
+  });
+
+  $("#location_wings").change(function(){
+    pms_area_from_wing($(this), $("#location_area")) 
+  });
+
+  $(function () {
+    //Date picker
+    var nowDate = new Date();
+    var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), 
+      nowDate.getDate(), 0, 0, 0, 0);
+
+    $(".complaint_datepicker").datepicker({
+      // dateFormat: 'dd/mm/yy',
+      autoclose: true,
+      startDate : today
+    });
+  });
+
+  jQuery(document).ready(function(){
+  jQuery("#assigned_to").val(location.pathname)
+  });
+
+  jQuery(document).ready(function(){
+  jQuery("#issue_type").val(location.pathname)
+  });
+
+
+  if(jQuery.isMobile){
+      jQuery("body").css({marginBottom: 140})
+  }
+
+  $('.ui.dropdown').dropdown();
+  $(document).ready(function() {
+     var readURL2 = function(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            $('.well').append($('<div class="attach-img"><i class="fa fa-times remove-img" aria-hidden="true" ></i><img src="' + e.target.result + '" alt="img" class="img-thumbnail"></div>'));
+
+            $(".remove-img").off("click");
+            $(".remove-img").click(function(){ $(this).parent().remove(); });
+           [i.fa.fa-times.remove-img, i.fa.fa-times.remove-img, i.fa.fa-times.remove-img]
+          }
+          reader.readAsDataURL(input.files[0]);
+        }
+    }    
+    $("#comment_doc").on('change', function(){
+      readURL2(this);
+    });
+  });
+
+ $("#submitbtn").click(function(e){
+  e.preventDefault();
+   $('.well img').each(function(){
+    pres = $(this).attr('src');
+    pres = pres.replace('data:image/png;base64,', "")
+    pres = pres.replace('data:image/jpg;base64,', "")
+    pres = pres.replace('data:image/jpeg;base64,', "")
+    $(this).parents("form").append($('<input type="hidden" name="complaint_comment[docs][]" value='+ pres +' > '))
+  });
+  $(this).parents("form").submit();
+ });
+
+ // $(".cancelreq").click(function(){
+ //   var id = $(this).attr('data-id');
+ //        $.ajax({      
+ //            type : 'GET',
+ //            url : '/costapprequpdate/'+id,
+ //            dataType: "html",
+ //            beforeSend: function(){
+ //                $("#loader").show();
+ //            },            
+ //            success: function(data) {
+ //              var result = $('<div />').append(data).find('.reqdiv').html();
+ //              $('.reqdiv').html(result);               
+ //              toastr.success("Cost Approval Request has been cancelled successfully.");
+ //              $("#loader").hide();
+ //             },
+ //         });
+ // });
+
+</script> 

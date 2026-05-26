@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Restaurant:</strong>
+  <%= @table_booking.restaurant_id %>
+</p>
+
+<p>
+  <strong>Ondate:</strong>
+  <%= @table_booking.ondate %>
+</p>
+
+<p>
+  <strong>Ontime:</strong>
+  <%= @table_booking.ontime %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @table_booking.user_id %>
+</p>
+
+<p>
+  <strong>No of person:</strong>
+  <%= @table_booking.no_of_person %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @table_booking.status %>
+</p>
+
+<%= link_to 'Edit', edit_table_booking_path(@table_booking) %> |
+<%= link_to 'Back', table_bookings_path %>

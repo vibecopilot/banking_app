@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Employee name:</strong>
+  <%= @transport_request.employee_name %>
+</p>
+
+<p>
+  <strong>Employee:</strong>
+  <%= @transport_request.employee_id %>
+</p>
+
+<p>
+  <strong>Pickup location:</strong>
+  <%= @transport_request.pickup_location %>
+</p>
+
+<p>
+  <strong>Date and time:</strong>
+  <%= @transport_request.date_and_time %>
+</p>
+
+<p>
+  <strong>Special requirements:</strong>
+  <%= @transport_request.special_requirements %>
+</p>
+
+<p>
+  <strong>Driver contact information:</strong>
+  <%= @transport_request.driver_contact_information %>
+</p>
+
+<p>
+  <strong>Vehicle details:</strong>
+  <%= @transport_request.vehicle_details %>
+</p>
+
+<p>
+  <strong>Booking confirmation number:</strong>
+  <%= @transport_request.booking_confirmation_number %>
+</p>
+
+<p>
+  <strong>Booking status:</strong>
+  <%= @transport_request.booking_status %>
+</p>
+
+<p>
+  <strong>Manager approval:</strong>
+  <%= @transport_request.manager_approval %>
+</p>
+
+<p>
+  <strong>Booking confirmation email:</strong>
+  <%= @transport_request.booking_confirmation_email %>
+</p>
+
+<%= link_to 'Edit', edit_transport_request_path(@transport_request) %> |
+<%= link_to 'Back', transport_requests_path %>

@@ -1,0 +1,27 @@
+<%= form_with(model: checklist_cron, local: true) do |form| %>
+  <% if checklist_cron.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(checklist_cron.errors.count, "error") %> prohibited this checklist_cron from being saved:</h2>
+
+      <ul>
+      <% checklist_cron.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :checklist_id %>
+    <%= form.number_field :checklist_id, id: :checklist_cron_checklist_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :expression %>
+    <%= form.text_field :expression, id: :checklist_cron_expression %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

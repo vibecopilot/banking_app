@@ -1,0 +1,65 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Firstname:</strong>
+  <%= @staff.firstname %>
+</p>
+
+<p>
+  <strong>Lastname:</strong>
+  <%= @staff.lastname %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @staff.email %>
+</p>
+
+<p>
+  <strong>Mobile no:</strong>
+  <%= @staff.mobile_no %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @staff.unit_id %>
+</p>
+
+<p>
+  <strong>Work type:</strong>
+  <%= @staff.work_type %>
+</p>
+
+<p>
+  <strong>Vendor:</strong>
+  <%= @staff.vendor_id %>
+</p>
+
+<p>
+  <strong>Valid from:</strong>
+  <%= @staff.valid_from %>
+</p>
+
+<p>
+  <strong>Valid till:</strong>
+  <%= @staff.valid_till %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @staff.status %>
+</p>
+
+<% if @filtered_working_schedule.present? %>
+  <h3>Working Schedule</h3>
+  <ul>
+    <% @filtered_working_schedule.each do |day, times| %>
+      <li><strong><%= day %></strong>: <%= times['start_time'] %> to <%= times['end_time'] %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No working schedule available.</p>
+<% end %>
+
+<%= link_to 'Edit', edit_staff_path(@staff) %> |
+<%= link_to 'Back', staffs_path %>

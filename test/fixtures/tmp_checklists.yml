@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  site_id: 1
+  frequency: MyString
+  user_id: 1
+  tmp_name: MyString
+  occurs: MyString
+  ctype: MyString
+  patrolling_id: 1
+  weightage_enabled: false
+
+two:
+  site_id: 1
+  frequency: MyString
+  user_id: 1
+  tmp_name: MyString
+  occurs: MyString
+  ctype: MyString
+  patrolling_id: 1
+  weightage_enabled: false

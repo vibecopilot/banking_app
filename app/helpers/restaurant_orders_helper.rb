@@ -1,0 +1,2 @@
+module RestaurantOrdersHelper
+end

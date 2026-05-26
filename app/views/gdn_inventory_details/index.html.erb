@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Gdn Inventory Details</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Inventory</th>
+      <th>Current stock</th>
+      <th>Quantity</th>
+      <th>Comments</th>
+      <th>Gdn</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @gdn_inventory_details.each do |gdn_inventory_detail| %>
+      <tr>
+        <td><%= gdn_inventory_detail.inventory %></td>
+        <td><%= gdn_inventory_detail.current_stock %></td>
+        <td><%= gdn_inventory_detail.quantity %></td>
+        <td><%= gdn_inventory_detail.comments %></td>
+        <td><%= gdn_inventory_detail.gdn_id %></td>
+        <td><%= link_to 'Show', gdn_inventory_detail %></td>
+        <td><%= link_to 'Edit', edit_gdn_inventory_detail_path(gdn_inventory_detail) %></td>
+        <td><%= link_to 'Destroy', gdn_inventory_detail, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Gdn Inventory Detail', new_gdn_inventory_detail_path %>

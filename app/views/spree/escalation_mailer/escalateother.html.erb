@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Helpdesk Ticket</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<style type="text/css">
+body, table, td, a {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+table, td {
+  mso-table-lspace: 0pt;
+  mso-table-rspace: 0pt;
+}
+img {
+  -ms-interpolation-mode: bicubic;
+}
+.attachment {
+  width: 110px;
+  height: auto;
+  display: inline-block;
+  margin: 10px 5px 5px 0px;
+  border: 1px solid #ddd;
+  text-align: center;
+  vertical-align: middle;
+  padding: 5px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+}
+.attachment img {
+  width: 75%;
+}
+/* RESET STYLES */
+img {
+  border: 0;
+  height: auto;
+  line-height: 100%;
+  outline: none;
+  text-decoration: none;
+}
+table {
+  border-collapse: collapse !important;
+}
+body {
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  font-size: 13px !important;
+}
+/* iOS BLUE LINKS */
+a[x-apple-data-detectors] {
+  color: inherit !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+@media all and (max-width: 600px) {
+.floater {
+  width: 320px;
+}
+}
+
+    
+    /* MOBILE STYLES */
+    @media screen and (max-width:600px) {
+h1 {
+  font-size: 32px !important;
+  line-height: 32px !important;
+}
+h5, p {
+  margin: 0px !important;
+}
+}
+</style>
+</head>
+<body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
+
+<!-- HIDDEN PREHEADER TEXT -->
+<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family:Arial, Helvetica, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;"> </div>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  
+
+  <tr>
+    <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;"><!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+      
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" >
+        <!-- COPY --> 
+        
+        <!-- COPY -->
+        <tr>
+          <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-weight: 400; line-height: 25px;" ><ul style="margin:0px; padding:0px; text-align:right;">
+              <% if @esc.complaint_worker.try(:esc_type) == "response" %>
+                <li style="list-style-type:none; display:inline-block; margin-right:5px;">
+                <div style="float:right; background-color:#673AB7; color:#ffffff; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px; padding:0px 8px;">Response</div>
+              </li>
+              <% else %>
+                <li style="list-style-type:none; display:inline-block; margin-right:5px;">
+                <div style="float:right; background-color:#FF9800; color:#ffffff; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px; padding:0px 8px;">Resolution</div>
+              </li>
+              <% end %>
+              
+              <li style="list-style-type:none; display:inline-block; margin-right:5px;">
+                <div style="float:right; background-color:#d44237; color:#ffffff; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px; padding:0px 8px;"><%= @esc.name %></div>
+              </li>
+            </ul></td>
+        </tr>
+        <tr>
+          <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;
+  padding-top: 5px; padding-bottom:5px; padding-left:20px; background:#ffffff;"><table border="0" cellpadding="0" cellspacing="0" align="left"
+  width="600" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit;
+  max-width: 600px;">
+              <tr>
+                <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 10px; padding-right: 0px;" class="floaters"><table width="180" border="0" cellpadding="0" cellspacing="0" align="left" valign="top" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; margin: 0; padding: 0; display: inline-table; float: none;" class="floater">
+                    <tr>
+                      <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; font-size: 13px; font-weight: 500; line-height:180%; padding-top: 10px; font-family:Arial, Helvetica, sans-serif; color: #666666;"><strong>Ticket Number</strong><br>
+                        <span style="color:#36a211;"><%= "#{@complaint.ticket_number}" %></span></td>
+                    </tr>
+                  </table>
+                  <table width="180" border="0" cellpadding="0" cellspacing="0" align="left" valign="top" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; margin: 0; padding: 0; display: inline-table; float: none;" class="floater">
+                    <tr>
+                      <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; font-size: 13px; font-weight: 500; line-height:180%; padding-top: 10px; font-family:Arial, Helvetica, sans-serif; color: #666666;"><strong>Category</strong><br>
+                        <span style="color:#36a211; "><%= @complaint.category_type.try(:name) %></span></td>
+                    </tr>
+                  </table>
+                  <table width="180" border="0" cellpadding="0" cellspacing="0" align="let" valign="top" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; margin: 0; padding: 0; display: inline-table; float: none;" class="floater">
+                    <tr>
+                      <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; font-size: 13px; font-weight: 500; line-height:180%; padding-top: 10px; font-family:Arial, Helvetica, sans-serif; color: #666666;"><strong>Created On</strong><br>
+                        <span style="color:#36a211;"><%= "#{@complaint.created_at.in_time_zone('Asia/Kolkata').strftime('%e %B %Y %l:%M %p')}" %></span></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr>
+                <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 10px; padding-right: 10px;" class="floaters"><table width="180" border="0" cellpadding="0" cellspacing="0" align="left" valign="top" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; margin: 0; padding: 0; display: inline-block; float: none;" class="floater">
+                    <tr>
+                      <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; font-size: 13px; font-weight: 500; line-height:180%; padding-top: 10px; font-family:Arial, Helvetica, sans-serif; color: #666666;"><strong>Created by</strong><br>
+                        <span style="color:#36a211;">
+                          <%= @complaint.user.try(:full_name) %></span></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table></td>
+        </tr>
+        <tr>
+          <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 400; line-height: 25px;" ><p style="margin: 0;"><strong>Title</strong><br>
+              <%= "#{@complaint.heading}" %> </p></td>
+        </tr>
+
+      </table>
+      
+      <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]--></td>
+  </tr>
+  
+  
+</table>
+</body>
+</html>

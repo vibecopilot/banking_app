@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  building_id: 1
+  floor_id: 1
+  vehicle_type: MyString
+
+two:
+  name: MyString
+  building_id: 1
+  floor_id: 1
+  vehicle_type: MyString

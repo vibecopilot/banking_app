@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Charge:</strong>
+  <%= @cam_bill_charge.charge_id %>
+</p>
+
+<p>
+  <strong>Charge amount:</strong>
+  <%= @cam_bill_charge.charge_amount %>
+</p>
+
+<p>
+  <strong>Sub amount:</strong>
+  <%= @cam_bill_charge.sub_amount %>
+</p>
+
+<p>
+  <strong>Cgst amount:</strong>
+  <%= @cam_bill_charge.cgst_amount %>
+</p>
+
+<p>
+  <strong>Igst amount:</strong>
+  <%= @cam_bill_charge.igst_amount %>
+</p>
+
+<p>
+  <strong>Sgst amount:</strong>
+  <%= @cam_bill_charge.sgst_amount %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @cam_bill_charge.description %>
+</p>
+
+<p>
+  <strong>Cam bill:</strong>
+  <%= @cam_bill_charge.cam_bill_id %>
+</p>
+
+<%= link_to 'Edit', edit_cam_bill_charge_path(@cam_bill_charge) %> |
+<%= link_to 'Back', cam_bill_charges_path %>

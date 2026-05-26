@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Tmp Checklists</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Site</th>
+      <th>Frequency</th>
+      <th>User</th>
+      <th>Tmp name</th>
+      <th>Occurs</th>
+      <th>Ctype</th>
+      <th>Patrolling</th>
+      <th>Weightage enabled</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tmp_checklists.each do |tmp_checklist| %>
+      <tr>
+        <td><%= tmp_checklist.site_id %></td>
+        <td><%= tmp_checklist.frequency %></td>
+        <td><%= tmp_checklist.user_id %></td>
+        <td><%= tmp_checklist.tmp_name %></td>
+        <td><%= tmp_checklist.occurs %></td>
+        <td><%= tmp_checklist.ctype %></td>
+        <td><%= tmp_checklist.patrolling_id %></td>
+        <td><%= tmp_checklist.weightage_enabled %></td>
+        <td><%= link_to 'Show', tmp_checklist %></td>
+        <td><%= link_to 'Edit', edit_tmp_checklist_path(tmp_checklist) %></td>
+        <td><%= link_to 'Destroy', tmp_checklist, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Tmp Checklist', new_tmp_checklist_path %>

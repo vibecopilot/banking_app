@@ -1,0 +1,55 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "Soft Service Log") do |sheet|
+  # Add headers
+  headers = [
+    "Soft Service Name", 
+    "Site Name", "Site ID", "Building Name", "Building ID", "Floor Name", "Floor ID", "Unit Name", "Unit ID",
+    "Activity ID", "Start Time", "End Time", "Status",
+    "Checklist Name", "Checklist Frequency", "Checklist Start Date", "Checklist End Date",
+    "Checklist Occurs", "Checklist Type",
+    "Performed By", "Assigned To", "Total Questions Performed",
+    "Question", "Answer", "Comment", "Submission Updated At"
+  ]
+  sheet.add_row headers
+
+  # Add data rows
+  @excel_log_data.each do |activity|
+    # Main activity row
+    main_row = [
+      activity[:soft_service_name],
+      activity[:site_name], activity[:site_id],
+      activity[:building_name], activity[:building_id],
+      activity[:floor_name], activity[:floor_id],
+      activity[:unit_name], activity[:unit_id],
+      activity[:activity_id],
+      activity[:start_time],
+      activity[:end_time],
+      activity[:status],
+      activity[:checklist_name],
+      activity[:checklist_frequency],
+      activity[:checklist_start_date],
+      activity[:checklist_end_date],
+      activity[:checklist_occurs],
+      activity[:checklist_type],
+      activity[:performed_by],
+      activity[:assigned_to],
+      activity[:total_questions_performed]
+    ]
+
+    if activity[:submissions].empty?
+      # If no submissions, add a single row with empty submission data
+      sheet.add_row main_row + ['', '', '', '']
+    else
+      # Add a row for each submission
+      activity[:submissions].each_with_index do |submission, index|
+        row_data = index.zero? ? main_row : Array.new(main_row.length, nil)
+        row_data += [submission[:question], submission[:answer], submission[:comment], submission[:updated_at]]
+        sheet.add_row row_data
+      end
+    end
+  end
+
+  # Apply some basic styling
+  sheet.auto_filter = "A1:Y1"  # Add filter to header row
+  sheet.row_style 0, wb.styles.add_style(b: true)  # Make header row bold
+end

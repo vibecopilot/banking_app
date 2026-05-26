@@ -1,0 +1,37 @@
+<%= form_with(model: generic_info, local: true) do |form| %>
+  <% if generic_info.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(generic_info.errors.count, "error") %> prohibited this generic_info from being saved:</h2>
+
+      <ul>
+      <% generic_info.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :generic_info_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.number_field :company_id, id: :generic_info_company_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :generic_info_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :info_type %>
+    <%= form.text_field :info_type, id: :generic_info_info_type %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

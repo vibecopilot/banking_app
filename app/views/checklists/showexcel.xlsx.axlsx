@@ -1,0 +1,69 @@
+wb = xlsx_package.workbook
+asset = SiteAsset.find_by(id: params[:asset_id])
+if params[:date_range].present?
+ @date_range = params[:date_range].split(" - ")
+ params[:q] = {}
+ params[:q][:start_time_lteq] = Date.strptime(@date_range[1], "%m/%d/%Y").strftime("%d/%m/%Y")
+ params[:q][:start_time_gteq] = Date.strptime(@date_range[0], "%m/%d/%Y").strftime("%d/%m/%Y")
+end
+
+params[:q] = params[:q].present? ? params[:q] : {start_time_gteq: Date.today.beginning_of_month.strftime('%d/%m/%Y'), start_time_lteq: Date.today.end_of_month.strftime('%d/%m/%Y')}
+
+params[:q][:checklist_id_eq] = @checklist.id
+params[:q][:asset_id_eq] = asset.id
+@occurrences = Activity.ransack(params[:q]).result
+
+sd = params[:q][:start_time_gteq].split("/")
+ed = params[:q][:start_time_lteq].split("/")
+st_date = Date.new(sd[2].to_i, sd[1].to_i, sd[0].to_i)
+en_date = Date.new(ed[2].to_i, ed[1].to_i, ed[0].to_i)
+
+firstrow =  ['']
+(st_date..en_date).each do |sdate|
+  occ = @occurrences.where("DATE(activities.start_time)=?", sdate)
+  if occ.count > 0 
+    (1..occ.count).each do |fff|
+    firstrow << sdate.strftime('%d %b %Y')
+    end
+  else
+    firstrow << sdate.strftime('%d %b %Y')
+  end
+end
+wb.add_worksheet(name: 'Projects') do |sheet|
+  sheet.add_row firstrow
+  secondrow = ['Activity']
+  (st_date..en_date).each do |sdate| 
+    occ = @occurrences.where("DATE(activities.start_time)=?", sdate)
+    if occ.count > 0 
+      occ.each do |oc|
+        secondrow << (Submission.find_by(activity_id: oc.id).try(:created_at).try(:strftime, "%l:%M %p") || oc.start_time.strftime("%l:%M %p"))
+      end
+    else
+      secondrow << ''
+    end
+  end
+
+  sheet.add_row secondrow
+
+  @checklist.questions.each_with_index do |cp, i|
+    this_row = [cp.try(:name)]
+    (st_date..en_date).each do |sdate| 
+      occ = @occurrences.where("DATE(activities.start_time)=?", sdate)
+      if occ.count > 0  
+        occ.each do |oc| 
+          submissions = Submission.where(activity_id: oc.id, question_id: cp.id)
+          if submissions.present?
+            submissions.each do |response| 
+              this_row << response.value
+            end
+          else
+            this_row << ""
+          end
+        end
+      else
+        this_row << ""
+      end
+    end
+  	sheet.add_row this_row 
+  end
+end

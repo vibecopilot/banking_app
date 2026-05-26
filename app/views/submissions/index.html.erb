@@ -1,0 +1,36 @@
+<p id="notice"><%= notice %></p>
+
+<div class="col-sm-12">
+    <h4 class="pull-left" style="width: 100%; text-align: left;"> Performance  <hr></h4>
+  </div>
+<div class="ml-2  mr-2">
+  
+<div id="toolbar">
+</div>
+<table class="table " id="user_setup" data-toggle="table" data-pagination="true" data-search="true" data-trim-on-search="false" data-show-columns="true" data-show-refresh="true" data-sortable="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+  <thead>
+    <tr>
+      <th>Asset</th>
+      <th>Checklist</th>
+      <th>Activities Performed</th>
+      <th>Questions Submitted </th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @submissions.each do |aid, cid| %>
+      <tr>
+        <td><%= SiteAsset.find_by(id: aid).name %></td>
+        <td><%= Checklist.unscoped.find_by(id: cid).try(:name) %></td>
+        <td><%= Submission.where(asset_id: aid, checklist_id: cid).pluck(:activity_id).uniq.count %></td>
+        <td><%= Submission.where(asset_id: aid, checklist_id: cid).count %></td>
+        <td><a href="/show_submissions?checklist_id=<%= cid%>&asset_id=<%= aid%>">View Performance</a></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%##= link_to 'New Submission', new_submission_path %>

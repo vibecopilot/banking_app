@@ -1,0 +1,114 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Audit for:</strong>
+  <%= @audit.audit_for %>
+</p>
+
+<p>
+  <strong>Activity name:</strong>
+  <%= @audit.activity_name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @audit.description %>
+</p>
+
+<p>
+  <strong>Allow observations:</strong>
+  <%= @audit.allow_observations %>
+</p>
+
+<p>
+  <strong>Checklist type:</strong>
+  <%= @audit.checklist_type %>
+</p>
+
+<p>
+  <strong>Asset name:</strong>
+  <%= @audit.asset_name %>
+</p>
+
+<p>
+  <strong>Service name:</strong>
+  <%= @audit.service_name %>
+</p>
+
+<p>
+  <strong>Vendor name:</strong>
+  <%= @audit.vendor_name %>
+</p>
+
+<p>
+  <strong>Training name:</strong>
+  <%= @audit.training_name %>
+</p>
+
+<p>
+  <strong>Assign to:</strong>
+  <%= @audit.assign_to %>
+</p>
+
+<p>
+  <strong>Scan type:</strong>
+  <%= @audit.scan_type %>
+</p>
+
+<p>
+  <strong>Plan duration:</strong>
+  <%= @audit.plan_duration %>
+</p>
+
+<p>
+  <strong>Priority:</strong>
+  <%= @audit.priority %>
+</p>
+
+<p>
+  <strong>Email trigger rule:</strong>
+  <%= @audit.email_trigger_rule %>
+</p>
+
+<p>
+  <strong>Supervisors:</strong>
+  <%= @audit.supervisors %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @audit.category %>
+</p>
+
+<p>
+  <strong>Look overdue task:</strong>
+  <%= @audit.look_overdue_task %>
+</p>
+
+<p>
+  <strong>Frequency:</strong>
+  <%= @audit.frequency %>
+</p>
+
+<p>
+  <strong>Start from:</strong>
+  <%= @audit.start_from %>
+</p>
+
+<p>
+  <strong>End at:</strong>
+  <%= @audit.end_at %>
+</p>
+
+<p>
+  <strong>Select supplier:</strong>
+  <%= @audit.select_supplier %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @audit.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_audit_path(@audit) %> |
+<%= link_to 'Back', audits_path %>

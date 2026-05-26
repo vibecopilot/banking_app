@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Generic Infos</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Company</th>
+      <th>Site</th>
+      <th>Info type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @generic_infos.each do |generic_info| %>
+      <tr>
+        <td><%= generic_info.name %></td>
+        <td><%= generic_info.company_id %></td>
+        <td><%= generic_info.site_id %></td>
+        <td><%= generic_info.info_type %></td>
+        <td><%= link_to 'Show', generic_info %></td>
+        <td><%= link_to 'Edit', edit_generic_info_path(generic_info) %></td>
+        <td><%= link_to 'Destroy', generic_info, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Generic Info', new_generic_info_path %>

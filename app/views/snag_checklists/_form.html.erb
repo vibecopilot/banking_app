@@ -1,0 +1,67 @@
+<%= form_with(model: snag_checklist, local: true) do |form| %>
+  <% if snag_checklist.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(snag_checklist.errors.count, "error") %> prohibited this snag_checklist from being saved:</h2>
+
+      <ul>
+      <% snag_checklist.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :snag_checklist_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :snag_audit_category_id %>
+    <%= form.number_field :snag_audit_category_id, id: :snag_checklist_snag_audit_category_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :snag_audit_sub_category_id %>
+    <%= form.number_field :snag_audit_sub_category_id, id: :snag_checklist_snag_audit_sub_category_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.number_field :active, id: :snag_checklist_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :snag_checklist_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.number_field :company_id, id: :snag_checklist_company_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :check_type %>
+    <%= form.text_field :check_type, id: :snag_checklist_check_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :snag_checklist_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :resource_id %>
+    <%= form.number_field :resource_id, id: :snag_checklist_resource_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :resource_type %>
+    <%= form.text_field :resource_type, id: :snag_checklist_resource_type %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

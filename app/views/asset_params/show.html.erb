@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Asset:</strong>
+  <%= @asset_param.asset_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @asset_param.name %>
+</p>
+
+<!-- <p>
+  <strong>Type:</strong>
+  <%#= @asset_param.type %>
+</p> -->
+
+<%= link_to 'Edit', edit_asset_param_path(@asset_param) %> |
+<%= link_to 'Back', asset_params_path %>

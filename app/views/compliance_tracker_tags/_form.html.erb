@@ -1,0 +1,57 @@
+<%= form_with(model: compliance_tracker_tag, local: true) do |form| %>
+  <% if compliance_tracker_tag.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(compliance_tracker_tag.errors.count, "error") %> prohibited this compliance_tracker_tag from being saved:</h2>
+
+      <ul>
+      <% compliance_tracker_tag.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :compliance_tracker_id %>
+    <%= form.number_field :compliance_tracker_id, id: :compliance_tracker_tag_compliance_tracker_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :submitted_on %>
+    <%= form.datetime_select :submitted_on, id: :compliance_tracker_tag_submitted_on %>
+  </div>
+
+  <div class="field">
+    <%= form.label :submitted_by_id %>
+    <%= form.number_field :submitted_by_id, id: :compliance_tracker_tag_submitted_by_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :compliance_tag_id %>
+    <%= form.number_field :compliance_tag_id, id: :compliance_tracker_tag_compliance_tag_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :observation %>
+    <%= form.text_area :observation, id: :compliance_tracker_tag_observation %>
+  </div>
+
+  <div class="field">
+    <%= form.label :recommendtion %>
+    <%= form.text_area :recommendtion, id: :compliance_tracker_tag_recommendtion %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comment %>
+    <%= form.text_area :comment, id: :compliance_tracker_tag_comment %>
+  </div>
+
+  <div class="field">
+    <%= form.label :compliance_tag_task_id %>
+    <%= form.number_field :compliance_tag_task_id, id: :compliance_tracker_tag_compliance_tag_task_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

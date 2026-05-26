@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Buiding:</strong>
+  <%= @seat.buiding_id %>
+</p>
+
+<p>
+  <strong>Floor:</strong>
+  <%= @seat.floor_id %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @seat.unit_id %>
+</p>
+
+<p>
+  <strong>Seat:</strong>
+  <%= @seat.seat %>
+</p>
+
+<p>
+  <strong>No:</strong>
+  <%= @seat.no %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @seat.category_id %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @seat.site_id %>
+</p>
+
+<%= link_to 'Edit', edit_seat_path(@seat) %> |
+<%= link_to 'Back', seats_path %>

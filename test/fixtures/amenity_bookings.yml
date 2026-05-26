@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  amenity_id: 1
+  amenity_slot_id: 1
+  user_id: 1
+  booking_date: 2024-12-04
+  site_id: 1
+
+two:
+  amenity_id: 1
+  amenity_slot_id: 1
+  user_id: 1
+  booking_date: 2024-12-04
+  site_id: 1

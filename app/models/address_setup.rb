@@ -1,0 +1,2 @@
+class AddressSetup < ApplicationRecord
+end

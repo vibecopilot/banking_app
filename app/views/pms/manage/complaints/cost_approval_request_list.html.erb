@@ -1,0 +1,320 @@
+<style>
+  .project-title {
+    max-width: 255px !important;
+  }
+</style>
+
+<%= csrf_meta_tag %>
+<div class="data-table-area mg-b-15">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12" style="margin-top: 20px !important">
+              <% complaints = Complaint.pms.where("complaints.site_id = ? ", @user.try(:selected_pms_site).try(:pms_site).try(:id)) 
+              cost_request_result = CostApprovalRequest.where(complaint_id: complaints.pluck(:id))
+              @pending_requests = cost_request_result.where(status: [nil,"pending"]).sum('cost')
+              @approved_requests = cost_request_result.where(status: "approved").sum('cost') 
+              @rejected_requests = cost_request_result.where(status: "rejected").sum('cost')
+              @partially_approved_requests = cost_request_result.where(status: ["pending"]).sum('cost')
+              @cancelled_requests = cost_request_result.where(status: "cancelled").sum('cost') 
+              %>
+          <a href="/cost_approval_request_list?q[status_blank]=1">    
+            <div class="col-sm-3 w20">
+              <div class="small-box">
+                <div class="inner bg-yellow">
+                  <h3><i class="fa fa-inr" aria-hidden="true"></i> <%= @pending_requests %></h3>
+                  <p>Pending</p>
+                </div>
+                <div class="icon"> <i class="fa fa-bar-chart"></i> </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- <a href="/pms/admin/complaints?q[complaint_status_fixed_state_not_eq]=closed"> -->
+         
+<!--           <div class="col-sm-3 w20">
+            <div class="small-box">
+              <div class="inner bg-green">
+                <h3><%#=  %></h3>
+                <p>Partially Approved</p>
+              </div>
+              <div class="icon"> <i class="fa fa-bar-chart"></i> </div>
+            </div>
+          </div> -->
+          <!-- </a> -->
+          <a href="/cost_approval_request_list?q[status_eq]=approved">
+          <div class="col-sm-3 w20">
+            <div class="small-box">
+              <div class="inner bg-green">
+                <h3><i class="fa fa-inr" aria-hidden="true"></i> <%= @approved_requests %></h3>
+                <p>Approved</p>
+              </div>
+              <div class="icon"> <i class="fa fa-bar-chart"></i> </div>
+            </div>
+          </div>
+          </a>
+          <a href="/cost_approval_request_list?q[status_eq]=rejected">
+          <div class="col-sm-3 w20">
+            <div class="small-box">
+              <div class="inner bg-maroon">
+                <h3><i class="fa fa-inr" aria-hidden="true"></i> <%= @rejected_requests %></h3>
+                <p>Rejected</p>
+              </div>
+              <div class="icon"> <i class="fa fa-bar-chart"></i> </div>
+            </div>
+          </div>
+          </a>
+          <a href="/cost_approval_request_list?q[status_eq]=pending">
+          <div class="col-sm-3 w20">
+            <div class="small-box">
+              <div class="inner bg-light-blue">
+                <h3><i class="fa fa-inr" aria-hidden="true"></i> <%= @partially_approved_requests %></h3>
+                <p>Partially Approved</p>
+              </div>
+              <div class="icon"> <i class="fa fa-bar-chart"></i> </div>
+            </div>
+          </div>
+          </a>
+          <a href="/cost_approval_request_list?q[status_eq]=cancelled">
+          <div class="col-sm-3 w20">
+            <div class="small-box">
+              <div class="inner bg-red">
+                <h3><i class="fa fa-inr" aria-hidden="true"></i> <%= @cancelled_requests %></h3>
+                <p>Cancelled</p>
+              </div>
+              <div class="icon"> <i class="fa fa-bar-chart"></i> </div>
+            </div>
+          </div>
+          </a>                    
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="sparkline13-list">
+            <div class="sparkline13-graph">
+              <div class="datatable-dashv1-list custom-datatable-overright">
+                <div id="toolbar">
+                </div>       
+               </div>
+                 <table class="table table-striped table-responsive " id="table" data-toggle="table" data-pagination="true" data-search="true" data-trim-on-search="false" data-show-columns="true" data-show-refresh="true" data-sortable="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+                 <thead>
+                    <tr class="table-row" data-href="#">
+                      <!-- <th><input type="checkbox" class="all_complaint_checkbox"></th> -->
+                        <th>Request ID</th>
+                        <th>Ticket Number</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Requested On</th>
+                        <th>Requested By</th>
+                        <th>Master Status</th>
+<!--                         <th>L1</th>
+                        <th>L2</th>
+                        <th>L3</th>
+                        <th>L4</th>
+                        <th>L5</th> -->
+                        <th>Current Level</th>
+                        <th>Current Status</th>
+                        <th>Last Approver Level</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <% @cost_approval_requests.order('created_at desc').each do |ca_request| %> 
+                      <tr class="table-row" data-href="#">
+                        <td>
+                          <%= ca_request.id %>
+                        </td>
+                        <td class="project-title"><a href="/pms/admin/complaints/<%= ca_request.complaint.id%>"><span title="<%= ca_request.complaint.ticket_number %>"><%= ca_request.complaint.ticket_number %></span></a></td>
+                        <td>
+                          <%= ca_request.complaint.category_type.try(:name) %>
+                        </td>
+                        <td>
+                          <%= ca_request.try(:cost) %>
+                        </td>
+                        <td>
+                          <%= ca_request.try(:created_at).strftime('%d/%m/%Y') %>
+                        </td>
+                        <td><%= ca_request.created_by.present? ? ca_request.created_by.full_name : "" %></td>
+                        <% @cost_hist = ca_request.cost_approval_histories %>
+                        <% if @cost_hist.present? && @cost_hist.count > 1 && @cost_hist.pluck(:status).include?("pending") 
+                            @master_status = "Partially Approved"
+                          else 
+                            @master_status = ca_request.status.present? ? ca_request.status : "pending"
+                          end  
+                        %>
+                        <td> <%= @master_status.titleize %></td>
+<!--                         <#%  if @cost_hist.present? 
+                              level1 = "" 
+                              level2 = "" 
+                              level3 = ""
+                              level4 = ""
+                              level5 = ""
+                              @cost_hist.each do|level|
+                                level_nm = level.cost_approval_level.name
+                                if level_nm.include?("L1")
+                                  level1 = level.status
+                                elsif level_nm.include?("L2")
+                                  level2 = level.status
+                                elsif level_nm.include?("L3")
+                                  level3 = level.status
+                                elsif level_nm.include?("L4")
+                                  level4 = level.status
+                                elsif level_nm.include?("L5")
+                                  level5 = level.status
+                                end 
+                              end
+                            end
+                        %> -->
+<!--                         <td><%#= level1.try(:titleize) %> </td>
+                        <td><%#= level2.try(:titleize) %></td>
+                        <td><%#= level3.try(:titleize) %></td>
+                        <td><%#= level4.try(:titleize) %></td>
+                        <td><%#= level5.try(:titleize) %></td> -->
+                        <td><%= @cost_hist.try(:last).try(:cost_approval_level).try(:name) %></td>
+                        <td><%= @cost_hist.try(:last).try(:status).try(:titleize) %></td>
+                        <%
+                        complaint = ca_request.complaint
+                        cost_approvals = CostApproval.active.applicable_approvals(complaint.issue_related_to, complaint.pms_company_setup.try(:cost_approval_level)).approvals_for(complaint.pms_company_setup.try(:id))
+                        abblicable_ca_id = cost_approvals.present? ? cost_approvals.matched_cost_approval_for(ca_request.try(:cost)) : ""
+                        cost_approval_levels = CostApprovalLevel.where(cost_approval_id: abblicable_ca_id) 
+                        %>                        
+                        <td><%= cost_approval_levels.present? ? cost_approval_levels.last.try(:name) : "NA" %></td>
+                      </tr>                    
+                     <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+var config = {
+  '.chosen-select'           : {},
+  '.chosen-select-deselect'  : { allow_single_deselect: true },
+  '.chosen-select-no-single' : { disable_search_threshold: 10 },
+  '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' },
+  '.chosen-select-rtl'       : { rtl: true },
+  '.chosen-select-width'     : { width: '95%' }
+}
+for (var selector in config) {
+  // $(selector).chosen(config[selector]);
+}
+
+
+$(function() {
+  $('#menu1').metisMenu();
+});
+
+    
+    $("#updatecomplaintmul").click(function(){
+
+      var complaint_log_ids = [] 
+      var _element =  $(".update-multi");     
+      for(i = 0; i < _element.length; i++ ){
+        if($(_element[i]).prop("checked")){
+          complaint_log_ids.push($(_element[i]).data("id"));
+        }
+      }
+
+      var params = {
+        assigned_to: $("#assigned_to").val(),
+        priority: $("#priority").val(),
+        external_priority: $("#external_priority").val(),
+        complaint_mode_id: $("#complaint_mode_id").val(),
+        issue_status: $("#complaint_status_id").val(),
+        complaint_log_ids: complaint_log_ids      
+      };
+
+
+      var url = "/pms/admin/update_complaint_logs";
+      var success = function(response){
+        if(response.status){
+          toastr.success("Updated successfully");
+          window.location.href= "/pms/admin/complaints";  
+        } else {
+          toastr.error("Please select any option");
+        }
+      }
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+        data: params,
+        success: success
+      });
+
+
+       //$(".updateall").submit();
+    });
+</script>
+
+
+   
+<script type="text/javascript">
+    
+
+$(function () {
+    $(document).on('click', ".update-multi",function () {
+        if ($(".update-multi:checked").length > 0) {
+            $("#complaint_horizontal").show();
+        } else {
+            $("#complaint_horizontal").hide();
+        }
+    });
+
+    $(document).on("click",".all_complaint_checkbox",function(e) {
+        e.stopPropagation();
+        if ($(this).is(":checked")) {
+            $('.update-multi').prop('checked', true);
+            $("#complaint_horizontal").show();
+        } else {
+            $('.update-multi').prop('checked', false);
+            $("#complaint_horizontal").hide();
+        }
+    });
+});
+
+</script>
+
+<script>
+$(document).ready(function(){
+  $('.reservation').daterangepicker();
+  $("#filter_container").click(function(){
+    $("#myDiv").toggle();
+  });
+});
+</script>
+<script>
+    // $(function () {
+  
+    // $('.reservation').daterangepicker();
+    // });
+
+    $(document).on("change","#category", function(){
+      pms_helpdesk_subcategory_from_category($(this), $("#sub_category")) 
+    });
+ </script> 
+
+  <script>
+    // $('.ui.dropdown').dropdown();
+    $('.applyfilter').click(function(){
+
+      var category_type = $("#q_category_type_id_eq").val();
+      var department = $("#q_dept_id_eq").val();
+      var date_range = $("#date_range").val();
+
+      var site_id = $("#q_site_id_eq").val();
+      var unit_id = $("#q_unit_id_eq").val();
+      var sub_category_id = $("#q_sub_category_id_eq").val();
+
+      if(category_type == "" && department == "" && date_range == "" && site_id == "" && unit_id == "" && sub_category_id == ""){
+        toastr.error("Please select any one filter");
+        return false;
+      }
+
+      $("#filters").submit();
+    });
+  </script>

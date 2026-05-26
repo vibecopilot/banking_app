@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Status Restaurants</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Display name</th>
+      <th>Fixed state</th>
+      <th>Order</th>
+      <th>Color</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @status_restaurants.each do |status_restaurant| %>
+      <tr>
+        <td><%= status_restaurant.status %></td>
+        <td><%= status_restaurant.display_name %></td>
+        <td><%= status_restaurant.fixed_state %></td>
+        <td><%= status_restaurant.order %></td>
+        <td><%= status_restaurant.color %></td>
+        <td><%= link_to 'Show', status_restaurant %></td>
+        <td><%= link_to 'Edit', edit_status_restaurant_path(status_restaurant) %></td>
+        <td><%= link_to 'Destroy', status_restaurant, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Status Restaurant', new_status_restaurant_path %>

@@ -1,0 +1,26 @@
+<%= form_for([:manage,@helpdesk_category], url: "helpdesk_categories/#{@helpdesk_category.id}") do |f| %>
+  <% if @helpdesk_category.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@helpdesk_category.errors.count, "error") %> prohibited this helpdesk_category from being saved:</h2>
+
+      <ul>
+      <% @helpdesk_category.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<%= f.hidden_field :society_id, :value=>@society.id %>
+<%= params[:url].inspect %>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :position %><br>
+    <%= f.number_field :position %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,68 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="col-sm-2">
+
+    <p id="notice"><%= notice %></p>
+
+    <p>
+      <strong>Name:</strong>
+      <%= @site.name %>
+    </p>
+
+    <p>
+      <strong>Region:</strong>
+      <%= @site.region %>
+    </p>
+
+    <p>
+      <strong>Active:</strong>
+      <%= @site.active %>
+    </p>
+    </div>
+    <br>
+    <div class="col-sm-4">
+      <h5>Add Levels</h5>
+      <%= form_for(ApprovalLevel.new, url: "/add_approval_level") do |form| %>
+      <%  @us = User.where('user_type IN (?)',  ["pms_occupant_admin"]).ransack(sites_id_eq: @user.current_site_id).result
+      @usmapped = @us.map {|s| [s.full_name, s.id]} %>
+      <div class="form-group">
+        <label>Level Name</label>
+        <%= form.text_field :name %>
+        <%= form.hidden_field :site_id, value: @user.current_site_id %>
+      </div>
+      <div class="form-group">
+        <label>Order</label>
+        <%= form.number_field :order %>
+      </div>
+      <div class="form-group">
+        <label>Select User</label>
+        <%= select_tag "approval_level[user_id]", options_for_select(@usmapped), :include_blank => "Select User" %>
+      </div>
+      <div class="form-group">
+        <label>Threshold (₹) — levels above this amount require this approver</label>
+        <%= form.number_field :threshold, step: :any %>
+      </div>
+      <div class="actions">
+        <%= form.submit %>
+      </div>
+      <% end %> 
+    </div>
+    <div class="col-sm-6">
+      <h5>Approval Levels</h5>
+      <% ApprovalLevel.where(site_id: @user.current_site_id).each do |level| %>
+        <div class="form-group">
+          <label><b>Level Name: <%= level.name %> </b></label>
+          <br>
+          <label><b>Order: <%= level.order %> </b></label>
+          <br>
+          <label><b>User Name: <%= level.user&.full_name %></b></label>
+          <br>
+          <label><b>Threshold: <%= number_to_currency(level.threshold, unit: "₹") %></b></label>
+        </div>
+          <br>
+          <br>
+      <% end %> 
+    </div>
+  </div>
+  
+</div>

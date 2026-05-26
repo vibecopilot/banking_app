@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Invoice Setups</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Prefix</th>
+      <th>Next number</th>
+      <th>Auto generate</th>
+      <th>Site</th>
+      <th>Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @invoice_setups.each do |invoice_setup| %>
+      <tr>
+        <td><%= invoice_setup.prefix %></td>
+        <td><%= invoice_setup.next_number %></td>
+        <td><%= invoice_setup.auto_generate %></td>
+        <td><%= invoice_setup.site_id %></td>
+        <td><%= invoice_setup.created_by %></td>
+        <td><%= link_to 'Show', invoice_setup %></td>
+        <td><%= link_to 'Edit', edit_invoice_setup_path(invoice_setup) %></td>
+        <td><%= link_to 'Destroy', invoice_setup, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Invoice Setup', new_invoice_setup_path %>

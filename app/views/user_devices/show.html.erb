@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @user_device.user_id %>
+</p>
+
+<p>
+  <strong>Device:</strong>
+  <%= @user_device.device_id %>
+</p>
+
+<p>
+  <strong>Device type:</strong>
+  <%= @user_device.device_type %>
+</p>
+
+<p>
+  <strong>Gcm key:</strong>
+  <%= @user_device.gcm_key %>
+</p>
+
+<p>
+  <strong>Device name:</strong>
+  <%= @user_device.device_name %>
+</p>
+
+<p>
+  <strong>Device os version:</strong>
+  <%= @user_device.device_os_version %>
+</p>
+
+<p>
+  <strong>App:</strong>
+  <%= @user_device.app_id %>
+</p>
+
+<%= link_to 'Edit', edit_user_device_path(@user_device) %> |
+<%= link_to 'Back', user_devices_path %>

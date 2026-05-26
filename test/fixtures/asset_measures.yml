@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  asset_id: 1
+  name: MyString
+  min_value: 1.5
+  max_value: 1.5
+  alert_below: 1.5
+  alert_above: 1.5
+  active: 1
+  unit_type: MyString
+  multiplier_factor: 1
+  meter_tag: MyString
+  meter_unit_id: 1
+  cloned: false
+  check_previous_reading: false
+
+two:
+  asset_id: 1
+  name: MyString
+  min_value: 1.5
+  max_value: 1.5
+  alert_below: 1.5
+  alert_above: 1.5
+  active: 1
+  unit_type: MyString
+  multiplier_factor: 1
+  meter_tag: MyString
+  meter_unit_id: 1
+  cloned: false
+  check_previous_reading: false

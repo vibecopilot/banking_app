@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Snag Checklists</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Snag audit category</th>
+      <th>Snag audit sub category</th>
+      <th>Active</th>
+      <th>Site</th>
+      <th>Company</th>
+      <th>Check type</th>
+      <th>User</th>
+      <th>Resource</th>
+      <th>Resource type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @snag_checklists.each do |snag_checklist| %>
+      <tr>
+        <td><%= snag_checklist.name %></td>
+        <td><%= snag_checklist.snag_audit_category_id %></td>
+        <td><%= snag_checklist.snag_audit_sub_category_id %></td>
+        <td><%= snag_checklist.active %></td>
+        <td><%= snag_checklist.site_id %></td>
+        <td><%= snag_checklist.company_id %></td>
+        <td><%= snag_checklist.check_type %></td>
+        <td><%= snag_checklist.user_id %></td>
+        <td><%= snag_checklist.resource_id %></td>
+        <td><%= snag_checklist.resource_type %></td>
+        <td><%= link_to 'Show', snag_checklist %></td>
+        <td><%= link_to 'Edit', edit_snag_checklist_path(snag_checklist) %></td>
+        <td><%= link_to 'Destroy', snag_checklist, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Snag Checklist', new_snag_checklist_path %>

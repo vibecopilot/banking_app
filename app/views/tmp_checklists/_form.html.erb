@@ -1,0 +1,57 @@
+<%= form_with(model: tmp_checklist, local: true) do |form| %>
+  <% if tmp_checklist.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(tmp_checklist.errors.count, "error") %> prohibited this tmp_checklist from being saved:</h2>
+
+      <ul>
+      <% tmp_checklist.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :tmp_checklist_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :frequency %>
+    <%= form.text_field :frequency, id: :tmp_checklist_frequency %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :tmp_checklist_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tmp_name %>
+    <%= form.text_field :tmp_name, id: :tmp_checklist_tmp_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :occurs %>
+    <%= form.text_field :occurs, id: :tmp_checklist_occurs %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ctype %>
+    <%= form.text_field :ctype, id: :tmp_checklist_ctype %>
+  </div>
+
+  <div class="field">
+    <%= form.label :patrolling_id %>
+    <%= form.number_field :patrolling_id, id: :tmp_checklist_patrolling_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :weightage_enabled %>
+    <%= form.check_box :weightage_enabled, id: :tmp_checklist_weightage_enabled %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

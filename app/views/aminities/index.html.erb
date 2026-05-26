@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Aminities</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Site</th>
+      <th>Cost</th>
+      <th>Cost</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @aminities.each do |aminity| %>
+      <tr>
+        <td><%= aminity.name %></td>
+        <td><%= aminity.site_id %></td>
+        <td><%= aminity.cost %></td>
+        <td><%= aminity.cost %></td>
+        <td><%= link_to 'Show', aminity %></td>
+        <td><%= link_to 'Edit', edit_aminity_path(aminity) %></td>
+        <td><%= link_to 'Destroy', aminity, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Aminity', new_aminity_path %>

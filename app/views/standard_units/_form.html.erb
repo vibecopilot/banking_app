@@ -1,0 +1,32 @@
+<%= form_with(model: standard_unit, local: true) do |form| %>
+  <% if standard_unit.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(standard_unit.errors.count, "error") %> prohibited this standard_unit from being saved:</h2>
+
+      <ul>
+      <% standard_unit.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :unit_name %>
+    <%= form.text_field :unit_name, id: :standard_unit_unit_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :convention %>
+    <%= form.text_field :convention, id: :standard_unit_convention %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.number_field :company_id, id: :standard_unit_company_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

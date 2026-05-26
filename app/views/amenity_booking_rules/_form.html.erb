@@ -1,0 +1,47 @@
+<%= form_with(model: amenity_booking_rule, local: true) do |form| %>
+  <% if amenity_booking_rule.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(amenity_booking_rule.errors.count, "error") %> prohibited this amenity_booking_rule from being saved:</h2>
+
+      <ul>
+      <% amenity_booking_rule.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :enumerator %>
+    <%= form.number_field :enumerator, id: :amenity_booking_rule_enumerator %>
+  </div>
+
+  <div class="field">
+    <%= form.label :duration %>
+    <%= form.number_field :duration, id: :amenity_booking_rule_duration %>
+  </div>
+
+  <div class="field">
+    <%= form.label :level %>
+    <%= form.text_field :level, id: :amenity_booking_rule_level %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.check_box :active, id: :amenity_booking_rule_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :amenity_id %>
+    <%= form.number_field :amenity_id, id: :amenity_booking_rule_amenity_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :amenity_booking_rule_site_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

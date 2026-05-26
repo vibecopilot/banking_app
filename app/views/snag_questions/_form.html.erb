@@ -1,0 +1,62 @@
+<%= form_with(model: snag_question, local: true) do |form| %>
+  <% if snag_question.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(snag_question.errors.count, "error") %> prohibited this snag_question from being saved:</h2>
+
+      <ul>
+      <% snag_question.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :qtype %>
+    <%= form.text_field :qtype, id: :snag_question_qtype %>
+  </div>
+
+  <div class="field">
+    <%= form.label :descr %>
+    <%= form.text_area :descr, id: :snag_question_descr %>
+  </div>
+
+  <div class="field">
+    <%= form.label :checklist_id %>
+    <%= form.number_field :checklist_id, id: :snag_question_checklist_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :snag_question_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :img_mandatory %>
+    <%= form.check_box :img_mandatory, id: :snag_question_img_mandatory %>
+  </div>
+
+  <div class="field">
+    <%= form.label :quest_mandatory %>
+    <%= form.check_box :quest_mandatory, id: :snag_question_quest_mandatory %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.number_field :active, id: :snag_question_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.number_field :company_id, id: :snag_question_company_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :qnumber %>
+    <%= form.number_field :qnumber, id: :snag_question_qnumber %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

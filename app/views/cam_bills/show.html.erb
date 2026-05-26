@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @cam_bill.unit_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @cam_bill.user_id %>
+</p>
+
+<p>
+  <strong>Bill date:</strong>
+  <%= @cam_bill.bill_date %>
+</p>
+
+<p>
+  <strong>Due date:</strong>
+  <%= @cam_bill.due_date %>
+</p>
+
+<p>
+  <strong>Total amount:</strong>
+  <%= @cam_bill.total_amount %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @cam_bill.created_by %>
+</p>
+
+<p>
+  <strong>Sub amount:</strong>
+  <%= @cam_bill.sub_amount %>
+</p>
+
+<%= link_to 'Edit', edit_cam_bill_path(@cam_bill) %> |
+<%= link_to 'Back', cam_bills_path %>

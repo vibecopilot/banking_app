@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Group name:</strong>
+  <%= @group.group_name %>
+</p>
+
+<p>
+  <strong>Group type:</strong>
+  <%= @group.group_type %>
+</p>
+
+<p>
+  <strong>Group admin:</strong>
+  <%= @group.group_admin %>
+</p>
+
+<p>
+  <strong>Group roles:</strong>
+  <%= @group.group_roles %>
+</p>
+
+<p>
+  <strong>Group permissions:</strong>
+  <%= @group.group_permissions %>
+</p>
+
+<p>
+  <strong>Group activities:</strong>
+  <%= @group.group_activities %>
+</p>
+
+<p>
+  <strong>Add members:</strong>
+  <%= @group.add_members %>
+</p>
+
+<p>
+  <strong>Group description:</strong>
+  <%= @group.group_description %>
+</p>
+
+<%= link_to 'Edit', edit_group_path(@group) %> |
+<%= link_to 'Back', groups_path %>

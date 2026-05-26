@@ -1,0 +1,85 @@
+<%= form_with(model: patrolling, local: true) do |form| %>
+  <% if patrolling.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(patrolling.errors.count, "error") %> prohibited this patrolling from being saved:</h2>
+
+      <ul>
+      <% patrolling.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+   <div class="field">
+    <%= form.label :patrolling_name %>
+    <%= form.text_field :patrolling_name, id: :patrolling_patrolling_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :building_id %>
+    <%= form.number_field :building_id, id: :patrolling_building_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :floor_id %>
+    <%= form.number_field :floor_id, id: :patrolling_floor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.collection_select :site_id, Site.all, :id, :name, prompt: "Select a Site" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit_id %>
+    <%= form.number_field :unit_id, id: :patrolling_unit_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.date_select :start_date, id: :patrolling_start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date %>
+    <%= form.date_select :end_date, id: :patrolling_end_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_time %>
+    <%= form.time_select :start_time, id: :patrolling_start_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_time %>
+    <%= form.time_select :end_time, id: :patrolling_end_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :time_intervals %>
+    <%= form.number_field :time_intervals, id: :patrolling_time_intervals %>
+  </div>
+  
+  <div class="field">
+    <%= form.label :specific_times %>
+    <% (0..23).each do |hour| %>
+      <%= form.check_box :specific_times, { multiple: true }, hour, nil %>
+      <%= format('%02d', hour) %>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :longitude %>
+    <%= form.number_field :longitude, step: 'any' %>
+  </div>
+
+  <div class="field">
+    <%= form.label :latitude %>
+    <%= form.number_field :latitude, step: 'any' %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

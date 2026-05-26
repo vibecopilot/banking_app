@@ -1,0 +1,45 @@
+wb = xlsx_package.workbook
+
+wb.styles do |style|
+  heading = style.add_style(b: true)
+
+	wb.add_worksheet(name: 'Tickets') do |sheet|
+		rows = ['Site Name', 'Total', 'Open', 'Closed', 'TAT', 'Breached']
+		sheet.add_row ["Activities during the #{@type == 'Monthly' ? 'month' : 'week'}"], style: heading
+		sheet.add_row rows 
+		Pms::Site.active.where(id: @user.allowed_sites.where(company_id: @company.id).pluck(:id)).each do|site|
+			complaints = @complaints.ransack({site_id_eq: site.id}).result
+			sheet.add_row [site.name, complaints.count, complaints.ransack({m: "or",complaint_status_fixed_state_not_eq: "closed", complaint_status_fixed_state_null: 1}).result.count, complaints.ransack({complaint_status_fixed_state_eq: "closed"}).result.count, complaints.response_breached_tat_count[:breached_tat], complaints.resolution_breached_tat_count[:breached_tat]]
+		end
+
+		sheet.add_row []
+		sheet.add_row ["Status as of the #{@type == 'Monthly' ? 'month' : 'week'}"], style: heading
+		sheet.add_row rows
+
+		Pms::Site.active.where(id: @user.allowed_sites.where(company_id: @company.id).pluck(:id)).each do|site|
+			complaints = @all_complaints.ransack({site_id_eq: site.id}).result
+			sheet.add_row [site.name, complaints.count, complaints.ransack({m: "or",complaint_status_fixed_state_not_eq: "closed", complaint_status_fixed_state_null: 1}).result.count, complaints.ransack({complaint_status_fixed_state_eq: "closed"}).result.count, complaints.response_breached_tat_count[:breached_tat], complaints.resolution_breached_tat_count[:breached_tat]]
+		end
+	end
+
+	wb.add_worksheet(name: 'Tasks') do |sheet|
+		rows = ['Site Name', 'Total', 'Open', 'In Progress', 'Overdue' , 'Closed', 'Partially Closed', '% Completion']
+		sheet.add_row ["Activities during the #{@type == 'Monthly' ? 'month' : 'week'}"], style: heading
+		sheet.add_row rows
+		Pms::Site.active.where(id: @user.allowed_sites.where(company_id: @company.id).pluck(:id)).each do|site|
+			occurrences = @occurrences.ransack({custom_form_pms_site_id_eq: site.id}).result
+			sheet.add_row [site.name, occurrences.count, occurrences.where(task_status: "Open").count, occurrences.where(task_status: "Work In Progress").count, occurrences.where(task_status: "Overdue").count, occurrences.where(task_status: "Closed").count, occurrences.where(task_status: "Partially Closed").count, occurrences.count > 0 ? (occurrences.where(task_status: ['Closed', "Partially Closed"]).count.to_f/occurrences.count.to_f * 100.0).round(2) : 0]
+		end
+
+		sheet.add_row []
+		sheet.add_row ["Status as of the #{@type == 'Monthly' ? 'month' : 'week'}"], style: heading
+		sheet.add_row rows
+
+		Pms::Site.active.where(id: @user.allowed_sites.where(company_id: @company.id).pluck(:id)).each do|site|
+			occurrences = @all_occurrences.ransack({custom_form_pms_site_id_eq: site.id}).result
+			sheet.add_row [site.name, occurrences.count, occurrences.where(task_status: "Open").count, occurrences.where(task_status: "Work In Progress").count, occurrences.where(task_status: "Overdue").count, occurrences.where(task_status: "Closed").count, occurrences.where(task_status: "Partially Closed").count, occurrences.count > 0 ? (occurrences.where(task_status: ['Closed', "Partially Closed"]).count.to_f/occurrences.count.to_f * 100.0).round(2) : 0]
+		end
+	end
+end
+
+

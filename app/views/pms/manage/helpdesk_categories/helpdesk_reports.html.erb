@@ -1,0 +1,1686 @@
+<div id="wrapper">
+  <div class="white-bg">
+    <div class="wrapper wrapper-content">
+      <section class="content">
+        <div class="ibox">
+          <div class="ibox-content">
+            <% #binding.pry %>
+            <%= form_tag("/crm/admin/helpdesk_reports", method: :post) do %>
+              <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                  <div class="col-sm-6">
+                    <div class="input-group">
+                      <div class="input-group-addon"> <i class="fa fa-calendar"></i> 
+                      </div>
+                      <input type="text" name="q[date_range]" class="form-control pull-right helpdesk_reports_picker" id="helpdesk-report-picker" placeholder="Select Date Range" value="<%=@date_rangeparam%>" >
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <input type="submit" name="commit" value="Apply" class="btn btn-success btn-sm">
+                    <a href="<%= manage_complaints_path %>"><button class="btn btn-info btn-sm"> Reset</button></a>
+                  </div>
+                </div>
+              </div>
+            <%end%>
+            <div class="hr-line-dashed"></div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <div class="helpdesk-chart" id="highchart_categorycanvas"></div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="helpdesk-chart" id="highchart_complaintypecanvas"> </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <button type="button" class="btn btn-sm bg-navy" id="compare-modal" data-toggle="modal" data-target="#compare-response-modal-form" style="position: relative;top: 43px;left: 20px;z-index: 1;">Compare</button>
+                  <div class="helpdesk-chart" id="highchart_responsetatcurrent_canvas"></div>
+                </div>
+                <div class="col-sm-6">
+                  <button type="button" class="btn btn-sm bg-navy" id="compare-modal" data-toggle="modal" data-target="#compare-resolution-modal-form" style="position: relative;top: 43px;left: 20px;z-index: 1;">Compare</button>
+                  <div class="helpdesk-chart" id="highchart_resolutiontatcurrent_canvas"> </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <div class="helpdesk-chart" id="highchart_rating_report"></div>
+                </div>
+                <div class="col-sm-6">
+                </div>
+              </div>
+            </div>
+
+
+        <!-- <div class="row">
+              <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <div class="helpdesk-chart" id="highchart_complaintagingcanvas"></div>
+                </div>
+                <div class="col-sm-6">
+                </div>
+              </div>
+            </div> -->
+                      
+
+      <div class="modal fade" id="compare-response-modal-form" role="dialog">
+        <div class="modal-dialog" style="width: 72% !important;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <div class="modal-title">Compare Chart</div>
+            </div>
+            <div class="modal-body">
+                <%= form_tag("/crm/admin/compare_response_chart", method: :post,id: 'compare-response-chart-form') do %>
+                  <div class="row" id="">
+                    <div class="col-sm-12">
+                      <div id="compare" class="m-t-sm">
+                        <div class="col-sm-4">
+                          <div class="input-group">
+                            <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                            <input type="text" name='q[response_date_range1]' id="response_date_range_1" class="form-control pull-right helpdesk_reports_picker compare-date-range" placeholder="Select Date Range">
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="input-group">
+                            <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                            <input type="text" name='q[response_date_range2]' id="response_date_range_2" class="form-control pull-right helpdesk_reports_picker compare-date-range" placeholder="Select Date Range">
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <input type="submit" name="commit" value="Compare" id="compare-response-button" class="applyfilter btn btn-success btn-sm">
+                          <button type="reset" id="chart-response-reset-button-modal" class="btn btn-info btn-sm"> Reset</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row helpdesk-chart" id="current_responsetat_div_modal" style="margin: 12px 0px 15px 0px;">
+                    <div class="col-sm-12">
+                      <div class="" id="highchart_responsetatcurrent_canvas_modal"></div>
+                    </div>
+                  </div>
+                  <div class="row helpdesk-chart" id="compare_responsetat_div" style="display: none;margin: 12px 0px 15px 0px;">
+                    <div class="col-sm-12">
+                      <div class="col-sm-6">
+                        <div class="" id="highchart_responsetatcanvas_left"></div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="" id="highchart_responsetatcanvas_right"> </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              <!-- <div class="modal-footer text-right"> -->
+                <!-- <button type="submit" id="export-btn" class="btn btn-info btn-sm"><i class="fa fa-download margin-r-5" aria-hidden="true"></i> Export</button> -->
+              <!-- </div> -->
+            <%end%>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="modal fade" id="compare-resolution-modal-form" role="dialog">
+        <div class="modal-dialog" style="width: 72% !important;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <div class="modal-title">Compare Chart</div>
+            </div>
+            <div class="modal-body">
+                <%= form_tag("/crm/admin/compare_resolution_chart", method: :post,id: 'compare-resolution-chart-form') do %>
+                  <div class="row" id="">
+                    <div class="col-sm-12">
+                      <div id="compare" class="m-t-sm">
+                        <div class="col-sm-4">
+                          <div class="input-group">
+                            <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                            <input type="text" name='q[resolution_date_range1]' id="resolution_date_range_1" class="form-control pull-right helpdesk_reports_picker compare-date-range" placeholder="Select Date Range">
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <div class="input-group">
+                            <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                            <input type="text" name='q[resolution_date_range2]' id="resolution_date_range_2" class="form-control pull-right helpdesk_reports_picker compare-date-range" placeholder="Select Date Range">
+                          </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <input type="submit" name="commit" value="Compare" id="compare-resolution-button" class="applyfilter btn btn-success btn-sm">
+                          <button type="reset" id="chart-resolution-reset-button-modal" class="btn btn-info btn-sm"> Reset</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row helpdesk-chart" id="current_resolutiontat_div_modal" style="margin: 12px 0px 15px 0px;">
+                    <div class="col-sm-12">
+                      <div class="" id="highchart_resolutiontatcurrent_canvas_modal"></div>
+                    </div>
+                  </div>
+                  <div class="row helpdesk-chart" id="compare_resolutiontat_div" style="display: none;margin: 12px 0px 15px 0px;">
+                    <div class="col-sm-12">
+                      <div class="col-sm-6">
+                        <div class="" id="highchart_resolutiontatcanvas_left"></div>
+                      </div>
+                      <div class="col-sm-6">
+                        <div class="" id="highchart_resolutiontatcanvas_right"> </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+              <!-- <div class="modal-footer text-right"> -->
+                <!-- <button type="submit" id="export-btn" class="btn btn-info btn-sm"><i class="fa fa-download margin-r-5" aria-hidden="true"></i> Export</button> -->
+              <!-- </div> -->
+            <%end%>
+          </div>
+        </div>
+      </div>
+
+            
+         
+          
+            <div class="row">
+              <div class="col-sm-12">
+                <button type="button" id="export-btnn" class="btn btn-info btn-sm" data-toggle="modal" data-target="#export"><i class="fa fa-download margin-r-5" aria-hidden="true"></i> Export</button>
+              </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="row">
+              <div class="col-sm-12">
+                <center><h5>Showing Records From: <%= DateTime.now.beginning_of_month.strftime('%d/%m/%Y') %> To: <%= DateTime.now.strftime('%d/%m/%Y') %></h5></center>
+                <table id="helpdesk-report-table" class="ui celled structured table hover text-left" style="width:100%">
+                  <thead>
+                    <tr>
+                      <th>Id</th>
+                      <th>Ticket Number</th>
+                      <th>Title</th>
+                      <th>Flat</th>
+                      <th>Issue Type</th>
+                      <th>Category</th>
+                      <th>Assign To</th>
+                      <th>Comment</th>
+                      <th>Rating</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @complaints.each do |complaint| %> 
+
+                      <tr>
+                        <td><%= complaint.id %></td>
+                        <td><%= complaint.ticket_number %></td>
+                        
+                        <td class="project-title"><a href="<%= manage_complaint_path(complaint)%>">
+                          <%= complaint.heading %> </a> 
+                          <small class="link-black">Created - 
+                          <%= complaint.created_at.strftime('%d/%m/%Y')%></small><br>
+                          
+                          <%if complaint.complaint_type == "Complaint" %>
+                            <span class="label label-danger margin-r-10">
+                            <%= complaint.complaint_type  %>
+                            </span>
+                          <%elsif complaint.complaint_type == "Suggestion" %>
+                            <span class="label label-info margin-r-10"><%= complaint.complaint_type  %></span>
+                          <% elsif complaint.complaint_type == "Request" %> <span class="label 
+                            label-warning margin-r-10">
+                            <%= complaint.complaint_type  %>
+                            </span>
+                            
+                          <% end %> 
+
+                          <% if complaint.priority.present? %> 
+                            <span class="label label-danger">
+                             <%=  complaint.try(:priority) %>
+                            </span>
+                          <% end %>
+                        
+                        </td>
+                        
+
+                        <td>
+                          <% if complaint.user_society.present? %>
+                            <%= complaint.user_society.user_flat.try(:block) %>-<%= complaint.user_society.user_flat.try(:flat) %>
+                          <% end %> 
+                        </td>
+                        
+                        <td>
+                          <%= complaint.issue_type.present? ? 
+                          complaint.issue_type.try(:name): " " %>
+                        </td>
+                        
+                        <td>
+                         <%= complaint.category_type.try(:name) %>
+                        </td>
+                        
+                        <td>
+                          <%= complaint.society_staff.try(:full_name)%>
+                          <% eh = EscHistory.where(complaint_id: complaint.id)
+                          %>
+                          <% if eh.present? %>
+                          <% esc = EscalationMatrix.find(eh.last.esc_id)%>
+                          <span class="label label-border"><%= esc.name %></span> <span class="font12"><%= UserSociety.where(id: esc.escalate_to_users).last.try(:user_full_name) %></span><br>
+                          <% end %>
+                          
+                          
+                            <span class="label label-info margin-r-5"> 
+                            <%= complaint.issue_status.present? ? (ComplaintStatus.find_by_id(complaint.issue_status).try(:name) || complaint.issue_status ) : "pending" %>
+                            </span>
+                          
+
+                          <% if complaint.urgency == 1 %> 
+                            <span class="label label-danger">High</span>
+                           
+                          <% elsif complaint.urgency == 2 %>
+                           <span class="label label-default">Medium</span>
+                          <% elsif complaint.urgency == 3 %>
+                           <span class="label label-success">Low
+                           </span>
+                          <% elsif complaint.is_urgent == true  %>
+                           <span class="label label-danger">High
+                           </span>
+                          <% elsif !complaint.is_urgent == true %>
+                           <span class="label label-success">Low
+                           </span>
+                          <% end%> 
+                        
+                         </td>
+                        
+                        <% @complaint_comments = ComplaintComment.where(complaint_id: complaint.id)
+                          %>
+
+                        <td>
+                          <% if complaint.complaint_comments.present? %>
+                          <span class="comment-text">
+                            <%= complaint.complaint_comments.last. comment %></span>
+                           <small class="text-muted"><%= complaint.complaint_comments.last.user.try(:full_name) %> <%= complaint.complaint_comments.last.created_at.strftime('%d %m %Y/ %l: %M %p')%>
+                            </small>
+                          <% end %>  
+                        </td>
+
+                        <td>
+                          <% if complaint.feedbacks.present? %>
+                            <%if complaint.feedbacks.last.rating == 1 %>
+                              Terrible
+                            <% elsif complaint.feedbacks.last.rating == 2 %>
+                              Bad
+                            <% elsif complaint.feedbacks.last.rating == 3 %>
+                              Okay
+                            <% elsif complaint.feedbacks.last.rating == 4 %>
+                              Good
+                            <% elsif complaint.feedbacks.last.rating == 5 %>
+                              Great
+                            <%end%>
+                          <%end%>
+                        </td>
+                        
+                        
+                        <td><a href="<%= manage_complaint_path(complaint)%>"><i class="fa fa-eye view" 
+                          aria-hidden="true"></i></a>
+                        </td>
+                      
+
+                      </tr>
+                     
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<% if @complaints.blank? %>
+  <div class="error-page">
+    <div class="error-content"> <img src="<%= asset_path "no-result.png" %>" alt="Page Not Found" class="img-responsive" style="margin-top:20px;height: 200px;">
+      <h3>No Result Found</h3>
+    </div>
+  </div> 
+<%end%>
+
+<div class="modal fade" id="export" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="modal-title">Export</div>
+      </div>
+      <div class="modal-body">
+        <%= form_tag("/hd_reports", method: :post,id: 'export-csv-form') do %>
+          <div class="row">
+            <!-- <div class="col-sm-12"> -->
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <!-- <label>From</label> -->
+                  <div class="input-group">
+                    <div class="input-group-addon"> <i class="fa fa-calendar"></i> 
+                    </div>
+                    <input type="text" name="q[date_range]" class="form-control pull-right helpdesk_reports_picker export-date-range" id="export-date-picker" placeholder="Select Date Range">
+                  </div>
+                </div>
+                <a href="#" class="advanced-filter link-close" id="advanced-filter-link"><i class="fa fa-filter" aria-hidden="true"></i> Advanced Filter</a><br>
+              </div>
+
+            <!-- </div> -->
+            <div id="extra-options" style="display: none;">
+               <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <!-- <label>From</label> -->
+                    <% @cses = @user.selected_user_society.user_society.id_society || @curusoc.id_society %>
+                    <%= select_tag "q[issue_status_eq]", options_for_select(ComplaintStatus.active.where(society_id: @cses).order(:position).collect{ |u| [ u.name, u.id]}) , :include_blank => 'select status', :class=>"form-control pull-right"%>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <!-- <label>From</label> -->
+                    <% @us = @user.selected_user_society.user_society  %>
+                    <% @category= HelpdeskCategory.where(society_id: @us.id_society).collect{|p| [p.name,p.id] }.sort_by(&:first)%>
+                    <%= select_tag 'q[category_type_id_in][]',options_for_select(@category),:class=>"ui  fluid search dropdown pull-right", :multiple => "true",:include_blank =>"Select 
+                      Category" %>
+                  </div>
+                </div>
+              </div>
+               <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <!-- <label>From</label> -->
+                   <%= select_tag "q[user_society_user_flat_society_flat_society_block_id_eq]",options_for_select(SocietyBlock.active.where(society_id: @cses).collect{|p| [p.name, p.id] }), :include_blank => "All Tower", :class => "form-control pull-right" %>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <!-- <label>From</label> -->
+                   <%= select_tag "q[user_society_user_flat_society_flat_flat_no_eq]", options_for_select([  ], ""), :include_blank=> "Select Flat", :class => "form-control pull-right" %>
+                </div>
+               </div>
+              </div>
+              <!--  <div class="col-sm-12">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <%= select_tag "response_tat",options_for_select([["Achieved","acheived"],["Breached","breached"]]), :include_blank=> "Select Response TAT", :class => "form-control pull-right"%>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <%= select_tag "resolution_tat",options_for_select([["Achieved","acheived"],["Breached","breached"]]), :include_blank=> "Select Resolution TAT", :class => "form-control pull-right"%>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+            <div class="col-sm-12">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-xs-5">
+                    <label>All Values</label>
+                    <select name="q[from][]" id="customSort" class="form-control" size="8" multiple="multiple">
+                      <option value="Id" data-position="1">Id</option>
+                      <option value="Ticket ID" data-position="2">Ticket ID</option>
+                      <option value="Created Date" data-position="3">Created Date</option>
+                      <option value="Created Time" data-position="4">Created Time</option>
+                      <option value="Complaint Title" data-position="5">Complaint Title</option>
+                      <option value="Complaint Description" data-position="6">Complaint Description</option>
+                      <option value="Status" data-position="7">Status</option>
+                      <option value="Category" data-position="8">Category</option>
+                      <option value="Issue Type" data-position="9">Issue Type</option>
+                      <option value="Complaint Type" data-position="10">Complaint Type</option>
+                      <option value="Urgency" data-position="11">Urgency</option>
+                      <option value="Created By" data-position="12">Created By</option>
+                      <option value="Tower" data-position="13">Tower</option>
+                      <option value="Flat" data-position="14">Flat</option>
+                      <option value="Updated Date" data-position="15">Updated Date</option>
+                      <option value="Updated Time" data-position="16">Updated Time</option>
+                      <option value="Updated By" data-position="17">Updated By</option>
+                      <option value="Assigned To" data-position="18">Assigned To</option>
+                      <option value="Comment" data-position="19">Comment</option>
+                      <option value="Priority" data-position="20">Priority</option>
+                      <option value="Response TAT (Min)" data-position="21">Response TAT (Min)</option>
+                      <option value="Resolution TAT (Min)" data-position="22">Resolution TAT (Min)</option>
+                      <option value="Response Time (Min)" data-position="23">Response Time (Min)</option>
+                      <option value="Resolution Time (Min)" data-position="24">Resolution Time (Min)</option>
+                      <option value="Response Escalation Level" data-position="25">Response Escalation Level</option>
+                      <option value="Response Escalated To" data-position="26">Response Escalated To</option>
+                      <option value="Preventive Action" data-position="27">Preventive Action</option>
+                      <option value="Responsible Person Name" data-position="28">Responsible Person Name</option>
+                      <option value="Mode of Complaint" data-position="29">Mode of Complaint</option>
+                      <option value="Review (Tracking)" data-position="30">Review (Tracking)</option>
+                      <option value="Complaint Location" data-position="31">Complaint Location</option>
+                      <option value="Agency" data-position="32">Agency</option>
+                      <option value="Root Cause" data-position="33">Root Cause</option>
+                      <option value="Proactive/Reactive" data-position="34">Proactive/Reactive</option>
+                      <option value="Impact" data-position="35">Impact</option>
+                      <option value="Correction" data-position="36">Correction</option>
+                      <option value="Corrective Action" data-position="37">Corrective Action</option>
+                      <option value="Rating" data-position="38">Rating</option>
+                      <option value="Feedback" data-position="39">Feedback</option>
+
+                    </select>
+                  </div>
+                  <div class="col-xs-2" style="margin-top:20px;">
+                    <button type="button" id="customSort_rightAll" class="btn btn-sm btn-white btn-block"><i class="fa fa-forward"></i></button>
+                    <button type="button" id="customSort_rightSelected" class="btn btn-sm btn-white btn-block"><i class="fa fa-chevron-right"></i></button>
+                    <button type="button" id="customSort_leftSelected" class="btn btn-sm btn-white btn-block"><i class="fa fa-chevron-left"></i></button>
+                    <button type="button" id="customSort_leftAll" class="btn btn-sm btn-white btn-block"><i class="fa fa-backward"></i></button>
+                  </div>
+                  <div class="col-xs-5">
+                    <label>Selected Values</label>
+                    <select name="q[to][]" id="customSort_to" class="form-control" size="8" multiple="multiple">
+                    </select>
+                    <input type="hidden" name="commit" value="export">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer text-center">
+          <button type="submit" id="export-btn" class="btn btn-info btn-sm"><i class="fa fa-download margin-r-5" aria-hidden="true"></i> Export</button>
+        </div>
+      <%end%>
+    </div>
+  </div>
+</div>
+<script>
+var compare_chart1 = false;
+var compare_chart2 = false;
+  $(function () {
+    $('#helpdesk-report-table').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+  });
+
+
+  reselect_flats_options =function(value){
+    $.ajax({
+      type: "GET",
+      url: "/crm/admin/society_flats.json?q[society_block_id_eq]=" + value,
+      success: function(datas){
+       var sfs = datas["society_flats"];
+       var str = "<option value=''> Select flat </option>";
+       for(var x=0; x< sfs.length; x++){
+         str += "<option value='"+sfs[x]["flat_no"]+"'>" + sfs[x]["flat_no"] + "</option>";
+       }
+       $('[name="q[user_society_user_flat_society_flat_flat_no_eq]"]').html("").html($(str));
+      }
+    });
+  }
+
+  $('[name="q[user_society_user_flat_society_flat_society_block_id_eq]"]').change(function(e){
+    reselect_flats_options($(this).val());
+  });
+
+jQuery(document).ready(function($) {
+  $('#customSort').multiselect({
+      sort: false
+  });
+
+   $('.helpdesk_reports_picker').daterangepicker({
+      locale: {
+        format: 'DD/MMM/YYYY'
+      }
+    });
+
+  $('.ui.dropdown').dropdown();
+  
+  $("#export-btn").click(function(r){
+    r.preventDefault();
+    a=$("#customSort_to option").length;
+    if(a < 1){
+      toastr.error("Please select columns to export");
+      return false;
+    }
+    else{
+       $("#export-csv-form").submit();
+    }
+  });
+
+
+  $('#export-btn').attr('disabled', 'disabled');
+  $('.export-date-range').change(function(e){
+    if($(this).val != ""){
+      $('#export-btn').removeAttr('disabled');
+    }
+    else
+    {
+      $('#export-btn').attr('disabled', 'disabled');
+    }
+  });
+
+  $('.export-date-range').keyup(function() {
+
+      var isEmpty = false;
+      $('.export-date-range').each(function() {
+          if ($(this).val() == '') {
+              isEmpty = true;
+          }
+      });
+
+      if (isEmpty) {
+          $('#export-btn').attr('disabled', 'disabled');
+      } else {
+          $('#export-btn').removeAttr('disabled');
+      }
+  });
+
+
+  $('#compare-button').attr('disabled', 'disabled');
+
+  $('.compare-date-range').keyup(function() {
+
+      var isEmpty = false;
+      $('.compare-date-range').each(function() {
+          if ($(this).val() == '') {
+              isEmpty = true;
+          }
+      });
+
+      if (isEmpty) {
+          $('#compare-button').attr('disabled', 'disabled');
+      } else {
+          $('#compare-button').removeAttr('disabled');
+      }
+  });
+
+
+
+  function displayAdvancedFilterForExport() {
+    var x = document.getElementById("extra-options");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+  }
+
+  $('#advanced-filter-link').on("click", function() {
+    displayAdvancedFilterForExport()
+   });
+
+  // $('#export-btn').attr('disabled', true);
+
+  Highcharts.setOptions({
+      lang: {
+          // drillUpText: '<< Terug naar {series.name}'
+          drillUpText: '< Back'
+      }
+  });
+
+
+  Highcharts.theme = {
+    // colors: ['#058DC7', '#50B432', '#ED561B', '#DDDF00', '#24CBE5', '#64E572', 
+    //          '#FF9655', '#FFF263', '#6AF9C4'],
+    colors: ['#8ED2C9', '#FFB85F', '#FF7A5A', '#84CF96', '#DF9496', '#FCB3D0', 
+             '#FF9655', '#FFF263', '#6AF9C4'],
+    chart: {
+        backgroundColor: {
+            linearGradient: [0, 0, 500, 500],
+            stops: [
+                [0, 'rgb(255, 255, 255)'],
+                [1, 'rgb(240, 240, 255)']
+            ]
+        },
+    },
+    title: {
+        style: {
+            color: '#000',
+            font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+        }
+    },
+    subtitle: {
+        style: {
+            color: '#666666',
+            font: 'bold 12px "Trebuchet MS", Verdana, sans-serif'
+        }
+    },
+
+    legend: {
+        itemStyle: {
+            font: '9pt Trebuchet MS, Verdana, sans-serif',
+            color: 'black'
+        },
+        itemHoverStyle:{
+            color: 'gray'
+        }   
+    }
+};
+// Apply the theme
+
+var stack_color = ['#00b5ad','#eaae00'];
+
+Highcharts.setOptions(Highcharts.theme);
+
+// console.log(Highcharts.getOptions().colors)
+
+  var data = <%= raw @helpdesk_categories.to_json %>;
+  var highchart_category_data_array = <%= raw @highchart_category_data_array.to_json %>;
+  // console.log(highchart_category_data_array);
+
+
+  var mycategory_highchart;
+
+  function prepare_highchart2(ctx,chart_type, titletext, yaxistext,series,drilldown){
+    var highchart_opts = {
+          colors: stack_color,
+          chart:  {
+            type: chart_type,
+            renderTo: 'container'
+            // options3d: {
+            //     enabled: true,
+            //     alpha: 15,
+            //     beta: 15,
+            //     depth: 50,
+            //     viewDistance: 25
+            // }
+          },
+          title:{
+            text: titletext
+          },
+          xAxis: {
+            type: 'category',
+            // labels: {
+            //     rotation: -50   
+            //   }
+
+          labels:{
+                  rotation: -50,
+                  formatter: function(){
+                      if (this.value.length > 8){
+                          return this.value.substr(0,8) + "...";
+                      }else{
+                           return this.value;   
+                      }                        
+                  }
+              }
+            },
+          yAxis: {
+            title: {
+              margin: 25,
+              text: yaxistext
+            }
+          },
+          // legend: {
+          //   align: 'left',
+          //   x: -10,
+          //   verticalAlign: 'bottom',
+          //   y: 12,
+          //   floating: true,
+          //   backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+          //   borderColor: '#CCC',
+          //   borderWidth: 1,
+          //   shadow: false,
+          //   enabled: true
+          // },
+          plotOptions: {
+            series: {
+                stacking: 'normal',
+                column: {
+                  depth: 40
+                },
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true
+                    // ,
+                    // format: '{point.y:.1f}%'
+                }
+            }
+          },
+          tooltip: {
+            headerFormat: '<span style="font-size:11px"><b>{series.name}</b></span><br>',
+            pointFormat: '<span style="">{point.name}</span>: {point.y}<br/>Total: {point.stackTotal}'
+          },
+          series: series,
+          drilldown: drilldown
+        };
+      // console.log(JSON.stringify(complaintcategory_opts))
+      var myHighChart =  Highcharts.chart(ctx, highchart_opts);
+      // $('.highcharts-drilldown-axis-label').bind('mouseover',function(e){
+      //   alert("You hover on "+$(this).text())
+      //   // return '<div class="hastip" title="' + this.value + '">' + this.value + '</div>';
+      //  });
+      return myHighChart;
+  }
+
+
+  var highchart_category_data_array = <%= raw @highchart_category_data_array.to_json %>;
+
+  var highchart_category_title = "Categorywise Helpdesk Report";
+
+  var category_yaxistext = '<p style="font-weight:550;">Total complaint counts Categorywise (in nos)</p>';
+
+  var category_series = highchart_category_data_array;
+
+  var category_drilldown = {
+          series:  <%= raw @categorywise_drilldown.to_json %>,
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+  var highchart_categorycanvas = 'highchart_categorycanvas';
+
+  var mycategory_highchart = prepare_highchart2(highchart_categorycanvas,'column', highchart_category_title, category_yaxistext,category_series,category_drilldown);
+
+  // console.log(drilldown);
+
+
+  function prepare_complaint_rating_highchart(ctx,chart_type, title, xAxis, yAxis,legend,plotOptions,tooltip,series,drilldown){
+    var complaintrating_opt = {
+          chart:  {
+            type: chart_type
+            // ,
+            // options3d: {
+            //   enabled: true,
+            //   alpha: 45,
+            //   beta: 0
+            // }
+          },
+          title: title,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          legend: legend,
+          plotOptions: plotOptions,
+          tooltip: tooltip,
+          series: series,
+          drilldown: drilldown
+        };
+      console.log(JSON.stringify(complaintrating_opt))
+      var myComplaintRatingHighChart =  Highcharts.chart(ctx, complaintrating_opt);
+      return myComplaintRatingHighChart;
+  }
+  
+
+  var complaintrating_highchart_title = {
+        text: 'Helpdesk Rating Report'
+      };
+
+  var complaintrating_data_array = <%= raw @highchart_complaintrating_data_array.to_json %>;
+
+
+  // var responsetat_highchart_subtitle = {
+  //         text: 'Click the columns to view Category.'
+  //     };
+
+  var complaintrating_xAxis = {
+          type: 'category',
+          labels: {
+            rotation: -50 
+        }
+      };
+
+  var complaintrating_yAxis = {
+      title: {
+          text: 'Total Complaint Count Ratingwise'
+      }
+    };   
+
+  var complaintrating_legend = {
+      enabled: true
+    };
+
+  var complaintrating_plotOptions = {
+      pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                // format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            },
+            showInLegend: true
+        }
+    };
+
+  var complaintrating_tooltip = {
+          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="">{point.name}</span>: <b>{point.y}</b><br/>'
+      };
+
+  var complaintrating_series = [
+        {
+          name: "Complaint Rating",
+          colorByPoint: true,
+          data: complaintrating_data_array
+        }
+      ];
+
+  var complaintrating_drilldown = {
+          series:  <%= raw @highchart_complaintrating_drill.to_json %>,
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+  console.log(JSON.stringify(complaintrating_drilldown))
+
+  var highchart_complaintrating_canvas = 'highchart_rating_report';
+
+  var mycomplaintrating_highchart = prepare_complaint_rating_highchart(highchart_complaintrating_canvas,'pie', complaintrating_highchart_title, complaintrating_xAxis, complaintrating_yAxis,complaintrating_legend,complaintrating_plotOptions,complaintrating_tooltip,complaintrating_series,complaintrating_drilldown);
+
+
+
+  var highchart_complaint_type_data_array = <%= raw @highchart_complaint_type_data_array.to_json %>;
+
+  var highchart_complaint_type_data_array = <%= raw @highchart_complaint_type_data_array.to_json %>;
+
+  var highchart_complainttype_title = "Helpdesk Typewise Report";
+
+  var complainttype_yaxistext = '<p style="font-weight:550;">Total complaint counts Typewise (in nos)</p>';
+
+  var complainttype_series = highchart_complaint_type_data_array;
+
+  var complainttype_drilldown = {
+          series:  <%= raw @complaint_categories_drill.to_json %>,
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+  var highchart_complaintypecanvas = 'highchart_complaintypecanvas';
+
+  var mycomplainttype_highchart = prepare_highchart2(highchart_complaintypecanvas,'column', highchart_complainttype_title, complainttype_yaxistext,complainttype_series,complainttype_drilldown);
+
+
+
+
+  // var highchart_complaint_aging_data_array = <%= raw @complaint_aging_data_array.to_json %>;
+
+  // var highchart_complaintaging_title = "Complaint Aging Report";
+
+  // var complaintaging_yaxistext = '<p style="font-weight:550;">Total complaint counts Status wise (in nos)</p>';
+
+  // var complaintaging_series = [
+  //         {
+  //         colorByPoint: true,
+  //         data: highchart_complaint_aging_data_array
+  //       }
+  //     ];;
+
+  // var complaintaging_drilldown = {
+  //         series:  <%= raw @complaint_aging_drill.to_json %>,
+  //         activeAxisLabelStyle: {
+  //           textDecoration: 'none',
+  //           // fontStyle: 'italic',
+  //           color: 'rgb(102, 102, 102)'
+  //         },
+  //         activeDataLabelStyle: {
+  //             textDecoration: 'none',
+  //             color: 'rgb(0, 0, 0)'
+  //         }
+  //       };
+
+  // var highchart_complaintagingcanvas = 'highchart_complaintagingcanvas';
+
+  // var complaintaging_highchart = prepare_highchart2(highchart_complaintagingcanvas,'column', highchart_complaintaging_title, complaintaging_yaxistext,complaintaging_series,complaintaging_drilldown);
+
+
+
+  var highchart_responsetat_current_data_array = <%= raw @highchart_current_responsetat_data_array.to_json %>;
+
+  var mycomplaintresponsetatcurrent_highchart;
+  var mycomplaintresponsetatcurrent_highchart_modal;
+
+  function prepare_responsetatcurrent_highchart(ctx,chart_type, title, xAxis, yAxis,legend,plotOptions,tooltip,series,drilldown){
+    var responsetatcurrent_opt = {
+          chart:  {
+            type: chart_type
+          },
+          title: title,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          legend: legend,
+          plotOptions: plotOptions,
+          tooltip: tooltip,
+          series: series,
+          drilldown: drilldown
+        };
+      // console.log(JSON.stringify(responsetatcurrent_opt))
+      var myResponseTatHighChartCurrent =  Highcharts.chart(ctx, responsetatcurrent_opt);
+      return myResponseTatHighChartCurrent;
+  }
+  
+
+  var responsetatcurrent_highchart_title = {
+        text: 'Helpdesk Response TAT Current Month Report'
+      };
+
+  // var responsetat_highchart_subtitle = {
+  //         text: 'Click the columns to view Category.'
+  //     };
+
+  var responsetatcurrent_xAxis = {
+          type: 'category',
+          labels: {
+            rotation: -50 
+        }
+      };
+
+  var responsetatcurrent_yAxis = {
+      title: {
+          text: 'Total Response TAT counts'
+      }
+    };   
+
+  var responsetatcurrent_legend = {
+      enabled: true
+    };
+
+  var responsetatcurrent_plotOptions = {
+      pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            },
+            showInLegend: true
+        }
+    };
+
+  var responsetatcurrent_tooltip = {
+          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="">{point.name}</span>: <b>{point.y}</b><br/>'
+      };
+
+  var responsetatcurrent_series = [
+        {
+          name: "Response TAT",
+          colorByPoint: true,
+          data: highchart_responsetat_current_data_array
+        }
+      ];
+
+  var responsetatcurrent_drilldown = {
+          series:  <%= raw @highchart_current_responsetat_drill.to_json %>,
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+  // console.log(JSON.stringify(responsetatcurrent_drilldown))
+
+  var highchart_responsetatcurrent_canvas = 'highchart_responsetatcurrent_canvas';
+
+  mc_complaintresponsetatcurrent_high = prepare_responsetatcurrent_highchart(highchart_responsetatcurrent_canvas,'pie', responsetatcurrent_highchart_title, responsetatcurrent_xAxis, responsetatcurrent_yAxis,responsetatcurrent_legend,responsetatcurrent_plotOptions,responsetatcurrent_tooltip,responsetatcurrent_series,responsetatcurrent_drilldown);
+
+  mycomplaintresponsetatcurrent_highchart = mc_complaintresponsetatcurrent_high;
+
+  var highchart_responsetatcurrent_canvas_modal = 'highchart_responsetatcurrent_canvas_modal';
+
+  mc_complaintresponsetatcurrent_high_modal = prepare_responsetatcurrent_highchart(highchart_responsetatcurrent_canvas_modal,'pie', responsetatcurrent_highchart_title, responsetatcurrent_xAxis, responsetatcurrent_yAxis,responsetatcurrent_legend,responsetatcurrent_plotOptions,responsetatcurrent_tooltip,responsetatcurrent_series,responsetatcurrent_drilldown);
+
+  mycomplaintresponsetatcurrent_highchart_modal = mc_complaintresponsetatcurrent_high_modal;
+
+
+  // var highchart_responsetat_data_array_left = <%= raw @highchart_responsetat_data_array.to_json %>;
+
+  var mycomplaintresponsetat_highchart_left;
+
+  function prepare_responsetat_highchart_left(ctx,chart_type, title, xAxis, yAxis,legend,plotOptions,tooltip,series,drilldown){
+    var responsetat_opt_left = {
+          chart:  {
+            type: chart_type
+          },
+          title: title,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          legend: legend,
+          plotOptions: plotOptions,
+          tooltip: tooltip,
+          series: series,
+          drilldown: drilldown
+        };
+      // console.log(JSON.stringify(responsetat_opt_left))
+      var myResponseTatHighChartLeft =  Highcharts.chart(ctx, responsetat_opt_left);
+      return myResponseTatHighChartLeft;
+  }
+  
+  // var highchart_type = {
+  //         type: 'column'
+  //     };
+
+  var responsetat_highchart_title_left = {
+        text: 'Helpdesk Response TAT Report'
+      };
+
+  // var responsetat_highchart_subtitle = {
+  //         text: 'Click the columns to view Category.'
+  //     };
+
+  var responsetat_xAxis_left = {
+          type: 'category',
+          labels: {
+            rotation: -50 
+        }
+      };
+
+  var responsetat_yAxis_left = {
+      title: {
+          text: 'Total Response TAT counts'
+      }
+    };   
+
+  var responsetat_legend_left = {
+      enabled: true
+    };
+
+  var responsetat_plotOptions_left = {
+      pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            },
+            showInLegend: true
+        }
+    };
+
+  var responsetat_tooltip_left = {
+          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="">{point.name}</span>: <b>{point.y}</b><br/>'
+      };
+
+
+  var highchart_responsetatcanvas_left = 'highchart_responsetatcanvas_left';
+
+
+
+  var mycomplaintresponsetat_highchart_right;
+
+  function prepare_responsetat_highchart_right(ctx,chart_type, title, xAxis, yAxis,legend,plotOptions,tooltip,series,drilldown){
+    var responsetat_opt_right = {
+          chart:  {
+            type: chart_type
+          },
+          title: title,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          legend: legend,
+          plotOptions: plotOptions,
+          tooltip: tooltip,
+          series: series,
+          drilldown: drilldown
+        };
+      // console.log(JSON.stringify(responsetat_opt_left))
+      var myResponseTatHighChartRight =  Highcharts.chart(ctx, responsetat_opt_right);
+      return myResponseTatHighChartRight;
+  }
+  
+  // var highchart_type = {
+  //         type: 'column'
+  //     };
+
+  var responsetat_highchart_title_right = {
+        text: 'Helpdesk Response TAT Report'
+      };
+
+  // var responsetat_highchart_subtitle = {
+  //         text: 'Click the columns to view Category.'
+  //     };
+
+  var responsetat_xAxis_right = {
+          type: 'category',
+          labels: {
+            rotation: -50 
+        }
+      };
+
+  var responsetat_yAxis_right = {
+      title: {
+          text: 'Total Response TAT counts'
+      }
+    };   
+
+  var responsetat_legend_right = {
+      enabled: true
+    };
+
+  var responsetat_plotOptions_right = {
+      pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            },
+            showInLegend: true
+        }
+    };
+
+  var responsetat_tooltip_right = {
+          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="">{point.name}</span>: <b>{point.y}</b><br/>'
+      };
+
+
+  var highchart_responsetatcanvas_right = 'highchart_responsetatcanvas_right';
+
+ $("#compare-response-button").click(function(r){
+    r.preventDefault();
+    $.ajax({
+      url: "/crm/admin/compare_response_chart",
+      type: "POST",
+      data: $("#compare-response-chart-form").serialize(),
+      success: function(data) {
+
+      // mycomplaintresponsetatcurrent_highchart.destroy();
+      $("#current_responsetat_div_modal").hide()
+      $("#compare_responsetat_div").show()
+
+      var responsetat_highchart_title_left = {
+        text: 'Helpdesk Response TAT Report<br>'+ "(" + $("#response_date_range_1").val() + ")"
+      };
+
+      var responsetat_series_left = [
+        {
+          name: "Response TAT",
+          colorByPoint: true,
+          data: data["response_data_left"]
+        }
+      ];
+
+      var responsetat_drilldown_left = {
+          series:  data["response_drill_left"],
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+
+        mc_highchart_left = prepare_responsetat_highchart_left(highchart_responsetatcanvas_left,'pie', responsetat_highchart_title_left, responsetat_xAxis_left, responsetat_yAxis_left,responsetat_legend_left,responsetat_plotOptions_left,responsetat_tooltip_left,responsetat_series_left,responsetat_drilldown_left);
+        // mycomplaintresponsetat_highchart_left = mc_highchart_left
+        mycomplaintresponsetat_highchart_left = mc_highchart_left;
+
+
+      var responsetat_highchart_title_right = {
+        text: 'Helpdesk Response TAT Report<br>'+ "(" + $("#response_date_range_2").val() + ")"
+      };
+
+      var responsetat_series_right = [
+        {
+          name: "Response TAT",
+          colorByPoint: true,
+          data: data["response_data_right"]
+        }
+      ];
+
+      var responsetat_drilldown_right = {
+          series:  data["response_drill_right"],
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+
+        mc_highchart_right = prepare_responsetat_highchart_right(highchart_responsetatcanvas_right,'pie', responsetat_highchart_title_right, responsetat_xAxis_right, responsetat_yAxis_right,responsetat_legend_right,responsetat_plotOptions_right,responsetat_tooltip_right,responsetat_series_right,responsetat_drilldown_right);
+
+        mycomplaintresponsetat_highchart_right = mc_highchart_right
+
+      },
+      error: function() {
+        if($("#response_date_range_1").val() == "" || $("#response_date_range_2").val() == ""){
+          toastr.error("You need to select both Date ranges for performing comparision");
+        }
+       }
+
+    });
+
+
+  });
+
+
+  $("#chart-response-reset-button-modal").click(function(){
+     $("#compare_responsetat_div").hide()
+     $("#current_responsetat_div_modal").show()
+
+     // $("#compare-link").show()
+
+     var highchart_responsetatcurrent_canvas_modal = 'highchart_responsetatcurrent_canvas_modal';
+
+     mc_complaintresponsetatcurrent_high_modal = prepare_responsetatcurrent_highchart(highchart_responsetatcurrent_canvas_modal,'pie', responsetatcurrent_highchart_title, responsetatcurrent_xAxis, responsetatcurrent_yAxis,responsetatcurrent_legend,responsetatcurrent_plotOptions,responsetatcurrent_tooltip,responsetatcurrent_series,responsetatcurrent_drilldown);
+  });
+
+
+
+  var highchart_resolutiontat_current_data_array = <%= raw @highchart_current_resolutiontat_data_array.to_json %>;
+
+  var mycomplaintresolutiontatcurrent_highchart;
+  var mycomplaintresolutiontatcurrent_highchart_modal;
+
+  function prepare_resolutiontatcurrent_highchart(ctx,chart_type, title, xAxis, yAxis,legend,plotOptions,tooltip,series,drilldown){
+    var resolutioncurrent_opt = {
+          chart:  {
+            type: chart_type
+          },
+          title: title,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          legend: legend,
+          plotOptions: plotOptions,
+          tooltip: tooltip,
+          series: series,
+          drilldown: drilldown
+        };
+      // console.log(JSON.stringify(resolutioncurrent_opt))
+      var myResolutionTatHighChartCurrent =  Highcharts.chart(ctx, resolutioncurrent_opt);
+      return myResolutionTatHighChartCurrent;
+  }
+  
+  // var highchart_type = {
+  //         type: 'column'
+  //     };
+
+  var resolutiontatcurrent_highchart_title = {
+        text: 'Helpdesk Resolution TAT Current Month Report'
+      };
+
+  // var responsetat_highchart_subtitle = {
+  //         text: 'Click the columns to view Category.'
+  //     };
+
+  var resolutiontatcurrent_xAxis = {
+          type: 'category',
+          labels: {
+            rotation: -50 
+        }
+      };
+
+  var resolutiontatcurrent_yAxis = {
+      title: {
+          text: 'Total Response TAT counts'
+      }
+    };   
+
+  var resolutiontatcurrent_legend = {
+      enabled: true
+    };
+
+  var resolutiontatcurrent_plotOptions = {
+      pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            },
+            showInLegend: true
+        }
+    };
+
+  var resolutiontatcurrent_tooltip = {
+          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="">{point.name}</span>: <b>{point.y}</b><br/>'
+      };
+
+  var resolutiontatcurrent_series = [
+        {
+          name: "Response TAT",
+          colorByPoint: true,
+          data: highchart_resolutiontat_current_data_array
+        }
+      ];
+
+  var resolutiontatcurrent_drilldown = {
+          series:  <%= raw @highchart_current_resolutiontat_drill.to_json %>,
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+  // console.log(JSON.stringify(responsetatcurrent_drilldown))
+
+  var highchart_resolutiontatcurrent_canvas = 'highchart_resolutiontatcurrent_canvas';
+
+  mc_complaintresolutiontatcurrent_high = prepare_resolutiontatcurrent_highchart(highchart_resolutiontatcurrent_canvas,'pie', resolutiontatcurrent_highchart_title, resolutiontatcurrent_xAxis, resolutiontatcurrent_yAxis,resolutiontatcurrent_legend,resolutiontatcurrent_plotOptions,resolutiontatcurrent_tooltip,resolutiontatcurrent_series,resolutiontatcurrent_drilldown);
+
+  mycomplaintresolutiontatcurrent_highchart = mc_complaintresolutiontatcurrent_high;
+
+  var highchart_resolutiontatcurrent_canvas_modal = 'highchart_resolutiontatcurrent_canvas_modal';
+
+  mc_complaintresolutiontatcurrent_high_modal = prepare_resolutiontatcurrent_highchart(highchart_resolutiontatcurrent_canvas_modal,'pie', resolutiontatcurrent_highchart_title, resolutiontatcurrent_xAxis, resolutiontatcurrent_yAxis,resolutiontatcurrent_legend,resolutiontatcurrent_plotOptions,resolutiontatcurrent_tooltip,resolutiontatcurrent_series,resolutiontatcurrent_drilldown);
+
+  mycomplaintresolutiontatcurrent_highchart_modal = mc_complaintresolutiontatcurrent_high_modal;
+
+
+
+
+  // var highchart_responsetat_data_array_left = <%= raw @highchart_responsetat_data_array.to_json %>;
+
+  var mycomplaintresolutiontat_highchart_left;
+
+  function prepare_resolutiontat_highchart_left(ctx,chart_type, title, xAxis, yAxis,legend,plotOptions,tooltip,series,drilldown){
+    var resolutiontat_opt_left = {
+          chart:  {
+            type: chart_type
+          },
+          title: title,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          legend: legend,
+          plotOptions: plotOptions,
+          tooltip: tooltip,
+          series: series,
+          drilldown: drilldown
+        };
+      // console.log(JSON.stringify(responsetat_opt_left))
+      var myResolutionTatHighChartLeft =  Highcharts.chart(ctx, resolutiontat_opt_left);
+      return myResolutionTatHighChartLeft;
+  }
+  
+  // var highchart_type = {
+  //         type: 'column'
+  //     };
+
+  var resolutiontat_highchart_title_left = {
+        text: 'Helpdesk Resolution TAT Report'
+      };
+
+  // var responsetat_highchart_subtitle = {
+  //         text: 'Click the columns to view Category.'
+  //     };
+
+  var resolutiontat_xAxis_left = {
+          type: 'category',
+          labels: {
+            rotation: -50 
+        }
+      };
+
+  var resolutiontat_yAxis_left = {
+      title: {
+          text: 'Total Resolution TAT counts'
+      }
+    };   
+
+  var resolutiontat_legend_left = {
+      enabled: true
+    };
+
+  var resolutiontat_plotOptions_left = {
+      pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            },
+            showInLegend: true
+        }
+    };
+
+  var resolutiontat_tooltip_left = {
+          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="">{point.name}</span>: <b>{point.y}</b><br/>'
+      };
+
+
+  var highchart_resolutiontatcanvas_left = 'highchart_resolutiontatcanvas_left';
+
+
+
+  var mycomplaintresolutiontat_highchart_right;
+
+  function prepare_resolutiontat_highchart_right(ctx,chart_type, title, xAxis, yAxis,legend,plotOptions,tooltip,series,drilldown){
+    var resolutiontat_opt_right = {
+          chart:  {
+            type: chart_type
+          },
+          title: title,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          legend: legend,
+          plotOptions: plotOptions,
+          tooltip: tooltip,
+          series: series,
+          drilldown: drilldown
+        };
+      // console.log(JSON.stringify(responsetat_opt_left))
+      var myResolutionTatHighChartRight =  Highcharts.chart(ctx, resolutiontat_opt_right);
+      return myResolutionTatHighChartRight;
+  }
+  
+  // var highchart_type = {
+  //         type: 'column'
+  //     };
+
+  var resolutiontat_highchart_title_right = {
+        text: 'Helpdesk Resolution TAT Report'
+      };
+
+  // var responsetat_highchart_subtitle = {
+  //         text: 'Click the columns to view Category.'
+  //     };
+
+  var resolutiontat_xAxis_right = {
+          type: 'category',
+          labels: {
+            rotation: -50 
+        }
+      };
+
+  var resolutiontat_yAxis_right = {
+      title: {
+          text: 'Total Resolution TAT counts'
+      }
+    };   
+
+  var resolutiontat_legend_right = {
+      enabled: true
+    };
+
+  var resolutiontat_plotOptions_right = {
+      pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            depth: 35,
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            },
+            showInLegend: true
+        }
+    };
+
+  var resolutiontat_tooltip_right = {
+          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="">{point.name}</span>: <b>{point.y}</b><br/>'
+      };
+
+
+  var highchart_resolutiontatcanvas_right = 'highchart_resolutiontatcanvas_right';  
+ 
+
+ $("#compare-resolution-button").click(function(r){
+    r.preventDefault();
+    $.ajax({
+      url: "/crm/admin/compare_resolution_chart",
+      type: "POST",
+      data: $("#compare-resolution-chart-form").serialize(),
+      success: function(data) {
+
+      // mycomplaintresponsetatcurrent_highchart.destroy();
+      $("#current_resolutiontat_div_modal").hide()
+      $("#compare_resolutiontat_div").show()
+
+      var resolutiontat_highchart_title_left = {
+        text: 'Helpdesk Resolution TAT Report<br>'+ "(" + $("#resolution_date_range_1").val() + ")"
+      };
+
+      var resolutiontat_series_left = [
+        {
+          name: "Resolution TAT",
+          colorByPoint: true,
+          data: data["resolution_data_left"]
+        }
+      ];
+
+      var resolutiontat_drilldown_left = {
+          series:  data["resolution_drill_left"],
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+
+        mc_resolution_highchart_left = prepare_resolutiontat_highchart_left(highchart_resolutiontatcanvas_left,'pie', resolutiontat_highchart_title_left, resolutiontat_xAxis_left, resolutiontat_yAxis_left,resolutiontat_legend_left,resolutiontat_plotOptions_left,resolutiontat_tooltip_left,resolutiontat_series_left,resolutiontat_drilldown_left);
+        // mycomplaintresponsetat_highchart_left = mc_highchart_left
+        mycomplaintresolutiontat_highchart_left = mc_resolution_highchart_left;
+
+
+      var resolutiontat_highchart_title_right = {
+        text: 'Helpdesk Resolution TAT Report<br>'+ "(" + $("#resolution_date_range_2").val() + ")"
+      };
+
+      var resolutiontat_series_right = [
+        {
+          name: "Resolution TAT",
+          colorByPoint: true,
+          data: data["resolution_data_right"]
+        }
+      ];
+
+      var resolutiontat_drilldown_right = {
+          series:  data["resolution_drill_right"],
+          activeAxisLabelStyle: {
+            textDecoration: 'none',
+            // fontStyle: 'italic',
+            color: 'rgb(102, 102, 102)'
+          },
+          activeDataLabelStyle: {
+              textDecoration: 'none',
+              color: 'rgb(0, 0, 0)'
+          }
+        };
+
+
+        mc_resolution_highchart_right = prepare_resolutiontat_highchart_right(highchart_resolutiontatcanvas_right,'pie', resolutiontat_highchart_title_right, resolutiontat_xAxis_right, resolutiontat_yAxis_right,resolutiontat_legend_right,resolutiontat_plotOptions_right,resolutiontat_tooltip_right,resolutiontat_series_right,resolutiontat_drilldown_right);
+
+        mycomplaintresolutiontat_highchart_right = mc_resolution_highchart_right
+
+      },
+      error: function() {
+        if($("#resolution_date_range_1").val() == "" || $("#resolution_date_range_2").val() == ""){
+          toastr.error("You need to select both Date ranges for performing comparision");
+        }
+       }
+    });
+
+
+  });
+
+
+  $("#chart-resolution-reset-button-modal").click(function(){
+     $("#compare_resolutiontat_div").hide()
+     $("#current_resolutiontat_div_modal").show()
+
+     // $("#compare-link").show()
+
+     var highchart_resolutiontatcurrent_canvas_modal = 'highchart_resolutiontatcurrent_canvas_modal';
+
+     mc_complaintresolutiontatcurrent_high_modal = prepare_resolutiontatcurrent_highchart(highchart_resolutiontatcurrent_canvas_modal,'pie', resolutiontatcurrent_highchart_title, resolutiontatcurrent_xAxis, resolutiontatcurrent_yAxis,resolutiontatcurrent_legend,resolutiontatcurrent_plotOptions,resolutiontatcurrent_tooltip,resolutiontatcurrent_series,resolutiontatcurrent_drilldown);
+  });
+
+
+
+});
+
+
+ $(function () {
+    $(".datepicker").datepicker({
+      autoclose: true
+    });
+    });
+
+$("#helpdesk-report-picker").val("<%= @date_rangeparam.to_s %>");
+</script>

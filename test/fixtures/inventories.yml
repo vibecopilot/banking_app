@@ -1,0 +1,43 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  inventory_type: 1
+  criticality: 1
+  asset_group_id: 1
+  asset_sub_group_id: 1
+  asset_id: 1
+  code: MyString
+  serial_number: MyString
+  quantity: 1.5
+  min_stock_level: MyString
+  min_order_level: MyString
+  cgst_rate: 1.5
+  sgst_rate: 1.5
+  igst_rate: 1.5
+  active: false
+  hsn_id: 1
+  expiry_date: 2024-10-26 17:34:59
+  unit: MyString
+  cost: 1.5
+
+two:
+  name: MyString
+  inventory_type: 1
+  criticality: 1
+  asset_group_id: 1
+  asset_sub_group_id: 1
+  asset_id: 1
+  code: MyString
+  serial_number: MyString
+  quantity: 1.5
+  min_stock_level: MyString
+  min_order_level: MyString
+  cgst_rate: 1.5
+  sgst_rate: 1.5
+  igst_rate: 1.5
+  active: false
+  hsn_id: 1
+  expiry_date: 2024-10-26 17:34:59
+  unit: MyString
+  cost: 1.5

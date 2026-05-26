@@ -1,0 +1,42 @@
+<%= form_with(model: meter_reading, local: true) do |form| %>
+  <% if meter_reading.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(meter_reading.errors.count, "error") %> prohibited this meter_reading from being saved:</h2>
+
+      <ul>
+      <% meter_reading.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :meter_id %>
+    <%= form.number_field :meter_id, id: :meter_reading_meter_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :opening %>
+    <%= form.text_field :opening, id: :meter_reading_opening %>
+  </div>
+
+  <div class="field">
+    <%= form.label :closing %>
+    <%= form.text_field :closing, id: :meter_reading_closing %>
+  </div>
+
+  <div class="field">
+    <%= form.label :consumption %>
+    <%= form.text_field :consumption, id: :meter_reading_consumption %>
+  </div>
+
+  <div class="field">
+    <%= form.label :parameter %>
+    <%= form.text_field :parameter, id: :meter_reading_parameter %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

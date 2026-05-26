@@ -1,0 +1,63 @@
+<div class="modal fade" id="esc_clone<%= @complaint_worker.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Clone Data</h4>
+        </div>
+        <%= form_tag "/clone_escalations", method: :post, :html => {:role => "form"} do |f| %>
+          <%= hidden_field_tag :cw_id, @complaint_worker.id %>
+          <div class="modal-body">
+            <div class="row">
+              <div class="form-group col-sm-12">
+                <div class="col-sm-12">
+                  <div class="col-sm-6">
+                    <label>Regions</label>
+                    <%= select_tag 'region_ids[]', options_for_select(Pms::Region.where(company_id: @user.company_id).map {|s| [s.name, s.id]}), data: { placeholder: "Select Regions"}, :class=>"chosen-select" , multiple: true, required: true %>
+                  </div>
+
+                  <div class='col-sm-6'>
+                    <label>Zones</label>
+                    <%= select_tag 'zone_ids[]', options_for_select([].map {|s| [s.name, s.id]}), data: { placeholder: "Select Zones"}, :class=>"chosen-select zones", multiple: true %>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="modal-footer">
+              <%= submit_tag 'Clone',class: "btn btn-sm custom-button clone-building" %>
+            </div>
+          <%end%>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $('[name="region_ids[]"]').change(function(){
+    var form = $(this).parents('form');
+    var zone = form.find('[name="zone_ids[]"]');
+    var region_id = $(this).val();
+    if(region_id != null || region_id > 0){
+      $.ajax({
+        type: 'GET',
+        url: '/pms/admin/complaints/'+region_id+'/zones',
+        dataType: 'json',
+        success: function(data){
+          zone.html("<select class = 'chosen-select' data-placeholder= 'Select Zones' name = 'zone_ids[]' multiple>");
+          for(i=0; i < data.zones.length; i++){
+            zone.append("<option value='" + data.zones[i].id + "' >" + data.zones[i].name +"</option>");
+          }
+          zone.append("</select>");
+          zone.trigger("chosen:updated");
+        }
+      });
+    }
+    else{
+      zone.html("<option value = ''></option>");
+      zone.trigger("chosen:updated");
+      $(".zones").each(function(){
+        $(this).find(".icon").click();
+      });
+    }
+  });
+  </script>

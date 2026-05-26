@@ -1,0 +1,67 @@
+<%= form_with(model: event_guest, local: true) do |form| %>
+  <% if event_guest.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(event_guest.errors.count, "error") %> prohibited this event_guest from being saved:</h2>
+
+      <ul>
+      <% event_guest.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :event_id %>
+    <%= form.number_field :event_id, id: :event_guest_event_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :event_guest_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :rsvp %>
+    <%= form.text_field :rsvp, id: :event_guest_rsvp %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_name %>
+    <%= form.text_field :company_name, id: :event_guest_company_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email, id: :event_guest_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mobile %>
+    <%= form.text_field :mobile, id: :event_guest_mobile %>
+  </div>
+
+  <div class="field">
+    <%= form.label :business %>
+    <%= form.text_field :business, id: :event_guest_business %>
+  </div>
+
+  <div class="field">
+    <%= form.label :rules %>
+    <%= form.text_field :rules, id: :event_guest_rules %>
+  </div>
+
+  <div class="field">
+    <%= form.label :charges %>
+    <%= form.text_field :charges, id: :event_guest_charges %>
+  </div>
+
+  <div class="field">
+    <%= form.label :industry %>
+    <%= form.text_field :industry, id: :event_guest_industry %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

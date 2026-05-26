@@ -1,0 +1,30 @@
+<h1>Verify OTP</h1>
+
+<% if Rails.env.development? %>
+  <div class="developer-info" style="background-color: #ffe6e6; border: 1px solid #ff9999; padding: 10px; margin-bottom: 20px;">
+    <h3>Developer Information</h3>
+    <p><strong>OTP for testing:</strong> <%= @visitor.otp %></p>
+    <p><strong>Warning:</strong> This information is only visible in development environment.</p>
+  </div>
+<% end %>
+
+<%= form_with(url: verify_otp_visitor_path(@visitor), method: :post, local: true) do |form| %>
+  <% if flash[:alert] %>
+    <div class="alert alert-danger">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :otp, "Enter OTP" %>
+    <%= form.text_field :otp, required: true, autofocus: true %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Verify OTP" %>
+  </div>
+<% end %>
+
+<%= button_to "Resend OTP", resend_otp_visitor_path(@visitor), method: :post %>
+
+<%= link_to "Back", visitors_path %>

@@ -1,0 +1,85 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Employee Name:</strong>
+  <%= @hotel.employee_name %>
+</p>
+
+<p>
+  <strong>Destination:</strong>
+  <%= @hotel.destination %>
+</p>
+
+<p>
+  <strong>Hotel name:</strong>
+  <%= @hotel.hotel_name %>
+</p>
+
+<p>
+  <strong>Location:</strong>
+  <%= @hotel.location %>
+</p>
+
+<p>
+  <strong>Number of rooms:</strong>
+  <%= @hotel.number_of_rooms %>
+</p>
+
+<p>
+  <strong>Room type:</strong>
+  <%= @hotel.room_type %>
+</p>
+
+<p>
+  <strong>Special requests:</strong>
+  <%= @hotel.special_requests %>
+</p>
+
+<p>
+  <strong>Hotel preferences:</strong>
+  <%= @hotel.hotel_preferences %>
+</p>
+
+<p>
+  <strong>Check-in date:</strong>
+  <%= @hotel.check_in_date %>
+</p>
+
+<p>
+  <strong>Check-out date:</strong>
+  <%= @hotel.check_out_date %>
+</p>
+
+<p>
+  <strong>Booking confirmation number:</strong>
+  <%= @hotel.booking_confirmation_number %>
+</p>
+
+<p>
+  <strong>Booking certification email:</strong>
+  <%= @hotel.booking_certification_email %>
+</p>
+
+<p>
+  <strong>Booking status:</strong>
+  <%= @hotel.booking_status %>
+</p>
+
+<p>
+  <strong>Manager approval:</strong>
+  <%= @hotel.manager_approval %>
+</p>
+
+<p>
+  <strong>Is available:</strong>
+  <%= @hotel.is_available %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @hotel.site_id %>
+</p>
+
+<%= link_to 'Edit', edit_hotel_path(@hotel) %> |
+<%= link_to 'Back', hotels_path %>
+

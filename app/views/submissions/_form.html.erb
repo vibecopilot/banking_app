@@ -1,0 +1,101 @@
+<%= form_with(model: submission, local: true, multipart: true) do |form| %>
+  <% if submission.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(submission.errors.count, "error") %> prohibited this submission from being saved:</h2>
+
+      <ul>
+      <% submission.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <% activity = Activity.find_by(id: params[:activity_id])
+   questions = Checklist.unscoped.find_by(id:activity.checklist_id).questions %>
+<div class="col-sm-12" >
+<div class="row">
+  <div class="col-sm-4">
+    <h5>Asset: <%= activity.site_asset&.name %></h5>
+  </div>
+  <div class="col-sm-4">
+    <h5>Checklist: <%= Checklist.unscoped.find_by(id:activity.checklist_id).try(:name) %></h5>
+  </div>
+</div>
+    <%= form.hidden_field :asset_id, id: :submission_asset_id, value: activity.asset_id %>
+    <%= form.hidden_field :checklist_id, id: :submission_checklist_id, value: activity.checklist_id %>
+    <%= form.hidden_field :activity_id, id: :submission_activity_id, value: activity.id %>
+    <%= form.hidden_field :user_id, id: :submission_user_id, value: @user.id %>
+<% questions.each do |question| %>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="field text-left mb-3">
+        <label>
+          <%= "#{question.name}" %>
+          <% if question.question_mandatory %>
+            <span style="color: red;">(Question Mandatory)</span>
+          <% end %>
+        </label>
+        <input type="hidden" name="questions[<%= question.id %>][id]" value="<%= question.id %>" >
+        <% if question.qtype == "multiple"%>
+          <% if question.option1.present? %>
+            <input type="radio" name="questions[<%= question.id %>][option]" value="<%= question.option1 %>"> <%= question.option1 %>
+            <input type="hidden" name="questions[<%= question.id %>][value_type1]" value="<%= question.value_type1 %>"> 
+              (<span style="background-color: <%= question.value_type1 == 'P' ? 'green' : 'red' %>; padding: 2px; border-radius: 2px; color: white; font-size: 12px;">
+                <%= question.value_type1 %>
+              </span>)
+          <%end%>
+          <% if question.option2.present? %>
+            <input type="radio" name="questions[<%= question.id %>][option]" value="<%= question.option2 %>"> <%= question.option2 %>
+            <input type="hidden" name="questions[<%= question.id %>][value_type2]" value="<%= question.value_type2 %>"> 
+            (<span style="background-color: <%= question.value_type2 == 'P' ? 'green' : 'red' %>; padding: 2px; border-radius: 2px; color: white; font-size: 12px;">
+                <%= question.value_type2 %>
+              </span>)
+          <%end%>
+          <% if question.option3.present? %>
+            <input type="radio" name="questions[<%= question.id %>][option]" value="<%= question.option3 %>"> <%= question.option3 %>
+            <input type="hidden" name="questions[<%= question.id %>][value_type3]" value="<%= question.value_type3 %>"> 
+            (<span style="background-color: <%= question.value_type3 == 'P' ? 'green' : 'red' %>; padding: 2px; border-radius: 2px; color: white; font-size: 12px;">
+                <%= question.value_type3 %>
+              </span>)
+          <%end%>
+          <% if question.option4.present? %>
+            <input type="radio" name="questions[<%= question.id %>][option]" value="<%= question.option4 %>"> <%= question.option4 %>
+            <input type="hidden" name="questions[<%= question.id %>][value_type4]" value="<%= question.value_type4 %>"> 
+            (<span style="background-color: <%= question.value_type4 == 'P' ? 'green' : 'red' %>; padding: 2px; border-radius: 2px; color: white; font-size: 12px;">
+                <%= question.value_type4 %>
+              </span>)
+          <%end%>
+        <% elsif question.qtype == "description"%>
+          <textarea name="questions[<%= question.id %>][option]"></textarea>
+        <% else%>
+          <input type="text" name="questions[<%= question.id %>][option]">
+        <%end%>
+        <br>
+        <% if question.image_mandatory %>
+          <span style="color: red;">(Image Mandatory)</span>
+          <%= file_field_tag "questions[#{question.id}][attachfiles][]", multiple: true %>
+        <% else %>
+          <%= file_field_tag "questions[#{question.id}][attachfiles][]", multiple: true %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+<div class="row">
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+      <%= form.label :comment %>
+      <%= form.text_area :comment, id: :submission_comment %>
+    </div>
+  </div>
+</div>
+
+  <div class="field">
+    <%= form.label :attachfiles %>
+    <%= form.file_field :attachfiles %>
+  </div> 
+
+  <div class="actions">
+    <%= form.submit "Submit" %>
+  </div>
+<% end %>

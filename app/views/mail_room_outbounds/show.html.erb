@@ -1,0 +1,74 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Vendor:</strong>
+  <%= @mail_room_outbound.vendor_id %>
+</p>
+
+<p>
+  <strong>Sending date:</strong>
+  <%= @mail_room_outbound.sending_date %>
+</p>
+
+<p>
+  <strong>Sender:</strong>
+  <%= @mail_room_outbound.sender_id %>
+</p>
+
+<p>
+  <strong>Recipient name:</strong>
+  <%= @mail_room_outbound.recipient_name %>
+</p>
+
+<p>
+  <strong>Mobile number:</strong>
+  <%= @mail_room_outbound.mobile_number %>
+</p>
+
+<p>
+  <strong>Awb number:</strong>
+  <%= @mail_room_outbound.awb_number %>
+</p>
+
+<p>
+  <strong>Recipient email:</strong>
+  <%= @mail_room_outbound.recipient_email_id %>
+</p>
+
+<p>
+  <strong>Recipient address 1:</strong>
+  <%= @mail_room_outbound.recipient_address_1 %>
+</p>
+
+<p>
+  <strong>Recipient address 2:</strong>
+  <%= @mail_room_outbound.recipient_address_2 %>
+</p>
+
+<p>
+  <strong>State:</strong>
+  <%= @mail_room_outbound.state %>
+</p>
+
+<p>
+  <strong>City:</strong>
+  <%= @mail_room_outbound.city %>
+</p>
+
+<p>
+  <strong>Pincode:</strong>
+  <%= @mail_room_outbound.pincode %>
+</p>
+
+<p>
+  <strong>Mail_outbound_type:</strong>
+  <%= @mail_room_outbound.mail_outbound_type %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @mail_room_outbound.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_mail_room_outbound_path(@mail_room_outbound) %> |
+<%= link_to 'Back', mail_room_outbounds_path %>

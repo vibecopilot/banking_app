@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Helpdesk Ticket Completed</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <style type="text/css">
+    body, table, td, a {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    body {
+      height: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+      font-size: 13px !important;
+      background-color: #f4f4f4;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .header {
+      text-align: right;
+      margin-bottom: 15px;
+    }
+    .status {
+      display: inline-block;
+      background-color: #F44336;
+      color: #ffffff;
+      border-radius: 20px;
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .section strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 5px;
+      color: #333333;
+    }
+    .section p {
+      margin: 0;
+      color: #666666;
+    }
+    .details {
+      display: flex;
+      flex-wrap: wrap;
+      margin: -10px;
+    }
+    .details .item {
+      width: calc(50% - 20px);
+      margin: 10px;
+      box-sizing: border-box;
+    }
+    .details .item strong {
+      font-size: 14px;
+    }
+    .footer {
+      background-color: #f4f4f4;
+      padding: 10px;
+      text-align: center;
+      border-top: 1px solid #999999;
+    }
+    .footer h2 {
+      font-size: 11px;
+      font-weight: 400;
+      margin: 0;
+      color: #777777;
+    }
+    @media (max-width: 600px) {
+      .details .item {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="status">Closed</div>
+    </div>
+    <div class="section">
+      <strong>Ticket Closed</strong>
+      <p><%= @complaint.heading %></p>
+    </div>
+    <div class="section">
+      <strong>Closed On</strong>
+      <p><%= Time.now.strftime('%d/%m/%Y %l:%M %p') %></p>
+    </div>
+    <div class="section">
+      <strong>Final Status</strong>
+      <p><%= @complaint.complaint_status.name.present? ? @complaint.complaint_status.name.titleize : 'Closed' %></p>
+    </div>
+    <div class="details">
+      <div class="item">
+        <strong>Site</strong>
+        <p><%= @complaint.site_id.present? ? Site.find(@complaint.site_id).try(:name) : "NA" %></p>
+      </div>
+      <div class="item">
+        <strong>Category</strong>
+        <p><%= @complaint.category_type.try(:name) %></p>
+      </div>
+      <div class="item">
+        <strong>Created On</strong>
+        <p><%= @complaint.created_at.strftime('%d/%m/%Y %l:%M %p') %></p>
+      </div>
+      <div class="item">
+        <strong>Sub-category</strong>
+        <p><%= @complaint.sub_category.try(:name) %></p>
+      </div>
+      <div class="item">
+        <strong>Created by</strong>
+        <p><%= @complaint.user.try(:firstname) %></p>
+      </div>
+      <div class="item">
+        <strong>Unit</strong>
+        <p><%= @complaint.unit.try(:name) %></p>
+      </div>
+      <div class="item">
+        <strong>Floor</strong>
+        <p><%= @complaint.floor.try(:name) %></p>
+      </div>
+    </div>
+    <div class="footer">
+      <h2>Note: This is an auto-generated email. Please do not reply.</h2>
+    </div>
+  </div>
+</body>
+</html>

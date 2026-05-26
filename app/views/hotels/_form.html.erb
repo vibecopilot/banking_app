@@ -1,0 +1,120 @@
+<%= form_with(model: hotel, local: true) do |form| %>
+  <% if hotel.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(hotel.errors.count, "error") %> prohibited this hotel from being saved:</h2>
+
+      <ul>
+      <% hotel.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :employee_id %>
+    <%= form.number_field :employee_id, id: :hotel_employee_id %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :employee_name %>
+    <%= form.text_field :employee_name, id: :hotel_employee_name %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :destination %>
+    <%= form.text_field :destination, id: :hotel_destination %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :hotel_name %>
+    <%= form.text_field :hotel_name, id: :hotel_hotel_name %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :location %>
+    <%= form.text_field :location, id: :hotel_location %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :number_of_rooms %>
+    <%= form.number_field :number_of_rooms, id: :hotel_number_of_rooms %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :room_type %>
+    <%= form.text_field :room_type, id: :hotel_room_type %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :special_requests %>
+    <%= form.text_field :special_requests, id: :hotel_special_requests %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :hotel_preferences %>
+    <%= form.text_field :hotel_preferences, id: :hotel_hotel_preferences %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :check_in_date %>
+    <%= form.datetime_select :check_in_date, id: :hotel_check_in_date %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :check_out_date %>
+    <%= form.datetime_select :check_out_date, id: :hotel_check_out_date %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :booking_confirmation_number %>
+    <%= form.text_field :booking_confirmation_number, id: :hotel_booking_confirmation_number %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :booking_certification_email %>
+    <%= form.text_field :booking_certification_email, id: :hotel_booking_certification_email %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :booking_status %>
+    <%= form.text_field :booking_status, id: :hotel_booking_status %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :manager_approval %>
+    <%= form.check_box :manager_approval, id: :hotel_manager_approval %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :is_available %>
+    <%= form.check_box :is_available, id: :hotel_is_available %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :hotel_site_id %>
+  </div>
+
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+

@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  restaurant_id: 1
+  ondate: 2024-12-10
+  ontime: 2024-12-10 23:08:35
+  user_id: 1
+  payment_status: MyString
+  total_amount: 1.5
+  status: MyString
+
+two:
+  restaurant_id: 1
+  ondate: 2024-12-10
+  ontime: 2024-12-10 23:08:35
+  user_id: 1
+  payment_status: MyString
+  total_amount: 1.5
+  status: MyString

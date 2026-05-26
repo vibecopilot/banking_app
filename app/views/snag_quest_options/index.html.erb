@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Snag Quest Options</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Question</th>
+      <th>Qname</th>
+      <th>Active</th>
+      <th>Company</th>
+      <th>Option type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @snag_quest_options.each do |snag_quest_option| %>
+      <tr>
+        <td><%= snag_quest_option.question_id %></td>
+        <td><%= snag_quest_option.qname %></td>
+        <td><%= snag_quest_option.active %></td>
+        <td><%= snag_quest_option.company_id %></td>
+        <td><%= snag_quest_option.option_type %></td>
+        <td><%= link_to 'Show', snag_quest_option %></td>
+        <td><%= link_to 'Edit', edit_snag_quest_option_path(snag_quest_option) %></td>
+        <td><%= link_to 'Destroy', snag_quest_option, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Snag Quest Option', new_snag_quest_option_path %>

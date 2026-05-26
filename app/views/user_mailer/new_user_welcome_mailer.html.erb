@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome Email</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<style type="text/css">
+body, table, td, a {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+table, td {
+  mso-table-lspace: 0pt;
+  mso-table-rspace: 0pt;
+}
+img {
+  -ms-interpolation-mode: bicubic;
+}
+body {
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  font-size: 13px !important;
+}
+a[x-apple-data-detectors] {
+  color: inherit !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+</style>
+</head>
+<body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="center" style="padding: 10px 10px 10px 10px; background-color: #ffffff;">
+      <h1 style="color: #28a745; font-family: Arial, Helvetica, sans-serif; font-size: 24px; font-weight: bold;">WELCOME TO “<%= @user&.site&.name %>” SERVICE MANAGEMENT PORTAL!</h1>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding: 20px 30px 10px 30px; background-color: #ffffff;">
+      <p style="color: #666666; font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 24px;">
+        Dear <strong><%= @user&.firstname %>  <%= @user.try(:lastname) %></strong>,<br>
+        We're excited to welcome you to <strong>‘<%= @user&.site&.name %>' - SERVICE MANAGEMENT PORTAL</strong>! This platform is designed to streamline your support experience and ensure that your queries/feedback/issues are addressed efficiently and effectively.
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding: 0 30px; background-color: #ffffff;">
+      <p style="color: #666666; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px;">
+        Here's what you can expect from our Service Management Portal:
+        <ul style="text-align: left; color: #666666; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px;">
+          <li>Centralized Ticketing System: Easily submit, track, and manage tickets from one convenient location.</li>
+          <li>Transparent Communication: Full visibility into ticket status, keeping you informed every step of the way.</li>
+          <li>Priority-Based Support: Tickets are prioritized based on urgency and impact for timely assistance.</li>
+          <li>24/7 Accessibility: Always within reach, no matter when or where you need support.</li>
+        </ul>
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding: 0 30px; background-color: #ffffff;">
+      <p style="color: #666666; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px;">
+        To access the Service Management Portal, simply follow the instructions below:
+        <ul style="text-align: left;">
+          <li>Service Management Portal: <a href="https://app.vibecopilot.ai" style="color: #28a745; text-decoration: none;">https://app.vibecopilot.ai</a></li>
+          <li>Your login credentials:<br>
+            ID - <%= @user.email %><br>
+            Password - <%= @password %>
+          </li>
+          <li>Log in using your credentials and follow the prompts to access your account.</li>
+          <li>Navigate to the "My Ticket" section to raise any queries or concerns.</li>
+        </ul>
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" style="padding: 0 30px 30px 30px; background-color: #ffffff;">
+      <p style="color: #666666; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 20px;">
+        We're committed to delivering exceptional support and ensuring your satisfaction with our products and services. Once again, welcome to ‘<%= @user&.site&.name %>’ - SERVICE MANAGEMENT PORTAL. We look forward to serving you!
+      </p>
+      <p style="color: #666666; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: bold;">Best regards,<br>TEAM - ‘<%= @user&.site&.name %>’</p>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

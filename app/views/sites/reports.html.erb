@@ -1,0 +1,591 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+<title>Invoice Emailer</title>
+<style>
+body {
+  padding: 0;
+  margin: 0
+}
+table, tr, td, th {
+  border-collapse: collapse;
+  border: 0 none;
+}
+
+.table-width{
+  border:20px solid  rgb(241,253,249);
+}
+  
+  /**********Media Query************/
+  @media screen and (max-width: 400px) {
+    .HScroll{ 
+      width: 480px ;
+        padding:10px;
+        overflow-x: scroll;
+    }
+
+    .table-width{
+      max-width:360px !important;
+      border: none !important;
+    }
+}
+
+</style>
+</head>
+<div class="row" id="myDiv" style="display: block;">
+  <%= form_tag "/reports", :method => 'get', :id=>"filters" do %>
+    <div class="col-sm-12" style="padding-left: 0px;">
+      <div class="col-sm-3 form-group helpdesk-filter">
+        <%= select_tag 'w[company_id_eq]',options_for_select(@companies.pluck(:name, :id), :selected => params[:w][:company_id_eq]),:class=>"form-control",:include_blank =>"Select Company",:id => 'companies' %>
+      </div>
+
+      <div class="col-sm-3 form-group helpdesk-filter">
+        <%= select_tag 'w[id_in][]',options_for_select(@sites.pluck(:name, :id), :selected => params[:w][:id_in]), :multiple => true, :class=>"ui dropdown form-control multiple",:include_blank =>"Select Sites", :id => "siteids" %>
+      </div>
+      <div class="form-group col-sm-3 helpdesk-filter" >
+        <div class="input-group">
+          <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+          <input type="text" name='q[date_range]' id ="date_range" class="reservation form-control pull-right" placeholder="Select Date Range" value="<%= params[:q][:date_range] %>">
+        </div>
+      </div>
+
+      <div class="col-sm-3 form-group" >
+        <button type="submit" class="applyfilter btn btn-success btn-sm"> Apply</button>
+        <a href="/reports"><button type="button" id="" class="btn btn-info btn-sm"> Reset</button></a>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
+<style>
+  .ui.structured.celled.table tr td, .ui.structured.celled.table tr th{
+    text-align: center !important;
+  }
+  .help{
+    margin: 0px !important;
+  }
+  .project_emails .bootstrap-tagsinput , .edit-project-emails .bootstrap-tagsinput {
+      height: 30px;
+      width: 83%;
+      margin-left: 20px;
+  }
+  .extra-bottom-padding{
+    padding-bottom: 100px;
+  }
+  #page-wrapper{
+    height: 100%;
+  }
+  #category-table > thead > tr > th {
+    padding-top: 10px!important;
+    padding-bottom: 10px !important;
+  }
+
+  #category-table th, #category-table td{
+    padding-left: 10px !important;
+  }
+
+  #category-table th{
+    background: #3bafda !important;
+    color: white;
+    font-weight: bold;
+  }
+</style>
+<div class="wrapper wrapper-content">
+  <section class="content">
+    <div class="row help">
+      <div class="col-sm-12">
+        <div class="tabs tabs-style-flip extra-bottom-padding">
+          <nav>
+            <ul>
+              <%  @site = Site.find_by_id(@user.current_site_id)
+              features = @site.features.pluck(:feature_name) %>
+            <% if features.include? "tickets" %>
+              <li><a href="#section-linemove-1" class="icon  section-check"><span>Complaints</span></a></li>
+            <% end %>
+            <% if features.include? "assets" %>
+              <li><a href="#section-linemove-2" class="icon  section-check"><span>Assets</span></a></li>
+              <li><a href="#section-linemove-3" class="icon  section-check"><span>Checklist</span></a></li>
+              <li><a href="#section-linemove-4" class="icon  section-check"><span>Logbook</span></a></li>
+            <% end %>
+            </ul>
+          </nav>
+          <div class="content-wrap">
+            <% if features.include? "tickets" %>
+            <section id="section-linemove-1">
+              <div class="col-sm-12">
+                <table class="table-width" border="0" width="740" align="center" style="max-width:740px; width:100%; margin:0 auto; ">
+                  <tr>
+                    <td><div style="border: 1px solid rgb(204,204,204); margin:0 12px 12px; border-radius: 3px; padding:12px;">
+                        <table width="100%" border="0">
+                          <tr>
+                            <td><table width="100%" border="0">
+                                <tr>
+                                  <td align="center" style=" background:rgb(247,251,253); padding:1rem"><h1 style="font-size: 2rem; color: rgb(53,82,124);    font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= @complaints.count %></h1>
+                                    <p style="line-height:1.4">
+                                     <br />
+                                      Total Tickets</p></td>
+                                  <td>&nbsp;</td>
+                                  <td align="center" style=" background:rgb(255,246,247); padding:1rem"><h1 style="font-size: 2rem; color: rgb(210,114,119);   font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= @complaints.ransack({m: "or",complaint_status_fixed_state_not_eq: "closed", complaint_status_fixed_state_null: 1}).result.count %></h1>
+                                              
+                                    <p style="line-height:1.4"><br />
+                                      Open Tickets</p></td>
+                                  <td>&nbsp;</td>
+                                  <td align="center" style=" background:rgb(241,253,249); padding:1rem"><h1 style="font-size: 2rem; color: rgb(97,200,166);   font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= @complaints.ransack(complaint_status_fixed_state_eq: "closed").result.count %></h1>
+                                    <p style="line-height:1.4"><br />
+                                      Closed Tickets </p></td>
+                                  <td>&nbsp;</td>
+                                  <% cpt = @complaints.ransack(ticket_items_rate_gt: 0).result
+                                     cpts = cpt.uniq
+                                     items = TicketItem.where(ticket_id: cpts)
+                                     total = items.sum(:rate) %>
+                                  <td align="center" style=" background:rgb(241,253,249); padding:1rem"><h1 style="font-size: 2rem; color: rgb(97,200,166);   font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= cpts.count %></h1>
+                                    <p style="line-height:1.4"><br />
+                                      Items required Tickets </p></td>
+                                  <td align="center" style=" background:rgb(241,253,249); padding:1rem"
+                                     ><h1 style="font-size: 2rem; color: rgb(97,200,166);   font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"> <%= total %> </h1>
+                                    <p style="line-height:1.4"><br />
+                                      Items Total Costs </p></td>
+                                </tr>
+                                
+                              </table></td>
+                          </tr>
+                        </table>
+                      </div></td>
+                  </tr>
+
+                  <tr>
+                    <td align="center"><div style="border: 1px solid rgb(204,204,204); margin:0 12px 12px; border-radius: 3px; padding:12px;" class="helpdesk-chart" id="container"></div></td>
+                  </tr>
+
+
+                  <tr>
+                    <td align="center"><div style="border: 1px solid rgb(204,204,204); margin:0 12px 12px; border-radius: 3px; padding:12px;" class="helpdesk-chart" id="container2"></div></td>
+                  </tr>
+                  
+
+                </table>
+              </div>
+            </section>
+            <% end %>
+            <% if features.include? "assets" %>
+            <section id="section-linemove-2">
+              <div class="col-sm-12">
+                <table class="table-width" border="0" width="740" align="center" style="max-width:740px; width:100%; margin:0 auto; ">
+                  <tr>
+                    <td><div style="border: 1px solid rgb(204,204,204); margin:0 12px 12px; border-radius: 3px; padding:12px;">
+                        <table width="100%" border="0">
+                          <tr>
+                            <td><table width="100%" border="0">
+                                <tr>
+                                  <td align="center" style=" background:rgb(247,251,253); padding:1rem"><h1 style="font-size: 2rem; color: rgb(53,82,124);    font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= @assets.count %></h1>
+                                    <p style="line-height:1.4">
+                                     <br />
+                                      Total Assets</p></td>
+                                  <td>&nbsp;</td>
+                                  <td align="center" style=" background:rgb(255,246,247); padding:1rem"><h1 style="font-size: 2rem; color: rgb(210,114,119);   font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= @assets.where(critical: true).count %></h1>
+                                              
+                                    <p style="line-height:1.4"><br />
+                                      Critical Assets</p></td>
+                                  <td>&nbsp;</td>
+                                  <td align="center" style=" background:rgb(241,253,249); padding:1rem"><h1 style="font-size: 2rem; color: rgb(97,200,166);   font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= @assets.where(critical: false).count %></h1>
+                                    <p style="line-height:1.4"><br />
+                                      Non-Critical Assets </p></td>
+                                </tr> 
+                              </table></td>
+                          </tr>
+                        </table>
+                      </div></td>
+                  </tr>
+                  <tr>
+                    <td align="center"><div style="border: 1px solid rgb(204,204,204); margin:0 12px 12px; border-radius: 3px; padding:12px;" class="helpdesk-chart" id="container3"></div></td>
+                  </tr>
+                </table>
+              </div>
+            </section>
+            <section id="section-linemove-3">
+              <div class="col-sm-12">
+                <table class="table-width" border="0" width="740" align="center" style="max-width:740px; width:100%; margin:0 auto; ">                  
+                  <tr>
+                    <td><div style="border: 1px solid rgb(204,204,204); margin:0 12px 12px; border-radius: 3px; padding:12px;">
+                        <table width="100%" border="0">
+                          <tr>
+                            <td><table width="100%" border="0">
+                                <tr>
+                                  <td align="center" style=" background:rgb(247,251,253); padding:1rem"><h1 style="font-size: 2rem; color: rgb(53,82,124);    font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= @occurrences.ransack(status_eq: "open").result.count %></h1>
+                                    <p style="line-height:1.4">
+                                     <br />
+                                      Open</p></td>
+                                  <td>&nbsp;</td>
+                                  <td align="center" style=" background:rgb(255,246,247); padding:1rem"><h1 style="font-size: 2rem; color: rgb(210,114,119);   font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= @occurrences.ransack(status_eq: "complete").result.count %></h1>
+                                              
+                                    <p style="line-height:1.4"><br />
+                                      Complete</p></td>
+                                  <td>&nbsp;</td>
+                                  <td align="center" style=" background:rgb(241,253,249); padding:1rem"><h1 style="font-size: 2rem; color: rgb(97,200,166);   font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= @occurrences.ransack(status_eq: "overdue").result.count %></h1>
+                                    <p style="line-height:1.4"><br />
+                                      Overdue </p></td>
+                                  <td align="center" style=" background:rgb(247,251,253); padding:1rem"><h1 style="font-size: 2rem; color: rgb(53,82,124);    font-weight: 600; line-height:0;  font-family: 'Poppins',sans-serif;"><%= @occurrences.ransack(status_eq: "upcoming").result.count %></h1>
+                                    <p style="line-height:1.4">
+                                     <br />
+                                      Upcoming</p></td>
+                                </tr> 
+                              </table></td>
+                          </tr>
+                        </table>
+                      </div></td>
+                  </tr>
+                  <tr>
+                    <td align="center"><div style="border: 1px solid rgb(204,204,204); margin:0 12px 12px; border-radius: 3px; padding:12px;" class="helpdesk-chart" id="container4"></div></td>
+                  </tr>
+
+                </table>
+              </div>
+            </section>
+            <section id="section-linemove-4">
+                <% @asset_with_params.each do |asid| %>
+              <div class="col-sm-12">
+                <div style="border: 1px solid rgb(204,204,204); margin:0 12px 12px; border-radius: 3px; padding:12px;" class="helpdesk-chart" id="asset_container<%= asid %>"></div>
+              </div>
+                <% end %>
+            </section>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<!-- <script src="https://code.highcharts.com/modules/exporting.js"></script> -->
+<script src="http://code.highcharts.com/modules/offline-exporting.js"></script>
+<script src="http://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+
+
+
+
+<script type="text/javascript">
+  $('.ui.dropdown').dropdown();
+  $('.reservation').daterangepicker({
+    locale: {
+            format: 'DD/MM/YYYY'
+        }
+  });
+
+  (function() {
+    [].slice.call( document.querySelectorAll( '.tabs' ) ).forEach( function( el ) {
+      new CBPFWTabs( el );
+    });
+  })();
+  $("#companies").change(function(e){
+    var url = "/company_sites.json?company_id=" + $(this).val() + "&token=" + gon.token;
+    var targt = $('#siteids');
+    var newoptions = "<option value=''>Select Site</option>";
+    $.ajax({
+      type: "GET",
+      url: url,
+      success: function(response){          
+        if(response.length > 0){
+          for (var i = 0; i < response.length; i++) {
+            var res = response[i];
+            newoptions += "<option value='"+res.id+"'>"+res.name+"</option>"
+          }
+        }
+        targt.html(newoptions);
+      }
+    });
+  });
+  // var stack_color = ['#00b5ad','#eaae00'];
+  <% if features.include? "tickets" %>
+
+  // first complaint chart
+  Highcharts.chart('container', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Status wise complaint count'
+    },
+    subtitle: {
+        text: ''
+    },
+    accessibility: {
+        announceNewData: {
+            enabled: true
+        }
+    },
+    xAxis: {
+        type: 'category'
+    },
+    yAxis: {
+        title: {
+            text: 'No. of Complaints'
+        }
+
+    },
+    legend: {
+        enabled: false
+    },
+    plotOptions: {
+        series: {
+            borderWidth: 0,
+            dataLabels: {
+                enabled: true,
+                format: '{point.y:.1f}%'
+            }
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}%</b> <br/>'
+    },
+
+    series: [
+        {
+            name: "Complaints",
+            colorByPoint: true,
+            data: <%= raw @highchart_category_data_array.to_json %>
+        }
+    ],
+    drilldown: {
+      series: <%= raw @categorywise_drilldown.to_json %>
+    }
+  });
+
+
+  // second complaint chart
+   Highcharts.chart('container2', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Response / Resolution Breached - Achieved'
+    },
+    subtitle: {
+        text: ''
+    },
+    accessibility: {
+        announceNewData: {
+            enabled: true
+        }
+    },
+    xAxis: {
+        type: 'category'
+    },
+    yAxis: {
+        title: {
+            text: 'No. of Complaints'
+        }
+
+    },
+    legend: {
+        enabled: false
+    },
+    plotOptions: {
+        series: {
+            borderWidth: 0,
+            dataLabels: {
+                enabled: true,
+                format: '{point.y}'
+            }
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> <br/>'
+    },
+
+    series: [
+        {
+            name: "Complaints",
+            colorByPoint: true,
+            data: <%= raw @highchart_category_data_array2.to_json %>
+        }
+    ],
+    drilldown: {
+      series: <%= raw @categorywise_drilldown2.to_json %>
+    }
+  });
+
+  <% end %>
+   // assets graph
+  <% if features.include? "assets" %>
+
+  Highcharts.chart('container3', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Assets '
+    },
+    subtitle: {
+        text: ''
+    },
+    accessibility: {
+        announceNewData: {
+            enabled: true
+        }
+    },
+    xAxis: {
+        type: 'category'
+    },
+    yAxis: {
+        title: {
+            text: 'No. of Assets'
+        }
+
+    },
+    legend: {
+        enabled: false
+    },
+    plotOptions: {
+        series: {
+            borderWidth: 0,
+            dataLabels: {
+                enabled: true,
+                format: '{point.y:}'
+            }
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> <br/>'
+    },
+
+    series: [
+        {
+            name: "Assets",
+            colorByPoint: true,
+            data: <%= raw @highchart_category_data_array3.to_json %>
+        }
+    ],
+    drilldown: {
+      series: <%= raw @categorywise_drilldown3.to_json %>
+    }
+  });
+
+  // checklist 
+
+  Highcharts.chart('container4', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Checklist Status '
+    },
+    subtitle: {
+        text: ''
+    },
+    accessibility: {
+        announceNewData: {
+            enabled: true
+        }
+    },
+    xAxis: {
+        type: 'category'
+    },
+    yAxis: {
+        title: {
+            text: 'No. of Checklist'
+        }
+
+    },
+    legend: {
+        enabled: false
+    },
+    plotOptions: {
+        series: {
+            borderWidth: 0,
+            dataLabels: {
+                enabled: true,
+                format: '{point.y:}'
+            }
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> <br/>'
+    },
+
+    series: [
+        {
+            name: "Checklist",
+            colorByPoint: true,
+            data: <%= raw @highchart_category_data_array4.to_json %>
+        }
+    ],
+    drilldown: {
+      series: <%= raw @categorywise_drilldown4.to_json %>
+    }
+  });
+
+
+  $(function () {
+    <% @asset_with_params.each do |asid| 
+      asset_param_line_data = []
+      @ap = nil
+      @assets_params.where(asset_id: asid).each do |ap|
+        basehash = Hash.new
+        basehash[:name] = "#{ap.name}"
+        # basehash[:data] = Submission.where(asset_param_id: ap.id).ransack(params[:q]).result.pluck(:value).map(&:to_i)
+        @ap = ap
+        thisdata = []
+        Submission.where(asset_param_id: ap.id).ransack(params[:q]).result.pluck(:created_at, :value).each do |jd|
+          thisdata << [jd[0].to_s, jd[1].to_i]
+        end
+        basehash[:data] = thisdata
+        asset_param_line_data << basehash
+      end %>
+
+        $('#asset_container<%= asid %>').highcharts({
+            title: {
+                text: "<%= @ap&.site_asset&.name %>",
+                x: -20 //center
+            },
+            subtitle: {
+                text: '',
+                x: -20
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: { hour: '%H:%M'}
+            },
+            yAxis: {
+                title: {
+                    text: 'Values'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: ''
+            },
+            legend: {
+                // layout: 'vertical',
+                // align: 'right',
+                // verticalAlign: 'middle',
+                // borderWidth: 0,
+                //  showInLegend: false
+            },
+            series: <%= raw asset_param_line_data.to_json %>
+        });
+    <% end %>
+
+    });
+  <% end %>
+
+</script>

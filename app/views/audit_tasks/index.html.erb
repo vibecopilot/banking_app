@@ -1,0 +1,47 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Audit Tasks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Group</th>
+      <th>Sub group</th>
+      <th>Task</th>
+      <th>Input type</th>
+      <th>Mandatory</th>
+      <th>Reading</th>
+      <th>Help text</th>
+      <th>Weightage</th>
+      <th>Rating</th>
+      <th>Audit</th>
+      <th>Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @audit_tasks.each do |audit_task| %>
+      <tr>
+        <td><%= audit_task.group %></td>
+        <td><%= audit_task.sub_group %></td>
+        <td><%= audit_task.task %></td>
+        <td><%= audit_task.input_type %></td>
+        <td><%= audit_task.mandatory %></td>
+        <td><%= audit_task.reading %></td>
+        <td><%= audit_task.help_text %></td>
+        <td><%= audit_task.weightage %></td>
+        <td><%= audit_task.rating %></td>
+        <td><%= audit_task.audit_id %></td>
+        <td><%= audit_task.created_by_id %></td>
+        <td><%= link_to 'Show', audit_task %></td>
+        <td><%= link_to 'Edit', edit_audit_task_path(audit_task) %></td>
+        <td><%= link_to 'Destroy', audit_task, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Audit Task', new_audit_task_path %>

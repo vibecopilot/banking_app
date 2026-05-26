@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  survey: one
+  q_title: MyString
+  question_type: MyString
+  position: 1
+  required: false
+  min_value: 1
+  max_value: 1
+
+two:
+  survey: two
+  q_title: MyString
+  question_type: MyString
+  position: 1
+  required: false
+  min_value: 1
+  max_value: 1

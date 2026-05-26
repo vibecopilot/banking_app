@@ -1,0 +1,47 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Travel Allowance Requests</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Employee</th>
+      <th>Employee name</th>
+      <th>Expense category</th>
+      <th>Date of expense</th>
+      <th>Amount spent</th>
+      <th>Approval status</th>
+      <th>Reimbursement amount</th>
+      <th>Reimbursement method</th>
+      <th>Manager approval</th>
+      <th>Reimbursement confirmation email</th>
+      <th>Description of expense</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @travel_allowance_requests.each do |travel_allowance_request| %>
+      <tr>
+        <td><%= travel_allowance_request.employee_id %></td>
+        <td><%= travel_allowance_request.employee_name %></td>
+        <td><%= travel_allowance_request.expense_category %></td>
+        <td><%= travel_allowance_request.date_of_expense %></td>
+        <td><%= travel_allowance_request.amount_spent %></td>
+        <td><%= travel_allowance_request.approval_status %></td>
+        <td><%= travel_allowance_request.reimbursement_amount %></td>
+        <td><%= travel_allowance_request.reimbursement_method %></td>
+        <td><%= travel_allowance_request.manager_approval %></td>
+        <td><%= travel_allowance_request.reimbursement_confirmation_email %></td>
+        <td><%= travel_allowance_request.description_of_expense %></td>
+        <td><%= link_to 'Show', travel_allowance_request %></td>
+        <td><%= link_to 'Edit', edit_travel_allowance_request_path(travel_allowance_request) %></td>
+        <td><%= link_to 'Destroy', travel_allowance_request, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Travel Allowance Request', new_travel_allowance_request_path %>

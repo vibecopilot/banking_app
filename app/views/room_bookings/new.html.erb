@@ -1,0 +1,329 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-plus-circle mr-2"></i>
+            New Room Booking
+            <% if @room %>
+              <small class="text-muted">for <%= @room.display_name %></small>
+            <% end %>
+          </h4>
+        </div>
+        
+        <div class="card-body">
+          <%= form_with model: @room_booking, local: true, id: "booking_form" do |f| %>
+            <% if @room_booking.errors.any? %>
+              <div class="alert alert-danger">
+                <h6><%= pluralize(@room_booking.errors.count, "error") %> prohibited this booking from being saved:</h6>
+                <ul class="mb-0">
+                  <% @room_booking.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <!-- Room Selection -->
+            <div class="form-group">
+              <%= f.label :room_id, "Room *" %>
+              <% if @room %>
+                <%= f.hidden_field :room_id, value: @room.id %>
+                <div class="form-control-plaintext">
+                  <strong><%= @room.display_name %></strong> - <%= @room.room_type.humanize %>
+                  <br><small class="text-muted">Capacity: <%= @room.capacity %></small>
+                </div>
+              <% else %>
+                <%= f.select :room_id, 
+                    options_from_collection_for_select(
+                      Room.where(site: current_user.site).active.available.order(:room_number), 
+                      :id, :display_name, @room_booking.room_id
+                    ), 
+                    { prompt: 'Select a room' }, 
+                    { class: "form-control", id: "room_select" } %>
+              <% end %>
+            </div>
+
+            <!-- Date Selection -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :check_in_date, "Check-in Date *" %>
+                  <%= f.date_field :check_in_date, 
+                      class: "form-control", 
+                      min: Date.current,
+                      id: "check_in_date" %>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :check_out_date, "Check-out Date *" %>
+                  <%= f.date_field :check_out_date, 
+                      class: "form-control", 
+                      min: Date.current + 1.day,
+                      id: "check_out_date" %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Guest Count -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :number_of_adults, "Number of Adults *" %>
+                  <%= f.number_field :number_of_adults, 
+                      class: "form-control", 
+                      min: 1, max: 10,
+                      id: "adults_count" %>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :number_of_children, "Number of Children" %>
+                  <%= f.number_field :number_of_children, 
+                      class: "form-control", 
+                      min: 0, max: 10,
+                      id: "children_count" %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Guest Information -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :guest_name, "Guest Name *" %>
+                  <%= f.text_field :guest_name, 
+                      class: "form-control", 
+                      value: @room_booking.guest_name || current_user.full_name %>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :guest_phone, "Guest Phone *" %>
+                  <%= f.telephone_field :guest_phone, 
+                      class: "form-control", 
+                      value: @room_booking.guest_phone || current_user.phone %>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :guest_email, "Guest Email *" %>
+              <%= f.email_field :guest_email, 
+                  class: "form-control", 
+                  value: @room_booking.guest_email || current_user.email %>
+            </div>
+
+            <!-- Special Requests -->
+            <div class="form-group">
+              <%= f.label :special_requests, "Special Requests" %>
+              <%= f.text_area :special_requests, 
+                  class: "form-control", 
+                  rows: 3,
+                  placeholder: "Any special requests or preferences..." %>
+            </div>
+
+            <!-- Payment Status (Admin only) -->
+            <% if current_user.admin? || current_user.manager? %>
+              <div class="form-group">
+                <%= f.label :payment_status, "Payment Status" %>
+                <%= f.select :payment_status, 
+                    options_for_select([
+                      ['Unpaid', 'unpaid'],
+                      ['Partial', 'partial'],
+                      ['Paid', 'paid']
+                    ], @room_booking.payment_status || 'unpaid'), 
+                    {}, 
+                    { class: "form-control" } %>
+              </div>
+            <% end %>
+
+            <!-- Pricing Summary -->
+            <div id="pricing_summary" class="card bg-light mt-4" style="display: none;">
+              <div class="card-header">
+                <h6 class="mb-0">Booking Summary</h6>
+              </div>
+              <div class="card-body">
+                <div id="pricing_details">
+                  <!-- Pricing will be loaded here via JavaScript -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Buttons -->
+            <div class="form-group mt-4">
+              <div class="row">
+                <div class="col-md-6">
+                  <%= f.submit "Create Booking", class: "btn btn-primary btn-block", id: "submit_booking" %>
+                </div>
+                <div class="col-md-6">
+                  <%= link_to "Cancel", room_bookings_path, class: "btn btn-secondary btn-block" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const roomSelect = document.getElementById('room_select');
+  const checkInField = document.getElementById('check_in_date');
+  const checkOutField = document.getElementById('check_out_date');
+  const adultsField = document.getElementById('adults_count');
+  const childrenField = document.getElementById('children_count');
+  const pricingSummary = document.getElementById('pricing_summary');
+  const pricingDetails = document.getElementById('pricing_details');
+  const submitButton = document.getElementById('submit_booking');
+  
+  // Update check-out minimum date when check-in changes
+  checkInField.addEventListener('change', function() {
+    const checkInDate = new Date(this.value);
+    const nextDay = new Date(checkInDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+    
+    checkOutField.min = nextDay.toISOString().split('T')[0];
+    
+    if (new Date(checkOutField.value) <= checkInDate) {
+      checkOutField.value = nextDay.toISOString().split('T')[0];
+    }
+    
+    updatePricing();
+  });
+  
+  // Update pricing when any relevant field changes
+  [checkOutField, roomSelect, adultsField, childrenField].forEach(field => {
+    if (field) {
+      field.addEventListener('change', updatePricing);
+    }
+  });
+  
+  // Validate guest capacity
+  function validateCapacity() {
+    const roomSelect = document.getElementById('room_select');
+    const selectedRoom = roomSelect?.options[roomSelect.selectedIndex];
+    
+    if (selectedRoom && selectedRoom.value) {
+      // You would need to pass room capacity data to JavaScript
+      // For now, we'll just enable the submit button
+      submitButton.disabled = false;
+    }
+  }
+  
+  // Update pricing summary
+  function updatePricing() {
+    const roomId = roomSelect?.value || document.querySelector('input[name="room_booking[room_id]"]')?.value;
+    const checkIn = checkInField.value;
+    const checkOut = checkOutField.value;
+    
+    if (roomId && checkIn && checkOut && checkIn < checkOut) {
+      // Make AJAX call to get pricing
+      fetch(`/room_bookings/pricing_info?room_id=${roomId}&check_in=${checkIn}&check_out=${checkOut}`)
+        .then(response => response.json())
+        .then(data => {
+          updatePricingDisplay(data);
+          pricingSummary.style.display = 'block';
+        })
+        .catch(error => {
+          console.error('Error fetching pricing:', error);
+          pricingSummary.style.display = 'none';
+        });
+    } else {
+      pricingSummary.style.display = 'none';
+    }
+  }
+  
+  function updatePricingDisplay(data) {
+    const nights = data.nights;
+    const nightText = nights === 1 ? 'night' : 'nights';
+    
+    let html = `
+      <div class="row">
+        <div class="col-md-6">
+          <table class="table table-sm">
+            <tr>
+              <td><strong>Room:</strong></td>
+              <td>${data.room_name}</td>
+            </tr>
+            <tr>
+              <td><strong>Check-in:</strong></td>
+              <td>${new Date(data.check_in_date).toLocaleDateString()}</td>
+            </tr>
+            <tr>
+              <td><strong>Check-out:</strong></td>
+              <td>${new Date(data.check_out_date).toLocaleDateString()}</td>
+            </tr>
+            <tr>
+              <td><strong>Duration:</strong></td>
+              <td>${nights} ${nightText}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-md-6">
+          <table class="table table-sm">
+            <tr>
+              <td><strong>Subtotal:</strong></td>
+              <td>$${data.subtotal.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td><strong>Tax (${data.tax_percentage}%):</strong></td>
+              <td>$${data.tax_amount.toFixed(2)}</td>
+            </tr>
+            <tr class="table-primary">
+              <td><strong>Total Amount:</strong></td>
+              <td><strong>$${data.total_amount.toFixed(2)}</strong></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    `;
+    
+    if (data.daily_breakdown && data.daily_breakdown.length > 0) {
+      html += `
+        <div class="mt-3">
+          <h6>Daily Breakdown:</h6>
+          <div class="row">
+      `;
+      
+      data.daily_breakdown.forEach(day => {
+        html += `
+          <div class="col-md-4 mb-2">
+            <small>${new Date(day.date).toLocaleDateString()}: $${day.price.toFixed(2)}</small>
+          </div>
+        `;
+      });
+      
+      html += `
+          </div>
+        </div>
+      `;
+    }
+    
+    pricingDetails.innerHTML = html;
+  }
+  
+  // Initial pricing update if room is pre-selected
+  if (checkInField.value && checkOutField.value) {
+    updatePricing();
+  }
+});
+</script>
+
+<style>
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+#pricing_summary {
+  border: 2px solid #28a745;
+}
+</style>

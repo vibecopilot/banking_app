@@ -1,0 +1,52 @@
+<%= form_with(model: user_refferal, local: true) do |form| %>
+  <% if user_refferal.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user_refferal.errors.count, "error") %> prohibited this user_refferal from being saved:</h2>
+
+      <ul>
+      <% user_refferal.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :from_user_id %>
+    <%= form.number_field :from_user_id, id: :user_refferal_from_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :to_user_id %>
+    <%= form.number_field :to_user_id, id: :user_refferal_to_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :user_refferal_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mobile %>
+    <%= form.text_field :mobile, id: :user_refferal_mobile %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email, id: :user_refferal_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :business %>
+    <%= form.text_field :business, id: :user_refferal_business %>
+  </div>
+
+  <div class="field">
+    <%= form.label :amount %>
+    <%= form.text_field :amount, id: :user_refferal_amount %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

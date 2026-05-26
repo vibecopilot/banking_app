@@ -1,0 +1,85 @@
+<%= form_with(model: restaurant_order_item, local: true) do |form| %>
+  <% if restaurant_order_item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(restaurant_order_item.errors.count, "error") %> prohibited this restaurant_order_item from being saved:</h2>
+
+      <ul>
+      <% restaurant_order_item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :order_id %>
+    <%= form.number_field :order_id, id: :restaurant_order_item_order_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :restaurant_menu_id %>
+    <%= form.number_field :restaurant_menu_id, id: :restaurant_order_item_restaurant_menu_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :quantity %>
+    <%= form.number_field :quantity, id: :restaurant_order_item_quantity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :amount %>
+    <%= form.text_field :amount, id: :restaurant_order_item_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :rate %>
+    <%= form.text_field :rate, id: :restaurant_order_item_rate %>
+  </div>
+
+  <div class="actions">
+
+
+<%= form.submit %>
+  </div>
+<% end %>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

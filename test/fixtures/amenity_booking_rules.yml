@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  enumerator: 1
+  duration: 1
+  level: MyString
+  active: false
+  amenity_id: 1
+  site_id: 1
+
+two:
+  enumerator: 1
+  duration: 1
+  level: MyString
+  active: false
+  amenity_id: 1
+  site_id: 1

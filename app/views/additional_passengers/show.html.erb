@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @additional_passenger.name %>
+</p>
+
+<p>
+  <strong>Gender:</strong>
+  <%= @additional_passenger.gender %>
+</p>
+
+<p>
+  <strong>Flight request:</strong>
+  <%= @additional_passenger.flight_request_id %>
+</p>
+
+<%= link_to 'Edit', edit_additional_passenger_path(@additional_passenger) %> |
+<%= link_to 'Back', additional_passengers_path %>

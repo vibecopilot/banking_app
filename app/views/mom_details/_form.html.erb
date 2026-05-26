@@ -1,0 +1,42 @@
+<%= form_with(model: mom_detail, local: true) do |form| %>
+  <% if mom_detail.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(mom_detail.errors.count, "error") %> prohibited this mom_detail from being saved:</h2>
+
+      <ul>
+      <% mom_detail.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_area :title, id: :mom_detail_title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :meeting_date %>
+    <%= form.datetime_select :meeting_date, id: :mom_detail_meeting_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :mom_detail_created_by_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.check_box :active, id: :mom_detail_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_tag_name %>
+    <%= form.text_field :company_tag_name, id: :mom_detail_company_tag_name %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

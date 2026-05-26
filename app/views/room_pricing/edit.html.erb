@@ -1,0 +1,177 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Edit Room Pricing</h4>
+          <div>
+            <%= link_to 'View Details', @room_pricing, class: 'btn btn-info btn-sm' %>
+            <%= link_to 'Back to List', room_pricing_index_path, class: 'btn btn-secondary btn-sm' %>
+          </div>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: @room_pricing, local: true, class: 'needs-validation', novalidate: true) do |form| %>
+            <% if @room_pricing.errors.any? %>
+              <div class="alert alert-danger">
+                <h6><%= pluralize(@room_pricing.errors.count, "error") %> prohibited this pricing from being saved:</h6>
+                <ul class="mb-0">
+                  <% @room_pricing.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :room_id, class: 'form-label' %>
+                  <%= form.collection_select :room_id, Room.includes(:site).all, :id, 
+                      ->(room) { "#{room.name} (#{room.site.name} - #{room.room_type})" }, 
+                      {}, 
+                      { class: 'form-control', required: true } %>
+                  <div class="invalid-feedback">
+                    Please select a room.
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :price_per_night, class: 'form-label' %>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">₹</span>
+                    </div>
+                    <%= form.number_field :price_per_night, step: 0.01, min: 0, 
+                        class: 'form-control', placeholder: '0.00', required: true %>
+                    <div class="invalid-feedback">
+                      Please enter a valid price per night.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :start_date, class: 'form-label' %>
+                  <%= form.date_field :start_date, class: 'form-control', required: true %>
+                  <div class="invalid-feedback">
+                    Please select a start date.
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :end_date, class: 'form-label' %>
+                  <%= form.date_field :end_date, class: 'form-control', required: true %>
+                  <div class="invalid-feedback">
+                    Please select an end date.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :tax_rate, 'Tax Rate (%)', class: 'form-label' %>
+                  <%= form.number_field :tax_rate, step: 0.01, min: 0, max: 100, 
+                      class: 'form-control', placeholder: '18.00' %>
+                  <small class="form-text text-muted">Enter tax rate as percentage (e.g., 18 for 18%)</small>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :discount_percentage, 'Discount (%)', class: 'form-label' %>
+                  <%= form.number_field :discount_percentage, step: 0.01, min: 0, max: 100, 
+                      class: 'form-control', placeholder: '0.00' %>
+                  <small class="form-text text-muted">Optional discount percentage</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <%= form.label :special_pricing_notes, class: 'form-label' %>
+                  <%= form.text_area :special_pricing_notes, rows: 3, 
+                      class: 'form-control', 
+                      placeholder: 'Any special notes about this pricing...' %>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-check">
+                  <%= form.check_box :is_active, class: 'form-check-input' %>
+                  <%= form.label :is_active, 'Active', class: 'form-check-label' %>
+                  <small class="form-text text-muted">Check to make this pricing active</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Show existing bookings that might be affected -->
+            <% if @room_pricing.persisted? %>
+            <div class="row mt-4">
+              <div class="col-md-12">
+                <div class="alert alert-warning">
+                  <h6><i class="fas fa-exclamation-triangle"></i> Important Note</h6>
+                  <p class="mb-0">
+                    Changing pricing for existing date ranges may affect future bookings. 
+                    Please ensure all stakeholders are informed of pricing changes.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <% end %>
+
+            <hr class="my-4">
+
+            <div class="form-group">
+              <%= form.submit 'Update Pricing', class: 'btn btn-primary' %>
+              <%= link_to 'Cancel', @room_pricing, class: 'btn btn-secondary ml-2' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Form validation
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      var forms = document.getElementsByClassName('needs-validation');
+      Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+  // Date validation
+  $('#room_pricing_start_date, #room_pricing_end_date').change(function() {
+    var startDate = $('#room_pricing_start_date').val();
+    var endDate = $('#room_pricing_end_date').val();
+    
+    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+      alert('End date must be after start date');
+      $('#room_pricing_end_date').val('');
+    }
+  });
+});
+</script>

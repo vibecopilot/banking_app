@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @compliance_config.name %>
+</p>
+
+<p>
+  <strong>Frequency:</strong>
+  <%= @compliance_config.frequency %>
+</p>
+
+<p>
+  <strong>Due in days:</strong>
+  <%= @compliance_config.due_in_days %>
+</p>
+
+<p>
+  <strong>Priority:</strong>
+  <%= @compliance_config.priority %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @compliance_config.description %>
+</p>
+
+<p>
+  <strong>Assign to:</strong>
+  <%= @compliance_config.assign_to_id %>
+</p>
+
+<p>
+  <strong>Reviewer:</strong>
+  <%= @compliance_config.reviewer_id %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @compliance_config.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @compliance_config.end_date %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @compliance_config.site_id %>
+</p>
+
+<%= link_to 'Edit', edit_compliance_config_path(@compliance_config) %> |
+<%= link_to 'Back', compliance_configs_path %>

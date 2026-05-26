@@ -1,0 +1,287 @@
+<%= form_with(model: soft_service, local: true, class: 'needs-validation', novalidate: true) do |form| %>
+  <% if soft_service.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(soft_service.errors.count, "error") %> prohibited this soft service from being saved:</h2>
+      <ul>
+        <% soft_service.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :site_id, class: 'form-label' %>
+      <%= form.number_field :site_id, id: :soft_service_site_id, class: 'form-control', required: true %>
+    </div>
+    <div class="col-md-6 mb-3">
+      <%= form.label :building_id, class: 'form-label' %>
+      <%= form.number_field :building_id, id: :soft_service_building_id, class: 'form-control', required: true %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :floor_id, class: 'form-label' %>
+      <%= form.number_field :floor_id, id: :soft_service_floor_id, class: 'form-control', required: true %>
+    </div>
+    <div class="col-md-6 mb-3">
+      <%= form.label :unit_id, "Units", class: 'form-label' %>
+      <%= form.collection_select :unit_id, Unit.all, :id, :name, {}, { multiple: true, class: 'form-select', required: true } %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :name, class: 'form-label' %>
+      <%= form.text_field :name, id: :soft_service_name, class: 'form-control', required: true %>
+    </div>
+    <div class="col-md-6 mb-3">
+      <%= form.label :user_id, class: 'form-label' %>
+      <%= form.number_field :user_id, id: :soft_service_user_id, class: 'form-control', required: true %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :generic_info_id, "Generic Info", class: 'form-label' %>
+      <%= form.collection_select :generic_info_id, GenericInfo.where(info_type: 'services'), :id, :name, { prompt: "Select Generic Info" }, { class: 'form-select', required: true } %>
+    </div>
+    <div class="col-md-6 mb-3">
+      <%= form.label :generic_sub_info_id, "Generic Sub Info", class: 'form-label' %>
+      <%= form.collection_select :generic_sub_info_id, GenericSubInfo.all, :id, :name, { prompt: "Select Generic Sub Info" }, { class: 'form-select', required: true } %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :longitude, class: 'form-label' %>
+      <%= form.number_field :longitude, step: 'any', class: 'form-control' %>
+    </div>
+    <div class="col-md-6 mb-3">
+      <%= form.label :latitude, class: 'form-label' %>
+      <%= form.number_field :latitude, step: 'any', class: 'form-control' %>
+    </div>
+  </div>
+
+  <h3 class="mt-4 mb-3">Cron Settings</h3>
+  <% if form.object.cron_setting.nil? %>
+    <p>Debug: cron_setting is nil</p>
+  <% else %>
+    <p>Debug: cron_setting is present</p>
+  <% end %>
+  <%= form.fields_for :cron_setting do |cron_form| %>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <%= cron_form.label :recurrence_type, "Recurrence Type", class: 'form-label' %>
+        <%= cron_form.select :recurrence_type, CronSetting::RECURRENCE_TYPES, { include_blank: "Select Recurrence Type" }, { class: 'form-select', id: 'recurrence_type' } %>
+      </div>
+      <div class="col-md-6 mb-3 year-interval-field" style="display: none;">
+        <%= cron_form.label :year_interval, "Year Interval", class: 'form-label' %>
+        <%= cron_form.number_field :year_interval, min: 1, class: 'form-control' %>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-3 month-field">
+        <%= cron_form.label :month, "Months", class: 'form-label' %>
+        <div class="custom-dropdown">
+          <button type="button" class="btn btn-secondary dropdown-toggle" id="monthDropdown">
+            Select Months
+          </button>
+          <div class="dropdown-menu" id="monthCheckboxes">
+            <% Date::MONTHNAMES.compact.each_with_index do |month, index| %>
+              <div class="dropdown-item">
+                <%= check_box_tag 'soft_service[cron_setting_attributes][month][]', index + 1, false, id: "month_#{index + 1}" %>
+                <%= label_tag "month_#{index + 1}", month %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div id="selectedMonths" class="mt-2"></div>
+      </div>
+      <div class="col-md-4 mb-3 date-field" style="display: none;">
+        <%= cron_form.label :date, "Day of Month", class: 'form-label' %>
+        <div class="custom-dropdown">
+          <button type="button" class="btn btn-secondary dropdown-toggle" id="dateDropdown">
+            Select Days
+          </button>
+          <div class="dropdown-menu" id="dateCheckboxes">
+            <% (1..31).each do |day| %>
+              <div class="dropdown-item">
+                <%= check_box_tag 'soft_service[cron_setting_attributes][date][]', day, false, id: "date_#{day}" %>
+                <%= label_tag "date_#{day}", day %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div id="selectedDates" class="mt-2"></div>
+      </div>
+      <div class="col-md-4 mb-3 day-of-week-field" style="display: none;">
+        <%= cron_form.label :day_of_week, "Day of Week", class: 'form-label' %>
+        <div class="custom-dropdown">
+          <button type="button" class="btn btn-secondary dropdown-toggle" id="dayOfWeekDropdown">
+            Select Days
+          </button>
+          <div class="dropdown-menu" id="dayOfWeekCheckboxes">
+            <% Date::DAYNAMES.each_with_index do |day, index| %>
+              <div class="dropdown-item">
+                <%= check_box_tag 'soft_service[cron_setting_attributes][day_of_week][]', index, false, id: "day_of_week_#{index}" %>
+                <%= label_tag "day_of_week_#{index}", day %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div id="selectedDaysOfWeek" class="mt-2"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 mb-3 hour-field" style="display: none;">
+        <%= cron_form.label :hour, class: 'form-label' %>
+        <div class="custom-dropdown">
+          <button type="button" class="btn btn-secondary dropdown-toggle" id="hourDropdown">
+            Select Hours
+          </button>
+          <div class="dropdown-menu" id="hourCheckboxes">
+            <% (0..23).each do |hour| %>
+              <div class="dropdown-item">
+                <%= check_box_tag 'soft_service[cron_setting_attributes][hour][]', hour, false, id: "hour_#{hour}" %>
+                <%= label_tag "hour_#{hour}", format("%02d:00", hour) %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div id="selectedHours" class="mt-2"></div>
+      </div>
+      <div class="col-md-6 mb-3 minute-field" style="display: none;">
+        <%= cron_form.label :minute, class: 'form-label' %>
+        <div class="custom-dropdown">
+          <button type="button" class="btn btn-secondary dropdown-toggle" id="minuteDropdown">
+            Select Minutes
+          </button>
+          <div class="dropdown-menu" id="minuteCheckboxes">
+            <% (0..59).step(5) do |minute| %>
+              <div class="dropdown-item">
+                <%= check_box_tag 'soft_service[cron_setting_attributes][minute][]', minute, false, id: "minute_#{minute}" %>
+                <%= label_tag "minute_#{minute}", format("%02d", minute) %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        <div id="selectedMinutes" class="mt-2"></div>
+      </div>
+    </div>
+  <% end %>
+  <div class="mt-4">
+    <%= form.submit class: 'btn btn-primary' %>
+  </div>
+<% end %>
+
+<style>
+.custom-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 8px 16px;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const recurrenceTypeSelect = document.getElementById('recurrence_type');
+  const yearIntervalField = document.querySelector('.year-interval-field');
+  const monthField = document.querySelector('.month-field');
+  const dateField = document.querySelector('.date-field');
+  const dayOfWeekField = document.querySelector('.day-of-week-field');
+  const hourField = document.querySelector('.hour-field');
+  const minuteField = document.querySelector('.minute-field');
+
+  function updateVisibleFields() {
+    const selectedType = recurrenceTypeSelect.value;
+    yearIntervalField.style.display = selectedType === 'yearly' ? 'block' : 'none';
+    monthField.style.display = ['yearly', 'monthly'].includes(selectedType) ? 'block' : 'none';
+    dateField.style.display = ['yearly', 'monthly'].includes(selectedType) ? 'block' : 'none';
+    dayOfWeekField.style.display = selectedType === 'weekly' ? 'block' : 'none';
+    hourField.style.display = ['daily', 'weekly', 'monthly', 'yearly'].includes(selectedType) ? 'block' : 'none';
+    minuteField.style.display = ['hourly', 'daily', 'weekly', 'monthly', 'yearly'].includes(selectedType) ? 'block' : 'none';
+  }
+
+  recurrenceTypeSelect.addEventListener('change', updateVisibleFields);
+
+  function setupDropdown(dropdownId, checkboxesId, selectedDivId, buttonText) {
+    const dropdown = document.getElementById(dropdownId);
+    const checkboxes = document.getElementById(checkboxesId);
+    const selectedDiv = document.getElementById(selectedDivId);
+
+    if (!dropdown || !checkboxes || !selectedDiv) {
+      console.error(`One or more elements not found for ${dropdownId}`);
+      return;
+    }
+
+    dropdown.addEventListener('click', function(event) {
+      event.stopPropagation();
+      checkboxes.style.display = checkboxes.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', function(event) {
+      if (!dropdown.contains(event.target) && !checkboxes.contains(event.target)) {
+        checkboxes.style.display = 'none';
+      }
+    });
+
+    const checkboxInputs = checkboxes.querySelectorAll('input[type="checkbox"]');
+    checkboxInputs.forEach(function(checkbox) {
+      checkbox.addEventListener('change', function() {
+        updateSelected(checkboxInputs, selectedDiv, dropdown, buttonText);
+      });
+    });
+
+    updateSelected(checkboxInputs, selectedDiv, dropdown, buttonText);
+  }
+
+  function updateSelected(checkboxes, selectedDiv, dropdown, buttonText) {
+    const selectedItems = Array.from(checkboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.nextElementSibling.textContent.trim());
+    
+    selectedDiv.textContent = selectedItems.length > 0
+      ? 'Selected: ' + selectedItems.join(', ')
+      : 'No items selected';
+    
+    dropdown.textContent = selectedItems.length > 0
+      ? `${selectedItems.length} ${buttonText}(s) selected`
+      : `Select ${buttonText}`;
+  }
+
+  setupDropdown('unitDropdown', 'unitCheckboxes', 'selectedUnits', 'Unit');
+  setupDropdown('monthDropdown', 'monthCheckboxes', 'selectedMonths', 'Month');
+  setupDropdown('dateDropdown', 'dateCheckboxes', 'selectedDates', 'Day');
+  setupDropdown('dayOfWeekDropdown', 'dayOfWeekCheckboxes', 'selectedDaysOfWeek', 'Day');
+  setupDropdown('hourDropdown', 'hourCheckboxes', 'selectedHours', 'Hour');
+  setupDropdown('minuteDropdown', 'minuteCheckboxes', 'selectedMinutes', 'Minute');
+
+  updateVisibleFields();
+});
+</script>

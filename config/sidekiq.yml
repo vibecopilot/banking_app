@@ -1,0 +1,9 @@
+---
+:max_retries: 2
+:concurrency: 9
+:queues:
+  - default
+  - mailers
+  - pushnotfn
+:limits:
+    pushnotfn: 5

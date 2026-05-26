@@ -1,0 +1,29 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "Soft Services") do |sheet|
+  header_style = sheet.styles.add_style(b: true, bg_color: "4472C4", fg_color: "FFFFFF", alignment: { horizontal: :center })
+
+  sheet.add_row [
+    "ID", "Name", "Building Name", "Floor Name", "Unit Name", "Assigned To",
+    "Generic Info ID", "Generic Sub Info ID", "Longitude", "Latitude",
+    "Created At", "Updated At"
+  ], style: header_style
+
+  @soft_services.find_each do |soft_service|
+    unit_names = soft_service.related_units.pluck(:name).join(", ") rescue ""
+
+    sheet.add_row [
+      soft_service.id,
+      soft_service.name,
+      soft_service.building&.name,
+      soft_service.floor&.name,
+      unit_names,
+      soft_service.user&.full_name || "Unassigned",
+      soft_service.generic_info_id,
+      soft_service.generic_sub_info_id,
+      soft_service.longitude,
+      soft_service.latitude,
+      soft_service.created_at&.strftime("%Y-%m-%d %H:%M:%S"),
+      soft_service.updated_at&.strftime("%Y-%m-%d %H:%M:%S")
+    ]
+  end
+end

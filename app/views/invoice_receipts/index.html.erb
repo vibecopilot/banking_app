@@ -1,0 +1,51 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Invoice Receipts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Receipt number</th>
+      <th>Invoice number</th>
+      <th>Building</th>
+      <th>Unit</th>
+      <th>Address</th>
+      <th>Payment mode</th>
+      <th>Amount received</th>
+      <th>Transaction or cheque number</th>
+      <th>Bank name</th>
+      <th>Branch name</th>
+      <th>Payment date</th>
+      <th>Receipt date</th>
+      <th>Notes</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @invoice_receipts.each do |invoice_receipt| %>
+      <tr>
+        <td><%= invoice_receipt.receipt_number %></td>
+        <td><%= invoice_receipt.invoice_number %></td>
+        <td><%= invoice_receipt.building_id %></td>
+        <td><%= invoice_receipt.unit_id %></td>
+        <td><%= invoice_receipt.address_id %></td>
+        <td><%= invoice_receipt.payment_mode %></td>
+        <td><%= invoice_receipt.amount_received %></td>
+        <td><%= invoice_receipt.transaction_or_cheque_number %></td>
+        <td><%= invoice_receipt.bank_name %></td>
+        <td><%= invoice_receipt.branch_name %></td>
+        <td><%= invoice_receipt.payment_date %></td>
+        <td><%= invoice_receipt.receipt_date %></td>
+        <td><%= invoice_receipt.notes %></td>
+        <td><%= link_to 'Show', invoice_receipt %></td>
+        <td><%= link_to 'Edit', edit_invoice_receipt_path(invoice_receipt) %></td>
+        <td><%= link_to 'Destroy', invoice_receipt, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Invoice Receipt', new_invoice_receipt_path %>

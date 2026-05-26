@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @asset_meter_type.name %>
+</p>
+
+<p>
+  <strong>Value:</strong>
+  <%= @asset_meter_type.value %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @asset_meter_type.active %>
+</p>
+
+<p>
+  <strong>Unit name:</strong>
+  <%= @asset_meter_type.unit_name %>
+</p>
+
+<%= link_to 'Edit', edit_asset_meter_type_path(@asset_meter_type) %> |
+<%= link_to 'Back', asset_meter_types_path %>

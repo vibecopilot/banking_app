@@ -1,0 +1,124 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Room Pricing Details</h4>
+          <div>
+            <%= link_to 'Edit', edit_room_pricing_path(@room_pricing), class: 'btn btn-primary btn-sm' %>
+            <%= link_to 'Back to List', room_pricing_index_path, class: 'btn btn-secondary btn-sm' %>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Basic Information</h5>
+              <table class="table table-bordered">
+                <tr>
+                  <th width="30%">Room:</th>
+                  <td><%= @room_pricing.room.name %> (<%= @room_pricing.room.room_type %>)</td>
+                </tr>
+                <tr>
+                  <th>Site:</th>
+                  <td><%= @room_pricing.room.site.name %></td>
+                </tr>
+                <tr>
+                  <th>Date Range:</th>
+                  <td>
+                    <%= @room_pricing.start_date.strftime('%d %b %Y') %> - 
+                    <%= @room_pricing.end_date.strftime('%d %b %Y') %>
+                    <span class="badge badge-info ml-2">
+                      <%= ((@room_pricing.end_date - @room_pricing.start_date).to_i + 1) %> days
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Status:</th>
+                  <td>
+                    <% if @room_pricing.is_active %>
+                      <span class="badge badge-success">Active</span>
+                    <% else %>
+                      <span class="badge badge-secondary">Inactive</span>
+                    <% end %>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            
+            <div class="col-md-6">
+              <h5>Pricing Details</h5>
+              <table class="table table-bordered">
+                <tr>
+                  <th width="30%">Base Price:</th>
+                  <td><strong>₹<%= number_with_delimiter(@room_pricing.price_per_night) %></strong> per night</td>
+                </tr>
+                <tr>
+                  <th>Tax Rate:</th>
+                  <td><%= @room_pricing.tax_rate %>%</td>
+                </tr>
+                <tr>
+                  <th>Tax Amount:</th>
+                  <td>₹<%= number_with_delimiter((@room_pricing.price_per_night * @room_pricing.tax_rate / 100).round(2)) %></td>
+                </tr>
+                <tr>
+                  <th>Total per Night:</th>
+                  <td><strong>₹<%= number_with_delimiter(@room_pricing.price_per_night * (1 + @room_pricing.tax_rate / 100)) %></strong></td>
+                </tr>
+                <% if @room_pricing.discount_percentage > 0 %>
+                <tr>
+                  <th>Discount:</th>
+                  <td>
+                    <span class="text-success"><%= @room_pricing.discount_percentage %>% OFF</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Discounted Price:</th>
+                  <td>
+                    <strong class="text-success">
+                      ₹<%= number_with_delimiter(@room_pricing.price_per_night * (1 - @room_pricing.discount_percentage / 100) * (1 + @room_pricing.tax_rate / 100)) %>
+                    </strong>
+                  </td>
+                </tr>
+                <% end %>
+              </table>
+            </div>
+          </div>
+          
+          <% if @room_pricing.special_pricing_notes.present? %>
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <h5>Special Pricing Notes</h5>
+              <div class="alert alert-info">
+                <%= simple_format(@room_pricing.special_pricing_notes) %>
+              </div>
+            </div>
+          </div>
+          <% end %>
+          
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <h5>Pricing Timeline</h5>
+              <table class="table table-sm">
+                <tr>
+                  <th>Created:</th>
+                  <td><%= @room_pricing.created_at.strftime('%d %b %Y at %I:%M %p') %></td>
+                </tr>
+                <tr>
+                  <th>Last Updated:</th>
+                  <td><%= @room_pricing.updated_at.strftime('%d %b %Y at %I:%M %p') %></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Initialize tooltips
+  $('[data-toggle="tooltip"]').tooltip();
+});
+</script>

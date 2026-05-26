@@ -1,0 +1,2 @@
+class StandardUnit < ApplicationRecord
+end

@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Booking type:</strong>
+  <%= @fitness_appointment.booking_type %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @fitness_appointment.name %>
+</p>
+
+<p>
+  <strong>Relationship:</strong>
+  <%= @fitness_appointment.relationship %>
+</p>
+
+<p>
+  <strong>Age:</strong>
+  <%= @fitness_appointment.age %>
+</p>
+
+<p>
+  <strong>Gender:</strong>
+  <%= @fitness_appointment.gender %>
+</p>
+
+<p>
+  <strong>Marital status:</strong>
+  <%= @fitness_appointment.marital_status %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @fitness_appointment.date %>
+</p>
+
+<p>
+  <strong>Modile number:</strong>
+  <%= @fitness_appointment.modile_number %>
+</p>
+
+<p>
+  <strong>Preference:</strong>
+  <%= @fitness_appointment.preference %>
+</p>
+
+<p>
+  <strong>Trainer:</strong>
+  <%= @fitness_appointment.trainer %>
+</p>
+
+<p>
+  <strong>Reason for appointment:</strong>
+  <%= @fitness_appointment.reason_for_appointment %>
+</p>
+
+<%= link_to 'Edit', edit_fitness_appointment_path(@fitness_appointment) %> |
+<%= link_to 'Back', fitness_appointments_path %>

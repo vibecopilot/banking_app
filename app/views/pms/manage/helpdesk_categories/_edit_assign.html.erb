@@ -1,0 +1,35 @@
+<div class="modal fade" id="myModal<%= @complaint_worker.id %>" role="dialog">
+  <div class="modal-dialog" role="document">
+    <%= form_for(ComplaintWorker.new,  :url => "/pms/admin/update_complaint_worker" ) do |f| %>
+      <%= f.hidden_field "id", :name => "id", :value => @complaint_worker.id %>
+      <%= f.hidden_field "custom_redirect", :name => "custom_redirect", :value =>  "/pms/admin/helpdesk_categories"  %>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Edit Assign Rule</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+<!--               <div class="form-group col-sm-4">
+                <label>Issue Type</label>
+                <#%= select_tag 'complaint_worker[issue_type_id]', options_for_select( @issue_types_mapped, :selected => @complaint_worker.issue_type_id), :class=>"form-control" %>
+              </div> -->
+              <div class="form-group col-sm-4">
+                <label>Category Type</label>
+                <%= select_tag 'complaint_worker[category_id]', options_for_select( @helpdesk_categories_mapped.sort_by(&:first), :selected => @complaint_worker.category_id), :include_blank => "select", :class=>"form-control" %>
+              </div>
+              <div class="form-group col-sm-4">
+                <label>Service Engineer</label>
+                <%= select_tag 'complaint_worker[assign_to][]', options_for_select( @sstaff, :selected => @complaint_worker.assign_to), :class=>"form-control"%>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success btn-sm">Update</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

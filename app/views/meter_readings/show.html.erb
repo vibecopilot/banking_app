@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Meter:</strong>
+  <%= @meter_reading.meter_id %>
+</p>
+
+<p>
+  <strong>Opening:</strong>
+  <%= @meter_reading.opening %>
+</p>
+
+<p>
+  <strong>Closing:</strong>
+  <%= @meter_reading.closing %>
+</p>
+
+<p>
+  <strong>Consumption:</strong>
+  <%= @meter_reading.consumption %>
+</p>
+
+<p>
+  <strong>Parameter:</strong>
+  <%= @meter_reading.parameter %>
+</p>
+
+<%= link_to 'Edit', edit_meter_reading_path(@meter_reading) %> |
+<%= link_to 'Back', meter_readings_path %>

@@ -1,0 +1,27 @@
+<%= form_with(model: compliance_config_tag, local: true) do |form| %>
+  <% if compliance_config_tag.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(compliance_config_tag.errors.count, "error") %> prohibited this compliance_config_tag from being saved:</h2>
+
+      <ul>
+      <% compliance_config_tag.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :compliance_tag_id %>
+    <%= form.number_field :compliance_tag_id, id: :compliance_config_tag_compliance_tag_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :compliance_config_id %>
+    <%= form.number_field :compliance_config_id, id: :compliance_config_tag_compliance_config_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

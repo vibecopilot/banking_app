@@ -1,0 +1,82 @@
+<%= form_with(model: parking_policy, local: true) do |form| %>
+  <% if parking_policy.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(parking_policy.errors.count, "error") %> prohibited this parking_policy from being saved:</h2>
+
+      <ul>
+      <% parking_policy.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :who_can_park %>
+    <%= form.text_field :who_can_park, id: :parking_policy_who_can_park %>
+  </div>
+
+  <div class="field">
+    <%= form.label :max_vechille_per_flat %>
+    <%= form.text_field :max_vechille_per_flat, id: :parking_policy_max_vechille_per_flat %>
+  </div>
+
+  <div class="field">
+    <%= form.label :allowed_vehicle_type %>
+    <%= form.text_field :allowed_vehicle_type, id: :parking_policy_allowed_vehicle_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :type_of %>
+    <%= form.text_field :type_of, id: :parking_policy_type_of %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_type %>
+    <%= form.text_field :payment_type, id: :parking_policy_payment_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :billing_frequency %>
+    <%= form.text_field :billing_frequency, id: :parking_policy_billing_frequency %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ev_charging_available %>
+    <%= form.check_box :ev_charging_available, id: :parking_policy_ev_charging_available %>
+  </div>
+
+  <div class="field">
+    <%= form.label :charging_type %>
+    <%= form.text_field :charging_type, id: :parking_policy_charging_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ev_charge_location %>
+    <%= form.text_field :ev_charge_location, id: :parking_policy_ev_charge_location %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ev_charge_fee %>
+    <%= form.text_field :ev_charge_fee, id: :parking_policy_ev_charge_fee %>
+  </div>
+
+  <div class="field">
+    <%= form.label :who_Can_access %>
+    <%= form.text_field :who_Can_access, id: :parking_policy_who_Can_access %>
+  </div>
+
+  <div class="field">
+    <%= form.label :visitor_parking_allowed %>
+    <%= form.check_box :visitor_parking_allowed, id: :parking_policy_visitor_parking_allowed %>
+  </div>
+
+  <div class="field">
+    <%= form.label :terms_and_condition %>
+    <%= form.text_area :terms_and_condition, id: :parking_policy_terms_and_condition %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

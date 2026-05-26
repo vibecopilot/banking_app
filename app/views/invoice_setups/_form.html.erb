@@ -1,0 +1,42 @@
+<%= form_with(model: invoice_setup, local: true) do |form| %>
+  <% if invoice_setup.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(invoice_setup.errors.count, "error") %> prohibited this invoice_setup from being saved:</h2>
+
+      <ul>
+      <% invoice_setup.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :prefix %>
+    <%= form.text_field :prefix, id: :invoice_setup_prefix %>
+  </div>
+
+  <div class="field">
+    <%= form.label :next_number %>
+    <%= form.number_field :next_number, id: :invoice_setup_next_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :auto_generate %>
+    <%= form.check_box :auto_generate, id: :invoice_setup_auto_generate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :invoice_setup_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by %>
+    <%= form.number_field :created_by, id: :invoice_setup_created_by %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

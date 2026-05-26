@@ -1,0 +1,143 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Restaurant name:</strong>
+  <%= @food_and_beverage.restaurant_name %>
+</p>
+
+<p>
+  <strong>Cost for two:</strong>
+  <%= @food_and_beverage.cost_for_two %>
+</p>
+
+<p>
+  <strong>Mobile number:</strong>
+  <%= @food_and_beverage.mobile_number %>
+</p>
+
+<p>
+  <strong>Alternate mobile number:</strong>
+  <%= @food_and_beverage.alternate_mobile_number %>
+</p>
+
+<p>
+  <strong>Landline number:</strong>
+  <%= @food_and_beverage.landline_number %>
+</p>
+
+<p>
+  <strong>Delivery time:</strong>
+  <%= @food_and_beverage.delivery_time %>
+</p>
+
+<p>
+  <strong>Cuisines:</strong>
+  <%= @food_and_beverage.cuisines %>
+</p>
+
+<p>
+  <strong>Serves alcohols:</strong>
+  <%= @food_and_beverage.serves_alcohols %>
+</p>
+
+<p>
+  <strong>Wheelchair accessible:</strong>
+  <%= @food_and_beverage.wheelchair_accessible %>
+</p>
+
+<p>
+  <strong>Cash on delivery:</strong>
+  <%= @food_and_beverage.cash_on_delivery %>
+</p>
+
+<p>
+  <strong>Pure veg:</strong>
+  <%= @food_and_beverage.pure_veg %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @food_and_beverage.address %>
+</p>
+
+<p>
+  <strong>Terms and conditions:</strong>
+  <%= @food_and_beverage.terms_and_conditions %>
+</p>
+
+<p>
+  <strong>Disclaimer:</strong>
+  <%= @food_and_beverage.disclaimer %>
+</p>
+
+<p>
+  <strong>Closing message:</strong>
+  <%= @food_and_beverage.closing_message %>
+</p>
+
+<p>
+  <strong>Minimum person:</strong>
+  <%= @food_and_beverage.minimum_person %>
+</p>
+
+<p>
+  <strong>Maximum person:</strong>
+  <%= @food_and_beverage.maximum_person %>
+</p>
+
+<p>
+  <strong>Cancel before:</strong>
+  <%= @food_and_beverage.cancel_before %>
+</p>
+
+<p>
+  <strong>Gst:</strong>
+  <%= @food_and_beverage.gst %>
+</p>
+
+<p>
+  <strong>Delivery charges:</strong>
+  <%= @food_and_beverage.delivery_charges %>
+</p>
+
+<p>
+  <strong>Minimum order:</strong>
+  <%= @food_and_beverage.minimum_order %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @food_and_beverage.status %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @food_and_beverage.created_by_id %>
+</p>
+
+<% if @food_and_beverage.restaurant_schedule&.any? { |_, times| times['selected'] == '1' && times['start_time'].present? && times['end_time'].present? } %>
+  <h3>Restaurant Schedule</h3>
+  <ul>
+    <% @food_and_beverage.restaurant_schedule.each do |day, times| %>
+      <% if times['selected'] && times['start_time'].present? && times['end_time'].present? %>
+        <li>
+          <strong><%= day %>:</strong>
+          <%= times['start_time'] %> to <%= times['end_time'] %>
+          <% if times['booking_allowed'] == '1' %>
+            (Booking allowed)
+          <% end %>
+          <% if times['order_allowed'] == '1' %>
+            (Order allowed)
+          <% end %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No restaurant schedule available.</p>
+<% end %>
+
+
+
+<%= link_to 'Edit', edit_food_and_beverage_path(@food_and_beverage) %> |
+<%= link_to 'Back', food_and_beverages_path %>

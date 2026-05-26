@@ -1,0 +1,134 @@
+header {
+    background: linear-gradient(to right, rgb(70, 70, 70), rgb(150, 150, 150));
+    border: 1px solid #ddd;
+    border-bottom: 0px;
+    padding: 10px;
+  }
+
+  section {
+    padding: 10px;
+  }
+
+  .custom-dropdown {
+    width: 175px;
+    height: 30px !important;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    margin: 0px 5px !important;
+    padding: 5px !important;
+  }
+
+  .textbox {
+    width: 75%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0px 5px;
+    outline: none;
+    display: inline-block;
+    margin: 0px 5px !important;
+  }
+
+  .detail-title {
+    margin: 10px;
+    font-size: 16px;
+  }
+
+  .fields {
+    width: 125px;
+    text-align: right;
+    margin-right: 5px;
+  }
+
+  .primary-detail {
+    background: #f9f9f9;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 20px;
+  }
+
+  .secondary-detail {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .ticket-type {
+    display: flex;
+  }
+
+  .main-title {
+    margin-left: 5px;
+    font-size: 15px;
+    color: white;
+  }
+
+  .upload {
+    padding: 10px; 
+    border: 2px dashed #eee; 
+    text-align: center; 
+    width: 75%; 
+    display: inline-block;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0px 5px !important;
+  }
+
+  .button-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn {
+    width: 110px;
+  }
+
+  
+  .radio-btn-label {
+    margin-right: 15px;
+  }
+
+  .complaint-ticket-container {
+      border: 1px solid #e5e5e5;
+    }
+
+  @media screen and (max-width: 768px) {
+    .complaint-ticket-container {
+      margin: 0 25px;
+    }
+
+    .primary-detail {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .secondary-detail {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+
+    .fields {
+      text-align: left;
+      margin-right: 5px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      margin: 8px 0;
+    }
+
+    .ticket-type {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 110px;
+    }
+  }

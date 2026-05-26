@@ -1,0 +1,69 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Vendor:</strong>
+  <%= @mail_room_inbound.vendor_id %>
+</p>
+
+<p>
+  <strong>Receiving date:</strong>
+  <%= @mail_room_inbound.receiving_date %>
+</p>
+
+<p>
+  <strong>Sender:</strong>
+  <%= @mail_room_inbound.sender %>
+</p>
+
+<p>
+  <strong>Mobile number:</strong>
+  <%= @mail_room_inbound.mobile_number %>
+</p>
+
+<p>
+  <strong>Awb number:</strong>
+  <%= @mail_room_inbound.awb_number %>
+</p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @mail_room_inbound.company %>
+</p>
+
+<p>
+  <strong>Company address 1:</strong>
+  <%= @mail_room_inbound.company_address_1 %>
+</p>
+
+<p>
+  <strong>Company address 2:</strong>
+  <%= @mail_room_inbound.company_address_2 %>
+</p>
+
+<p>
+  <strong>State:</strong>
+  <%= @mail_room_inbound.state %>
+</p>
+
+<p>
+  <strong>City:</strong>
+  <%= @mail_room_inbound.city %>
+</p>
+
+<p>
+  <strong>Pincode:</strong>
+  <%= @mail_room_inbound.pincode %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @mail_room_inbound.mail_inbound_type %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @mail_room_inbound.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_mail_room_inbound_path(@mail_room_inbound) %> |
+<%= link_to 'Back', mail_room_inbounds_path %>

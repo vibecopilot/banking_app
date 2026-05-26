@@ -1,0 +1,87 @@
+<%= form_with(model: registered_vehicle, local: true, multipart: true) do |form| %>
+  <% if registered_vehicle.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(registered_vehicle.errors.count, "error") %> prohibited this registered_vehicle from being saved:</h2>
+
+      <ul>
+      <% registered_vehicle.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :slot_number %>
+    <%= form.number_field :slot_number, id: :registered_vehicle_slot_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vehicle_category %>
+    <%= form.text_field :vehicle_category, id: :registered_vehicle_vehicle_category %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vehicle_type %>
+    <%= form.text_field :vehicle_type, id: :registered_vehicle_vehicle_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sticker_number %>
+    <%= form.text_field :sticker_number, id: :registered_vehicle_sticker_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :registration_number %>
+    <%= form.text_field :registration_number, id: :registered_vehicle_registration_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :insurance_number %>
+    <%= form.text_field :insurance_number, id: :registered_vehicle_insurance_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :insurance_valid_till %>
+    <%= form.date_select :insurance_valid_till, id: :registered_vehicle_insurance_valid_till %>
+  </div>
+
+  <div class="field">
+    <%= form.label :category %>
+    <%= form.text_field :category, id: :registered_vehicle_category %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vehicle_number %>
+    <%= form.text_field :vehicle_number, id: :registered_vehicle_vehicle_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit_id %>
+    <%= form.number_field :unit_id, id: :registered_vehicle_unit_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :registered_vehicle_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :registered_vehicle_created_by_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.check_box :status, id: :registered_vehicle_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attachfiles %>
+    <%= form.file_field :attachfiles %>
+  </div>  
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

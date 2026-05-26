@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tasklist</title>
+
+  <%= csrf_meta_tags %>
+
+  <!-- ✅ CSS -->
+  <%= stylesheet_link_tag 'bootstrap45.min' %>
+  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= stylesheet_link_tag 'font-awesome.min.css' %>
+
+  <!-- ✅ jQuery (ONLY ONE) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+
+  <div id="page-wrapper">
+    <% if current_user.present? %>
+      <div class="nav-header">
+        <span><%= current_user.full_name %></span>
+        <%= link_to '', destroy_user_session_path, method: :delete, class: "glyphicon glyphicon-log-out" %>
+      </div>
+
+      <% flash.each do |type, message| %>
+        <% alert_class = case type.to_s
+           when 'notice' then 'alert-success'
+           when 'alert' then 'alert-danger'
+           else 'alert-info'
+           end %>
+        <div class="alert <%= alert_class %>">
+          <%= message %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="container">
+    <%= yield %>
+  </div>
+
+
+  <!-- ✅ Application JS -->
+  <%= javascript_include_tag 'application' %>
+
+  <!-- ✅ Safe Init -->
+  <script>
+    $(document).ready(function () {
+      console.log("App loaded ✅");
+    });
+  </script>
+
+</body>
+</html>

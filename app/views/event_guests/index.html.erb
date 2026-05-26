@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Event Guests</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Event</th>
+      <th>Name</th>
+      <th>Rsvp</th>
+      <th>Company name</th>
+      <th>Email</th>
+      <th>Mobile</th>
+      <th>Business</th>
+      <th>Rules</th>
+      <th>Charges</th>
+      <th>Industry</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @event_guests.each do |event_guest| %>
+      <tr>
+        <td><%= event_guest.event_id %></td>
+        <td><%= event_guest.name %></td>
+        <td><%= event_guest.rsvp %></td>
+        <td><%= event_guest.company_name %></td>
+        <td><%= event_guest.email %></td>
+        <td><%= event_guest.mobile %></td>
+        <td><%= event_guest.business %></td>
+        <td><%= event_guest.rules %></td>
+        <td><%= event_guest.charges %></td>
+        <td><%= event_guest.industry %></td>
+        <td><%= link_to 'Show', event_guest %></td>
+        <td><%= link_to 'Edit', edit_event_guest_path(event_guest) %></td>
+        <td><%= link_to 'Destroy', event_guest, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Event Guest', new_event_guest_path %>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Assets</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- Bootstrap JavaScript -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<p id="notice"><%= notice %></p>
+<div class="col-sm-12">
+  <h4 class="pull-left" style="width: 100%; text-align: left;"> Site Assets <hr></h4>
+</div>
+
+<div class="ml-2 mr-2">
+
+<div id="toolbar">
+  <%= form_tag site_assets_path, method: :get, id: "filters" do %>
+    <div class="col-sm-8" style="padding-left: 0px;">
+      <div class="form-group col-sm-4 helpdesk-filter" >
+        <div class="input-group">
+          <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+          <%= text_field_tag 'q[date_range]', params[:q]&.[](:date_range), class: "reservation form-control pull-right", placeholder: "Select Date Range" %>
+        </div>
+      </div>
+      <div class="col-sm-4 form-group">
+        <%= button_tag "Export Assets", type: :button, class: "applyfilter2 btn btn-success btn-sm" %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @user.user_type == 'pms_admin' %>
+    <div class="form-group" style="display: inline-flex ;" >
+      <button type="button" class="create_user mr-2" data-toggle="modal" data-target="#bulkupload">
+        Import
+      </button>
+      <%= link_to 'Add Asset', new_site_asset_path, class: "create_user mr-2" %>
+    <% end %>
+    <%= link_to 'Print Asset QR codes', qr_codes_site_assets_path(format: :pdf), class: "create_user mr-2" %>
+  </div>
+</div>
+
+<div class="col-sm-4 form-group">
+  <%= button_tag "Export Assets", type: :button, class: "applyfilter2 btn btn-success btn-sm" %>
+  <%= button_tag "Download All Assets Excel", type: :button, id: "download-all-assets", class: "btn btn-primary btn-sm ml-2" %>
+</div>
+
+<% if @site_assets.respond_to?(:total_pages) %>
+  <%= page_entries_info @site_assets %>
+  <%= will_paginate @site_assets %>
+<% end %>
+
+<table class="table" id="site_assets_table">
+  <thead>
+    <tr>
+      <th>Select</th>
+      <th>View</th>
+      <th>Building</th>
+      <th>Floor</th>
+      <th>Unit</th>
+      <th>Name</th>
+      <th>Serial number</th>
+      <th>Model number</th>
+      <th>Purchased on</th>
+      <th>Purchase cost</th>
+      <th>Warranty expiry</th>
+      <th>User</th>
+      <th>Critical</th>
+      <th>Breakdown</th>
+      <th>Is meter</th>
+      <th>QR Code</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @site_assets.each do |asset| %>
+      <tr>
+        <td><input type="checkbox" class="checklist" name="checklistids[]" value="<%= asset.id %>"></td>
+        <td><a href="<%= site_asset_path(asset) %>" class="btn btn-xs"><i class="fa fa-eye text-info" aria-hidden="true"></i></a></td>
+        <td><%= asset.building&.name %></td>
+        <td><%= asset.floor&.name %></td>
+        <td><%= asset.unit&.name %></td>
+        <td><%= asset.name %></td>
+        <td><%= asset.serial_number %></td>
+        <td><%= asset.model_number %></td>
+        <td><%= asset.purchased_on %></td>
+        <td><%= asset.purchase_cost %></td>
+        <td><%= asset.warranty_expiry %></td>
+        <td><%= asset.user_id %></td>
+        <td><%= asset.critical %></td>
+        <td><%= asset.breakdown %></td>
+        <td><%= asset.is_meter %></td>
+        <td><a href="#" data-toggle="modal" data-target="#qr-code-preview" data-asset-id="<%= asset.id %>"><img class="assetqr" src="<%= asset.qr_code_image.try(:image).try(:url) %>" style="width:50px; height: 50px;"></a></td>
+        <% if @user.user_type == 'pms_admin' %>
+          <td><a href="<%= edit_site_asset_path(asset) %>" class="btn btn-xs"><i class="fa fa-pencil text-info" aria-hidden="true"></i></a></td>
+          <td><%= link_to 'Destroy', asset, method: :delete, data: { confirm: 'Are you sure? Please note all asset related data will be deleted and will not be recovered. Hit cancel if you are not sure.' } %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @site_assets.respond_to?(:total_pages) %>
+  <%= will_paginate @site_assets %>
+<% end %>
+
+</div>
+<br>
+
+<!-- QR Code Preview Modal -->
+<div class="modal fade" id="qr-code-preview" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Asset QR Code</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="qr_code_preview_div">
+          <img src="" style="width: 200px; height: 200px">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="download-qr">Download QR Code</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Upload Modal -->
+<div class="modal fade" id="bulkupload" tabindex="-2" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document"> 
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Bulk Upload</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag import_site_assets_path, method: :post, multipart: true do %>
+          <div class="form-group">
+            <section class="upload-div"> Drag &amp; Drop or <%= file_field_tag :file, required: true %></section>
+          </div>
+      </div>
+      <div class='modal-footer'>
+        <div class="form-group">
+          <%= link_to "Download Sample Format", "/assets/assets_import.xlsx", {download: 'assets_import.xlsx', target:"_blank", :class => "create_user mr-2"} %>
+          <%= submit_tag "Import", class: 'create_user mr-2' %>
+        </div>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var cursrc = "";
+    var currentAssetId = "";
+
+    $(".assetqr").click(function(e) {
+      cursrc = $(this).attr("src");
+      currentAssetId = $(this).closest("a").data("asset-id");
+      $("#qr_code_preview_div").find("img").attr("src", cursrc);
+    });
+
+    $("#download-qr").click(function() {
+      if (cursrc) {
+        var link = document.createElement('a');
+        link.href = cursrc;
+        link.download = 'site_asset_qr_' + currentAssetId + '.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    });
+
+    $('.reservation').daterangepicker();
+
+    $('.applyfilter2').click(function(){
+      if ($("input[name='checklistids[]']:checked").length < 1){
+        toastr.error("Please select at least one asset.");
+        return;
+      } else {
+        var a = [];
+        $.each($("input[name='checklistids[]']:checked"), function(){
+          a.push($(this).val());
+        });
+
+        var checklistids = a.join(",")  
+        console.log(checklistids);
+        window.location.href = "/show_multiple_readings.xlsx?checklistids="+ checklistids + "&date_range=" + $("#q_date_range").val();
+      }
+    });
+  });
+
+  $("#download-all-assets").click(function() {
+    window.location.href = "<%= download_all_log_excel_site_assets_path(format: :xlsx) %>";
+  });
+</script>
+
+</body>
+</html>

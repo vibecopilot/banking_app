@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Poll Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Poll</th>
+      <th>User</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @poll_users.each do |poll_user| %>
+      <tr>
+        <td><%= poll_user.poll_id %></td>
+        <td><%= poll_user.user_id %></td>
+        <td><%= link_to 'Show', poll_user %></td>
+        <td><%= link_to 'Edit', edit_poll_user_path(poll_user) %></td>
+        <td><%= link_to 'Destroy', poll_user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Poll User', new_poll_user_path %>

@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Asset Params</h1>
+
+<table class="col-sm-8">
+  <thead>
+    <tr>
+      <th width="50%">Asset</th>
+      <th>Name</th>
+      <th>Edit</th>
+      <th>Delete</th>
+      <!-- <th>Type</th> -->
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @asset_params.each do |asset_param| %>
+      <tr>
+        <td><%= asset_param.asset_id %></td>
+        <td><%= asset_param.name %></td>
+        <!-- <td><%#= asset_param.type %></td> -->
+        <td><%= link_to 'Show', asset_param %></td>
+        <td><%= link_to 'Edit', edit_asset_param_path(asset_param) %></td>
+        <td><%= link_to 'Destroy', asset_param, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Asset Param', new_asset_param_path %>

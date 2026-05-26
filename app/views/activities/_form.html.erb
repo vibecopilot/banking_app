@@ -1,0 +1,85 @@
+<div class="row">
+  <div class="col-sm-12">
+  <% checklist = Checklist.unscoped.find_by(id: params[:checklist_id] || @checklist_id) %>
+  <%= checklist.activities.pluck(:asset_id, :soft_service_id).uniq.count %> link_to_Associations
+  </div>
+  <% assi = checklist.activities.pluck(:patrolling_id, :soft_service_id, :asset_id, :assigned_to).uniq
+    assi.each do |as| %>
+    <div class="col-sm-12">
+      <div class="col-sm-3">
+        Patrolling: <%= Patrolling.find_by(id: as[0]).try(:patrolling_name) %>
+      </div>
+      <div class="col-sm-3">
+        Softservices: <%= SoftService.find_by(id: as[1]).try(:name) %>
+      </div>
+      <div class="col-sm-3">
+        Asset: <%= SiteAsset.find_by(id: as[2]).try(:name) %>
+      </div>
+      <div class="col-sm-3">
+        User: <%= User.find_by(id: as[3]).try(:full_name) %>
+      </div>
+      <div class="col-sm-3">
+        <button>
+          <a href="/delete_user_activity?checklist_id=<%= params[:checklist_id] %>&assigned_to=<%= as[3] %>&asset_id=<%= as[2] %>&soft_service_id=<%= as[1] %>&patrolling_id=<%= as[0] %>">
+            Delete Association
+          </a>
+        </button>
+      </div>
+    </div>
+    <br>
+    <br>
+    <br>
+  <% end %>
+</div>
+<br>
+<br>
+<br>
+<br>
+<%= form_with(model: activity, local: true) do |form| %>
+  <% if activity.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(activity.errors.count, "error") %> prohibited this activity from being saved:</h2>
+      <ul>
+      <% activity.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<div class="row">
+<div class="col-sm-12" >
+  <div class="col-sm-2">
+    <div class="field text-left mb-3">
+    <label>Assets </label>
+      <%= select_tag 'asset_ids[]', options_for_select(SiteAsset.where(site_id: @user.current_site_id).ransack(activities_checklist_id: params[:checklist_id]).result.map { |e| [e.name, e.id] }, selected: activity.asset_id), multiple: true, include_blank: "Select Asset", class: "ui dropdown building-select multiple" %>
+    </div>
+  </div>
+  <div class="col-sm-2">
+    <div class="field text-left mb-3">
+      <label>SoftServices </label>
+        <%= select_tag 'soft_service_ids[]', options_for_select(SoftService.where(site_id: @user.current_site_id).ransack(activities_checklist_id: params[:checklist_id]).result.map { |e| [e.name, e.id] }, selected: activity.soft_service_id), multiple: true, include_blank: "Select SoftService", class: "ui dropdown building-select multiple" %>
+    </div>
+  </div>
+  <div class="col-sm-2">
+    <div class="field text-left mb-3">
+      <label>Patrollings </label>
+        <%= select_tag 'patrolling_ids[]', options_for_select(Patrolling.where(site_id: @user.current_site_id).ransack(activities_checklist_id: params[:checklist_id]).result.map { |e| [e.patrolling_name, e.id] }, selected: activity.patrolling_id), multiple: true, include_blank: "Select Patrolling", class: "ui dropdown building-select multiple" %>
+    </div>
+  </div>
+  <%= form.hidden_field :checklist_id, id: :activity_checklist_id, value: params[:checklist_id] %>
+  <div class="col-sm-2">
+    <div class="field text-left mb-3">
+      <% @fm_users = User.where(id: UserSite.where(site_id: @user.current_site_id).pluck(:user_id), user_type: ["pms_technician", "pms_admin"]) %>
+    <label>Assigned To </label>
+      <%= select_tag 'assigned_to[]', options_for_select(@fm_users.map { |e| [e.full_name, e.id] }, selected: activity.assigned_to), multiple: true, include_blank: "Select Assigned To", class: "ui dropdown building-select multiple" %>
+    </div>
+  </div>
+  <div class="actions col-sm-2">
+    <%= form.submit %>
+  </div>
+</div>
+</div>
+<% end %>
+<script type="text/javascript">
+  $('.ui.dropdown').dropdown();
+</script>

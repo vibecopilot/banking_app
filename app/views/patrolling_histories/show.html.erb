@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @patrolling_history.user_id %>
+</p>
+
+<p>
+  <strong>Patrolling:</strong>
+  <%= @patrolling_history.patrolling_id %>
+</p>
+
+<p>
+  <strong>Expected time:</strong>
+  <%= @patrolling_history.expected_time %>
+</p>
+
+<p>
+  <strong>Actual time:</strong>
+  <%= @patrolling_history.actual_time %>
+</p>
+
+<%= link_to 'Edit', edit_patrolling_history_path(@patrolling_history) %> |
+<%= link_to 'Back', patrolling_histories_path %>

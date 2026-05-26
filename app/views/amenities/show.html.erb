@@ -1,0 +1,134 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @amenity.site_id %>
+</p>
+
+<p>
+  <strong>Fac type:</strong>
+  <%= @amenity.fac_type %>
+</p>
+
+<p>
+  <strong>Fac name:</strong>
+  <%= @amenity.fac_name %>
+</p>
+
+<p>
+  <strong>Member charges:</strong>
+  <%= @amenity.member_charges %>
+</p>
+
+<p>
+  <strong>Book before:</strong>
+  <%= @amenity.book_before %>
+</p>
+
+<p>
+  <strong>Disclaimer:</strong>
+  <%= @amenity.disclaimer %>
+</p>
+
+<p>
+  <strong>Cancellation policy:</strong>
+  <%= @amenity.cancellation_policy %>
+</p>
+
+<p>
+  <strong>Cutoff min:</strong>
+  <%= @amenity.cutoff_min %>
+</p>
+
+<p>
+  <strong>Return percentage:</strong>
+  <%= @amenity.return_percentage %>
+</p>
+
+<p>
+  <strong>Create by:</strong>
+  <%= @amenity.create_by %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @amenity.active %>
+</p>
+
+<p>
+  <strong>Member price adult:</strong>
+  <%= @amenity.member_price_adult %>
+</p>
+
+<p>
+  <strong>Member price child:</strong>
+  <%= @amenity.member_price_child %>
+</p>
+
+<p>
+  <strong>Guest price adult:</strong>
+  <%= @amenity.guest_price_adult %>
+</p>
+
+<p>
+  <strong>Tenant price child:</strong>
+  <%= @amenity.tenant_price_child %>
+</p>
+
+<p>
+  <strong>Tenant price adult:</strong>
+  <%= @amenity.tenant_price_adult %>
+</p>
+
+<p>
+  <strong>Guest price child:</strong>
+  <%= @amenity.guest_price_child %>
+</p>
+
+<p>
+  <strong>Min people:</strong>
+  <%= @amenity.min_people %>
+</p>
+
+<p>
+  <strong>Max people:</strong>
+  <%= @amenity.max_people %>
+</p>
+
+<p>
+  <strong>Cancel before:</strong>
+  <%= @amenity.cancel_before %>
+</p>
+
+<p>
+  <strong>Terms:</strong>
+  <%= @amenity.terms %>
+</p>
+
+<p>
+  <strong>Advance Booking:</strong>
+  <%= @amenity.advance_booking %>
+</p>
+
+<p>
+  <strong>Deposit:</strong>
+  <%= @amenity.deposit %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @amenity.description %>
+</p>
+
+<p>
+  <strong>Max slots:</strong>
+  <%= @amenity.max_slots %>
+</p>
+
+<p><strong>Payment Methods:</strong>
+ <%= @amenity.payment_methods.to_a.join(", ") %>
+</p>
+
+
+<%= link_to 'Edit', edit_amenity_path(@amenity) %> |
+<%= link_to 'Back', amenities_path %>

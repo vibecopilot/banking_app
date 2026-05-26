@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Maintenance Bill</title>
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    @page { size:A4; margin:5mm; }
+
+    body {
+      font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+      font-size: 9.5px;
+      color: #222;
+      line-height: 1.35;
+    }
+
+    .bill-container {
+      width: 100%;
+      border: 1.5px solid #1a237e;
+      padding: 0;
+    }
+
+    /* =========================
+       HEADER (Compact Letterhead)
+    ========================== */
+.header {
+  background: #1a237e;
+  color: #ffffff;
+  padding: 12px 18px 10px;
+  text-align: center;
+  border-bottom: 3px solid #ff8f00;
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.header .address-line {
+  font-size: 10px;
+  font-weight: 500;
+  color: #f5f5f5;
+  line-height: 1.5;
+  margin-top: 2px;
+  opacity: 1;
+}
+
+.header .gst-line {
+  font-size: 9px;
+  font-weight: 600;
+  color: #e8eaf6;
+  line-height: 1.4;
+  margin-top: 4px;
+  opacity: 1;
+}
+    /* =========================
+       BILL TITLE (tighter gap)
+    ========================== */
+
+    .bill-title {
+      text-align: center;
+      background: #ff8f00;
+      color: #fff;
+      padding: 5px 8px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* =========================
+       DETAILS SECTION (compact)
+    ========================== */
+
+    .details-section {
+      padding: 5px 10px;
+    }
+
+    .details-grid {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .details-grid td {
+      padding: 3px 8px;
+      vertical-align: top;
+      border: 1px solid #c5cae9;
+    }
+
+    .details-grid .label {
+      font-weight: 700;
+      color: #1a237e;
+      font-size: 8.5px;
+    }
+
+    .details-grid .value {
+      font-weight: 600;
+      color: #222;
+      font-size: 9.5px;
+      margin-top: 1px;
+    }
+
+    .details-grid .highlight-cell {
+      background: #e8eaf6;
+    }
+
+    /* =========================
+       CHARGES TABLE (compact)
+    ========================== */
+
+    .charges-section {
+      padding: 0 10px 4px;
+    }
+
+    .charges-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .charges-table thead th {
+      background: #1a237e;
+      color: #fff;
+      font-weight: 700;
+      font-size: 9px;
+      padding: 5px 8px;
+      text-align: left;
+      border: 1px solid #1a237e;
+    }
+
+    .charges-table thead th:last-child {
+      text-align: right;
+    }
+
+    .charges-table tbody td {
+      padding: 4px 8px;
+      border: 1px solid #c5cae9;
+      font-size: 9px;
+    }
+
+    .charges-table tbody td:last-child {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .charges-table tbody tr:nth-child(even) { background: #f9f9f9; }
+    .charges-table tbody tr:nth-child(odd) { background: #fff; }
+
+    .charges-table tbody tr.total-row td {
+      border-top: 2px solid #1a237e;
+      background: #e8eaf6;
+      font-weight: 800;
+      font-size: 9.5px;
+      padding: 4px 8px;
+    }
+
+    .charges-table tbody tr.grand-total-row {
+      background: #1a237e;
+      color: #fff;
+    }
+
+    .charges-table tbody tr.grand-total-row td {
+      font-weight: 800;
+      font-size: 11px;
+      padding: 5px 8px;
+    }
+
+    .charges-table tbody tr.arrears-row td {
+      color: #c62828;
+      font-size: 9px;
+      padding: 3px 8px;
+    }
+
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+
+    /* =========================
+       BOTTOM AREA (compact flex)
+    ========================== */
+
+    .bottom-area {
+      padding: 0 10px 4px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .bottom-area .left-panel {
+      flex: 1;
+    }
+
+    .bottom-area .right-panel {
+      flex: 0 0 auto;
+      width: 190px;
+      margin-left: auto;
+    }
+
+    /* Amount in words box */
+    .amount-words-box {
+      border: 1px solid #1a237e;
+      padding: 5px 10px;
+      background: #f5f5f5;
+    }
+
+    .amount-words-box .words-label {
+      font-size: 7.5px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .amount-words-box .words-value {
+      font-size: 10px;
+      font-weight: 700;
+      color: #1a237e;
+      margin-top: 2px;
+    }
+
+    /* Payment stripe */
+    .payment-stripe {
+      background: #fff8e1;
+      border: 1px solid #ff8f00;
+      padding: 5px 10px;
+      margin-top: 4px;
+    }
+
+    .payment-stripe .pay-label {
+      font-weight: 700;
+      color: #e65100;
+      font-size: 8.5px;
+    }
+
+    .payment-stripe .pay-detail {
+      font-size: 8px;
+      color: #555;
+      margin-top: 1px;
+    }
+
+    /* Summary table */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .summary-table td {
+      padding: 4px 8px;
+      border: 1px solid #c5cae9;
+      font-size: 9px;
+    }
+
+    .summary-table td:last-child {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .summary-table .summary-label {
+      background: #e8eaf6;
+      font-weight: 700;
+    }
+
+    .summary-table .amount-due-row td {
+      background: #1a237e;
+      color: #fff;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 5px 8px;
+    }
+
+    .summary-table .sub-label {
+      color: #888;
+      font-size: 8.5px;
+    }
+
+    /* =========================
+       BANK DETAILS (compact)
+    ========================== */
+
+    .bank-section {
+      margin: 2px 10px 4px;
+      border: 1px solid #c5cae9;
+    }
+
+    .bank-header {
+      background: #e8eaf6;
+      padding: 3px 8px;
+      font-weight: 700;
+      font-size: 8.5px;
+      color: #1a237e;
+      border-bottom: 1px solid #c5cae9;
+    }
+
+    .bank-grid { width: 100%; border-collapse: collapse; }
+
+    .bank-grid td {
+      padding: 2px 8px;
+      font-size: 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .bank-grid .b-label { font-weight: 600; color: #555; width: 100px; }
+    .bank-grid .b-value { font-weight: 600; color: #222; }
+
+    /* =========================
+       NOTES (compact)
+    ========================== */
+
+    .notes-section {
+      padding: 3px 10px;
+      border-top: 1px dashed #c5cae9;
+      margin-top: 2px;
+    }
+
+    .notes-section .note-item {
+      font-size: 7.5px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    /* =========================
+       SIGNATURE (compact)
+    ========================== */
+
+    .signature-section {
+      padding: 3px 10px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+    }
+
+    .signature-section .sig-left {
+      font-size: 7.5px;
+      color: #888;
+    }
+
+    .signature-section .sig-right {
+      text-align: center;
+    }
+
+    .signature-section .sig-right .for-company {
+      font-weight: 700;
+      font-size: 9px;
+      color: #1a237e;
+    }
+
+    .signature-section .sig-right .sig-line {
+      margin-top: 18px;
+      border-top: 1px solid #999;
+      padding-top: 2px;
+      font-size: 8px;
+      color: #555;
+    }
+
+    /* =========================
+       RECEIPT (compact)
+    ========================== */
+/* =========================
+   RECEIPT (FIXED ALIGNMENT)
+========================== */
+
+.receipt-section {
+  margin-top: 8px;
+  border-top: 2px dashed #1a237e;
+  padding: 12px 16px 16px;
+  width: 100%;
+  clear: both;
+}
+
+.receipt-header {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.receipt-header table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.receipt-badge {
+  background: #1a237e;
+  color: #fff;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 4px 18px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.receipt-ref {
+  text-align: right;
+  font-size: 8px;
+  color: #555;
+}
+
+.receipt-body {
+  margin-top: 10px;
+  font-size: 10px;
+  line-height: 1.8;
+  color: #222;
+  width: 100%;
+}
+
+.receipt-body strong {
+  color: #000;
+}
+
+.receipt-body .rcpt-words {
+  font-weight: 700;
+  color: #1a237e;
+  font-size: 10px;
+}
+
+.receipt-dotted {
+  display: inline-block;
+  min-width: 140px;
+  border-bottom: 1px dashed #999;
+  height: 12px;
+}
+
+.receipt-amount-box {
+  margin-top: 14px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.receipt-amount-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.receipt-amount-table td {
+  vertical-align: middle;
+}
+
+.rcpt-amt-label {
+  font-weight: 700;
+  font-size: 10px;
+  color: #000;
+}
+
+.rcpt-amt-value {
+  border: 2px solid #1a237e;
+  padding: 6px 14px;
+  font-weight: 800;
+  font-size: 18px;
+  color: #1a237e;
+  text-align: left;
+}
+
+.receipt-footer {
+  margin-top: 20px;
+  width: 100%;
+  text-align: right;
+}
+
+.receipt-footer .for-company {
+  font-weight: 700;
+  color: #1a237e;
+  font-size: 10px;
+}
+
+.receipt-footer .sig-line {
+  margin-top: 18px;
+  border-top: 1px solid #999;
+  padding-top: 4px;
+  font-size: 8px;
+  color: #555;
+  display: inline-block;
+  min-width: 180px;
+  text-align: center;
+}
+  </style>
+</head>
+<body>
+
+<div class="bill-container">
+
+  <!-- =========================
+       HEADER (Letterhead)
+  ========================== -->
+
+  <div class="header">
+    <h1><%= @company_data[:company_name] %></h1>
+    <% if @company_data[:address].present? %>
+      <div class="address-line"><%= @company_data[:address] %></div>
+    <% end %>
+    <div class="address-line">
+      <%= [@company_data[:city], @company_data[:state], @company_data[:pincode]].compact.join(', ') %>
+      <% if @company_data[:email].present? %> | Email: <%= @company_data[:email] %><% end %>
+      <% if @company_data[:phone].present? %> | <%= @company_data[:phone] %><% end %>
+    </div>
+    <div class="gst-line">
+      <% if @company_data[:gst_number].present? %>GST: <%= @company_data[:gst_number] %> | <% end %>
+      <% if @company_data[:pan_number].present? %>PAN: <%= @company_data[:pan_number] %><% end %>
+      <% if @company_data[:site_name].present? %> | Site: <%= @company_data[:site_name] %><% end %>
+    </div>
+  </div>
+
+  <!-- =========================
+       BILL TITLE
+  ========================== -->
+
+  <div class="bill-title">
+    MAINTENANCE BILL | <%= @from_date.strftime('%B %Y') %>
+  </div>
+
+  <!-- =========================
+       DETAILS GRID
+  ========================== -->
+
+  <div class="details-section">
+    <table class="details-grid">
+      <tr>
+        <td class="highlight-cell" width="50%">
+          <span class="label">Flat / Unit No.</span>
+          <div class="value"><%= @unit.name %></div>
+        </td>
+        <td class="highlight-cell" width="50%">
+          <span class="label">Bill No.</span>
+          <div class="value"><%= @bill_number || "CAM/#{@unit.name}/#{Date.today.strftime('%b%y')}/#{Time.now.to_i % 10000}" %></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="label">Owner / Occupant</span>
+          <div class="value"><%= @unit_owner_name.presence || 'N/A' %></div>
+        </td>
+        <td>
+          <span class="label">Bill Date</span>
+          <div class="value"><%= Date.today.strftime('%d/%m/%Y') %></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="label">Carpet Area</span>
+          <div class="value"><%= number_with_precision(@report_data[:unit][:carpet_area], precision: 2) rescue 0 %> sq.ft.</div>
+        </td>
+        <td>
+          <span class="label">Due Date</span>
+          <div class="value" style="color:#c62828;"><%= (@due_date || Date.today + 15.days).strftime('%d/%m/%Y') %></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="label">Period</span>
+          <div class="value"><%= @from_date.strftime('%d %b %Y') %> &ndash; <%= @to_date.strftime('%d %b %Y') %></div>
+        </td>
+        <td>
+          <span class="label">Allocation Basis</span>
+          <div class="value">Active Days (<%= number_with_precision(@report_data[:unit][:share_percentage], precision: 2) %>% share)</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- =========================
+       CHARGES TABLE
+  ========================== -->
+
+  <div class="charges-section">
+    <table class="charges-table">
+      <thead>
+        <tr>
+          <th width="8%">Sr.</th>
+          <th width="67%">Particulars</th>
+          <th width="25%">Amount (₹)</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <% total_amount = 0 %>
+
+        <% if @report_data[:expenses][:breakdown].present? && @report_data[:expenses][:breakdown].any? %>
+
+          <% @report_data[:expenses][:breakdown].each_with_index do |expense, idx| %>
+            <% total_amount += expense[:amount].to_f %>
+            <tr>
+              <td class="text-center"><%= idx + 1 %></td>
+              <td><%= expense[:name] %></td>
+              <td><%= number_with_precision(expense[:amount], precision: 2, delimiter: ',') %></td>
+            </tr>
+          <% end %>
+
+        <% else %>
+
+          <tr>
+            <td class="text-center">1</td>
+            <td>CAM Maintenance Charges</td>
+            <td>0.00</td>
+          </tr>
+
+        <% end %>
+
+        <!-- Total row -->
+        <tr class="total-row">
+          <td colspan="2" style="text-align:right; padding-right:12px;">Total Charges</td>
+          <td>₹ <%= number_with_precision(total_amount, precision: 2, delimiter: ',') %></td>
+        </tr>
+
+        <!-- Arrears -->
+        <tr class="arrears-row">
+          <td colspan="2" style="text-align:right; padding-right:12px;">(+) Arrears if any</td>
+          <td>0.00</td>
+        </tr>
+
+        <!-- Grand Total -->
+        <tr class="grand-total-row">
+          <td colspan="2" style="text-align:right; padding-right:12px;">AMOUNT DUE</td>
+          <td>₹ <%= number_with_precision(total_amount, precision: 2, delimiter: ',') %></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- =========================
+       BOTTOM AREA
+  ========================== -->
+
+  <div class="bottom-area">
+    <div class="left-panel">
+      <div class="amount-words-box">
+        <div class="words-label">Amount in Words</div>
+        <div class="words-value">
+          Rupees <%= total_amount.to_i.to_words.titleize rescue 'Zero' %> Only
+        </div>
+      </div>
+      <div class="payment-stripe">
+        <div class="pay-label">Payment Instructions</div>
+        <div class="pay-detail">
+          Pay on or before due date.
+          <% if @company_data[:bank_name].present? %>
+            Cheque / DD in favour of <strong><%= @company_data[:favouring_name].presence || @company_data[:company_name] %></strong>.
+          <% end %>
+          Interest @21% p.a. on overdue amount.
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <table class="summary-table">
+        <tr>
+          <td class="summary-label">Total Charges</td>
+          <td>₹ <%= number_with_precision(total_amount, precision: 2, delimiter: ',') %></td>
+        </tr>
+        <tr>
+          <td class="sub-label">Add: Arrears</td>
+          <td>0.00</td>
+        </tr>
+        <tr class="amount-due-row">
+          <td>NET AMOUNT DUE</td>
+          <td>₹ <%= number_with_precision(total_amount, precision: 2, delimiter: ',') %></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- =========================
+       BANK DETAILS
+  ========================== -->
+
+  <% if @company_data[:bank_name].present? || @company_data[:account_number].present? %>
+  <div class="bank-section">
+    <div class="bank-header">Bank Account Details</div>
+    <table class="bank-grid">
+      <% if @company_data[:favouring_name].present? %>
+        <tr>
+          <td class="b-label">Favouring Name</td>
+          <td class="b-value"><%= @company_data[:favouring_name] %></td>
+          <td class="b-label">Bank</td>
+          <td class="b-value"><%= @company_data[:bank_name] %></td>
+        </tr>
+      <% else %>
+        <tr><td class="b-label">Bank</td><td class="b-value"><%= @company_data[:bank_name] %></td><td></td><td></td></tr>
+      <% end %>
+      <tr>
+        <td class="b-label">Branch</td>
+        <td class="b-value"><%= @company_data[:branch_name] %></td>
+        <td class="b-label">A/C No.</td>
+        <td class="b-value"><%= @company_data[:account_number] %></td>
+      </tr>
+      <tr>
+        <td class="b-label">IFSC</td>
+        <td class="b-value"><%= @company_data[:ifsc_code] %></td>
+        <% if @company_data[:account_type].present? %>
+          <td class="b-label">Type</td>
+          <td class="b-value"><%= @company_data[:account_type] %></td>
+        <% elsif @company_data[:swift_code].present? %>
+          <td class="b-label">SWIFT</td>
+          <td class="b-value"><%= @company_data[:swift_code] %></td>
+        <% else %>
+          <td></td><td></td>
+        <% end %>
+      </tr>
+    </table>
+  </div>
+  <% end %>
+
+  <!-- =========================
+       NOTES
+  ========================== -->
+
+  <div class="notes-section">
+    <% @pdf_remarks.each_with_index do |remark, idx| %>
+      <% next if remark.blank? %>
+      <div class="note-item"><strong><%= idx + 1 %>.</strong> <%= remark %></div>
+    <% end %>
+  </div>
+
+  <!-- =========================
+       SIGNATURE
+  ========================== -->
+
+  <div class="signature-section">
+    <div class="sig-left">Computer generated statement</div>
+    <div class="sig-right">
+      <div class="for-company">For <%= @company_data[:company_name] %></div>
+      <div class="sig-line">Chairman / Hon. Secretary / Treasurer</div>
+    </div>
+  </div>
+
+  <!-- =========================
+       RECEIPT
+  ========================== -->
+
+ <div class="receipt-section">
+
+  <div class="receipt-header">
+    <table>
+      <tr>
+        <td>
+          <span class="receipt-badge">RECEIPT</span>
+        </td>
+
+        <td class="receipt-ref">
+          No: <%= @receipt_number || "RCP/#{Date.today.year}/#{Time.now.to_i % 100000}" %>
+          |
+          <%= Date.today.strftime('%d/%m/%Y') %>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="receipt-body">
+    Received from
+    <strong>[ <%= @unit.name %> ] <%= @unit_owner_name.presence || "N/A" %></strong>
+
+    — Rupees
+    <span class="rcpt-words">
+      <%= total_amount.to_i.to_words.titleize rescue 'Zero' %> Only
+    </span>
+
+    <br><br>
+
+    By Cheque / DD No.
+    <span class="receipt-dotted"></span>
+
+    &nbsp;&nbsp;&nbsp;
+
+    Dated
+    <span class="receipt-dotted" style="min-width:100px;"></span>
+  </div>
+
+  <div class="receipt-amount-box">
+    <table class="receipt-amount-table">
+      <tr>
+        <td class="rcpt-amt-label">
+          Amount: ₹ <%= number_with_precision(total_amount, precision: 2, delimiter: ',') %>
+        </td>
+
+        <td width="260">
+          <div class="rcpt-amt-value">
+            ₹ <%= number_with_precision(total_amount, precision: 2, delimiter: ',') %> -/
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="receipt-footer">
+    <div class="for-company">
+      For <%= @company_data[:company_name] %>
+    </div>
+
+    <div class="sig-line">
+      Authorised Signatory
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

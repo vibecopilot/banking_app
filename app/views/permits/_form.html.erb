@@ -1,0 +1,112 @@
+<%= form_with(model: permit, local: true) do |form| %>
+  <% if permit.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(permit.errors.count, "error") %> prohibited this permit from being saved:</h2>
+
+      <ul>
+      <% permit.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :permit_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contact_number %>
+    <%= form.text_field :contact_number, id: :permit_contact_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :permit_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit_id %>
+    <%= form.number_field :unit_id, id: :permit_unit_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :permit_for %>
+    <%= form.text_field :permit_for, id: :permit_permit_for %>
+  </div>
+
+  <div class="field">
+    <%= form.label :building_id %>
+    <%= form.number_field :building_id, id: :permit_building_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :floor_id %>
+    <%= form.number_field :floor_id, id: :permit_floor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :room_id %>
+    <%= form.number_field :room_id, id: :permit_room_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :client_specific %>
+    <%= form.text_field :client_specific, id: :permit_client_specific %>
+  </div>
+
+  <div class="field">
+    <%= form.label :entity %>
+    <%= form.text_field :entity, id: :permit_entity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :copy_to_string %>
+    <%= form.text_field :copy_to_string, id: :permit_copy_to_string %>
+  </div>
+
+  <div class="field">
+    <%= form.label :permit_type %>
+    <%= form.text_field :permit_type, id: :permit_permit_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vendor_id %>
+    <%= form.number_field :vendor_id, id: :permit_vendor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :issue_date_and_time %>
+    <%= form.datetime_select :issue_date_and_time, id: :permit_issue_date_and_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :expiry_date_and_time %>
+    <%= form.datetime_select :expiry_date_and_time, id: :permit_expiry_date_and_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comment %>
+    <%= form.text_area :comment, id: :permit_comment %>
+  </div>
+
+  <div class="field">
+    <%= form.label :permit_status %>
+    <%= form.text_field :permit_status, id: :permit_permit_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :extention_status %>
+    <%= form.check_box :extention_status, id: :permit_extention_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :permit_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

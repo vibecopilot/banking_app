@@ -1,0 +1,37 @@
+<%= form_with(model: asset_group_param, local: true) do |form| %>
+  <% if asset_group_param.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(asset_group_param.errors.count, "error") %> prohibited this asset_group_param from being saved:</h2>
+
+      <ul>
+      <% asset_group_param.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :asset_group_param_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :order %>
+    <%= form.number_field :order, id: :asset_group_param_order %>
+  </div>
+
+  <div class="field">
+    <%= form.label :dashboard_view %>
+    <%= form.check_box :dashboard_view, id: :asset_group_param_dashboard_view %>
+  </div>
+
+  <div class="field">
+    <%= form.label :consumption_view %>
+    <%= form.check_box :consumption_view, id: :asset_group_param_consumption_view %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

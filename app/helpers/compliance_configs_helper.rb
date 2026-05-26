@@ -1,0 +1,2 @@
+module ComplianceConfigsHelper
+end

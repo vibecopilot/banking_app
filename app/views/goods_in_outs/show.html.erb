@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Visitor:</strong>
+  <%= @goods_in_out.visitor_id %>
+</p>
+
+<p>
+  <strong>No of goods:</strong>
+  <%= @goods_in_out.no_of_goods %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @goods_in_out.description %>
+</p>
+
+<p>
+  <strong>Ward type:</strong>
+  <%= @goods_in_out.ward_type %>
+</p>
+
+<p>
+  <strong>Vehicle no:</strong>
+  <%= @goods_in_out.vehicle_no %>
+</p>
+
+<p>
+  <strong>Person name:</strong>
+  <%= @goods_in_out.person_name %>
+</p>
+
+<p>
+  <strong>Goods in time:</strong>
+  <%= @goods_in_out.goods_in_time %>
+</p>
+
+<p>
+  <strong>Goods out time:</strong>
+  <%= @goods_in_out.goods_out_time %>
+</p>
+
+<p>
+  <strong>Staff:</strong>
+  <%= @goods_in_out.staff_id %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @goods_in_out.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_goods_in_out_path(@goods_in_out) %> |
+<%= link_to 'Back', goods_in_outs_path %>

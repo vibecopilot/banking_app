@@ -1,0 +1,66 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @soft_service.site_id %>
+</p>
+
+<p>
+  <strong>Building:</strong>
+  <%= @soft_service.building_id %>
+</p>
+
+<p>
+  <strong>Floor:</strong>
+  <%= @soft_service.floor_id %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @soft_service.unit_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @soft_service.name %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @soft_service.user_id %>
+</p>
+
+<p>
+  <strong>Generic Info:</strong>
+  <% if GenericInfo.exists?(@soft_service.generic_info_id) %>
+    <%= GenericInfo.find(@soft_service.generic_info_id)&.name %>
+  <% else %>
+    No Generic Info found
+  <% end %>
+</p>
+
+<p>
+  <strong>Generic Info:</strong>
+  <% if GenericSubInfo.exists?(@soft_service.generic_sub_info_id) %>
+    <%= GenericSubInfo.find(@soft_service.generic_sub_info_id)&.name %>
+  <% else %>
+    No Generic Sub Info found
+  <% end %>
+</p>
+
+<p>
+  <strong>Export Log Data:</strong>
+  <%= link_to 'Download Excel', download_log_excel_soft_service_path(@soft_service, format: :xlsx) %>
+</p>
+
+
+<% if @soft_service.qr_code_image.present? %>
+  <div>
+    <p><strong>QR Code:</strong></p>
+    <%= image_tag @soft_service.qr_code_image.image.url, alt: "QR Code" %>
+    <%= link_to "Download QR Code", soft_service_path(@soft_service, format: :png), class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<%= link_to 'Edit', edit_soft_service_path(@soft_service) %> |
+<%= link_to 'Back', soft_services_path %>

@@ -1,0 +1,29 @@
+<% site_asset = SiteAsset.find_by(id: params[:asset_id]) %>
+<div class="row">
+  <div class="col-sm-4">
+    <h5>Asset: <%= site_asset.name %></h5>
+  </div>
+</div>
+<%= form_with(model: @submission, local: true) do |form| %>
+  <%= form.hidden_field :asset_id, id: :submission_asset_id, value: params[:asset_id] %>
+  <input type="hidden" name="for_asset_params" value="true" >
+	<% site_asset.asset_params.order(:order).each do |question|%>
+		<div class="row">
+		  <div class="col-sm-4">
+		    <div class="field text-left mb-3">
+		      <%= form.label "#{question.name}" %>
+		      <input type="hidden" name="asset_params[][asset_param_id]" value="<%= question.id %>" >
+
+		      <input type="text" name="asset_params[][value]" required=true maxlength="<%= question.digit %>  " >
+		    </div>
+		  </div>
+		</div>
+	<%end%>
+<div class="row">
+	<div class="col-sm-4">
+		<div class="actions">
+	    <%= form.submit "Submit" %>
+	  </div>
+  </div>
+</div>
+<%end%>

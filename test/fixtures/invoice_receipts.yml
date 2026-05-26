@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  receipt_number: MyString
+  invoice_number: MyString
+  building_id: 1
+  unit_id: 1
+  address_id: 1
+  payment_mode: MyString
+  amount_received: 9.99
+  transaction_or_cheque_number: MyString
+  bank_name: MyString
+  branch_name: MyString
+  payment_date: 2024-12-26
+  receipt_date: 2024-12-26
+  notes: MyText
+
+two:
+  receipt_number: MyString
+  invoice_number: MyString
+  building_id: 1
+  unit_id: 1
+  address_id: 1
+  payment_mode: MyString
+  amount_received: 9.99
+  transaction_or_cheque_number: MyString
+  bank_name: MyString
+  branch_name: MyString
+  payment_date: 2024-12-26
+  receipt_date: 2024-12-26
+  notes: MyText

@@ -1,0 +1,55 @@
+<p id="notice"><%= notice %></p>
+<% aid = params[:asset_id] || @submission&.asset_id
+  cid = params[:checklist_id] || @submission&.checklist_id
+  if cid.present?
+    acts =Submission.where(asset_id: aid, checklist_id: cid).pluck(:activity_id).uniq
+  else
+    acts =Submission.where(asset_id: aid).pluck(:activity_id).uniq
+  end
+ activities = Activity.where(id: acts)%>
+
+<div class="col-sm-12">
+    <h4 class="pull-left" style="width: 100%; text-align: left;"> Report  <hr></h4>
+  </div>
+<div class="ml-2  mr-2">
+  
+<div id="toolbar">
+</div>
+<table class="table " id="user_setup" data-toggle="table" data-pagination="true" data-search="true" data-trim-on-search="false" data-show-columns="true" data-show-refresh="true" data-sortable="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+  <thead>
+    <tr>
+      <th>Asset</th>
+      <th>Checklist</th>
+      <th>Activities Performed</th>
+      <th>Questions Submitted </th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%
+    @submissions = Submission.ransack(site_asset_site_id_eq: @user.current_site_id, asset_id_eq: aid).result.pluck(:asset_id, :checklist_id).uniq
+  %>
+    <% @submissions.each do |aid, cid| %>
+      <tr>
+        <td><%= SiteAsset.find_by(id: aid).name %></td>
+        <td><%= Checklist.unscoped.find_by(id: cid).try(:name) %></td>
+        <td><%= Submission.where(asset_id: aid, checklist_id: cid).pluck(:activity_id).uniq.count %></td>
+        <td><%= Submission.where(asset_id: aid, checklist_id: cid).count %></td>
+        <td><a href="/checklists/<%= cid%>?asset_id=<%= aid%>">View Report</a></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<% activities.last(5).each do |act| %>
+  <div class="timeline-date"><strong><%= Checklist.unscoped.find_by(id: act.checklist_id).try(:name)  %> </strong> : <%= Submission.find_by(activity_id: act.id).try(:created_at).try(:strftime, "%b %d, %Y %l:%M %p")%></div>
+  <% Submission.where(activity_id: act.id).each do |log| %>
+    <div class="feed-element" style="text-align: left;">
+      <div class="media-body">
+        <strong><%= log.question.try(:name) %></strong>: <%= log.value %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,32 @@
+<%= form_with(model: fitout_document, local: true) do |form| %>
+  <% if fitout_document.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(fitout_document.errors.count, "error") %> prohibited this fitout_document from being saved:</h2>
+
+      <ul>
+      <% fitout_document.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :fitout_category %>
+    <%= form.text_field :fitout_category, id: :fitout_document_fitout_category %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.check_box :active, id: :fitout_document_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :fitout_document_name %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

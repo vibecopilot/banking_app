@@ -1,0 +1,47 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Hsns</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Category</th>
+      <th>Code</th>
+      <th>Sgst rate</th>
+      <th>Cgst rate</th>
+      <th>Igst rate</th>
+      <th>Active</th>
+      <th>Created by</th>
+      <th>Updated by</th>
+      <th>Company</th>
+      <th>Hsn type</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @hsns.each do |hsn| %>
+      <tr>
+        <td><%= hsn.type %></td>
+        <td><%= hsn.category %></td>
+        <td><%= hsn.code %></td>
+        <td><%= hsn.sgst_rate %></td>
+        <td><%= hsn.cgst_rate %></td>
+        <td><%= hsn.igst_rate %></td>
+        <td><%= hsn.active %></td>
+        <td><%= hsn.created_by %></td>
+        <td><%= hsn.updated_by %></td>
+        <td><%= hsn.company_id %></td>
+        <td><%= hsn.hsn_type %></td>
+        <td><%= link_to 'Show', hsn %></td>
+        <td><%= link_to 'Edit', edit_hsn_path(hsn) %></td>
+        <td><%= link_to 'Destroy', hsn, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Hsn', new_hsn_path %>

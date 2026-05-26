@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  content: MyString
+  folder_id: 1
+  site_id: 1
+  uploaded_by: 1
+  folder_type: MyString
+  of_phase: MyString
+  unit_id: 1
+  heavy_video_url: MyString
+
+two:
+  content: MyString
+  folder_id: 1
+  site_id: 1
+  uploaded_by: 1
+  folder_type: MyString
+  of_phase: MyString
+  unit_id: 1
+  heavy_video_url: MyString

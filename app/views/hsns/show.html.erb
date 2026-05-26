@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @hsn.type %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @hsn.category %>
+</p>
+
+<p>
+  <strong>Code:</strong>
+  <%= @hsn.code %>
+</p>
+
+<p>
+  <strong>Sgst rate:</strong>
+  <%= @hsn.sgst_rate %>
+</p>
+
+<p>
+  <strong>Cgst rate:</strong>
+  <%= @hsn.cgst_rate %>
+</p>
+
+<p>
+  <strong>Igst rate:</strong>
+  <%= @hsn.igst_rate %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @hsn.active %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @hsn.created_by %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @hsn.updated_by %>
+</p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @hsn.company_id %>
+</p>
+
+<p>
+  <strong>Hsn type:</strong>
+  <%= @hsn.hsn_type %>
+</p>
+
+<%= link_to 'Edit', edit_hsn_path(@hsn) %> |
+<%= link_to 'Back', hsns_path %>

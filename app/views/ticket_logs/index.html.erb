@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Ticket Logs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ticket</th>
+      <th>Created by</th>
+      <th>Status</th>
+      <th>Log type</th>
+      <th>Remarks</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ticket_logs.each do |ticket_log| %>
+      <tr>
+        <td><%= ticket_log.ticket_id %></td>
+        <td><%= ticket_log.created_by_id %></td>
+        <td><%= ticket_log.status %></td>
+        <td><%= ticket_log.log_type %></td>
+        <td><%= ticket_log.remarks %></td>
+        <td><%= link_to 'Show', ticket_log %></td>
+        <td><%= link_to 'Edit', edit_ticket_log_path(ticket_log) %></td>
+        <td><%= link_to 'Destroy', ticket_log, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Ticket Log', new_ticket_log_path %>

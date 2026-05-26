@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Additional Passengers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Gender</th>
+      <th>Flight request</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @additional_passengers.each do |additional_passenger| %>
+      <tr>
+        <td><%= additional_passenger.name %></td>
+        <td><%= additional_passenger.gender %></td>
+        <td><%= additional_passenger.flight_request_id %></td>
+        <td><%= link_to 'Show', additional_passenger %></td>
+        <td><%= link_to 'Edit', edit_additional_passenger_path(additional_passenger) %></td>
+        <td><%= link_to 'Destroy', additional_passenger, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Additional Passenger', new_additional_passenger_path %>

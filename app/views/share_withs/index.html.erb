@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Share Withs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Shared by</th>
+      <th>Folder</th>
+      <th>Document</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @share_withs.each do |share_with| %>
+      <tr>
+        <td><%= share_with.user_id %></td>
+        <td><%= share_with.shared_by %></td>
+        <td><%= share_with.folder_id %></td>
+        <td><%= share_with.document_id %></td>
+        <td><%= link_to 'Show', share_with %></td>
+        <td><%= link_to 'Edit', edit_share_with_path(share_with) %></td>
+        <td><%= link_to 'Destroy', share_with, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Share With', new_share_with_path %>

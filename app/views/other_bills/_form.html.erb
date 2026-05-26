@@ -1,0 +1,128 @@
+<%= form_with(model: other_bill, local: true, multipart: true) do |form| %>
+  <% if other_bill.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(other_bill.errors.count, "error") %> prohibited this other_bill from being saved:</h2>
+
+      <ul>
+      <% other_bill.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :vendor_id %>
+    <%= form.number_field :vendor_id, id: :other_bill_vendor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :bill_date %>
+    <%= form.date_select :bill_date, id: :other_bill_bill_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :invoice_number %>
+    <%= form.text_field :invoice_number, id: :other_bill_invoice_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :related_to %>
+    <%= form.text_field :related_to, id: :other_bill_related_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tds_percentage %>
+    <%= form.text_field :tds_percentage, id: :other_bill_tds_percentage %>
+  </div>
+
+  <div class="field">
+    <%= form.label :retention_percentage %>
+    <%= form.text_field :retention_percentage, id: :other_bill_retention_percentage %>
+  </div>
+
+  <div class="field">
+    <%= form.label :deduction_remarks %>
+    <%= form.text_field :deduction_remarks, id: :other_bill_deduction_remarks %>
+  </div>
+
+  <div class="field">
+    <%= form.label :deduction_amount %>
+    <%= form.text_field :deduction_amount, id: :other_bill_deduction_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :additional_expenses %>
+    <%= form.text_field :additional_expenses, id: :other_bill_additional_expenses %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_tenure %>
+    <%= form.number_field :payment_tenure, id: :other_bill_payment_tenure %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cgst_rate %>
+    <%= form.text_field :cgst_rate, id: :other_bill_cgst_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cgst_amount %>
+    <%= form.text_field :cgst_amount, id: :other_bill_cgst_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sgst_rate %>
+    <%= form.text_field :sgst_rate, id: :other_bill_sgst_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sgst_amount %>
+    <%= form.text_field :sgst_amount, id: :other_bill_sgst_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :igst_rate %>
+    <%= form.text_field :igst_rate, id: :other_bill_igst_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :igst_amount %>
+    <%= form.text_field :igst_amount, id: :other_bill_igst_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tcs_rate %>
+    <%= form.text_field :tcs_rate, id: :other_bill_tcs_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tcs_amount %>
+    <%= form.text_field :tcs_amount, id: :other_bill_tcs_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tax_amount %>
+    <%= form.text_field :tax_amount, id: :other_bill_tax_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :total_amount %>
+    <%= form.text_field :total_amount, id: :other_bill_total_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :other_bill_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attachfiles %>
+    <%= form.file_field :attachfiles %>
+  </div>  
+
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Checklist:</strong>
+  <%= @checklist_cron.checklist_id %>
+</p>
+
+<p>
+  <strong>Expression:</strong>
+  <%= @checklist_cron.expression %>
+</p>
+
+<%= link_to 'Edit', edit_checklist_cron_path(@checklist_cron) %> |
+<%= link_to 'Back', checklist_crons_path %>

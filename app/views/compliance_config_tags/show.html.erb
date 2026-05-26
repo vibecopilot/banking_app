@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Compliance tag:</strong>
+  <%= @compliance_config_tag.compliance_tag_id %>
+</p>
+
+<p>
+  <strong>Compliance config:</strong>
+  <%= @compliance_config_tag.compliance_config_id %>
+</p>
+
+<%= link_to 'Edit', edit_compliance_config_tag_path(@compliance_config_tag) %> |
+<%= link_to 'Back', compliance_config_tags_path %>

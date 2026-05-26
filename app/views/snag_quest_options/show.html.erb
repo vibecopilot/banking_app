@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Question:</strong>
+  <%= @snag_quest_option.question_id %>
+</p>
+
+<p>
+  <strong>Qname:</strong>
+  <%= @snag_quest_option.qname %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @snag_quest_option.active %>
+</p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @snag_quest_option.company_id %>
+</p>
+
+<p>
+  <strong>Option type:</strong>
+  <%= @snag_quest_option.option_type %>
+</p>
+
+<%= link_to 'Edit', edit_snag_quest_option_path(@snag_quest_option) %> |
+<%= link_to 'Back', snag_quest_options_path %>

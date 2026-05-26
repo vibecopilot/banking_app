@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Field Sense Leads Managements</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Lead name</th>
+      <th>Lead source</th>
+      <th>Contact phone</th>
+      <th>Contact email</th>
+      <th>Company name</th>
+      <th>Lead status</th>
+      <th>Assigned sales representative</th>
+      <th>Last contact date</th>
+      <th>Next follow up date</th>
+      <th>Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @field_sense_leads_managements.each do |field_sense_leads_management| %>
+      <tr>
+        <td><%= field_sense_leads_management.lead_name %></td>
+        <td><%= field_sense_leads_management.lead_source %></td>
+        <td><%= field_sense_leads_management.contact_phone %></td>
+        <td><%= field_sense_leads_management.contact_email %></td>
+        <td><%= field_sense_leads_management.company_name %></td>
+        <td><%= field_sense_leads_management.lead_status %></td>
+        <td><%= field_sense_leads_management.assigned_sales_representative %></td>
+        <td><%= field_sense_leads_management.last_contact_date %></td>
+        <td><%= field_sense_leads_management.next_follow_up_date %></td>
+        <td><%= field_sense_leads_management.created_by_id %></td>
+        <td><%= link_to 'Show', field_sense_leads_management %></td>
+        <td><%= link_to 'Edit', edit_field_sense_leads_management_path(field_sense_leads_management) %></td>
+        <td><%= link_to 'Destroy', field_sense_leads_management, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Field Sense Leads Management', new_field_sense_leads_management_path %>

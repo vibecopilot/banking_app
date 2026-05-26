@@ -1,0 +1,52 @@
+<%= form_with(model: seat_booking, local: true) do |form| %>
+  <% if seat_booking.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(seat_booking.errors.count, "error") %> prohibited this seat_booking from being saved:</h2>
+
+      <ul>
+      <% seat_booking.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :book_type %>
+    <%= form.select :book_type, ["Self", "Others"], id: :seat_booking_book_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.collection_select :user_id, User.all, :id, :full_name, prompt: "Select a user", id: :seat_booking_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_date %>
+    <%= form.date_select :booking_date, id: :seat_booking_booking_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :building_id %>
+    <%= form.number_field :building_id, id: :seat_booking_building_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :floor_id %>
+    <%= form.number_field :floor_id, id: :seat_booking_floor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_status %>
+    <%= form.check_box :booking_status, id: :seat_booking_booking_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :seat_booking_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

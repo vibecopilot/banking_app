@@ -1,0 +1,57 @@
+<%= form_with(model: folder_document, local: true) do |form| %>
+  <% if folder_document.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(folder_document.errors.count, "error") %> prohibited this folder_document from being saved:</h2>
+
+      <ul>
+      <% folder_document.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :content %>
+    <%= form.text_field :content, id: :folder_document_content %>
+  </div>
+
+  <div class="field">
+    <%= form.label :folder_id %>
+    <%= form.number_field :folder_id, id: :folder_document_folder_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :folder_document_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :uploaded_by %>
+    <%= form.number_field :uploaded_by, id: :folder_document_uploaded_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :folder_type %>
+    <%= form.text_field :folder_type, id: :folder_document_folder_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :of_phase %>
+    <%= form.text_field :of_phase, id: :folder_document_of_phase %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit_id %>
+    <%= form.number_field :unit_id, id: :folder_document_unit_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :heavy_video_url %>
+    <%= form.text_field :heavy_video_url, id: :folder_document_heavy_video_url %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,113 @@
+<p id="notice"><%= notice %></p>
+
+<div class="visitor-details">
+  <h1>Visitor Details</h1>
+
+  <div class="profile-picture">
+    <h2>Profile Picture</h2>
+    <% if @visitor.profile_pic.present? %>
+      <%= image_tag @visitor.profile_pic.image.url, class: 'profile-pic' %>
+    <% else %>
+      <p>No profile picture available</p>
+    <% end %>
+  </div>
+
+  <div class="visitor-info">
+    <p>
+      <strong>Name:</strong>
+      <%= @visitor.name %>
+    </p>
+
+    <p>
+      <strong>Contact no:</strong>
+      <%= @visitor.contact_no %>
+    </p>
+
+    <p>
+      <strong>Purpose:</strong>
+      <%= @visitor.purpose %>
+    </p>
+
+    <p>
+      <strong>Site:</strong>
+      <%= @visitor.site.name %>
+    </p>
+
+    <p>
+      <strong>OTP:</strong>
+      <%= @visitor.otp %>
+    </p>
+
+    <p>
+      <strong>Status:</strong>
+      <%= @visitor.status %>
+    </p>
+
+    <p>
+      <strong>Start pass:</strong>
+      <%= @visitor.start_pass&.strftime("%Y-%m-%d %H:%M") %>
+    </p>
+
+    <p>
+      <strong>End pass:</strong>
+      <%= @visitor.end_pass&.strftime("%Y-%m-%d %H:%M") %>
+    </p>
+  </div>
+
+  <div class="qr-code">
+    <h2>QR Code</h2>
+    <% if @visitor.qr_code_image.present? %>
+      <%= image_tag @visitor.qr_code_image.image.url, class: 'qr-code-image' %>
+    <% else %>
+      <p>No QR code available</p>
+    <% end %>
+  </div>
+
+  <div class="visitor-files">
+    <h2>Visitor Files</h2>
+    <% if @visitor.visitor_files.any? %>
+      <ul>
+        <% @visitor.visitor_files.each do |file| %>
+          <li><%= link_to file.image_file_name, file.image.url, target: '_blank' %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No files uploaded</p>
+    <% end %>
+  </div>
+</div>
+
+<div class="actions">
+  <%= link_to 'Edit', edit_visitor_path(@visitor), class: 'btn' %>
+  <%= link_to 'Back', visitors_path, class: 'btn' %>
+</div>
+
+<style>
+  .visitor-details {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .profile-pic {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .qr-code-image {
+    max-width: 200px;
+    max-height: 200px;
+  }
+  .btn {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 10px 5px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  .btn:hover {
+    background-color: #0056b3;
+  }
+</style>

@@ -1,0 +1,136 @@
+wb = xlsx_package.workbook
+
+# Summary Sheet
+wb.add_worksheet(name: "Summary") do |sheet|
+  # Calculate summary statistics
+  total_visitors = @visitors.count
+  active_visitors = @visitors.where(status: true).count
+  inactive_visitors = @visitors.where(status: false).count
+  
+  # Today's statistics
+  today_start = Date.current.beginning_of_day
+  today_end = Date.current.end_of_day
+  
+  # Get site_id from the visitors query to handle multiple sites
+  site_ids = @visitors.unscoped.where(id: @visitors.select(:id)).distinct.pluck(:site_id)
+  
+  today_checkins = VisitorVisit.joins(:visitor)
+    .where(visitors: { site_id: site_ids })
+    .where(check_in: today_start..today_end)
+    .count
+    
+  today_checkouts = VisitorVisit.joins(:visitor)
+    .where(visitors: { site_id: site_ids })
+    .where(check_out: today_start..today_end)
+    .count
+  
+  currently_in = VisitorVisit.joins(:visitor)
+    .where(visitors: { site_id: site_ids })
+    .where(check_out: nil)
+    .where('check_in >= ?', today_start)
+    .count
+  
+  # All time statistics
+  total_checkins = VisitorVisit.joins(:visitor)
+    .where(visitors: { site_id: site_ids })
+    .count
+    
+  total_checkouts = VisitorVisit.joins(:visitor)
+    .where(visitors: { site_id: site_ids })
+    .where.not(check_out: nil)
+    .count
+
+  sheet.add_row ["Visitor Statistics Summary"]
+  sheet.add_row []
+  sheet.add_row ["Report Generated:", Time.current.strftime("%Y-%m-%d %H:%M:%S")]
+  sheet.add_row ["Site:", Site.find_by(id: @user.current_site_id)&.name || "Unknown Site"]
+  sheet.add_row []
+  
+  sheet.add_row ["VISITOR COUNTS"]
+  sheet.add_row ["Total Visitors:", total_visitors]
+  sheet.add_row ["Active Visitors:", active_visitors]
+  sheet.add_row ["Inactive Visitors:", inactive_visitors]
+  sheet.add_row []
+  
+  sheet.add_row ["TODAY'S ACTIVITY"]
+  sheet.add_row ["Today's Check-ins:", today_checkins]
+  sheet.add_row ["Today's Check-outs:", today_checkouts]
+  sheet.add_row ["Currently In:", currently_in]
+  sheet.add_row []
+  
+  sheet.add_row ["ALL TIME ACTIVITY"]
+  sheet.add_row ["Total Check-ins:", total_checkins]
+  sheet.add_row ["Total Check-outs:", total_checkouts]
+end
+
+# Detailed Data Sheet
+wb.add_worksheet(name: "Visitor Details") do |sheet|
+  # Define the header row
+  sheet.add_row [
+    "ID", "Name", "Contact Number", "Purpose", "Coming From", "Vehicle Number", 
+    "Visit Type", "Frequency", "Expected Date", "Expected Time", "Pass Start Date", 
+    "Pass End Date", "Status", "Visitor In/Out", "Parking Slot", "Created By", 
+    "Created On", "Site", "Building", "Unit", "Host Name", "Host Contact", 
+    "Staff Category", "Total Check-ins", "Today's Check-ins", "Today's Check-outs",
+    "Last Check-in", "Last Check-out", "Current Status"
+  ]
+
+  @visitors.find_each do |visitor|
+    # Get the primary host information
+    primary_host = visitor.hosts.first
+    
+    # Calculate visit statistics
+    total_checkins = visitor.visitor_visits.count
+    last_visit = visitor.visitor_visits.order(created_at: :desc).first
+    last_checkin = last_visit&.check_in
+    last_checkout = last_visit&.check_out
+    
+    # Get today's visits for today's in/out count
+    today_visits = visitor.visitor_visits.where(created_at: Date.current.beginning_of_day..Date.current.end_of_day)
+    today_checkins = today_visits.count
+    today_checkouts = today_visits.where.not(check_out: nil).count
+    
+    # Determine current visitor status based on latest visit
+    current_status = if last_visit
+      if last_visit.check_out.present?
+        "Out"
+      else
+        "In"
+      end
+    else
+      "Not Visited"
+    end
+
+    sheet.add_row [
+      visitor.id,                                           # ID
+      visitor.name,                                         # Name
+      visitor.contact_no,                                   # Contact Number
+      visitor.purpose,                                      # Purpose
+      visitor.coming_from,                                  # Coming From
+      visitor.vehicle_number,                               # Vehicle Number
+      visitor.visit_type,                                   # Visit Type
+      visitor.frequency,                                    # Frequency
+      visitor.expected_date,                                # Expected Date
+      visitor.expected_time,                                # Expected Time
+      visitor.pass_start_date,                              # Pass Start Date
+      visitor.pass_end_date,                                # Pass End Date
+      visitor.status? ? "Active" : "Inactive",             # Status
+      visitor.visitor_in_out,                               # Visitor In/Out
+      visitor.try(:parking_configuration)&.try(:name),     # Parking Slot
+      visitor.created_by&.full_name,                        # Created By
+      visitor.created_at,                                   # Created On
+      visitor.site&.name,                                   # Site
+      visitor.building_id.present? ? Building.find_by(id: visitor.building_id)&.name : "", # Building
+      visitor.unit_id.present? ? Unit.find_by(id: visitor.unit_id)&.name : "",             # Unit
+      primary_host&.user&.full_name,                        # Host Name
+      primary_host&.user&.mobile,                           # Host Contact
+      visitor.visitor_staff_category&.name,                 # Staff Category
+      total_checkins,                                       # Total Check-ins
+      today_checkins,                                       # Today's Check-ins
+      today_checkouts,                                      # Today's Check-outs
+      last_checkin,                                         # Last Check-in
+      last_checkout,                                        # Last Check-out
+      current_status                                        # Current Status (In/Out/Not Visited)
+    ]
+  end
+end

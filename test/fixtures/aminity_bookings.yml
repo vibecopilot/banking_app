@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: 2024-07-17
+  aminity_id: 1
+  comment: MyText
+  cancellation_policy: MyText
+  terms_and_conditions: MyText
+  payment_method: MyString
+  user_id: 1
+  status: MyString
+  created_by_id: 1
+
+two:
+  date: 2024-07-17
+  aminity_id: 1
+  comment: MyText
+  cancellation_policy: MyText
+  terms_and_conditions: MyText
+  payment_method: MyString
+  user_id: 1
+  status: MyString
+  created_by_id: 1

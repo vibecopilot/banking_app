@@ -1,0 +1,29 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: "Site Assets") do |sheet|
+  sheet.add_row [
+    "ID", "Site ID", "Building ID", "Floor ID", "Unit ID", 
+    "Name", "Serial Number", "Model Number", "Purchased On", 
+    "Purchase Cost", "Warranty Expiry", "User ID", "Critical", 
+    "Breakdown", "Is Meter", "Parent Asset ID", "Active", 
+    "Created At", "Updated At", "Description", "OEM Name", 
+    "Capacity", "Installation", "Warranty Start", "Remarks", 
+    "Vendor ID", "Asset Group ID", "UOM", "Asset Type", 
+    "Asset Sub Group ID", "Equipment ID", "Asset Number", 
+    "Asset Meter Type ID", "Latitude", "Longitude", 
+    "Comprehensive"
+  ]
+  @site_assets.each do |asset|
+    sheet.add_row [
+      asset.id, asset.site_id, asset.building_id, asset.floor_id, asset.unit_id,
+      asset.name, asset.serial_number, asset.model_number, asset.purchased_on,
+      asset.purchase_cost, asset.warranty_expiry, asset.user_id, asset.critical,
+      asset.breakdown == true ? "Breakdown" : "In Use" , asset.is_meter, asset.parent_asset_id, asset.active,
+      asset.created_at, asset.updated_at, asset.description, asset.oem_name,
+      asset.capacity, asset.installation, asset.warranty_start, asset.remarks,
+      asset.vendor_id, asset.asset_group_id, asset.uom, asset.asset_type,
+      asset.asset_sub_group_id, asset.equipemnt_id, asset.asset_number,
+      asset.asset_meter_type_id, asset.latitude, asset.longitude,
+      asset.comprehensive== true ? "Comprehensive" : "Non-Comprehensive" 
+    ]
+  end
+end

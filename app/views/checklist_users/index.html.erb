@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Checklist Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Checklist</th>
+      <th>Resource type</th>
+      <th>User</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @checklist_users.each do |checklist_user| %>
+      <tr>
+        <td><%= checklist_user.resource_id %></td>
+        <td><%= checklist_user.checklist_id %></td>
+        <td><%= checklist_user.resource_type %></td>
+        <td><%= checklist_user.user_id %></td>
+        <td><%= link_to 'Show', checklist_user %></td>
+        <td><%= link_to 'Edit', edit_checklist_user_path(checklist_user) %></td>
+        <td><%= link_to 'Destroy', checklist_user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Checklist User', new_checklist_user_path %>

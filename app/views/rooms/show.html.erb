@@ -1,0 +1,223 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <!-- Room Details Card -->
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-bed mr-2"></i>
+            <%= @room.display_name %>
+          </h4>
+          <div>
+            <span class="badge badge-lg <%= 'badge-success' if @room.available? %>
+                                         <%= 'badge-warning' if @room.occupied? %>
+                                         <%= 'badge-danger' if @room.maintenance? || @room.out_of_order? %>">
+              <%= @room.status.humanize %>
+            </span>
+            <% if current_user.admin? || current_user.manager? %>
+              <div class="btn-group ml-2">
+                <%= link_to "Edit", edit_room_path(@room), class: "btn btn-sm btn-primary" %>
+                <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                  <%= link_to "Pricing", room_room_pricing_path(@room), class: "dropdown-item" %>
+                  <%= link_to "Availability", room_room_availability_path(@room), class: "dropdown-item" %>
+                  <div class="dropdown-divider"></div>
+                  <%= link_to "Delete", room_path(@room), method: :delete, 
+                              confirm: "Are you sure? This will delete the room and all its data.", 
+                              class: "dropdown-item text-danger" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <div class="row">
+            <!-- Room Information -->
+            <div class="col-md-8">
+              <div class="row">
+                <div class="col-md-6">
+                  <h6>Room Details</h6>
+                  <table class="table table-sm">
+                    <tr>
+                      <td><strong>Room Number:</strong></td>
+                      <td><%= @room.room_number %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Type:</strong></td>
+                      <td><%= @room.room_type.humanize %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Floor:</strong></td>
+                      <td><%= @room.floor_number || 'N/A' %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Capacity:</strong></td>
+                      <td><%= @room.capacity %></td>
+                    </tr>
+                  </table>
+                </div>
+                
+                <div class="col-md-6">
+                  <h6>Pricing Information</h6>
+                  <table class="table table-sm">
+                    <tr>
+                      <td><strong>Base Price:</strong></td>
+                      <td class="text-primary">$<%= @room.base_price_per_night %>/night</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Tax Rate:</strong></td>
+                      <td><%= @room.tax_percentage %>%</td>
+                    </tr>
+                    <tr>
+                      <td><strong>Today's Price:</strong></td>
+                      <td class="text-success">$<%= @room.price_for_date(Date.current) %>/night</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              
+              <% if @room.description.present? %>
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <h6>Description</h6>
+                    <p><%= simple_format(@room.description) %></p>
+                  </div>
+                </div>
+              <% end %>
+              
+              <% if @room.amenities.present? %>
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <h6>Amenities</h6>
+                    <% @room.amenities.split(',').each do |amenity| %>
+                      <span class="badge badge-secondary mr-1"><%= amenity.strip %></span>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                  <%= link_to "Search Availability", 
+                              room_availability_path(@room), 
+                              class: "btn btn-outline-primary btn-block mb-2" %>
+                  
+                  <% if @room.available? %>
+                    <%= link_to "Book This Room", 
+                                new_room_booking_path(room_id: @room.id), 
+                                class: "btn btn-success btn-block mb-2" %>
+                  <% end %>
+                  
+                  <%= link_to "View All Rooms", rooms_path, class: "btn btn-outline-secondary btn-block" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Current Bookings -->
+      <% if @current_bookings.any? %>
+        <div class="card mt-4">
+          <div class="card-header">
+            <h5 class="mb-0">Current Bookings</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Booking Reference</th>
+                    <th>Guest</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @current_bookings.each do |booking| %>
+                    <tr>
+                      <td><%= link_to booking.booking_reference, room_booking_path(booking) %></td>
+                      <td><%= booking.guest_name %></td>
+                      <td><%= booking.check_in_date.strftime('%d %b %Y') %></td>
+                      <td><%= booking.check_out_date.strftime('%d %b %Y') %></td>
+                      <td>
+                        <span class="badge <%= 'badge-warning' if booking.confirmed? %>
+                                            <%= 'badge-success' if booking.checked_in? %>">
+                          <%= booking.status.humanize %>
+                        </span>
+                      </td>
+                      <td>
+                        <%= link_to "View", room_booking_path(booking), class: "btn btn-sm btn-outline-primary" %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Upcoming Bookings -->
+      <% if @upcoming_bookings.any? %>
+        <div class="card mt-4">
+          <div class="card-header">
+            <h5 class="mb-0">Upcoming Bookings</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>Booking Reference</th>
+                    <th>Guest</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @upcoming_bookings.each do |booking| %>
+                    <tr>
+                      <td><%= link_to booking.booking_reference, room_booking_path(booking) %></td>
+                      <td><%= booking.guest_name %></td>
+                      <td><%= booking.check_in_date.strftime('%d %b %Y') %></td>
+                      <td><%= booking.check_out_date.strftime('%d %b %Y') %></td>
+                      <td>
+                        <span class="badge badge-info">
+                          <%= booking.status.humanize %>
+                        </span>
+                      </td>
+                      <td>
+                        <%= link_to "View", room_booking_path(booking), class: "btn btn-sm btn-outline-primary" %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+.badge-lg {
+  font-size: 0.9em;
+  padding: 0.5em 0.8em;
+}
+</style>

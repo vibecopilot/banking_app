@@ -1,0 +1,99 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @permit.name %>
+</p>
+
+<p>
+  <strong>Contact number:</strong>
+  <%= @permit.contact_number %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @permit.site_id %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @permit.unit_id %>
+</p>
+
+<p>
+  <strong>Permit for:</strong>
+  <%= @permit.permit_for %>
+</p>
+
+<p>
+  <strong>Building:</strong>
+  <%= @permit.building_id %>
+</p>
+
+<p>
+  <strong>Floor:</strong>
+  <%= @permit.floor_id %>
+</p>
+
+<p>
+  <strong>Room:</strong>
+  <%= @permit.room_id %>
+</p>
+
+<p>
+  <strong>Client specific:</strong>
+  <%= @permit.client_specific %>
+</p>
+
+<p>
+  <strong>Entity:</strong>
+  <%= @permit.entity %>
+</p>
+
+<p>
+  <strong>Copy to string:</strong>
+  <%= @permit.copy_to_string %>
+</p>
+
+<p>
+  <strong>Permit type:</strong>
+  <%= @permit.permit_type %>
+</p>
+
+<p>
+  <strong>Vendor:</strong>
+  <%= @permit.vendor_id %>
+</p>
+
+<p>
+  <strong>Issue date and time:</strong>
+  <%= @permit.issue_date_and_time %>
+</p>
+
+<p>
+  <strong>Expiry date and time:</strong>
+  <%= @permit.expiry_date_and_time %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @permit.comment %>
+</p>
+
+<p>
+  <strong>Permit status:</strong>
+  <%= @permit.permit_status %>
+</p>
+
+<p>
+  <strong>Extention status:</strong>
+  <%= @permit.extention_status %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @permit.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_permit_path(@permit) %> |
+<%= link_to 'Back', permits_path %>

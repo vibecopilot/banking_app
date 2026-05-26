@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <body style="margin:0; padding:0; background-color:#f4f6f8; font-family: Arial, sans-serif;">
+    
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8; padding: 20px;">
+      <tr>
+        <td align="center">
+
+          <!-- Main Container -->
+          <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff; padding: 30px; border-radius: 8px;">
+            
+            <!-- Header -->
+            <tr>
+              <td align="center" style="padding-bottom: 20px;">
+                <% if @survey&.mail_logos&.active&.last.present? %>
+                  <img src="<%= @survey.mail_logos.active.last.whole_path('admin.vibecopilot.ai') %>" 
+                       alt="Client Logo" 
+                       style="height:50px;">
+                <% end %>
+              </td>
+            </tr>
+
+            <!-- Illustration -->
+            <tr>
+              <td align="center" style="padding: 20px 0;">
+                <img src="<%= "https://admin.vibecopilot.ai/ThankYou.jpeg" %>" 
+                     alt="Thank You" 
+                     style="width:120px;">
+              </td>
+            </tr>
+
+            <!-- Title -->
+            <tr>
+              <td align="center" style="font-size: 20px; font-weight: bold; color: #333;">
+                Thank You for Your Response
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding-top: 20px; color:#555; font-size:14px; line-height:1.6;">
+                <% if @message.present? %>
+                  <div style="white-space: pre-line;"><%= @message.html_safe %></div>
+                <% else %>
+                  <p>Dear <%= @survey_response.feedback_given_by.presence || "Participant" %>,</p>
+                  <p>
+                    Thank you for taking the time to complete our survey. We truly appreciate your valuable feedback.
+                    Your response will help us better understand user experiences and improve our services.
+                    We are grateful for your participation and support.
+                  </p>
+                  <p>
+                    If you have any additional comments or suggestions, please feel free to share them with us.
+                  </p>
+                  <p>
+                    Best regards,<br>
+                    <strong>Survey Team</strong>
+                  </p>
+                <% end %>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>

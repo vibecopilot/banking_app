@@ -1,0 +1,62 @@
+<%= form_with(model: folder, local: true) do |form| %>
+  <% if folder.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(folder.errors.count, "error") %> prohibited this folder from being saved:</h2>
+
+      <ul>
+      <% folder.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :folder_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :parent_id %>
+    <%= form.number_field :parent_id, id: :folder_parent_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :structure %>
+    <%= form.text_field :structure, id: :folder_structure %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date_of_upload %>
+    <%= form.date_select :date_of_upload, id: :folder_date_of_upload %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :folder_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :folder_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :uploaded_by %>
+    <%= form.number_field :uploaded_by, id: :folder_uploaded_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :folder_type %>
+    <%= form.text_field :folder_type, id: :folder_folder_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit_id %>
+    <%= form.number_field :unit_id, id: :folder_unit_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

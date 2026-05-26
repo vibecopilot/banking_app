@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @asset_group_param.name %>
+</p>
+
+<p>
+  <strong>Order:</strong>
+  <%= @asset_group_param.order %>
+</p>
+
+<p>
+  <strong>Dashboard view:</strong>
+  <%= @asset_group_param.dashboard_view %>
+</p>
+
+<p>
+  <strong>Consumption view:</strong>
+  <%= @asset_group_param.consumption_view %>
+</p>
+
+<%= link_to 'Edit', edit_asset_group_param_path(@asset_group_param) %> |
+<%= link_to 'Back', asset_group_params_path %>

@@ -1,0 +1,77 @@
+<%= form_with(model: pet, local: true) do |form| %>
+  <% if pet.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(pet.errors.count, "error") %> prohibited this pet from being saved:</h2>
+
+      <ul>
+      <% pet.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :pet_name %>
+    <%= form.text_field :pet_name, id: :pet_pet_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :owner_mobile_no %>
+    <%= form.number_field :owner_mobile_no, id: :pet_owner_mobile_no %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pet_breed %>
+    <%= form.text_field :pet_breed, id: :pet_pet_breed %>
+  </div>
+
+  <div class="field">
+    <%= form.label :gender %>
+    <%= form.text_field :gender, id: :pet_gender %>
+  </div>
+
+  <div class="field">
+    <%= form.label :colour %>
+    <%= form.text_field :colour, id: :pet_colour %>
+  </div>
+
+  <div class="field">
+    <%= form.label :age %>
+    <%= form.text_field :age, id: :pet_age %>
+  </div>
+
+  <div class="field">
+    <%= form.label :dob %>
+    <%= form.date_select :dob, id: :pet_dob %>
+  </div>
+
+  <div class="field">
+    <%= form.label :is_pet_transfered %>
+    <%= form.check_box :is_pet_transfered, id: :pet_is_pet_transfered %>
+  </div>
+
+  <div class="field">
+    <%= form.label :brought %>
+    <%= form.check_box :brought, id: :pet_brought %>
+  </div>
+
+  <div class="field">
+    <%= form.label :stray_pet_adopted %>
+    <%= form.check_box :stray_pet_adopted, id: :pet_stray_pet_adopted %>
+  </div>
+
+  <div class="field">
+    <%= form.label :whether_brought_from_current_city %>
+    <%= form.check_box :whether_brought_from_current_city, id: :pet_whether_brought_from_current_city %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pet_born_to_owner_dog %>
+    <%= form.check_box :pet_born_to_owner_dog, id: :pet_pet_born_to_owner_dog %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

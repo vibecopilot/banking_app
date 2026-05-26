@@ -1,0 +1,42 @@
+<%= form_with(model: parking_slot, local: true) do |form| %>
+  <% if parking_slot.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(parking_slot.errors.count, "error") %> prohibited this parking_slot from being saved:</h2>
+
+      <ul>
+      <% parking_slot.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :parking_slot_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_hr %>
+    <%= form.number_field :start_hr, id: :parking_slot_start_hr %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_min %>
+    <%= form.number_field :start_min, id: :parking_slot_start_min %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_hr %>
+    <%= form.number_field :end_hr, id: :parking_slot_end_hr %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_min %>
+    <%= form.number_field :end_min, id: :parking_slot_end_min %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

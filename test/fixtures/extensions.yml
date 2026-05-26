@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  permit_id: 1
+  ext_date: 2025-01-11
+  ext_time: 2025-01-11 17:09:32
+  created_by_id: 1
+
+two:
+  permit_id: 1
+  ext_date: 2025-01-11
+  ext_time: 2025-01-11 17:09:32
+  created_by_id: 1

@@ -1,0 +1,2 @@
+module AminitiesHelper
+end

@@ -1,0 +1,53 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Cab And Bus Requests</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Employee name</th>
+      <th>Employee</th>
+      <th>Pickup location</th>
+      <th>Drop off location</th>
+      <th>Date and time</th>
+      <th>Number of passengers</th>
+      <th>Transportation type</th>
+      <th>Special requirements</th>
+      <th>Driver contact information</th>
+      <th>Vehicle details</th>
+      <th>Booking confirmation number</th>
+      <th>Booking status</th>
+      <th>Manager approval</th>
+      <th>Booking confirmation email</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @cab_and_bus_requests.each do |cab_and_bus_request| %>
+      <tr>
+        <td><%= cab_and_bus_request.employee_name %></td>
+        <td><%= cab_and_bus_request.employee_id %></td>
+        <td><%= cab_and_bus_request.pickup_location %></td>
+        <td><%= cab_and_bus_request.drop_off_location %></td>
+        <td><%= cab_and_bus_request.date_and_time %></td>
+        <td><%= cab_and_bus_request.number_of_passengers %></td>
+        <td><%= cab_and_bus_request.transportation_type %></td>
+        <td><%= cab_and_bus_request.special_requirements %></td>
+        <td><%= cab_and_bus_request.driver_contact_information %></td>
+        <td><%= cab_and_bus_request.vehicle_details %></td>
+        <td><%= cab_and_bus_request.booking_confirmation_number %></td>
+        <td><%= cab_and_bus_request.booking_status %></td>
+        <td><%= cab_and_bus_request.manager_approval %></td>
+        <td><%= cab_and_bus_request.booking_confirmation_email %></td>
+        <td><%= link_to 'Show', cab_and_bus_request %></td>
+        <td><%= link_to 'Edit', edit_cab_and_bus_request_path(cab_and_bus_request) %></td>
+        <td><%= link_to 'Destroy', cab_and_bus_request, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Cab And Bus Request', new_cab_and_bus_request_path %>

@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @deleted_user.email %>
+</p>
+
+<p>
+  <strong>Mobile:</strong>
+  <%= @deleted_user.mobile %>
+</p>
+
+<p>
+  <strong>First name:</strong>
+  <%= @deleted_user.first_name %>
+</p>
+
+<p>
+  <strong>Last name:</strong>
+  <%= @deleted_user.last_name %>
+</p>
+
+<%= link_to 'Edit', edit_deleted_user_path(@deleted_user) %> |
+<%= link_to 'Back', deleted_users_path %>

@@ -1,0 +1,27 @@
+<%= form_with(model: generic_sub_info, local: true) do |form| %>
+  <% if generic_sub_info.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(generic_sub_info.errors.count, "error") %> prohibited this generic_sub_info from being saved:</h2>
+
+      <ul>
+      <% generic_sub_info.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :generic_info_id %>
+    <%= form.number_field :generic_info_id, id: :generic_sub_info_generic_info_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :generic_sub_info_name %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

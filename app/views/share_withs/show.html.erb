@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @share_with.user_id %>
+</p>
+
+<p>
+  <strong>Shared by:</strong>
+  <%= @share_with.shared_by %>
+</p>
+
+<p>
+  <strong>Folder:</strong>
+  <%= @share_with.folder_id %>
+</p>
+
+<p>
+  <strong>Document:</strong>
+  <%= @share_with.document_id %>
+</p>
+
+<%= link_to 'Edit', edit_share_with_path(@share_with) %> |
+<%= link_to 'Back', share_withs_path %>

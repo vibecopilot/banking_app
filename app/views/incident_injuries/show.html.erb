@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Injury type:</strong>
+  <%= @incident_injury.injury_type %>
+</p>
+
+<p>
+  <strong>Injury number:</strong>
+  <%= @incident_injury.injury_number %>
+</p>
+
+<p>
+  <strong>Incident:</strong>
+  <%= @incident_injury.incident_id %>
+</p>
+
+<p>
+  <strong>Lost time:</strong>
+  <%= @incident_injury.lost_time %>
+</p>
+
+<p>
+  <strong>Who got injured:</strong>
+  <%= @incident_injury.who_got_injured_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @incident_injury.name %>
+</p>
+
+<p>
+  <strong>Company name:</strong>
+  <%= @incident_injury.company_name %>
+</p>
+
+<p>
+  <strong>Mobile:</strong>
+  <%= @incident_injury.mobile %>
+</p>
+
+<%= link_to 'Edit', edit_incident_injury_path(@incident_injury) %> |
+<%= link_to 'Back', incident_injuries_path %>

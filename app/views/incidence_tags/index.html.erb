@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Incidence Tags</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Active</th>
+      <th>Parent</th>
+      <th>Tag type</th>
+      <th>Resource</th>
+      <th>Resource type</th>
+      <th>Comment</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @incidence_tags.each do |incidence_tag| %>
+      <tr>
+        <td><%= incidence_tag.name %></td>
+        <td><%= incidence_tag.active %></td>
+        <td><%= incidence_tag.parent_id %></td>
+        <td><%= incidence_tag.tag_type %></td>
+        <td><%= incidence_tag.resource_id %></td>
+        <td><%= incidence_tag.resource_type %></td>
+        <td><%= incidence_tag.comment %></td>
+        <td><%= link_to 'Show', incidence_tag %></td>
+        <td><%= link_to 'Edit', edit_incidence_tag_path(incidence_tag) %></td>
+        <td><%= link_to 'Destroy', incidence_tag, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Incidence Tag', new_incidence_tag_path %>

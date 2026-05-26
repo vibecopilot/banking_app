@@ -1,0 +1,2 @@
+class FitoutStatus < ApplicationRecord
+end

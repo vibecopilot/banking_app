@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  question_id: 1
+  quest_option_id: 1
+  ans_descr: MyString
+  comments: MyText
+  user_id: 1
+  company_id: 1
+  checklist_id: 1
+  answer_type: MyString
+  answer_mode: MyString
+
+two:
+  question_id: 1
+  quest_option_id: 1
+  ans_descr: MyString
+  comments: MyText
+  user_id: 1
+  company_id: 1
+  checklist_id: 1
+  answer_type: MyString
+  answer_mode: MyString

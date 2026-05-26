@@ -1,0 +1,209 @@
+<%= form_with(model: site_asset, local: true) do |form| %>
+  <% if site_asset.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(site_asset.errors.count, "error") %> prohibited this site_asset from being saved:</h2>
+
+      <ul>
+      <% site_asset.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<div class="col-sm-12">
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :asset_name, :class => 'form-control', :required => true %>
+  </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :serial_number %>
+    <%= form.text_field :serial_number, id: :asset_serial_number, :class => 'form-control', :required => true %>
+  </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :model_number %>
+    <%= form.text_field :model_number, id: :asset_model_number, :class => 'form-control' %>
+  </div>
+  </div>
+</div>
+<div class="col-sm-12" >
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :building_id %>
+    <%= form.select :building_id, options_for_select( Building.where(site_id: @user.current_site_id).map { |e| [e.name, e.id] }, :selected => site_asset.building_id),{:include_blank=>"Select Building"}, {:class => 'form-control'} %>
+  </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :floor_id %>
+    <%= form.select :floor_id, options_for_select( Floor.where(site_id: @user.current_site_id).map { |e| [e.name, e.id] }, :selected => site_asset.floor_id),{:include_blank=>"Select Floor"}, {:class => 'form-control'} %>
+  </div>
+  </div>
+  <div class="col-sm-4">
+      <div class="field text-left mb-3">
+      <%= form.label :unit_id %>
+      <%= form.select :unit_id, options_for_select( Unit.where(site_id: @user.current_site_id).map { |e| [e.name, e.id] }, :selected => site_asset.unit_id),{:include_blank=>"Select Unit"}, {:class => 'form-control'} %>
+    </div>
+  </div>
+</div>
+<div class="col-sm-12" >
+
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :vendor_id %>
+    <%= form.select :vendor_id, options_for_select( Vendor.where(site_id: @user.current_site_id).map { |e| [e.vendor_name, e.id] }, :selected => site_asset.vendor_id),{:include_blank=>"Select Vendor"}, {:class => 'form-control'} %>
+  </div>
+  </div>
+  
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :purchased_on %>
+    <%= form.date_select :purchased_on, id: :asset_purchased_on, :class => 'form-control' %>
+  </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :purchase_cost %>
+    <%= form.text_field :purchase_cost, id: :asset_purchase_cost, :class => 'form-control' %>
+  </div>
+  </div>
+  <input type="hidden" name="site_asset[user_id]" value="<%= @user.id %>">
+  <input type="hidden" name="site_asset[site_id]" value="<%= @user.current_site_id %>">
+</div>
+<div class="col-sm-12">
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :description %>
+    <%= form.text_field :description, id: :description, :class => 'form-control' %>
+  </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :oem_name %>
+    <%= form.text_field :oem_name, id: :oem_name, :class => 'form-control' %>
+  </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <%= form.label :capacity %>
+    <%= form.text_field :capacity, id: :capacity, :class => 'form-control' %>
+  </div>
+  </div>
+</div>
+
+<div class="col-sm-12" >
+  <div class="col-sm-3">
+    <div class="field text-left mb-3">
+    <%= form.label :critical %>
+    <%= form.check_box :critical, id: :asset_critical %>
+  </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="field text-left mb-3">
+    <%= form.label :breakdown %>
+    <%= form.check_box :breakdown, id: :asset_breakdown %>
+  </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="field text-left mb-3">
+    <%= form.label :is_meter %>
+    <%= form.check_box :is_meter, id: :asset_is_meter %>
+  </div>
+  </div>
+
+  <div class="col-sm-3">
+    <div class="field text-left mb-3">
+    <%= form.label :active %>
+    <%= form.check_box :active, id: :asset_active %>
+  </div>
+  </div>
+</div>
+<div class="col-sm-12" >
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+      <%= form.label :installation %>
+      <%= form.date_select :installation, id: :installation, :class => 'form-control' %>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+      <%= form.label :warranty_start %>
+      <%= form.date_select :warranty_start, id: :warranty_start, :class => 'form-control' %>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+      <%= form.label :warranty_expiry %>
+      <%= form.date_select :warranty_expiry, id: :asset_warranty_expiry, :class => 'form-control' %>
+    </div>
+  </div>
+  <div class="col-sm-2">
+    <div class="field text-left mb-3">
+      <%= form.label :asset_group_id %>
+    <%= form.select :asset_group_id, options_for_select( AssetGroup.all.map { |e| [e.name, e.id] }, :selected => site_asset.asset_group_id),{:include_blank=>"Select Asset Group"}, {:class => 'form-control'} %>
+    </div>
+  </div>
+</div>
+<br>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  $('[name="site_asset[building_id]"]').change(function() {
+    var cursel = $(this);
+    var targt = $('[name="site_asset[floor_id]"]');
+    var sel_val = cursel.val();
+    var newoptions = "<option value=''>Select Floor</option>";
+    if (sel_val.length > 0) {
+      var url = "/floors.json?q[building_id_eq]=" + sel_val + "&token=" + gon.token;
+      $.ajax({
+        type: "GET",
+        url: url,
+        success: function(response){
+          if(response.length > 0){
+            for (var i = 0; i < response.length; i++) {
+              var res = response[i];
+              newoptions += "<option value='"+res.id+"'>"+res.name+"</option>"
+            }
+          }
+          targt.html(newoptions);
+        }
+      });
+    } else {
+      targt.html(newoptions);
+    }
+  });
+
+  $('[name="site_asset[floor_id]"]').change(function() {
+    var cursel = $(this);
+    var targt = $('[name="site_asset[unit_id]"]');
+    var sel_val = cursel.val();
+    var newoptions = "<option value=''>Select Unit</option>";
+    if (sel_val.length > 0) {
+      var url = "/units.json?q[floor_id_eq]=" + sel_val + "&token=" + gon.token;
+      $.ajax({
+        type: "GET",
+        url: url,
+        success: function(response){
+          if(response.length > 0){
+            for (var i = 0; i < response.length; i++) {
+              var res = response[i];
+              newoptions += "<option value='"+res.id+"'>"+res.name+"</option>"
+            }
+          }
+          targt.html(newoptions);
+        }
+      });
+    } else {
+      targt.html(newoptions);
+    }
+  });
+</script>

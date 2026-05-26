@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Visitors</title>
+  <style>
+    .visitors-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    .notice {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+    }
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+    .btn {
+      display: inline-block;
+      padding: 8px 12px;
+      margin: 2px;
+      text-decoration: none;
+      color: white;
+      background-color: #007bff;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .btn-danger {
+      background-color: #dc3545;
+    }
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+    .new-visitor-btn {
+      display: block;
+      width: 200px;
+      margin: 20px auto;
+      text-align: center;
+    }
+    .qr-code {
+      max-width: 100px;
+      max-height: 100px;
+    }
+    .profile-pic {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="visitors-container">
+    <% if notice %>
+      <p id="notice" class="notice"><%= notice %></p>
+    <% end %>
+    <h1>Visitors</h1>
+    <%= link_to 'Download QR Codes', visitor_qr_codes_visitors_path(format: :pdf), class: 'btn', target: '_blank' %>
+    <%= link_to 'Export Visitors', export_visitors_visitors_path(format: :xlsx), class: 'btn', style: 'margin-left: 10px;' %>
+    <table id="visitors-table">
+      <thead>
+        <tr>
+          <th>Profile Picture</th>
+          <th>Name</th>
+          <th>Contact no</th>
+          <th>Purpose</th>
+          <th>Site</th>
+          <th>OTP</th>
+          <th>Status</th>
+          <th>Start pass</th>
+          <th>End pass</th>
+          <th>QR Code</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @visitors.each do |visitor| %>
+          <tr>
+            <td>
+              <% if visitor.profile_pic.present? %>
+                <%= image_tag visitor.profile_pic.image.url, class: 'profile-pic' %>
+              <% else %>
+                No profile picture
+              <% end %>
+            </td>
+            <td><%= visitor.name %></td>
+            <td><%= visitor.contact_no %></td>
+            <td><%= visitor.purpose %></td>
+            <td><%= visitor.site.name %></td>
+            <td><%= visitor.otp %></td>
+            <td><%= visitor.status %></td>
+            <td><%= visitor.start_pass&.strftime("%Y-%m-%d %H:%M") %></td>
+            <td><%= visitor.end_pass&.strftime("%Y-%m-%d %H:%M") %></td>
+            <td>
+              <% if visitor.qr_code_image.present? %>
+                <%= image_tag visitor.qr_code_image.image.url, class: 'qr-code' %>
+              <% else %>
+                No QR code
+              <% end %>
+            </td>
+            <td>
+              <%= link_to 'Show', visitor, class: 'btn' %>
+              <%= link_to 'Edit', edit_visitor_path(visitor), class: 'btn' %>
+              <%= link_to 'Destroy', visitor, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= link_to 'New Visitor', new_visitor_path, class: 'btn new-visitor-btn' %>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const table = document.getElementById('visitors-table');
+      const rows = table.getElementsByTagName('tr');
+
+      for (let i = 1; i < rows.length; i++) {
+        rows[i].addEventListener('click', function() {
+          this.classList.toggle('selected');
+        });
+      }
+
+      const notice = document.getElementById('notice');
+      if (notice) {
+        setTimeout(function() {
+          notice.style.display = 'none';
+        }, 5000);
+      }
+    });
+  </script>
+</body>
+</html>

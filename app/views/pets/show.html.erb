@@ -1,0 +1,64 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Pet name:</strong>
+  <%= @pet.pet_name %>
+</p>
+
+<p>
+  <strong>Owner mobile no:</strong>
+  <%= @pet.owner_mobile_no %>
+</p>
+
+<p>
+  <strong>Pet breed:</strong>
+  <%= @pet.pet_breed %>
+</p>
+
+<p>
+  <strong>Gender:</strong>
+  <%= @pet.gender %>
+</p>
+
+<p>
+  <strong>Colour:</strong>
+  <%= @pet.colour %>
+</p>
+
+<p>
+  <strong>Age:</strong>
+  <%= @pet.age %>
+</p>
+
+<p>
+  <strong>Dob:</strong>
+  <%= @pet.dob %>
+</p>
+
+<p>
+  <strong>Is pet transfered:</strong>
+  <%= @pet.is_pet_transfered %>
+</p>
+
+<p>
+  <strong>Brought:</strong>
+  <%= @pet.brought %>
+</p>
+
+<p>
+  <strong>Stray pet adopted:</strong>
+  <%= @pet.stray_pet_adopted %>
+</p>
+
+<p>
+  <strong>Whether brought from current city:</strong>
+  <%= @pet.whether_brought_from_current_city %>
+</p>
+
+<p>
+  <strong>Pet born to owner dog:</strong>
+  <%= @pet.pet_born_to_owner_dog %>
+</p>
+
+<%= link_to 'Edit', edit_pet_path(@pet) %> |
+<%= link_to 'Back', pets_path %>

@@ -1,0 +1,137 @@
+workbook = xlsx_package.workbook
+
+workbook.styles do |style|
+  header_style = style.add_style(b: true, sz: 12, bg_color: "4472C4", fg_color: "FFFFFF", alignment: { horizontal: :center })
+  date_header = style.add_style(b: true, sz: 11, bg_color: "D9E2F3", alignment: { horizontal: :center })
+  staff_name_style = style.add_style(b: true, sz: 11, bg_color: "F2F2F2")
+  in_style = style.add_style(bg_color: "C6EFCE", fg_color: "006100", alignment: { horizontal: :center })
+  out_style = style.add_style(bg_color: "FFC7CE", fg_color: "9C0006", alignment: { horizontal: :center })
+  time_style = style.add_style(alignment: { horizontal: :center })
+  title_style = style.add_style(b: true, sz: 14)
+  
+  workbook.add_worksheet(name: "Staff Attendance") do |sheet|
+    # Title row
+    sheet.add_row ["Staff Attendance Report"], style: title_style
+    sheet.add_row ["Period: #{@start_date.strftime('%d/%m/%Y')} to #{@end_date.strftime('%d/%m/%Y')}"]
+    sheet.add_row []
+    
+    # Headers
+    sheet.add_row [
+      "Sr No.",
+      "Staff ID",
+      "Staff Name",
+      "Mobile No",
+      "Work Type",
+      "Vendor",
+      "Date",
+      "Punch In Time",
+      "Punch Out Time",
+      "Duration",
+      "Status"
+    ], style: header_style
+    
+    row_number = 1
+    @attendance_data.each do |data|
+      staff = data[:staff]
+      attendances = data[:attendances]
+      
+      if attendances.any?
+        attendances.each do |attendance|
+          # Calculate duration
+          duration = if attendance.punched_in_at && attendance.punched_out_at
+            seconds = (attendance.punched_out_at - attendance.punched_in_at).to_i
+            hours = seconds / 3600
+            minutes = (seconds % 3600) / 60
+            "#{hours}h #{minutes}m"
+          else
+            "-"
+          end
+          
+          status = attendance.punched_out_at.present? ? "OUT" : "IN"
+          status_style_to_use = status == "IN" ? in_style : out_style
+          
+          sheet.add_row [
+            row_number,
+            staff.staff_id,
+            staff.full_name,
+            staff.mobile_no,
+            staff.work_type,
+            staff.vendor&.vendor_name,
+            attendance.punched_in_at&.strftime("%d/%m/%Y"),
+            attendance.punched_in_at&.strftime("%H:%M"),
+            attendance.punched_out_at&.strftime("%H:%M") || "-",
+            duration,
+            status
+          ], style: [nil, nil, nil, nil, nil, nil, time_style, time_style, time_style, time_style, status_style_to_use]
+          
+          row_number += 1
+        end
+      else
+        # Staff with no attendance in date range
+        sheet.add_row [
+          row_number,
+          staff.staff_id,
+          staff.full_name,
+          staff.mobile_no,
+          staff.work_type,
+          staff.vendor&.vendor_name,
+          "No attendance records",
+          "-",
+          "-",
+          "-",
+          "-"
+        ]
+        row_number += 1
+      end
+    end
+    
+    # Auto-fit columns
+    sheet.column_widths 8, 12, 25, 15, 15, 20, 12, 14, 14, 12, 10
+  end
+  
+  # Summary worksheet
+  workbook.add_worksheet(name: "Summary") do |sheet|
+    sheet.add_row ["Staff Attendance Summary"], style: title_style
+    sheet.add_row ["Period: #{@start_date.strftime('%d/%m/%Y')} to #{@end_date.strftime('%d/%m/%Y')}"]
+    sheet.add_row []
+    
+    sheet.add_row [
+      "Staff ID",
+      "Staff Name",
+      "Work Type",
+      "Vendor",
+      "Total Days Present",
+      "Total Hours Worked"
+    ], style: header_style
+    
+    @attendance_data.each do |data|
+      staff = data[:staff]
+      attendances = data[:attendances]
+      
+      days_present = attendances.select { |a| a.punched_in_at.present? }.map { |a| a.punched_in_at.to_date }.uniq.count
+      
+      total_seconds = attendances.sum do |a|
+        if a.punched_in_at && a.punched_out_at
+          (a.punched_out_at - a.punched_in_at).to_i
+        else
+          0
+        end
+      end
+      
+      total_hours = total_seconds / 3600
+      total_minutes = (total_seconds % 3600) / 60
+      total_time = "#{total_hours}h #{total_minutes}m"
+      
+      sheet.add_row [
+        staff.staff_id,
+        staff.full_name,
+        staff.work_type,
+        staff.vendor&.vendor_name,
+        days_present,
+        total_time
+      ]
+    end
+    
+    sheet.column_widths 12, 25, 15, 20, 18, 18
+  end
+end

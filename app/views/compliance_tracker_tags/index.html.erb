@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Compliance Tracker Tags</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Compliance tracker</th>
+      <th>Submitted on</th>
+      <th>Submitted by</th>
+      <th>Compliance tag</th>
+      <th>Observation</th>
+      <th>Recommendtion</th>
+      <th>Comment</th>
+      <th>Compliance tag task</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @compliance_tracker_tags.each do |compliance_tracker_tag| %>
+      <tr>
+        <td><%= compliance_tracker_tag.compliance_tracker_id %></td>
+        <td><%= compliance_tracker_tag.submitted_on %></td>
+        <td><%= compliance_tracker_tag.submitted_by_id %></td>
+        <td><%= compliance_tracker_tag.compliance_tag_id %></td>
+        <td><%= compliance_tracker_tag.observation %></td>
+        <td><%= compliance_tracker_tag.recommendtion %></td>
+        <td><%= compliance_tracker_tag.comment %></td>
+        <td><%= compliance_tracker_tag.compliance_tag_task_id %></td>
+        <td><%= link_to 'Show', compliance_tracker_tag %></td>
+        <td><%= link_to 'Edit', edit_compliance_tracker_tag_path(compliance_tracker_tag) %></td>
+        <td><%= link_to 'Destroy', compliance_tracker_tag, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Compliance Tracker Tag', new_compliance_tracker_tag_path %>

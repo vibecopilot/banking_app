@@ -1,0 +1,37 @@
+<%= form_with(model: gdn_detail, local: true) do |form| %>
+  <% if gdn_detail.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(gdn_detail.errors.count, "error") %> prohibited this gdn_detail from being saved:</h2>
+
+      <ul>
+      <% gdn_detail.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :gdn_date %>
+    <%= form.date_select :gdn_date, id: :gdn_detail_gdn_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :gdn_detail_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.check_box :status, id: :gdn_detail_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :gdn_detail_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

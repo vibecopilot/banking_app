@@ -1,0 +1,61 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Loi Items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Loi detail</th>
+      <th>Item</th>
+      <th>Sac code</th>
+      <th>Quantity</th>
+      <th>Standard unit</th>
+      <th>Expected Date</th>
+      <th>Rate</th>
+      <th>Csgt rate</th>
+      <th>Csgt amt</th>
+      <th>Sgst rate</th>
+      <th>Sgst amt</th>
+      <th>Igst rate</th>
+      <th>Igst amt</th>
+      <th>Tcs rate</th>
+      <th>Tcs amt</th>
+      <th>Tax amt</th>
+      <th>Amount</th>
+      <th>Total amount</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @loi_items.each do |loi_item| %>
+      <tr>
+        <td><%= loi_item.loi_detail_id %></td>
+        <td><%= loi_item.item_id %></td>
+        <td><%= loi_item.sac_code %></td>
+        <td><%= loi_item.quantity %></td>
+        <td><%= loi_item.standard_unit_id %></td>
+        <td><%= loi_item.expected_date %></td>
+        <td><%= loi_item.rate %></td>
+        <td><%= loi_item.csgt_rate %></td>
+        <td><%= loi_item.csgt_amt %></td>
+        <td><%= loi_item.sgst_rate %></td>
+        <td><%= loi_item.sgst_amt %></td>
+        <td><%= loi_item.igst_rate %></td>
+        <td><%= loi_item.igst_amt %></td>
+        <td><%= loi_item.tcs_rate %></td>
+        <td><%= loi_item.tcs_amt %></td>
+        <td><%= loi_item.tax_amt %></td>
+        <td><%= loi_item.amount %></td>
+        <td><%= loi_item.total_amount %></td>
+        <td><%= link_to 'Show', loi_item %></td>
+        <td><%= link_to 'Edit', edit_loi_item_path(loi_item) %></td>
+        <td><%= link_to 'Destroy', loi_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Loi Item', new_loi_item_path %>

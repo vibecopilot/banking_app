@@ -1,0 +1,52 @@
+<%= form_with(model: attendance, local: true) do |form| %>
+  <% if attendance.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(attendance.errors.count, "error") %> prohibited this attendance from being saved:</h2>
+
+      <ul>
+      <% attendance.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :attendance_of_id %>
+    <%= form.number_field :attendance_of_id, id: :attendance_attendance_of_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attendance_of_type %>
+    <%= form.text_field :attendance_of_type, id: :attendance_attendance_of_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :resource_id %>
+    <%= form.number_field :resource_id, id: :attendance_resource_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :resource_type %>
+    <%= form.text_field :resource_type, id: :attendance_resource_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :punched_in_at %>
+    <%= form.datetime_select :punched_in_at, id: :attendance_punched_in_at %>
+  </div>
+
+  <div class="field">
+    <%= form.label :punched_out_at %>
+    <%= form.datetime_select :punched_out_at, id: :attendance_punched_out_at %>
+  </div>
+
+  <div class="field">
+    <%= form.label :work_log %>
+    <%= form.text_area :work_log, id: :attendance_work_log %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

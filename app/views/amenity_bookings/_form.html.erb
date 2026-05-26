@@ -1,0 +1,42 @@
+<%= form_with(model: amenity_booking, local: true) do |form| %>
+  <% if amenity_booking.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(amenity_booking.errors.count, "error") %> prohibited this amenity_booking from being saved:</h2>
+
+      <ul>
+      <% amenity_booking.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :amenity_id %>
+    <%= form.number_field :amenity_id, id: :amenity_booking_amenity_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :amenity_slot_id %>
+    <%= form.number_field :amenity_slot_id, id: :amenity_booking_amenity_slot_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :amenity_booking_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_date %>
+    <%= form.date_select :booking_date, id: :amenity_booking_booking_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :amenity_booking_site_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

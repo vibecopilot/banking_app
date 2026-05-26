@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @charge.site_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @charge.name %>
+</p>
+
+<p>
+  <strong>Code:</strong>
+  <%= @charge.code %>
+</p>
+
+<p>
+  <strong>Cgst:</strong>
+  <%= @charge.cgst %>
+</p>
+
+<p>
+  <strong>Sgst:</strong>
+  <%= @charge.sgst %>
+</p>
+
+<p>
+  <strong>Igst:</strong>
+  <%= @charge.igst %>
+</p>
+
+<%= link_to 'Edit', edit_charge_path(@charge) %> |
+<%= link_to 'Back', charges_path %>

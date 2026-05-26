@@ -1,0 +1,168 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-plus-circle mr-2"></i>
+            Add New Room
+          </h4>
+        </div>
+        
+        <div class="card-body">
+          <%= form_with model: @room, local: true do |f| %>
+            <% if @room.errors.any? %>
+              <div class="alert alert-danger">
+                <h6><%= pluralize(@room.errors.count, "error") %> prohibited this room from being saved:</h6>
+                <ul class="mb-0">
+                  <% @room.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :name, "Room Name *" %>
+                  <%= f.text_field :name, class: "form-control", placeholder: "e.g., Deluxe Suite" %>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :room_number, "Room Number *" %>
+                  <%= f.text_field :room_number, class: "form-control", placeholder: "e.g., 201" %>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :room_type, "Room Type *" %>
+                  <%= f.select :room_type, 
+                      options_for_select([
+                        ['Standard', 'standard'],
+                        ['Deluxe', 'deluxe'],
+                        ['Suite', 'suite'],
+                        ['Premium', 'premium'],
+                        ['Penthouse', 'penthouse']
+                      ], @room.room_type), 
+                      { prompt: 'Select room type' }, 
+                      { class: "form-control" } %>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :floor_number, "Floor Number" %>
+                  <%= f.number_field :floor_number, class: "form-control", placeholder: "e.g., 2" %>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :base_price_per_night, "Base Price per Night *" %>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">$</span>
+                    </div>
+                    <%= f.number_field :base_price_per_night, class: "form-control", step: 0.01, min: 0 %>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :tax_percentage, "Tax Percentage" %>
+                  <div class="input-group">
+                    <%= f.number_field :tax_percentage, class: "form-control", step: 0.01, min: 0, max: 100, value: @room.tax_percentage || 12.0 %>
+                    <div class="input-group-append">
+                      <span class="input-group-text">%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :max_adults, "Maximum Adults *" %>
+                  <%= f.number_field :max_adults, class: "form-control", min: 1, max: 10 %>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :max_children, "Maximum Children *" %>
+                  <%= f.number_field :max_children, class: "form-control", min: 0, max: 10 %>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= f.label :status, "Status" %>
+                  <%= f.select :status, 
+                      options_for_select([
+                        ['Available', 'available'],
+                        ['Occupied', 'occupied'],
+                        ['Maintenance', 'maintenance'],
+                        ['Out of Order', 'out_of_order']
+                      ], @room.status || 'available'), 
+                      {}, 
+                      { class: "form-control" } %>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>&nbsp;</label>
+                  <div class="form-check mt-2">
+                    <%= f.check_box :active, { checked: @room.active != false }, true, false %>
+                    <%= f.label :active, "Active Room", class: "form-check-label" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :description, "Description" %>
+              <%= f.text_area :description, class: "form-control", rows: 3, placeholder: "Describe the room features and amenities..." %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :amenities, "Amenities" %>
+              <%= f.text_area :amenities, class: "form-control", rows: 2, placeholder: "WiFi, AC, TV, Mini Bar, Room Service (comma separated)" %>
+              <small class="form-text text-muted">Separate amenities with commas</small>
+            </div>
+
+            <div class="form-group mt-4">
+              <div class="row">
+                <div class="col-md-6">
+                  <%= f.submit "Create Room", class: "btn btn-primary btn-block" %>
+                </div>
+                <div class="col-md-6">
+                  <%= link_to "Cancel", rooms_path, class: "btn btn-secondary btn-block" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+</style>

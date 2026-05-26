@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  status: MyString
+  display_name: MyString
+  fixed_state: false
+  order: 1
+  color: MyString
+
+two:
+  status: MyString
+  display_name: MyString
+  fixed_state: false
+  order: 1
+  color: MyString

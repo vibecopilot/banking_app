@@ -1,0 +1,105 @@
+<%= form_with(model: staff, local: true, multipart: true) do |form| %>
+  <% if staff.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(staff.errors.count, "error") %> prohibited this staff from being saved:</h2>
+
+      <ul>
+      <% staff.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :profile_picture %>
+    <%= form.file_field :profile_picture, accept: 'image/png,image/jpeg' %>
+  </div>
+
+  <div class="field">
+    <%= form.label :firstname %>
+    <%= form.text_field :firstname, id: :staff_firstname %>
+  </div>
+
+  <div class="field">
+    <%= form.label :lastname %>
+    <%= form.text_field :lastname, id: :staff_lastname %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email, id: :staff_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mobile_no %>
+    <%= form.text_field :mobile_no, id: :staff_mobile_no %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit_id %>
+    <%= form.number_field :unit_id, id: :staff_unit_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :work_type %>
+    <%= form.text_field :work_type, id: :staff_work_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vendor_id %>
+    <%= form.number_field :vendor_id, id: :staff_vendor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :valid_from %>
+    <%= form.datetime_select :valid_from, id: :staff_valid_from %>
+  </div>
+
+  <div class="field">
+    <%= form.label :valid_till %>
+    <%= form.datetime_select :valid_till, id: :staff_valid_till %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.check_box :status, id: :staff_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attachfiles %>
+    <%= form.file_field :attachfiles %>
+  </div>  
+
+  <h3>Working Schedule</h3>
+  <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; margin: 0 auto; ">
+    <thead>
+      <tr>
+        <th style="text-align: center;">Day</th>
+        <th style="text-align: center;">Select</th>
+        <th style="text-align: center;">Start Time</th>
+        <th style="text-align: center;">End Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% Date::DAYNAMES.each do |day| %>
+        <tr>
+          <td><%= day %></td>
+          <td>
+            <%= form.check_box "working_schedule[#{day}][selected]", checked: staff.working_schedule&.dig(day, 'selected') %>
+          </td>
+          <td>
+            <%= form.time_field "working_schedule[#{day}][start_time]", value: staff.working_schedule&.dig(day, 'start_time') %>
+          </td>
+          <td>
+            <%= form.time_field "working_schedule[#{day}][end_time]", value: staff.working_schedule&.dig(day, 'end_time') %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

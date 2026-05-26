@@ -1,0 +1,57 @@
+<%= form_with(model: incident_injury, local: true) do |form| %>
+  <% if incident_injury.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(incident_injury.errors.count, "error") %> prohibited this incident_injury from being saved:</h2>
+
+      <ul>
+      <% incident_injury.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :injury_type %>
+    <%= form.text_field :injury_type, id: :incident_injury_injury_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :injury_number %>
+    <%= form.number_field :injury_number, id: :incident_injury_injury_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :incident_id %>
+    <%= form.number_field :incident_id, id: :incident_injury_incident_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :lost_time %>
+    <%= form.number_field :lost_time, id: :incident_injury_lost_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :who_got_injured_id %>
+    <%= form.number_field :who_got_injured_id, id: :incident_injury_who_got_injured_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :incident_injury_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_name %>
+    <%= form.text_field :company_name, id: :incident_injury_company_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mobile %>
+    <%= form.text_field :mobile, id: :incident_injury_mobile %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

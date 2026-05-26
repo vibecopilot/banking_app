@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    /* ---------- RESET / BASE ---------- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, Helvetica, sans-serif; font-size: 11px; color: #000; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { padding: 4px 6px; vertical-align: top; }
+
+    /* ---------- OUTER BORDER ---------- */
+    .invoice-wrapper { border: 2px solid #000; width: 100%; }
+
+    /* ---------- HEADER (BLUE) ---------- */
+    .header-block { background: #c6d9f1; text-align: center; padding: 10px 8px 6px; border-bottom: 2px solid #000; }
+    .header-block .company-name { font-size: 18px; font-weight: bold; }
+    .header-block .company-addr { font-size: 10px; margin-top: 2px; }
+    .header-block .company-gst  { font-size: 10px; margin-top: 1px; }
+
+    /* ---------- TITLE ---------- */
+    .title-row { background: #c6d9f1; text-align: center; border-bottom: 1px solid #000; padding: 4px 0; }
+    .title-row h2 { font-size: 16px; margin: 0; }
+
+    /* ---------- INVOICE META ---------- */
+    .meta-table td { border: 1px solid #000; font-size: 10px; }
+    .meta-table .label { font-weight: bold; }
+
+    /* ---------- BILL TO ---------- */
+    .bill-to-header { background: #c6d9f1; text-align: center; font-weight: bold; font-size: 11px; border: 1px solid #000; }
+    .bill-to-table td { border: 1px solid #000; font-size: 10px; }
+
+    /* ---------- ITEMS TABLE ---------- */
+    .items-table { margin-top: -1px; }
+    .items-table th { background: #c6d9f1; border: 1px solid #000; font-size: 9px; text-align: center; padding: 3px 4px; font-weight: bold; }
+    .items-table td { border: 1px solid #000; text-align: right; font-size: 10px; padding: 3px 5px; }
+    .items-table td:nth-child(1) { text-align: center; }
+    .items-table td:nth-child(2) { text-align: left; }
+    .items-table .total-row { font-weight: bold; font-size: 14px; }
+    .items-table .total-row td { border-top: 2px solid #000; }
+
+    /* ---------- SUMMARY ---------- */
+    .summary-table td { border: 1px solid #000; font-size: 10px; }
+    .summary-table .label-cell { font-weight: bold; }
+    .summary-table .amount-cell { text-align: right; }
+    .summary-table .inwords-cell { text-align: left; font-style: italic; }
+    .summary-table .highlight { background: #c6d9f1; font-weight: bold; }
+
+    /* ---------- BANK & FOOTER ---------- */
+    .bank-table td { border: 1px solid #000; font-size: 10px; }
+    .bank-table .bank-header { background: #c6d9f1; font-weight: bold; text-align: center; }
+    .footer-table td { border: 1px solid #000; font-size: 10px; padding: 8px 6px; }
+    .footer-table .center { text-align: center; font-weight: bold; }
+    .certified { font-size: 9px; font-style: italic; text-align: center; }
+
+    /* ---------- PRINT STYLES ---------- */
+    @media print {
+      body { margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .invoice-wrapper { border: 2px solid #000; }
+      .no-print { display: none !important; }
+      @page { size: A4; margin: 10mm; }
+    }
+
+    /* ---------- SCREEN TOOLBAR ---------- */
+    .print-toolbar {
+      text-align: center; padding: 12px; background: #f3f4f6; margin-bottom: 10px;
+      border-bottom: 1px solid #ddd; font-family: Arial, sans-serif;
+    }
+    .print-toolbar button {
+      padding: 8px 24px; font-size: 14px; cursor: pointer; border: none; border-radius: 4px;
+      color: #fff; margin: 0 6px;
+    }
+    .btn-print { background: #2563eb; }
+    .btn-print:hover { background: #1d4ed8; }
+    .btn-close { background: #6b7280; }
+    .btn-close:hover { background: #4b5563; }
+  </style>
+  <title>Tax Invoice - <%= @invoice.invoice_number %></title>
+</head>
+<body>
+
+<!-- Toolbar (hidden during print) -->
+<div class="print-toolbar no-print">
+  <button class="btn-print" onclick="window.print()">🖨️ Print / Save as PDF</button>
+  <button class="btn-close" onclick="window.close()">✕ Close</button>
+</div>
+
+<%
+  inv = @invoice
+  items = inv.accounting_invoice_items.order(:s_no)
+  site = inv.site
+  company = site&.company
+  billing_config = @billing_config
+
+  # Company details (from BillingConfiguration → Site → Company fallback)
+  company_name = billing_config&.company_name.presence || company&.name || site&.name || 'Company Name'
+  company_address = billing_config&.address.presence || ''
+  company_city = [billing_config&.city, billing_config&.state, billing_config&.pincode].compact.reject(&:blank?).join(', ')
+  company_gst = billing_config&.gst_number.presence || ''
+
+  # Bill-to
+  bill_name = inv.customer_name.presence || [inv.user&.firstname, inv.user&.lastname].compact.join(' ')
+  bill_address = inv.customer_address.presence || inv.unit&.try(:full_address) || ''
+  bill_state = inv.state.presence || billing_config&.state || 'Maharashtra'
+  bill_state_code = inv.state_code.presence || '27'
+  bill_gst_no = inv.gst_no || ''
+
+  reverse_charge = inv.gst_reverse_charge.presence || 'N'
+  place_of_supply = inv.place_of_supply.presence || site&.name || ''
+
+  # Totals
+  total_taxable = 0.0
+  total_cgst = 0.0
+  total_sgst = 0.0
+  total_igst = 0.0
+  total_amount = 0.0
+  max_rows = 10
+%>
+
+<div class="invoice-wrapper">
+
+  <!-- ===== HEADER ===== -->
+  <div class="header-block">
+    <div class="company-name"><%= company_name %></div>
+    <div class="company-addr"><%= company_address %></div>
+    <div class="company-addr"><%= company_city %></div>
+    <div class="company-gst">GST No- <%= company_gst %></div>
+  </div>
+
+  <!-- ===== TITLE ===== -->
+  <div class="title-row">
+    <h2>Tax Invoice</h2>
+  </div>
+
+  <!-- ===== INVOICE META ===== -->
+  <table class="meta-table">
+    <tr>
+      <td class="label" colspan="4">Invoice No: <%= inv.invoice_number %></td>
+    </tr>
+    <tr>
+      <td class="label" colspan="4">Invoice date: <%= inv.invoice_date&.strftime('%d/%m/%Y') %></td>
+    </tr>
+    <tr>
+      <td class="label" colspan="2">Reverse Charge (Y/N): <%= reverse_charge %></td>
+      <td colspan="2"></td>
+    </tr>
+    <tr>
+      <td class="label">State: <%= bill_state %></td>
+      <td class="label">Code</td>
+      <td><%= bill_state_code %></td>
+      <td class="label">Place of Supply: <%= place_of_supply %></td>
+    </tr>
+  </table>
+
+  <!-- ===== BILL TO PARTY ===== -->
+  <table class="bill-to-table">
+    <tr><td class="bill-to-header" colspan="4">Bill to Party</td></tr>
+    <tr>
+      <td class="label">Name:</td>
+      <td colspan="3"><%= bill_name %></td>
+    </tr>
+    <tr>
+      <td class="label">Address:</td>
+      <td colspan="3"><%= bill_address %></td>
+    </tr>
+    <tr><td colspan="4">&nbsp;</td></tr>
+    <tr>
+      <td class="label">State: <%= bill_state %></td>
+      <td class="label">Code</td>
+      <td><%= bill_state_code %></td>
+      <td>Mode of Payment: UPI No.:</td>
+    </tr>
+  </table>
+
+  <!-- ===== LINE ITEMS ===== -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th rowspan="2" style="width:5%">S. No</th>
+        <th rowspan="2" style="width:25%">Service Description</th>
+        <th rowspan="2" style="width:8%">HSN/SAC<br/>Code</th>
+        <th rowspan="2" style="width:8%">Rate</th>
+        <th rowspan="2" style="width:10%">Taxable<br/>Value</th>
+        <th colspan="2" style="width:16%">CGST</th>
+        <th colspan="2" style="width:16%">SGST</th>
+        <th rowspan="2" style="width:12%">Total</th>
+      </tr>
+      <tr>
+        <th>Rate %</th>
+        <th>Amount</th>
+        <th>Rate %</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% items.each_with_index do |item, idx| %>
+        <%
+          taxable = (item.taxable_value || item.amount || 0).to_f
+          cgst_rate = (item.cgst_rate || 0).to_f
+          cgst_amt  = (item.cgst_amount || 0).to_f
+          sgst_rate = (item.sgst_rate || 0).to_f
+          sgst_amt  = (item.sgst_amount || 0).to_f
+          igst_amt  = (item.igst_amount || 0).to_f
+          row_total = (item.total || item.total_amount || 0).to_f
+          total_taxable += taxable
+          total_cgst += cgst_amt
+          total_sgst += sgst_amt
+          total_igst += igst_amt
+          total_amount += row_total
+        %>
+        <tr>
+          <td><%= item.s_no || (idx + 1) %></td>
+          <td><%= item.service_description || item.description %></td>
+          <td><%= item.hsn_sac_code || '-' %></td>
+          <td><%= item.rate.present? ? number_with_delimiter(item.rate, delimiter: ',') : '-' %></td>
+          <td><%= number_with_delimiter(sprintf('%.2f', taxable), delimiter: ',') %></td>
+          <td><%= cgst_rate > 0 ? "#{cgst_rate}%" : '' %></td>
+          <td><%= cgst_amt > 0 ? number_with_delimiter(sprintf('%.2f', cgst_amt), delimiter: ',') : '-' %></td>
+          <td><%= sgst_rate > 0 ? "#{sgst_rate}%" : '' %></td>
+          <td><%= sgst_amt > 0 ? number_with_delimiter(sprintf('%.2f', sgst_amt), delimiter: ',') : '-' %></td>
+          <td><%= number_with_delimiter(sprintf('%.2f', row_total), delimiter: ',') %></td>
+        </tr>
+      <% end %>
+
+
+      <!-- TOTAL ROW -->
+      <tr class="total-row">
+        <td></td>
+        <td style="text-align:center; font-size:14px;"><strong>Total</strong></td>
+        <td></td>
+        <td></td>
+        <td><%= number_with_delimiter(sprintf('%.2f', total_taxable), delimiter: ',') %></td>
+        <td>-</td>
+        <td><%= number_with_delimiter(sprintf('%.2f', total_cgst), delimiter: ',') %></td>
+        <td></td>
+        <td><%= number_with_delimiter(sprintf('%.2f', total_sgst), delimiter: ',') %></td>
+        <td><%= number_with_delimiter(sprintf('%.2f', total_amount), delimiter: ',') %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ===== SUMMARY SECTION ===== -->
+  <%
+    total_before_tax = total_taxable
+    total_tax = total_cgst + total_sgst + total_igst
+    total_after_tax = total_before_tax + total_tax
+    gst_reverse = (reverse_charge.to_s.downcase == 'y') ? total_tax : 0
+  %>
+  <table class="summary-table">
+    <tr>
+      <td class="label-cell" colspan="3" style="text-align:center">Total Invoice amount in words</td>
+      <td class="label-cell" colspan="2">Total Amount before Tax</td>
+      <td class="amount-cell"><%= number_with_delimiter(sprintf('%.2f', total_before_tax), delimiter: ',') %></td>
+    </tr>
+    <tr>
+      <td class="inwords-cell" colspan="3" rowspan="4">
+        <%= number_to_words(total_after_tax) rescue 'Amount inwords' %>
+      </td>
+      <td class="label-cell" colspan="2">Add: CGST (<%= items.first&.cgst_rate || 0 %>%)</td>
+      <td class="amount-cell"><%= number_with_delimiter(sprintf('%.2f', total_cgst), delimiter: ',') %></td>
+    </tr>
+    <tr>
+      <td class="label-cell" colspan="2">Add: SGST (<%= items.first&.sgst_rate || 0 %>%)</td>
+      <td class="amount-cell"><%= number_with_delimiter(sprintf('%.2f', total_sgst), delimiter: ',') %></td>
+    </tr>
+    <tr>
+      <td class="label-cell" colspan="2">Total Tax Amount</td>
+      <td class="amount-cell"><%= number_with_delimiter(sprintf('%.2f', total_tax), delimiter: ',') %></td>
+    </tr>
+    <tr>
+      <td class="label-cell" colspan="2"><strong>Total Amount after Tax:</strong></td>
+      <td class="amount-cell"><strong><%= number_with_delimiter(sprintf('%.2f', total_after_tax), delimiter: ',') %></strong></td>
+    </tr>
+    <tr>
+      <td colspan="3"></td>
+      <td class="highlight" colspan="2">GST on Reverse Charge</td>
+      <td class="amount-cell highlight"><%= gst_reverse %></td>
+    </tr>
+  </table>
+
+<!-- Bank details from billing config -->
+  <%
+    bank_favouring = billing_config&.favouring_name.presence || inv.bank_account.presence || billing_config&.company_name || ''
+    bank_account = inv.bank_account.presence || billing_config&.account_number || ''
+    bank_ifsc = inv.bank_ifsc.presence || billing_config&.ifsc_code || ''
+    bank_name = billing_config&.bank_name || ''
+    bank_branch = billing_config&.branch_name || ''
+    bank_account_type = billing_config&.account_type || ''
+    bank_swift = billing_config&.swift_code || ''
+    tc = inv.terms_and_conditions.presence || billing_config&.terms_and_conditions || ''
+  %>
+<table class="bank-table">
+  <tr>
+    <td class="bank-header" colspan="2" style="width: 40%">Bank Details</td>
+    <%# <td class="bank-header"> </td> %>
+    <td rowspan="6" style="width:28%; text-align:center; vertical-align:middle; font-weight:bold;">
+    <td class="certified" colspan="2">
+      Certified that the particulars given above are true and correct
+    </td>
+  </tr>
+
+  <tr>
+    <td class="label" style="width:12%">Favouring Name:</td>
+    <td style="width:28%"><%= bank_favouring %></td>
+
+    <!-- COMMON SEAL -->
+   
+
+    <!-- COMPANY -->
+    <td colspan="2" style="text-align:center; font-weight:bold;">
+      <%= company_name %>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="label" style="width:12%">Bank Name</td>
+    <td><%= bank_name %></td>
+
+    <!-- EMPTY SPACE FOR SIGNATURE AREA -->
+    <td colspan="2" rowspan="4"></td>
+  </tr>
+
+  <tr>
+    <td class="label" style="width:12%">Branch</td>
+    <td><%= bank_branch %></td>
+  </tr>
+
+  <tr>
+    <td class="label" style="width:12%">Bank A/C</td>
+    <td><%= bank_account %></td>
+  </tr>
+
+  <tr>
+    <td class="label" style="width:12%">Bank IFSC</td>
+    <td><%= bank_ifsc %></td>
+  </tr>
+
+  <tr>
+    <!-- TERMS -->
+    <td colspan="2" style="padding:10px;">
+      <strong>Terms & Conditions</strong><br>
+      <%= tc %>
+    </td>
+    <td  style="text-align:center; vertical-align:bottom; font-weight:bold;">
+      Common Seal
+    </td>
+      <!-- SIGNATURE -->
+    <td colspan="2" style="text-align:center; vertical-align:bottom; font-weight:bold;">
+      Authorised signatory
+    </td>
+  </tr>
+</table>
+  <!-- ===== FOOTER ===== -->
+</div>
+</body>
+</html>

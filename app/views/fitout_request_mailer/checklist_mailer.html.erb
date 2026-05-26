@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Checklist Created - <%= @checklist.name %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            color: #444;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+        strong {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <%= @checklist.site&.name || "Site Management" %>
+        </div>
+
+        <h1>Hi <%= @user&.firstname || "User" %>,</h1>
+
+        <p>A new Checklist has been created for your site (<strong>ID: <%= @checklist.id %></strong>). This notification was sent on <%= Time.current.strftime("%a, %b %d, %Y at %I:%M %p") %>.</p>
+
+        <p>Details:</p>
+        <ul>
+            <li>Site: <strong><%= @checklist.site&.name || "N/A" %></strong></li>
+            <li>Checklist Name: <strong><%= @checklist.name %></strong></li>
+            <li>Frequency: <strong><%= @checklist.frequency&.humanize || "N/A" %></strong></li>
+            <li>Start Date: <strong><%= @checklist.start_date&.strftime("%B %d, %Y") || "N/A" %></strong></li>
+            <li>End Date: <strong><%= @checklist.end_date&.strftime("%B %d, %Y") || "N/A" %></strong></li>
+            <li>Type: <strong><%= @checklist.ctype&.humanize || "N/A" %></strong></li>
+        </ul>
+
+        <p>We will notify you once there are updates to this checklist.</p>
+
+        <p>Best Regards,<br>
+        Team <%= @checklist.site&.name || "Management" %></p>
+
+        <div class="footer">
+            <p>Powered by <strong>LOCKATED</strong></p>
+            <p><em>Note: This is an auto generated email. Please do not reply.</em></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Fitness Appointments</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Booking type</th>
+      <th>Name</th>
+      <th>Relationship</th>
+      <th>Age</th>
+      <th>Gender</th>
+      <th>Marital status</th>
+      <th>Date</th>
+      <th>Modile number</th>
+      <th>Preference</th>
+      <th>Trainer</th>
+      <th>Reason for appointment</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @fitness_appointments.each do |fitness_appointment| %>
+      <tr>
+        <td><%= fitness_appointment.booking_type %></td>
+        <td><%= fitness_appointment.name %></td>
+        <td><%= fitness_appointment.relationship %></td>
+        <td><%= fitness_appointment.age %></td>
+        <td><%= fitness_appointment.gender %></td>
+        <td><%= fitness_appointment.marital_status %></td>
+        <td><%= fitness_appointment.date %></td>
+        <td><%= fitness_appointment.modile_number %></td>
+        <td><%= fitness_appointment.preference %></td>
+        <td><%= fitness_appointment.trainer %></td>
+        <td><%= fitness_appointment.reason_for_appointment %></td>
+        <td><%= link_to 'Show', fitness_appointment %></td>
+        <td><%= link_to 'Edit', edit_fitness_appointment_path(fitness_appointment) %></td>
+        <td><%= link_to 'Destroy', fitness_appointment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Fitness Appointment', new_fitness_appointment_path %>

@@ -1,0 +1,116 @@
+<p id="notice"><%= notice %></p>
+
+<h1 style="text-align: center;">Registered Vehicles</h1>
+
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; margin: 0 auto;">
+  <thead>
+    <tr>
+      <th style="text-align: center;">Slot number</th>
+      <th style="text-align: center;">Vehicle category</th>
+      <th style="text-align: center;">Vehicle type</th>
+      <th style="text-align: center;">Sticker number</th>
+      <th style="text-align: center;">Registration number</th>
+      <th style="text-align: center;">Insurance number</th>
+      <th style="text-align: center;">Insurance valid till</th>
+      <th style="text-align: center;">Category</th>
+      <th style="text-align: center;">Vehicle number</th>
+      <th style="text-align: center;">Unit</th>
+      <th style="text-align: center;">User</th>
+      <th style="text-align: center;">Created by</th>
+      <th style="text-align: center;">Status</th>
+      <th style="text-align: center;">QR Code</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @registered_vehicles.each do |registered_vehicle| %>
+      <tr>
+        <td style="text-align: center;"><%= registered_vehicle.parking_configuration&.name %></td>
+        <td style="text-align: center;"><%= registered_vehicle.vehicle_category %></td>
+        <td style="text-align: center;"><%= registered_vehicle.vehicle_type %></td>
+        <td style="text-align: center;"><%= registered_vehicle.sticker_number %></td>
+        <td style="text-align: center;"><%= registered_vehicle.registration_number %></td>
+        <td style="text-align: center;"><%= registered_vehicle.insurance_number %></td>
+        <td style="text-align: center;"><%= registered_vehicle.insurance_valid_till %></td>
+        <td style="text-align: center;"><%= registered_vehicle.category %></td>
+        <td style="text-align: center;"><%= registered_vehicle.vehicle_number %></td>
+        <td style="text-align: center;"><%= registered_vehicle.unit_id %></td>
+        <td style="text-align: center;"><%= registered_vehicle.user_id %></td>
+        <td style="text-align: center;"><%= registered_vehicle.created_by_id %></td>
+        <td style="text-align: center;"><%= registered_vehicle.status %></td>
+        <td>
+          <a href="#registered_vehicle-qr-preview" data-toggle="modal" data-registered_vehicle-id="<%=registered_vehicle.id%>">
+            <img class="registered_vehicleqr" src="<%= registered_vehicle.qr_code_image.try(:document_url) %>" style="width:50px; height: 50px;">
+          </a>
+        </td>
+        <td><%= link_to 'Show', registered_vehicle %></td>
+        <td><%= link_to 'Edit', edit_registered_vehicle_path(registered_vehicle) %></td>
+        <td><%= link_to 'Destroy', registered_vehicle, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Registered Vehicle', new_registered_vehicle_path %>
+
+<!-- Registered Vehicle QR Code Preview Modal -->
+<div class="modal fade" id="registered_vehicle-qr-preview" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Registered Vehicle QR Code</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="registered_vehicle_qr_div">
+          <img src="" style="width: 200px; height: 200px">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="download-qr">Download QR Code</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var cursrc = "";
+    var currentRegisteredVehicleId = "";
+
+    $(".registered_vehicleqr").click(function(e) {
+      e.preventDefault();
+      cursrc = $(this).attr("src");
+      currentRegisteredVehicleId = $(this).closest("a").data("registered_vehicle-id");
+      $("#registered_vehicle_qr_div").find("img").attr("src", cursrc);
+      $("#registered_vehicle-qr-preview").modal('show');
+    });
+
+    $("#download-qr").click(function() {
+      if (cursrc) {
+        var link = document.createElement('a');
+        link.href = cursrc;
+        link.download = 'registered_vehicle_qr_' + currentRegisteredVehicleId + '.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    });
+
+    // Add this part to handle the download button in the table
+    $("a[download]").click(function(e) {
+      e.preventDefault();
+      var link = document.createElement('a');
+      link.href = $(this).attr('href');
+      link.download = 'registered_vehicle_qr_' + $(this).closest("tr").find("a[data-registered_vehicle-id]").data("registered_vehicle-id") + '.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  });
+</script>

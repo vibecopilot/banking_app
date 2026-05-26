@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @compliance_tag_task.name %>
+</p>
+
+<p>
+  <strong>Weightage:</strong>
+  <%= @compliance_tag_task.weightage %>
+</p>
+
+<p>
+  <strong>Compliance tag:</strong>
+  <%= @compliance_tag_task.compliance_tag_id %>
+</p>
+
+<%= link_to 'Edit', edit_compliance_tag_task_path(@compliance_tag_task) %> |
+<%= link_to 'Back', compliance_tag_tasks_path %>

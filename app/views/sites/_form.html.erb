@@ -1,0 +1,152 @@
+
+<style>
+  .site-form {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.field label {
+  margin-bottom: 4px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+}
+
+.field-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.features-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 20px;
+  width: 100%;
+}
+.feature-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;            
+}
+.feature-item label {
+  flex: 1;             
+}
+
+.feature-item input[type="checkbox"] {
+  margin-left: 10px;
+}
+</style>
+
+<div class="site-form">
+  <%= form_with(model: @site, local: true) do |form| %>
+   <%# binding.pry %> 
+
+    <% if @site.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@site.errors.count, "error") %> prohibited this site from being saved:</h2>
+        <ul>
+          <% @site.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Company -->
+    <div class="field">
+      <%= form.label :company_id, "Company" %>
+      <%= select_tag 'site[company_id]',
+            options_for_select(Company.all.map { |e| [e.name, e.id] }, @site.company_id),
+            include_blank: "Select Company",
+            class: "ui dropdown",
+            required: true %>
+    </div>
+
+    <!-- Name -->
+    <div class="field">
+      <%= form.label :name %>
+      <%= form.text_field :name, required: true %>
+    </div>
+
+    <!-- Region -->
+    <div class="field">
+      <%= form.label :region %>
+      <%= form.text_field :region, required: true %>
+    </div>
+
+    <!-- City -->
+    <div class="field">
+      <%= form.label :city %>
+      <%= form.text_field :city, required: true %>
+    </div>
+
+    <!-- Address -->
+    <div class="field">
+      <%= form.label :address %>
+      <%= form.text_field :address %>
+    </div>
+
+    <!-- Features -->
+    <div class="field">
+      <label>Features</label>
+
+      <% features_list = ["tickets","assets","accounting","cam_bill","document_pro","service_tickets",
+      "face_recognition","soft_services","items","purchase_order","work_order","hrms","vendors",
+      "attendance","gatepass","visitor","additional-services","skill_grow","fitout",
+      "registered_vehicles","staff","patrolling","good_in_and_out","permits","audits","bookings",
+      "field_sense","fnb","incidents","mailroom","contacts","business_cards","workspace_bookings",
+      "advance_salary","space","communication","meeting","doctors","insurances","bills","fitness",
+      "my_tickets","transport","parking","personal_finance","calendar","project_task",
+      "task_management","bill_pay","salary","bills_pay","birthday","task","copilot","integration",
+      "other_projects","about_us","compliance","meter_cat_type","amenities","setup_amenity",
+      "addresses","setup_tickets","setup_address","setup_communication","setup_gatepass",
+      "setup_bills","setup_cam_bill","survey","additional-service-OSR","setup_parking",
+      "other_bills","setup_incidents","bookings_request","setup_vendors","SETUP"] %>
+
+      <div class="features-container">
+        <% features_list.each do |feature| %>
+          <div class="feature-item">
+            <%= label_tag "features_#{feature}", feature %>
+            <%= check_box_tag "features[]", feature,
+                  @site.features.pluck(:feature_name).include?(feature) %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Active -->
+    <div class="field-inline">
+      <%= form.label :active %>
+      <%= form.check_box :active %>
+    </div>
+
+    <!-- Longitude -->
+    <div class="field">
+      <%= form.label :longitude %>
+      <%= form.number_field :longitude, step: 'any' %>
+    </div>
+
+    <!-- Latitude -->
+    <div class="field">
+      <%= form.label :latitude %>
+      <%= form.number_field :latitude, step: 'any' %>
+    </div>
+
+    <!-- Submit -->
+    <div class="actions">
+      <%= form.submit %>
+    </div>
+  <% end %>
+</div>

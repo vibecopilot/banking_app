@@ -1,0 +1,62 @@
+<%= form_with(model: incident, local: true) do |form| %>
+  <% if incident.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(incident.errors.count, "error") %> prohibited this incident from being saved:</h2>
+
+      <ul>
+      <% incident.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :time_and_date %>
+    <%= form.datetime_select :time_and_date, id: :incident_time_and_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :primary_incident_category %>
+    <%= form.number_field :primary_incident_category, id: :incident_primary_incident_category %>
+  </div>
+
+  <div class="field">
+    <%= form.label :secondary_incident_category %>
+    <%= form.number_field :secondary_incident_category, id: :incident_secondary_incident_category %>
+  </div>
+
+  <div class="field">
+    <%= form.label :incident_severity %>
+    <%= form.text_field :incident_severity, id: :incident_incident_severity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :incident_level %>
+    <%= form.text_field :incident_level, id: :incident_incident_level %>
+  </div>
+
+  <div class="field">
+    <%= form.label :building_id %>
+    <%= form.number_field :building_id, id: :incident_building_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :probability %>
+    <%= form.text_field :probability, id: :incident_probability %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :incident_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :incident_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,199 @@
+<% if notice.present? %>
+  <div class="alert alert-success alert-dismissible" role="alert" style="margin: 10px;">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <%= notice %>
+  </div>
+<% end %>
+<% if alert.present? %>
+  <div class="alert alert-danger alert-dismissible" role="alert" style="margin: 10px;">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <%= alert %>
+  </div>
+<% end %>
+
+<div class="col-sm-12">
+  <h4 class="pull-left" style="width: 100%; text-align: left;">
+    Users
+    <hr>
+  </h4>
+</div>
+
+<div class="ml-2 mr-2">
+  <!-- Toolbar -->
+  <div id="toolbar" style="display: flex; gap: 8px; align-items: center;">
+    <% if @user.user_type == 'pms_admin' %>
+      <%= link_to 'Add User', "/users/new", class: "create_user", style: "float: none;" %>
+
+    <button type="button" class="create_user mr-2" id="open-import-modal" style="float: none;">
+      Import
+    </button>
+    <% end %>
+  </div>
+
+  <!-- Table -->
+  <table class="table" id="user_setup"
+    data-toggle="table"
+    data-pagination="true"
+    data-search="true"
+    data-trim-on-search="false"
+    data-show-columns="true"
+    data-show-refresh="true"
+    data-show-toggle="true"
+    data-show-export="true"
+    data-click-to-select="true"
+    data-toolbar="#toolbar"
+    data-page-size="25"
+    data-page-list="[10, 25, 50, 100, All]"
+    data-sortable="true">
+
+    <thead>
+      <tr>
+        <th data-field="view">View</th>
+        <th data-field="firstname">Firstname</th>
+        <th data-field="lastname">Lastname</th>
+        <th data-field="email">Email</th>
+        <th data-field="mobile">Mobile</th>
+        <th data-field="unit">Unit</th>
+        <th data-field="type">Type</th>
+        <th data-field="send_email">Email</th>
+        <th data-field="approve">Approve</th>
+        <th data-field="actions"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td>
+            <a href="/users/<%= user.id %>" class="btn btn-xs">
+              <i class="fa fa-eye text-info"></i>
+            </a>
+          </td>
+
+          <td><%= user.firstname %></td>
+          <td><%= user.lastname %></td>
+          <td><%= user.email %></td>
+          <td><%= user.mobile %></td>
+
+          <% unit = Unit.find_by(id: user.try(:unit_id)) %>
+          <td><%= unit.present? ? unit.name : '' %></td>
+
+          <td><%= user.user_type_str %></td>
+
+          <td>
+            <a href="/users/send_welcome_email?id=<%= user.id %>">
+              <button type="button" class="create_user">Send Email</button>
+            </a>
+          </td>
+
+          <td>
+            <% if user.user_status == false %>
+              <%= link_to 'Approve',
+                  update_status_user_path(user, user_status: true, is_admin_approved: true),
+                  method: :patch,
+                  data: { confirm: 'Are you sure you want to approve this user?' },
+                  class: 'btn btn-success btn-xs' %>
+            <% else %>
+              Approved
+            <% end %>
+          </td>
+
+          <td>
+            <%= link_to 'Destroy',
+                user,
+                method: :delete,
+                data: { confirm: 'Are you sure? Note that all access to the user will be revoked & user will be permanently destroyed' } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <%# Modal moved outside this div - see below %>
+
+  <%= link_to 'Back', setup_path %>
+
+</div>
+
+<!-- Modal (plain jQuery - avoids Bootstrap JS conflicts) -->
+<div id="vendor-bulkupload" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:10500; background:rgba(0,0,0,0.5);">
+  <div style="max-width:500px; margin:80px auto; background:#fff; border-radius:8px; box-shadow:0 5px 15px rgba(0,0,0,0.5);">
+
+    <div style="padding:15px 20px; border-bottom:1px solid #e5e5e5; display:flex; justify-content:space-between; align-items:center;">
+      <h4 style="margin:0;">Bulk Upload</h4>
+      <button type="button" class="close" id="close-import-modal" style="font-size:24px; border:none; background:none; cursor:pointer;">&times;</button>
+    </div>
+
+    <%= form_tag import_users_path, method: :post, multipart: true, id: "user-import-form" do %>
+      <div style="padding:20px;">
+        <div class="form-group">
+          <section class="upload-div">
+            Drag & Drop or <%= file_field_tag :file, required: true %>
+          </section>
+        </div>
+      </div>
+
+      <div style="padding:15px 20px; border-top:1px solid #e5e5e5; text-align:right;">
+        <%= link_to "Download Sample Format",
+            "/assets/users_import.xlsx",
+            download: 'users_import.xlsx',
+            target: "_blank",
+            class: "create_user mr-2" %>
+
+        <%= submit_tag "Import", class: 'create_user mr-2', id: "import-submit-btn" %>
+      </div>
+    <% end %>
+
+  </div>
+</div>
+
+<br>
+
+<script>
+$(function() {
+  // Open import modal
+  $('#open-import-modal').on('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $('#import-submit-btn').prop('disabled', false).val('Import');
+    $('#user-import-form')[0].reset();
+    $('#vendor-bulkupload').fadeIn(200);
+  });
+
+  // Close import modal
+  $('#close-import-modal').on('click', function() {
+    $('#vendor-bulkupload').fadeOut(200);
+  });
+
+  // Close on backdrop click
+  $('#vendor-bulkupload').on('click', function(e) {
+    if (e.target === this) {
+      $(this).fadeOut(200);
+    }
+  });
+
+  // Close on Escape key
+  $(document).on('keydown', function(e) {
+    if (e.key === 'Escape') {
+      $('#vendor-bulkupload').fadeOut(200);
+    }
+  });
+
+  // Disable button on submit to prevent multiple uploads
+  $('#user-import-form').on('submit', function() {
+    var $btn = $('#import-submit-btn');
+    var fileInput = $('#user-import-form input[type="file"]');
+
+    // Validate file is selected
+    if (!fileInput.val()) {
+      alert('Please select a file to import.');
+      return false;
+    }
+
+    // Disable button and show uploading state
+    $btn.prop('disabled', true).val('Uploading...');
+    return true; // Allow normal form submission
+  });
+});
+</script>

@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  employee_id: 1
+  employee_name: MyString
+  expense_category: MyString
+  date_of_expense: 2024-12-13
+  amount_spent: 9.99
+  approval_status: MyString
+  reimbursement_amount: 9.99
+  reimbursement_method: MyString
+  manager_approval: false
+  reimbursement_confirmation_email: MyString
+  description_of_expense: MyText
+
+two:
+  employee_id: 1
+  employee_name: MyString
+  expense_category: MyString
+  date_of_expense: 2024-12-13
+  amount_spent: 9.99
+  approval_status: MyString
+  reimbursement_amount: 9.99
+  reimbursement_method: MyString
+  manager_approval: false
+  reimbursement_confirmation_email: MyString
+  description_of_expense: MyText

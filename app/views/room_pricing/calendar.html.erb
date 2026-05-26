@@ -1,0 +1,295 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Room Pricing Calendar</h4>
+          <div>
+            <%= link_to 'Add New Pricing', new_room_pricing_path, class: 'btn btn-primary btn-sm' %>
+            <%= link_to 'Back to List', room_pricing_index_path, class: 'btn btn-secondary btn-sm' %>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Filter Controls -->
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <label for="room-filter" class="form-label">Filter by Room:</label>
+              <select id="room-filter" class="form-control">
+                <option value="">All Rooms</option>
+                <% Room.includes(:site).each do |room| %>
+                  <option value="<%= room.id %>"><%= room.name %> (<%= room.site.name %>)</option>
+                <% end %>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="site-filter" class="form-label">Filter by Site:</label>
+              <select id="site-filter" class="form-control">
+                <option value="">All Sites</option>
+                <% Site.all.each do |site| %>
+                  <option value="<%= site.id %>"><%= site.name %></option>
+                <% end %>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="month-picker" class="form-label">Month/Year:</label>
+              <input type="month" id="month-picker" class="form-control" value="<%= Date.current.strftime('%Y-%m') %>">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">&nbsp;</label>
+              <div>
+                <button type="button" id="refresh-calendar" class="btn btn-info btn-block">Refresh Calendar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar Container -->
+          <div id="pricing-calendar-container">
+            <div class="text-center">
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <p>Loading pricing calendar...</p>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Calendar Legend</h6>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <div class="d-flex align-items-center mb-2">
+                        <div class="bg-success" style="width: 20px; height: 20px; margin-right: 10px;"></div>
+                        <span>Low Price (< ₹2,000)</span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="d-flex align-items-center mb-2">
+                        <div class="bg-warning" style="width: 20px; height: 20px; margin-right: 10px;"></div>
+                        <span>Medium Price (₹2,000 - ₹5,000)</span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="d-flex align-items-center mb-2">
+                        <div class="bg-danger" style="width: 20px; height: 20px; margin-right: 10px;"></div>
+                        <span>High Price (> ₹5,000)</span>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="d-flex align-items-center mb-2">
+                        <div class="bg-light border" style="width: 20px; height: 20px; margin-right: 10px;"></div>
+                        <span>No Pricing Set</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pricing Details Modal -->
+<div class="modal fade" id="pricingModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Pricing Details</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="pricing-modal-body">
+        <!-- Content will be loaded dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.calendar-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+.calendar-table th,
+.calendar-table td {
+  border: 1px solid #dee2e6;
+  padding: 8px;
+  text-align: center;
+  vertical-align: top;
+  height: 80px;
+  position: relative;
+}
+
+.calendar-table th {
+  background-color: #f8f9fa;
+  height: 40px;
+  font-weight: bold;
+}
+
+.pricing-cell {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pricing-cell:hover {
+  opacity: 0.8;
+  transform: scale(1.02);
+}
+
+.pricing-amount {
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.room-name {
+  font-size: 10px;
+  color: #6c757d;
+}
+
+.date-number {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.other-month {
+  color: #adb5bd;
+  background-color: #f8f9fa;
+}
+</style>
+
+<script>
+$(document).ready(function() {
+  loadPricingCalendar();
+
+  // Event handlers
+  $('#refresh-calendar, #month-picker, #room-filter, #site-filter').on('change', function() {
+    loadPricingCalendar();
+  });
+
+  $('#refresh-calendar').on('click', function() {
+    loadPricingCalendar();
+  });
+
+  function loadPricingCalendar() {
+    const month = $('#month-picker').val();
+    const roomId = $('#room-filter').val();
+    const siteId = $('#site-filter').val();
+    
+    $('#pricing-calendar-container').html(`
+      <div class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <p>Loading pricing calendar...</p>
+      </div>
+    `);
+
+    // Simulate API call (replace with actual AJAX call)
+    setTimeout(function() {
+      generateCalendar(month, roomId, siteId);
+    }, 1000);
+  }
+
+  function generateCalendar(month, roomId, siteId) {
+    const [year, monthNum] = month.split('-');
+    const firstDay = new Date(year, monthNum - 1, 1);
+    const lastDay = new Date(year, monthNum, 0);
+    const startDate = new Date(firstDay);
+    startDate.setDate(startDate.getDate() - startDate.getDay());
+    
+    let calendarHtml = '<table class="calendar-table table">';
+    
+    // Header
+    calendarHtml += '<thead><tr>';
+    ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
+      calendarHtml += `<th>${day}</th>`;
+    });
+    calendarHtml += '</tr></thead><tbody>';
+
+    // Generate weeks
+    const currentDate = new Date(startDate);
+    while (currentDate <= lastDay || currentDate.getDay() !== 0) {
+      calendarHtml += '<tr>';
+      
+      for (let i = 0; i < 7; i++) {
+        const isCurrentMonth = currentDate.getMonth() === firstDay.getMonth();
+        const dateStr = currentDate.toISOString().split('T')[0];
+        const cellClass = isCurrentMonth ? 'pricing-cell' : 'pricing-cell other-month';
+        
+        // Mock pricing data (replace with actual data from server)
+        const mockPrice = isCurrentMonth ? Math.floor(Math.random() * 8000) + 1000 : null;
+        const priceClass = mockPrice ? getPriceClass(mockPrice) : 'bg-light';
+        
+        calendarHtml += `
+          <td class="${cellClass} ${priceClass}" data-date="${dateStr}" data-price="${mockPrice || 0}">
+            <div class="date-number">${currentDate.getDate()}</div>
+            ${mockPrice ? `<div class="pricing-amount">₹${mockPrice.toLocaleString()}</div>` : ''}
+            <div class="room-name">${roomId ? 'Selected Room' : 'All Rooms'}</div>
+          </td>
+        `;
+        
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      
+      calendarHtml += '</tr>';
+      
+      if (currentDate > lastDay && currentDate.getDay() === 0) break;
+    }
+    
+    calendarHtml += '</tbody></table>';
+    
+    $('#pricing-calendar-container').html(calendarHtml);
+    
+    // Add click handlers for pricing cells
+    $('.pricing-cell').on('click', function() {
+      const date = $(this).data('date');
+      const price = $(this).data('price');
+      showPricingDetails(date, price);
+    });
+  }
+
+  function getPriceClass(price) {
+    if (price < 2000) return 'bg-success text-white';
+    if (price < 5000) return 'bg-warning text-dark';
+    return 'bg-danger text-white';
+  }
+
+  function showPricingDetails(date, price) {
+    const modalBody = `
+      <div class="row">
+        <div class="col-md-6">
+          <h6>Date</h6>
+          <p>${new Date(date).toLocaleDateString()}</p>
+        </div>
+        <div class="col-md-6">
+          <h6>Current Price</h6>
+          <p>${price > 0 ? '₹' + price.toLocaleString() : 'No pricing set'}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h6>Actions</h6>
+          <a href="/room_pricing/new?date=${date}" class="btn btn-primary btn-sm">Set New Pricing</a>
+          ${price > 0 ? '<a href="#" class="btn btn-info btn-sm ml-2">Edit Existing</a>' : ''}
+        </div>
+      </div>
+    `;
+    
+    $('#pricing-modal-body').html(modalBody);
+    $('#pricingModal').modal('show');
+  }
+});
+</script>

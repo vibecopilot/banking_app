@@ -1,0 +1,109 @@
+<style type="text/css">
+  .rbg {
+    margin-left: 0px;
+    margin-right: 0px;
+    background-color: #1f76b1;
+  }
+</style>
+<p id="notice"><%= notice %></p>
+<p id="notice"><%= flash[:error] %></p>
+<%= render "form" %> 
+<div class="row" style="text-align: center;">
+  <button data-toggle="modal" data-target="#addp" class="btn" style="background-color: #30637E; color: white;"> <i class="fa fa-plus"></i>
+Add TODO List</button>
+</div>
+<% @projects.each do |project| %>
+ <div class="wrapper" style="border:  1px solid; margin: 10px; padding: 5px">
+    <div class="row" >
+      <div class="col-sm-12" >
+        <div class="col-sm-1">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </div>
+        <div class="col-sm-4" style="color: black;">
+          <%= project.name %>
+        </div>
+        <% @project = project %>
+        <%= render "form" %> 
+        <div class="col-sm-3">
+          <span><i data-toggle="modal" data-target="#addp<%= project.id %>" class="fa fa-edit text-orange edit" style="font-size: 20px;"></i></span> 
+          <span class="" data-id="<%= project.id %>" style="margin-left: 5px;"> 
+                <%= link_to '', project, method: :delete, data: { confirm: 'Are you sure?' }, :remote => true, :class => 'fa fa-trash-o text-red', :style => "font-size: 20px;" %> 
+            </span>
+        </div>
+      </div>
+      <div class="col-sm-12" >
+        <div class="col-sm-1">
+          <span class="glyphicon glyphicon-plus"></span>
+        </div>
+        <div class="col-sm-4">
+          <%= form_for([@project, Task.new], :remote => true, :authenticity_token => true) do |form| %>
+            <input type="text" id="task_name" name="task[name]" class="form-control">
+          <% end %>
+        </div>
+        <div class="col-sm-3" style=";height: 33px;padding-top: 5px;"> 
+          <button class="btn btn-xs btn-info addtask" data-pid="<%= project.id %>">Add Task</button>
+        </div>
+      </div>
+      <div class="col-sm-12" >
+        <table class="table table-bordered" style="margin-top: 10px;">
+          <tbody>
+            <% project.tasks.each do |task| %>
+              <% @task = task %>
+              <%= render "tasks/show_part" %>
+              <%= render "tasks/form" %>
+              <%= render "comments/form" %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">
+  $("document").ready(function(){
+
+    $(".addprj").click(function(e){
+      form = $(this).parents(".modal-content").find("form")
+      if(form.find("#project_name").val() == ""){
+        alert("Please provide project name");
+      }
+      else{
+        form.submit();
+      }
+    });
+
+    $(".markdone").click(function(e){
+      selector = $(this);
+      id = $(this).attr("data-task");
+      pid = $(this).attr("dpid");
+      if(id != ''){
+        $.ajax({
+          type: "PUT",
+          data: {task: {
+            status: 1,
+          }},
+          url: "/projects/"+pid+"/tasks/"+id+".json?token="+api.token,
+          success: function(datas){
+            console.log(selector);
+            selector.parents("tr").find(".icns").hide();
+          }
+        });
+      }
+    });
+
+
+    $(".addtask").click(function(e){
+      form = $(this).parents(".row").find("form")
+      if(form.find("#task_name").val() == ""){
+        alert("Please provide name");
+        return false;
+      }
+      else{
+        form.submit();
+      }
+    });
+
+  });
+</script>

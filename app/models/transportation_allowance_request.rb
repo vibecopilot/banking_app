@@ -1,0 +1,2 @@
+class TransportationAllowanceRequest < ApplicationRecord
+end

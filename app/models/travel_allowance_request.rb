@@ -1,0 +1,2 @@
+class TravelAllowanceRequest < ApplicationRecord
+end

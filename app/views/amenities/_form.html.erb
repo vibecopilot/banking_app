@@ -1,0 +1,149 @@
+<%= form_with(model: amenity, local: true) do |form| %>
+  <% if amenity.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(amenity.errors.count, "error") %> prohibited this amenity from being saved:</h2>
+
+      <ul>
+      <% amenity.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :amenity_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fac_type %>
+    <%= form.text_field :fac_type, id: :amenity_fac_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :fac_name %>
+    <%= form.text_field :fac_name, id: :amenity_fac_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :member_charges %>
+    <%= form.number_field :member_charges, id: :amenity_member_charges %>
+  </div>
+
+  <div class="field">
+    <%= form.label :book_before %>
+    <%= form.number_field :book_before, id: :amenity_book_before %>
+  </div>
+
+  <div class="field">
+    <%= form.label :disclaimer %>
+    <%= form.text_area :disclaimer, id: :amenity_disclaimer %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cancellation_policy %>
+    <%= form.text_area :cancellation_policy, id: :amenity_cancellation_policy %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cutoff_min %>
+    <%= form.number_field :cutoff_min, id: :amenity_cutoff_min %>
+  </div>
+
+  <div class="field">
+    <%= form.label :return_percentage %>
+    <%= form.number_field :return_percentage, id: :amenity_return_percentage %>
+  </div>
+
+  <div class="field">
+    <%= form.label :create_by %>
+    <%= form.number_field :create_by, id: :amenity_create_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.number_field :active, id: :amenity_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :member_price_adult %>
+    <%= form.number_field :member_price_adult, id: :amenity_member_price_adult %>
+  </div>
+
+  <div class="field">
+    <%= form.label :member_price_child %>
+    <%= form.number_field :member_price_child, id: :amenity_member_price_child %>
+  </div>
+
+  <div class="field">
+    <%= form.label :guest_price_adult %>
+    <%= form.number_field :guest_price_adult, id: :amenity_guest_price_adult %>
+  </div>
+
+  <div class="field">
+    <%= form.label :guest_price_child %>
+    <%= form.number_field :guest_price_child, id: :amenity_guest_price_child %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tenant_price_adult %>
+    <%= form.number_field :tenant_price_adult, id: :amenity_tenant_price_adult %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tenant_price_child %>
+    <%= form.number_field :tenant_price_child, id: :amenity_tenant_price_child %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :min_people %>
+    <%= form.number_field :min_people, id: :amenity_min_people %>
+  </div>
+
+  <div class="field">
+    <%= form.label :max_people %>
+    <%= form.number_field :max_people, id: :amenity_max_people %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cancel_before %>
+    <%= form.number_field :cancel_before, id: :amenity_cancel_before %>
+  </div>
+
+  <div class="field">
+    <%= form.label :terms %>
+    <%= form.text_area :terms, id: :amenity_terms %>
+  </div>
+
+  <div class="field">
+    <%= form.label :advance_booking %>
+    <%= form.number_field :advance_booking, id: :advance_booking %>
+  </div>
+
+  <div class="field">
+    <%= form.label :deposit %>
+    <%= form.number_field :deposit, id: :amenity_deposit %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :amenity_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :max_slots %>
+    <%= form.number_field :max_slots, id: :amenity_max_slots %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_methods, "Select Payment Methods" %><br>
+    <%= form.select :payment_methods, Amenity::PAYMENT_METHODS, {include_blank: false }, multiple: true %>
+  </div>
+
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

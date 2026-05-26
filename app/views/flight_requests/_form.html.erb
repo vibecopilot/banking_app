@@ -1,0 +1,87 @@
+<%= form_with(model: flight_request, local: true) do |form| %>
+  <% if flight_request.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(flight_request.errors.count, "error") %> prohibited this flight_request from being saved:</h2>
+
+      <ul>
+      <% flight_request.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :employee_name %>
+    <%= form.text_field :employee_name, id: :flight_request_employee_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :employee_id %>
+    <%= form.number_field :employee_id, id: :flight_request_employee_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :departure_city %>
+    <%= form.text_field :departure_city, id: :flight_request_departure_city %>
+  </div>
+
+  <div class="field">
+    <%= form.label :arrival_city %>
+    <%= form.text_field :arrival_city, id: :flight_request_arrival_city %>
+  </div>
+
+  <div class="field">
+    <%= form.label :departure_date %>
+    <%= form.date_select :departure_date, id: :flight_request_departure_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :return_date %>
+    <%= form.date_select :return_date, id: :flight_request_return_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :preferred_airlines %>
+    <%= form.text_field :preferred_airlines, id: :flight_request_preferred_airlines %>
+  </div>
+
+  <div class="field">
+    <%= form.label :flight_class %>
+    <%= form.text_field :flight_class, id: :flight_request_flight_class %>
+  </div>
+
+  <div class="field">
+    <%= form.label :passenger_name %>
+    <%= form.text_field :passenger_name, id: :flight_request_passenger_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :passport_information %>
+    <%= form.text_field :passport_information, id: :flight_request_passport_information %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ticket_confirmation_number %>
+    <%= form.number_field :ticket_confirmation_number, id: :flight_request_ticket_confirmation_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_status %>
+    <%= form.text_field :booking_status, id: :flight_request_booking_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :manager_approval %>
+    <%= form.check_box :manager_approval, id: :flight_request_manager_approval %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_confirmation_email %>
+    <%= form.text_field :booking_confirmation_email, id: :flight_request_booking_confirmation_email %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

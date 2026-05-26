@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Deleted Users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Mobile</th>
+      <th>First name</th>
+      <th>Last name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @deleted_users.each do |deleted_user| %>
+      <tr>
+        <td><%= deleted_user.email %></td>
+        <td><%= deleted_user.mobile %></td>
+        <td><%= deleted_user.first_name %></td>
+        <td><%= deleted_user.last_name %></td>
+        <td><%= link_to 'Show', deleted_user %></td>
+        <td><%= link_to 'Edit', edit_deleted_user_path(deleted_user) %></td>
+        <td><%= link_to 'Destroy', deleted_user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Deleted User', new_deleted_user_path %>

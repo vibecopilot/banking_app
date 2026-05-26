@@ -1,0 +1,99 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @inventory.name %>
+</p>
+
+<p>
+  <strong>Inventory type:</strong>
+  <%= @inventory.inventory_type %>
+</p>
+
+<p>
+  <strong>Criticality:</strong>
+  <%= @inventory.criticality %>
+</p>
+
+<p>
+  <strong>Asset group:</strong>
+  <%= @inventory.asset_group_id %>
+</p>
+
+<p>
+  <strong>Asset sub group:</strong>
+  <%= @inventory.asset_sub_group_id %>
+</p>
+
+<p>
+  <strong>Asset:</strong>
+  <%= @inventory.asset_id %>
+</p>
+
+<p>
+  <strong>Code:</strong>
+  <%= @inventory.code %>
+</p>
+
+<p>
+  <strong>Serial number:</strong>
+  <%= @inventory.serial_number %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @inventory.quantity %>
+</p>
+
+<p>
+  <strong>Min stock level:</strong>
+  <%= @inventory.min_stock_level %>
+</p>
+
+<p>
+  <strong>Min order level:</strong>
+  <%= @inventory.min_order_level %>
+</p>
+
+<p>
+  <strong>Cgst rate:</strong>
+  <%= @inventory.cgst_rate %>
+</p>
+
+<p>
+  <strong>Sgst rate:</strong>
+  <%= @inventory.sgst_rate %>
+</p>
+
+<p>
+  <strong>Igst rate:</strong>
+  <%= @inventory.igst_rate %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @inventory.active %>
+</p>
+
+<p>
+  <strong>Hsn:</strong>
+  <%= @inventory.hsn_id %>
+</p>
+
+<p>
+  <strong>Expiry date:</strong>
+  <%= @inventory.expiry_date %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @inventory.unit %>
+</p>
+
+<p>
+  <strong>Cost:</strong>
+  <%= @inventory.cost %>
+</p>
+
+<%= link_to 'Edit', edit_inventory_path(@inventory) %> |
+<%= link_to 'Back', inventories_path %>

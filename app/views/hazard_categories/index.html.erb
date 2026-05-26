@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Hazard Categories</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Sub activity</th>
+      <th>Activity</th>
+      <th>Site</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @hazard_categories.each do |hazard_category| %>
+      <tr>
+        <td><%= hazard_category.name %></td>
+        <td><%= hazard_category.description %></td>
+        <td><%= hazard_category.sub_activity_id %></td>
+        <td><%= hazard_category.activity_id %></td>
+        <td><%= hazard_category.site_id %></td>
+        <td><%= link_to 'Show', hazard_category %></td>
+        <td><%= link_to 'Edit', edit_hazard_category_path(hazard_category) %></td>
+        <td><%= link_to 'Destroy', hazard_category, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Hazard Category', new_hazard_category_path %>

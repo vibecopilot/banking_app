@@ -1,0 +1,11 @@
+json.id service_subcategory.id
+json.name service_subcategory.name
+json.description service_subcategory.description
+json.category_name service_subcategory.service_category.try(:name)
+json.service_category_id service_subcategory.service_category.id
+json.duration_minutes service_subcategory.duration_minutes
+json.advance_booking_hours service_subcategory.advance_booking_hours
+json.cancellation_hours service_subcategory.cancellation_hours
+json.slots_count service_subcategory.service_slots.active.count
+json.created_at service_subcategory.created_at
+json.active service_subcategory.active

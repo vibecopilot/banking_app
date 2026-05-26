@@ -1,0 +1,3 @@
+class IssueType < ApplicationRecord
+
+end

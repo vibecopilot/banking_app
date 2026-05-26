@@ -1,0 +1,87 @@
+<%= form_with(model: cab_and_bus_request, local: true) do |form| %>
+  <% if cab_and_bus_request.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(cab_and_bus_request.errors.count, "error") %> prohibited this cab_and_bus_request from being saved:</h2>
+
+      <ul>
+      <% cab_and_bus_request.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :employee_name %>
+    <%= form.text_field :employee_name, id: :cab_and_bus_request_employee_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :employee_id %>
+    <%= form.number_field :employee_id, id: :cab_and_bus_request_employee_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pickup_location %>
+    <%= form.text_field :pickup_location, id: :cab_and_bus_request_pickup_location %>
+  </div>
+
+  <div class="field">
+    <%= form.label :drop_off_location %>
+    <%= form.text_field :drop_off_location, id: :cab_and_bus_request_drop_off_location %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date_and_time %>
+    <%= form.datetime_select :date_and_time, id: :cab_and_bus_request_date_and_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :number_of_passengers %>
+    <%= form.number_field :number_of_passengers, id: :cab_and_bus_request_number_of_passengers %>
+  </div>
+
+  <div class="field">
+    <%= form.label :transportation_type %>
+    <%= form.text_field :transportation_type, id: :cab_and_bus_request_transportation_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :special_requirements %>
+    <%= form.text_area :special_requirements, id: :cab_and_bus_request_special_requirements %>
+  </div>
+
+  <div class="field">
+    <%= form.label :driver_contact_information %>
+    <%= form.text_area :driver_contact_information, id: :cab_and_bus_request_driver_contact_information %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vehicle_details %>
+    <%= form.text_area :vehicle_details, id: :cab_and_bus_request_vehicle_details %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_confirmation_number %>
+    <%= form.number_field :booking_confirmation_number, id: :cab_and_bus_request_booking_confirmation_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_status %>
+    <%= form.text_field :booking_status, id: :cab_and_bus_request_booking_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :manager_approval %>
+    <%= form.check_box :manager_approval, id: :cab_and_bus_request_manager_approval %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_confirmation_email %>
+    <%= form.text_field :booking_confirmation_email, id: :cab_and_bus_request_booking_confirmation_email %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,42 @@
+<%= form_with(model: compliance_tracker, local: true) do |form| %>
+  <% if compliance_tracker.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(compliance_tracker.errors.count, "error") %> prohibited this compliance_tracker from being saved:</h2>
+
+      <ul>
+      <% compliance_tracker.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :compliance_config_id %>
+    <%= form.number_field :compliance_config_id, id: :compliance_tracker_compliance_config_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status, id: :compliance_tracker_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :submitted_on %>
+    <%= form.datetime_select :submitted_on, id: :compliance_tracker_submitted_on %>
+  </div>
+
+  <div class="field">
+    <%= form.label :submitted_by_id %>
+    <%= form.number_field :submitted_by_id, id: :compliance_tracker_submitted_by_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :compliance_tracker_site_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

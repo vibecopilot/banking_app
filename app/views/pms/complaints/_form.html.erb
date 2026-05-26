@@ -1,0 +1,231 @@
+<style>
+.picupload{
+  height: 60px !important;
+}
+.chosen-container.chosen-container-single {
+    width: 52% !important;
+  }
+</style>
+
+  <div style="display: flex; justify-content: center; align-items: center;">
+    <div class="complaint-ticket-container">
+    <%= form_for([:manage, @complaint], :url => "/pms/complaints", :html => { :multipart => true, :class => "form-horizontal" }) do |f| %>
+        <%= f.hidden_field :of_phase, :value => "pms" %>
+        <%= f.hidden_field :society_staff_type, :value => "User" %>
+
+      <header>
+        <span class="main-title">New Ticket</span> 
+      </header>
+      <section>
+        <% if @user.pms_occupant_admin? %>
+        <span style="display: inline-block; margin-left: 20px;"><h6 class="detail-title">On Behalf of</h6></span>
+          <div style="margin-right: 130px; margin-left: 9%; display: inline-block;">
+              <input type="radio" name="complaint[on_behalf_of]" value="occupant_admin" class="on_behalf_of" checked data-name="<%= @user.firstname + ' ' + @user.lastname %>" data-mobile="<%= @user.mobile %>" data-site_id="" data-unit_id=""> 
+              <label>Self</label>
+          </div>
+          <div style="display: inline-block;">
+              <input type="radio" name="complaint[on_behalf_of]" value="user" class="on_behalf_of"> 
+              <label>User</label>
+          </div> 
+              <div class="col-sm-12 on_behalf_usr" style="display: block;">
+            <label class="col-sm-3 control-label">User</label>
+            <div class="col-sm-9">
+
+              <% @users = User.where(id: UserSite.where(site_id: @user.current_site_id).pluck(:user_id), user_type: ["pms_technician", "pms_admin"]) %>
+              
+              <select id='' name="sel_id_user" class="chosen-select select_user">
+                <option value="">Select User</option>
+                <% @users.each do |user| %>
+                  <option value="<%= user.id %>" data-name="<%= user.firstname + ' ' + user.lastname %>" data-mobile="<%= user.mobile %>" ><%= user.firstname + ' ' + user.lastname %></option> 
+                <% end %>
+              </select>
+            </div>
+          </div>
+          <% end %>
+              <br>
+                      <div id="blk-1" class="toHide">
+
+
+              <input type="hidden" name="complaint[complaint_type]" value="Complaint" >
+
+          <div class="secondary-detail">
+            <div class="grid">
+              <label class="fields">Category Type :</label>
+              <% @helpdesk_categories = HelpdeskCategory.where(society_id: @user.current_site_id) %>
+              <%= f.select :category_type_id, options_for_select(@helpdesk_categories.map { |e| [e.name, e.id] }),{:include_blank=>"Select Category"},{:class => 'custom-dropdown category-type'}%>
+            </div>
+<br>
+            <div class="grid">
+              <label class="fields">Sub Category :</label>
+            <% @sbs = @complaint.category_type_id.present? ? HelpdeskCategory.find_by(id: @complaint.category_type_id).helpdesk_sub_categories : [] %>
+            <select class="custom-dropdown sub-categories sub_category" name="complaint[sub_category_id]" id="complaint_log_sub_category_id">
+              <option value="">Select Sub Category</option>
+              <% @sbs.each do |sc|%>
+                <option data-ht="<%= sc.helpdesk_text %>" value="<%= sc.id%>" <%= @complaint.sub_category_id == sc.id ? 'selected' : '' %>><%= sc.name %></option>
+              <% end %>
+            </select>
+          </div>
+            <% if @user.available_site.try(:complaint_urgency_enabled?) %>
+
+            <div class="grid">
+                <label class="fields"> Customer Priority :</label>
+                  <% urgency = [["High",1],["Medium", 2],["Low", 3]] %>
+                  <%= select_tag "complaint[urgency]", options_for_select(urgency, :selected => 3), :class => 'custom-dropdown selectpicker' %>
+            </div>
+              <% end %>
+
+
+          </div><br>
+
+            <div style="display: flex;padding: 10px;">
+              <label class="fields">Description :</label>
+              <%= f.text_area :heading, :placeholder => "Description", :class => "textbox desc", :rows => "4" %>
+            </div>
+       
+          <div style="display: flex;padding: 10px;">
+              <label class="fields">Attachment :</label>
+              <div class="upload">
+                <ul id="media-list" class="clearfix">
+                  <li class="myupload"><span><i class="fa fa-plus" aria-hidden="true"></i>
+                  <input type="file" name="attachments[]" click-type="type2" id="picupload2" class="picupload" multiple>
+                </span> </li>
+                </ul>
+              </div>
+          </div> 
+
+          <div class="button-group">
+            <button style="margin-right: 8px;" class="btn btn-info btn-sm" type="button" id="submitpms">Submit</button>
+            <%#= link_to "Reset", new_pms_manage_complaint_path %>
+            <a class="btn btn-primary btn-sm" href="/pms/complaints/new">Cancel</a>
+          </div><br>
+        </div>
+        </section>
+        <% end %>    
+      </div>
+  </div>
+<br>
+<br>
+<br>
+<br>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+
+  <script>
+  $(function() {
+
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : { allow_single_deselect: true },
+      '.chosen-select-no-single' : { disable_search_threshold: 10 },
+      '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' },
+      '.chosen-select-rtl'       : { rtl: true },
+      '.chosen-select-width'     : { width: '95%' }
+    }
+
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+
+  $(".on_behalf_usr").hide();
+  $('[name="complaint[on_behalf_of]"]').change(function(){
+    if($(this).val() == "user"){
+      $(".requestor-details").hide();
+      $(".on_behalf_usr").show();
+      $(".select_user").val('');
+      $('.select_user').trigger("chosen:updated");
+      $(".user-name").html("");
+      $(".mobile").html("");
+      $(".site_id").html("");
+      $(".unit_id").html("");
+      $(".department_id").html("");
+    } else {
+      $(".requestor-details").show();
+      $(".on_behalf_usr").hide();
+      $(".user-name").html($(this).data('name'));
+      $(".mobile").html($(this).data('mobile'));
+      $(".site_id").html($(this).data('site_id'));
+      $(".unit_id").html($(this).data('unit_id'));
+      $(".department_id").html($(this).data('department_id'));
+    }
+
+  });
+
+
+  $("#submitpms").click(function(e){
+    e.preventDefault();
+    form = $(this).parents("form");
+    if($('[name="complaint[on_behalf_of]"]:checked').val() == "user"){
+
+     if ($('.select_user').val() == "") {
+        toastr.error("Please select user.");
+        return false;
+     }
+    }
+    
+    var category_type_id = $("#complaint_category_type_id").val();
+    if(category_type_id == ""){
+      toastr.error("Please select category");
+      return false;
+    }
+      
+    vl = form.find('.desc').val();
+    if(vl == "")   
+    {
+      toastr.error("Please enter description");
+      return;
+    }
+
+    form.submit();
+    $(this).prop('disabled', true);
+  });
+  });  
+
+  $(".select_user").change(function (event) {
+    var selected = $(this).children("option:selected");
+    var option = selected[0];
+
+    if($(option).val()){
+      $(".user-name").html($(option).data('name'));
+      $(".mobile").html($(option).data('mobile'));
+      $(".site_id").html($(option).data('site_id'));
+      $(".unit_id").html($(option).data('unit_id'));
+      $(".department_id").html($(option).data('department_id'));
+      $(".requestor-details").show();
+    } else {
+      $(".user-name").html("");
+      $(".mobile").html("");
+      $(".site_id").html("");
+      $(".unit_id").html("");
+      $(".department_id").html("");
+      $(".requestor-details").hide();
+    }
+    
+  });
+
+  $('.category-type').change(function() {
+      var category_type_id = $(this).val();
+      var sub_categories_options = "<option value=''>Select Sub Category</option>";
+      if (category_type_id.length > 0) {
+        var url = "/pms/admin/get_sub_categories.json?category_type_id=" + category_type_id + "&token=" + gon.token;
+
+        $.ajax({
+          type: "GET",
+          url: url,
+          success: function(response){          
+            if(response.sub_categories.length > 0){
+              for (var i = 0; i < response.sub_categories.length; i++) {
+                var sub_category = response.sub_categories[i];
+                sub_categories_options += "<option data-ht='"+sub_category.helpdesk_text +"'  value='"+sub_category.id+"'>"+sub_category.name+"</option>"
+              }
+            }
+
+            $(".sub-categories").html(sub_categories_options);
+            $('#complaint_assigned_to').val(response.assigned_to);
+          }
+        });
+      } else {
+        $(".sub-categories").html(sub_categories_options);
+        $('#complaint_assigned_to').val('');
+      }
+  });
+
+</script>

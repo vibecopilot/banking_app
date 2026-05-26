@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  meter_id: 1
+  opening: 9.99
+  closing: 9.99
+  consumption: 9.99
+  parameter: MyString
+
+two:
+  meter_id: 1
+  opening: 9.99
+  closing: 9.99
+  consumption: 9.99
+  parameter: MyString

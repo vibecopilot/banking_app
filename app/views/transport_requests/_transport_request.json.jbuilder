@@ -1,0 +1,2 @@
+json.extract! transport_request, :id, :employee_name, :employee_id, :pickup_location, :date_and_time, :special_requirements, :driver_contact_information, :vehicle_details, :booking_confirmation_number, :booking_status, :manager_approval, :booking_confirmation_email, :mobile_no, :created_at, :updated_at,:start_date,:end_date,:drop_off_location
+json.url transport_request_url(transport_request, format: :json)

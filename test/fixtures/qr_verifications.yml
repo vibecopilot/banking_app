@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  code: MyString
+  expected_time: 2026-01-20 18:05:12
+  valid_till: 2026-01-20 18:05:12
+  generated_by_id: 1
+  checked_in: false
+  checked_in_at: 2026-01-20 18:05:12
+  checked_in_by_id: 1
+  site_id: 1
+  purpose: MyString
+  notes: MyText
+
+two:
+  code: MyString
+  expected_time: 2026-01-20 18:05:12
+  valid_till: 2026-01-20 18:05:12
+  generated_by_id: 1
+  checked_in: false
+  checked_in_at: 2026-01-20 18:05:12
+  checked_in_by_id: 1
+  site_id: 1
+  purpose: MyString
+  notes: MyText

@@ -1,0 +1,2 @@
+class HikDevice < ApplicationRecord
+end

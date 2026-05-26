@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>User Refferals</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>From user</th>
+      <th>To user</th>
+      <th>Name</th>
+      <th>Mobile</th>
+      <th>Email</th>
+      <th>Business</th>
+      <th>Amount</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @user_refferals.each do |user_refferal| %>
+      <tr>
+        <td><%= user_refferal.from_user_id %></td>
+        <td><%= user_refferal.to_user_id %></td>
+        <td><%= user_refferal.name %></td>
+        <td><%= user_refferal.mobile %></td>
+        <td><%= user_refferal.email %></td>
+        <td><%= user_refferal.business %></td>
+        <td><%= user_refferal.amount %></td>
+        <td><%= link_to 'Show', user_refferal %></td>
+        <td><%= link_to 'Edit', edit_user_refferal_path(user_refferal) %></td>
+        <td><%= link_to 'Destroy', user_refferal, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New User Refferal', new_user_refferal_path %>

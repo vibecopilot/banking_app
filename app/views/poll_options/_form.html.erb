@@ -1,0 +1,27 @@
+<%= form_with(model: poll_option, local: true) do |form| %>
+  <% if poll_option.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(poll_option.errors.count, "error") %> prohibited this poll_option from being saved:</h2>
+
+      <ul>
+      <% poll_option.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :content %>
+    <%= form.text_field :content, id: :poll_option_content %>
+  </div>
+
+  <div class="field">
+    <%= form.label :poll_id %>
+    <%= form.text_field :poll_id, id: :poll_option_poll_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

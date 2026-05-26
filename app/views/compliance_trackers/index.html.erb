@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Compliance Trackers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Compliance config</th>
+      <th>Status</th>
+      <th>Submitted on</th>
+      <th>Submitted by</th>
+      <th>Site</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @compliance_trackers.each do |compliance_tracker| %>
+      <tr>
+        <td><%= compliance_tracker.compliance_config_id %></td>
+        <td><%= compliance_tracker.status %></td>
+        <td><%= compliance_tracker.submitted_on %></td>
+        <td><%= compliance_tracker.submitted_by_id %></td>
+        <td><%= compliance_tracker.site_id %></td>
+        <td><%= link_to 'Show', compliance_tracker %></td>
+        <td><%= link_to 'Edit', edit_compliance_tracker_path(compliance_tracker) %></td>
+        <td><%= link_to 'Destroy', compliance_tracker, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Compliance Tracker', new_compliance_tracker_path %>

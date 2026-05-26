@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+  <div class="col-sm-12">
+    <h4 class="pull-left" style="width: 100%; text-align: left;"> Items  <hr></h4>
+  </div>
+<div class="ml-2 mr-2">
+  <div id="toolbar">
+    <%= link_to 'New Item', new_item_path, :class => "create_user" %>
+  </div>
+
+  <table class="table table-striped table-responsive " id="table" data-toggle="table" data-pagination="true" data-search="true" data-trim-on-search="false" data-show-columns="true" data-show-refresh="true" data-sortable="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+    <thead>
+      <tr>
+        <th>Site</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Rate</th>
+        <th>Available quantity</th>
+        <th>Created by</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @items.each do |item| %>
+        <tr>
+          <td><%= item.site_id %></td>
+          <td><%= item.name %></td>
+          <td><%= item.description %></td>
+          <td><%= item.rate %></td>
+          <td><%= item.available_quantity %></td>
+          <td><%= item.created_by_id %></td>
+          <td><%= link_to 'Edit', edit_item_path(item) %></td>
+          <td><%= link_to 'Destroy', item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<br>
+<%= link_to 'Back', setup_path %>

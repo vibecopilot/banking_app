@@ -1,0 +1,49 @@
+<% @site = Site.find_by_id(@user.current_site_id)
+features = if @site.present?
+                   @site.features.pluck(:feature_name)
+                 else
+                   [] %>
+                  <li style="color: red;background: wheat;"> Please Select Site by clicking on the user icon</li>
+
+                 <% end %>
+
+      <% if features.include? "tickets" %>
+<div class="col-sm-4 <%= (request.original_url.include? '/pms/admin/complaints') ? 'active' : '' %>">
+  <a href="/pms/admin/complaints"><span class="nav-link"> Tickets </span> </a>
+</div>
+<% end %>
+
+<% if @user.id == 2 %>
+<div class="col-sm-4 <%= (request.original_url.include? '/sites') ? 'active' : '' %>">
+  <a href="/sites"><span class="nav-link"> Sites </span> </a>
+</div>
+<div class="col-sm-4 <%= (request.original_url.include? '/buildings') ? 'active' : '' %>">
+  <a href="/buildings"><span class="nav-link"> Buildings </span> </a>
+</div>
+<div class="col-sm-4 <%= (request.original_url.include? '/units') ? 'active' : '' %>">
+  <a href="/asset_groups"><span class="nav-link"> Asset Groups </span> </a>
+</div>
+<div class="col-sm-4 <%= (request.original_url.include? '/items') ? 'active' : '' %>">
+  <a href="/items"><span class="nav-link"> Items Setup </span> </a>
+</div>
+<% end %>
+<div class="col-sm-4 <%= (request.original_url.include? '/vendors') ? 'active' : '' %>">
+  <a href="/vendors"><span class="nav-link"> Vendors </span> </a>
+</div>
+<div class="col-sm-4 <%= (request.original_url.include? '/floors') ? 'active' : '' %>">
+  <a href="/floors"><span class="nav-link"> Floors </span> </a>
+</div>
+<div class="col-sm-4 <%= (request.original_url.include? '/units') ? 'active' : '' %>">
+  <a href="/units"><span class="nav-link"> Units </span> </a>
+</div>
+<%# <div class="col-sm-4 <%= (request.original_url.include? '/attendances') ? 'active' : '' %>
+  <%# <a href="/attendances"><span class="nav-link"> Attendance </span> </a> %>
+<%# </div> %>
+<div class="col-sm-4 <%= (request.original_url.include? '/users') ? 'active' : '' %>">
+  <a href="/users"><span class="nav-link"> Users </span> </a>
+</div>
+<% if @user.user_type == 'pms_admin' && (features.include? "tickets") %>
+<div class="col-sm-4 <%= (request.original_url.include? '/pms/admin/helpdesk_categories') ? 'active' : '' %>">
+  <a href="/pms/admin/helpdesk_categories"><span class="nav-link"> Ticket Setup </span> </a>
+</div>
+<% end %>

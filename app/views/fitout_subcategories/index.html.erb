@@ -1,0 +1,22 @@
+<h1>Fitout Subcategories</h1>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Category Name</th>
+    <th>Name</th>
+    <th>Actions</th>
+  </tr>
+  <% @fitout_subcategories.each do |subcategory| %>
+    <tr>
+      <td><%= subcategory.id %></td>
+      <td><%= subcategory.helpdesk_category_name %></td>
+      <td><%= subcategory.name %></td>
+      <td>
+        <%= link_to 'Show', fitout_subcategory_path(subcategory) %> |
+        <%= link_to 'Edit', edit_fitout_subcategory_path(subcategory) %> |
+        <%= link_to 'Delete', fitout_subcategory_path(subcategory), method: :delete, data: { confirm: 'Are you sure?' } %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<%= link_to 'New Fitout Subcategory', new_fitout_subcategory_path %>

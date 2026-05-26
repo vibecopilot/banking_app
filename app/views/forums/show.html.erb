@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Thread title:</strong>
+  <%= @forum.thread_title %>
+</p>
+
+<p>
+  <strong>Thread category:</strong>
+  <%= @forum.thread_category %>
+</p>
+
+<p>
+  <strong>Thread tags:</strong>
+  <%= @forum.thread_tags %>
+</p>
+
+<p>
+  <strong>Thread creators:</strong>
+  <%= @forum.thread_creators %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @forum.date %>
+</p>
+
+<p>
+  <strong>Thread description:</strong>
+  <%= @forum.thread_description %>
+</p>
+
+<%= link_to 'Edit', edit_forum_path(@forum) %> |
+<%= link_to 'Back', forums_path %>

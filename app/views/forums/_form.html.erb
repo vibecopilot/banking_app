@@ -1,0 +1,53 @@
+<%= form_with(model: forum, local: true, multipart: true) do |form| %>
+  <% if forum.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(forum.errors.count, "error") %> prohibited this forum from being saved:</h2>
+      <ul>
+      <% forum.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :thread_title %>
+    <%= form.text_field :thread_title, id: :forum_thread_title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :thread_category %>
+    <%= form.text_field :thread_category, id: :forum_thread_category %>
+  </div>
+
+  <div class="field">
+    <%= form.label :thread_tags %>
+    <%= form.text_field :thread_tags, id: :forum_thread_tags %>
+  </div>
+
+  <div class="field">
+    <%= form.label :thread_creators %>
+    <%= form.text_field :thread_creators, id: :forum_thread_creators %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date %>
+    <%= form.datetime_select :date, id: :forum_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :thread_description %>
+    <%= form.text_area :thread_description, id: :forum_thread_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attachfiles, "Attach Files" %>
+    <%= form.file_field :attachfiles%>
+  </div>
+
+  <%= form.hidden_field :created_by_id, value: current_user.id %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

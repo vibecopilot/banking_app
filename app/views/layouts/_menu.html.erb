@@ -1,0 +1,121 @@
+<style type="text/css">
+  .bg-gradient-0 {
+  background-image: linear-gradient(85deg, #000 0, #000 100%);
+</style>
+
+
+<% if !params[:wv].present? %>
+<section class="bg-gradient-0 pt-1 pb-1">
+  <nav class="navbar navbar-expand-lg navbar-dark" style="margin-bottom: 0;">
+    <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler ml-auto" data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
+      <span class="navbar-toggler-icon"> </span>
+    </button>
+    <img class="img-fluid" id="logouserimage" width="50px" src="/new_logo.jpg" >
+    <div class="navbar-collapse collapse" id="navbarSupportedContent" style="">
+      <ul class="ml-2 navbar-nav  " style="display: flex; justify-content: center; align-items: center; text-align: center; width: 100%;">
+      <% 
+      @site = Site.find_by_id(@user&.current_site_id)
+      features = if @site.present? 
+                   @site&.features.pluck(:feature_name) 
+                 else 
+                   [] %>
+                  <li style="color: red;background: wheat;"> Please Select Site by clicking on the user icon</li>
+                  
+                 <% end %>
+
+      <% if @user&.user_type == 'pms_occupant_admin' ||  @user&.user_type == 'pms_admin' %>
+        <li class="nav-item <%= (request.original_url.include? '/setup') ? 'active' : '' %>">
+          <a href="/setup"><span class="nav-link"> Setup </span> </a>
+        </li>
+        <% if features.include? "assets" %>
+        <li class="nav-item <%= (request.original_url.include? '/site_assets') ? 'active' : '' %>">
+          <a href="/site_assets"><span class="nav-link"> Assets </span> </a>
+        </li>
+        <li class="nav-item <%= (request.original_url.include? '/checklists') ? 'active' : '' %>">
+          <a href="/checklists"><span class="nav-link"> Checklists </span> </a>
+        </li> 
+        <li class="nav-item <%= (request.original_url.include? '/ppm') ? 'active' : '' %>">
+          <a href="/ppm"><span class="nav-link"> PPM </span> </a>
+        </li>
+        <li class="nav-item <%= (request.original_url.include? '/activities') ? 'active' : '' %>">
+          <a href="/activities"><span class="nav-link"> Activities </span> </a>
+        </li>
+        <li class="nav-item <%= (request.original_url.include? 'submissions') ? 'active' : '' %>">
+          <a href="/submissions"><span class="nav-link"> Performance </span> </a>
+        </li>
+        <% end %>
+
+        <li class="nav-item <%= (request.original_url.include? 'reports') ? 'active' : '' %>">
+          <a href="/reports"><span class="nav-link"> Reports </span> </a>
+        </li>
+        <%# <li class="nav-item <%= (request.original_url.include? 'consumption') ? 'active' : '' %>"> %>
+          <%# <a href="/consumption"><span class="nav-link"> Consumption </span> </a> %>
+        <%# </li> %>
+      <% end %>
+    </ul>
+    </div>
+
+
+    <% if @user.present? && @user.id.present? %>
+        <div>
+            <div class="field"> 
+              <span  style="margin: 20px; color: white; font-size: initial;">
+                  <%= @user&.site.try(:name_with_region) %>
+              </span>
+            </div>
+        </div>
+    <img class="img-fluid" id="userimage" width="50px" src="/prof.png" >
+    <div style="display: flex; justify-content: flex-end;">
+      <div id="user-profile" class="collapse user-profile" style="background: white !important;">
+        <span id="closeprofile" style="color: red; padding: 5px; cursor: pointer;">X</span>
+        <div class="flex-center" style="margin-bottom: 20px; position: relative;">
+          <span class="edit-profile-pic flex-center"><%= @user.try(:id).present? ? "#{@user.full_name.try(:first).to_s.upcase}" : ''%></span>
+        </div>
+        <div class="flex-center" style="font-weight: bold;"><%= "#{@user.try(:full_name)}"%></div>
+        <div class="flex-center"><%= @user.try(:mobile) %></div>
+        <div class="flex-center" style="margin-bottom: 5px;"> <%= @user.try(:email) %></div>
+        <br>
+        <div>
+          <% if @user.present? && @user&.id.present? %>
+            <%= form_with(model: @user, local: true, url: "/change_site") do |form| %>
+              <div class="field">
+                <%= select_tag 'user[current_site_id]', options_for_select( @user&.sites.map { |e| [e.name_with_region, e.id] }, :selected => @user&.current_site_id), :include_blank => "Select Site", :class=>"ui dropdown change_siteuser", required: true %>
+              </div>
+            <% end%>
+          <% end%>
+        </div>
+        <br>
+        <div class="flex-center">
+          <div>
+            <div style="text-decoration-color: white; text-align: center;">
+              <%= link_to 'Logout', destroy_user_session_path, method: :delete, :class => "logout-button",:style => "color: white; padding: 10px;font-weight: 700;" %>
+              <%#= link_to "Logout", destroy_user_session_path, method: :delete, :data => {:no_turbolink => true}, :style => "color: white; padding: 10px;font-weight: 700;", :class => "logout-button" %>
+            </div>
+          </div>
+        </div>  
+      </div> 
+    </div>
+    <% end %>
+    <script type="text/javascript">
+      var orurl = "<%= request.original_url %>"
+      $('[href="'+orurl+'"]').addClass("active");
+      $("#userimage").click(function(){
+        $("#user-profile").show();
+      });
+      $("#closeprofile").click(function(){
+        $("#user-profile").hide();
+      })
+
+      $("#logouserimage").click(function(){
+        $("#logouser-profile").show();
+      });
+      $("#logocloseprofile").click(function(){
+        $("#logouser-profile").hide();
+      })
+      $(".change_siteuser").change(function(e){
+        window.location = "/change_site?siteid="+ $(this).val()
+      })
+    </script>
+  </nav>
+</section>
+<% end %>

@@ -1,0 +1,22 @@
+<%= form_with(model: color_code, local: true) do |form| %>
+  <% if color_code.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(color_code.errors.count, "error") %> prohibited this color_code from being saved:</h2>
+
+      <ul>
+      <% color_code.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :code %>
+    <%= form.text_field :code, id: :color_code_code %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

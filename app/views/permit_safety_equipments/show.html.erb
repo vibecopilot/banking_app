@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Safety equipment name:</strong>
+  <%= @permit_safety_equipment.safety_equipment_name %>
+</p>
+
+<p>
+  <strong>Permit type:</strong>
+  <%= @permit_safety_equipment.permit_type_id %>
+</p>
+
+<p>
+  <strong>Activity:</strong>
+  <%= @permit_safety_equipment.activity_id %>
+</p>
+
+<p>
+  <strong>Sub activity:</strong>
+  <%= @permit_safety_equipment.sub_activity_id %>
+</p>
+
+<p>
+  <strong>Hazard category:</strong>
+  <%= @permit_safety_equipment.hazard_category_id %>
+</p>
+
+<p>
+  <strong>Permit risk:</strong>
+  <%= @permit_safety_equipment.permit_risk_id %>
+</p>
+
+<%= link_to 'Edit', edit_permit_safety_equipment_path(@permit_safety_equipment) %> |
+<%= link_to 'Back', permit_safety_equipments_path %>

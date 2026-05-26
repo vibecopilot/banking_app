@@ -1,0 +1,2 @@
+module IncidenceTagsHelper
+end

@@ -1,0 +1,69 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Asset:</strong>
+  <%= @asset_measure.asset_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @asset_measure.name %>
+</p>
+
+<p>
+  <strong>Min value:</strong>
+  <%= @asset_measure.min_value %>
+</p>
+
+<p>
+  <strong>Max value:</strong>
+  <%= @asset_measure.max_value %>
+</p>
+
+<p>
+  <strong>Alert below:</strong>
+  <%= @asset_measure.alert_below %>
+</p>
+
+<p>
+  <strong>Alert above:</strong>
+  <%= @asset_measure.alert_above %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @asset_measure.active %>
+</p>
+
+<p>
+  <strong>Unit type:</strong>
+  <%= @asset_measure.unit_type %>
+</p>
+
+<p>
+  <strong>Multiplier factor:</strong>
+  <%= @asset_measure.multiplier_factor %>
+</p>
+
+<p>
+  <strong>Meter tag:</strong>
+  <%= @asset_measure.meter_tag %>
+</p>
+
+<p>
+  <strong>Meter unit:</strong>
+  <%= @asset_measure.meter_unit_id %>
+</p>
+
+<p>
+  <strong>Cloned:</strong>
+  <%= @asset_measure.cloned %>
+</p>
+
+<p>
+  <strong>Check previous reading:</strong>
+  <%= @asset_measure.check_previous_reading %>
+</p>
+
+<%= link_to 'Edit', edit_asset_measure_path(@asset_measure) %> |
+<%= link_to 'Back', asset_measures_path %>

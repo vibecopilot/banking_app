@@ -1,0 +1,86 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Loi type:</strong>
+  <%= @loi_detail.loi_type %>
+</p>
+
+<p>
+  <strong>Reference:</strong>
+  <%= @loi_detail.reference %>
+</p>
+
+<p>
+  <strong>Loi date:</strong>
+  <%= @loi_detail.loi_date %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @loi_detail.created_by_id %>
+</p>
+
+<p>
+  <strong>Billing address:</strong>
+  <%= @loi_detail.billing_address_id %>
+</p>
+
+<p>
+  <strong>Delivery address:</strong>
+  <%= @loi_detail.delivery_address_id %>
+</p>
+
+
+<p>
+  <strong>Transportation amount:</strong>
+  <%= @loi_detail.transportation_amount %>
+</p>
+
+<p>
+  <strong>Retention:</strong>
+  <%= @loi_detail.retention %>
+</p>
+
+<p>
+  <strong>Tds:</strong>
+  <%= @loi_detail.tds %>
+</p>
+
+<p>
+  <strong>Qc:</strong>
+  <%= @loi_detail.qc %>
+</p>
+
+<p>
+  <strong>Payment Tenure:</strong>
+  <%= @loi_detail.payment_tenure %>
+</p>
+
+<p>
+  <strong>Advance Amount:</strong>
+  <%= @loi_detail.advance_amount %>
+</p>
+
+
+<p>
+  <strong>Related to:</strong>
+  <%= @loi_detail.related_to %>
+</p>
+
+<p>
+  <strong>Terms:</strong>
+  <%= @loi_detail.terms %>
+</p>
+
+<p>
+  <strong>Is approved:</strong>
+  <%= @loi_detail.is_approved %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @loi_detail.site_id %>
+</p>
+
+<%= link_to 'Edit', edit_loi_detail_path(@loi_detail) %> |
+<%= link_to 'Back', loi_details_path %>

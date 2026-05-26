@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Amenity:</strong>
+  <%= @amenity_slot.amenity_id %>
+</p>
+
+<p>
+  <strong>Start hr:</strong>
+  <%= @amenity_slot.start_hr %>
+</p>
+
+<p>
+  <strong>End hr:</strong>
+  <%= @amenity_slot.end_hr %>
+</p>
+
+<p>
+  <strong>Start min:</strong>
+  <%= @amenity_slot.start_min %>
+</p>
+
+<p>
+  <strong>End min:</strong>
+  <%= @amenity_slot.end_min %>
+</p>
+
+<%= link_to 'Edit', edit_amenity_slot_path(@amenity_slot) %> |
+<%= link_to 'Back', amenity_slots_path %>

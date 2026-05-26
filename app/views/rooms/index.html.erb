@@ -1,0 +1,178 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-bed mr-2"></i>
+            Rooms Management
+          </h4>
+          <% if current_user.admin? || current_user.manager? %>
+            <%= link_to "Add New Room", new_room_path, class: "btn btn-primary" %>
+          <% end %>
+        </div>
+        
+        <div class="card-body">
+          <!-- Filters -->
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <%= form_with url: rooms_path, method: :get, local: true, class: "form-inline" do |f| %>
+                <div class="form-group mr-3">
+                  <%= f.select :room_type, 
+                      options_for_select([
+                        ['All Types', ''],
+                        ['Standard', 'standard'],
+                        ['Deluxe', 'deluxe'],
+                        ['Suite', 'suite'],
+                        ['Premium', 'premium'],
+                        ['Penthouse', 'penthouse']
+                      ], params[:room_type]), 
+                      {}, 
+                      { class: "form-control" } %>
+                </div>
+                
+                <div class="form-group mr-3">
+                  <%= f.select :status, 
+                      options_for_select([
+                        ['All Status', ''],
+                        ['Available', 'available'],
+                        ['Occupied', 'occupied'],
+                        ['Maintenance', 'maintenance'],
+                        ['Out of Order', 'out_of_order']
+                      ], params[:status]), 
+                      {}, 
+                      { class: "form-control" } %>
+                </div>
+                
+                <div class="form-group mr-3">
+                  <%= f.number_field :floor, placeholder: "Floor", value: params[:floor], class: "form-control", style: "width: 100px;" %>
+                </div>
+                
+                <div class="form-check mr-3">
+                  <%= f.check_box :active_only, { checked: params[:active_only] }, "true", "" %>
+                  <%= f.label :active_only, "Active Only", class: "form-check-label" %>
+                </div>
+                
+                <%= f.submit "Filter", class: "btn btn-secondary mr-2" %>
+                <%= link_to "Clear", rooms_path, class: "btn btn-outline-secondary" %>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Room Cards -->
+          <div class="row">
+            <% @rooms.each do |room| %>
+              <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 <%= 'border-success' if room.available? %>
+                                       <%= 'border-warning' if room.occupied? %>
+                                       <%= 'border-danger' if room.maintenance? || room.out_of_order? %>">
+                  <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                      <strong><%= room.display_name %></strong>
+                    </h6>
+                    <span class="badge <%= 'badge-success' if room.available? %>
+                                        <%= 'badge-warning' if room.occupied? %>
+                                        <%= 'badge-danger' if room.maintenance? || room.out_of_order? %>">
+                      <%= room.status.humanize %>
+                    </span>
+                  </div>
+                  
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-6">
+                        <small class="text-muted">Type:</small><br>
+                        <strong><%= room.room_type.humanize %></strong>
+                      </div>
+                      <div class="col-6">
+                        <small class="text-muted">Floor:</small><br>
+                        <strong><%= room.floor_number || 'N/A' %></strong>
+                      </div>
+                    </div>
+                    
+                    <div class="row mt-2">
+                      <div class="col-12">
+                        <small class="text-muted">Capacity:</small><br>
+                        <strong><%= room.capacity %></strong>
+                      </div>
+                    </div>
+                    
+                    <div class="row mt-2">
+                      <div class="col-12">
+                        <small class="text-muted">Base Price:</small><br>
+                        <strong class="text-primary">$<%= room.base_price_per_night %>/night</strong>
+                        <% if room.tax_percentage > 0 %>
+                          <small class="text-muted">(+<%= room.tax_percentage %>% tax)</small>
+                        <% end %>
+                      </div>
+                    </div>
+                    
+                    <% if room.description.present? %>
+                      <div class="row mt-2">
+                        <div class="col-12">
+                          <small class="text-muted">Description:</small><br>
+                          <small><%= truncate(room.description, length: 80) %></small>
+                        </div>
+                      </div>
+                    <% end %>
+                    
+                    <% if room.amenities.present? %>
+                      <div class="row mt-2">
+                        <div class="col-12">
+                          <small class="text-muted">Amenities:</small><br>
+                          <small><%= truncate(room.amenities, length: 60) %></small>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                  
+                  <div class="card-footer">
+                    <div class="btn-group w-100" role="group">
+                      <%= link_to "View", room_path(room), class: "btn btn-sm btn-outline-primary" %>
+                      
+                      <% if current_user.admin? || current_user.manager? %>
+                        <%= link_to "Edit", edit_room_path(room), class: "btn btn-sm btn-outline-secondary" %>
+                        <%= link_to "Pricing", room_room_pricing_path(room), class: "btn btn-sm btn-outline-info" %>
+                        <%= link_to "Availability", room_room_availability_path(room), class: "btn btn-sm btn-outline-warning" %>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <% if @rooms.empty? %>
+            <div class="text-center py-5">
+              <i class="fas fa-bed fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">No rooms found</h5>
+              <p class="text-muted">
+                <% if params.values.any?(&:present?) %>
+                  Try adjusting your filters or 
+                  <%= link_to "view all rooms", rooms_path %>
+                <% else %>
+                  <% if current_user.admin? || current_user.manager? %>
+                    <%= link_to "Create your first room", new_room_path, class: "btn btn-primary" %>
+                  <% else %>
+                    No rooms are currently available.
+                  <% end %>
+                <% end %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.card {
+  transition: transform 0.2s;
+}
+.card:hover {
+  transform: translateY(-2px);
+}
+.badge {
+  font-size: 0.75em;
+}
+</style>

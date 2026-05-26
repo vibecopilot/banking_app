@@ -1,0 +1,115 @@
+<style type="text/css">
+  .custom-side-bar .nav>li>a>img, .nav>li>a>div>img{
+        width: 15px;
+    margin-bottom: 5px;
+    margin-left: 8px;
+  }
+  .custom-side-bar .nav > li > a > i{
+    margin-right: 10px;
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 4px;
+    display: block;
+    color: black;
+    margin-top: 7px;
+  }
+  .second-level{
+    background-color: transparent !important;
+  }
+  .custom-side-bar .nav > li{
+    display: flow-root;
+  }
+</style>
+<div class="custom-side-bar hidden-xs">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+      <div class="sidebar-collapse">
+
+        <ul class="nav" id="side-menu" style="height:100vh; overflow:scroll; overflow-x:hidden;width: 135px; background: white;">
+          <li class="nav-header">
+            <div class = "user-company-logo">
+              <img alt="image" src="<%#= current_user.company.try(:logo).try(:url) %>" style = "width: 80px; height: 60px; margin-top: 15px;"/>
+            </div>
+          </li>
+
+          <% if @user.user_type == 'pms_occupant_admin' ||  @user.user_type == 'pms_admin' %>
+            <li class="<%= (request.original_url.include? '/pms/admin/complaints') ? 'main-active active' : '' %>">
+              <a href="/pms/admin/complaints" class="left-align">
+                <%= image_tag("helpdesk-new.svg") %>
+                <span class="side-nav-label">
+                   Tickets
+                </span>
+              </a>
+            </li>
+            <li class="<%= (request.original_url.include? '/users') ? 'main-active active' : '' %>">
+              <a href="/users" class="left-align">
+                <%= image_tag("setting-new.svg") %>
+                <span class="side-nav-label">
+                   Users
+                </span>
+              </a>
+            </li>
+            <li class="<%= (request.original_url.include? '/pms/admin/helpdesk_categories') ? 'main-active active' : '' %>">
+              <a href="/pms/admin/helpdesk_categories" class="left-align">
+                <%= image_tag("helpdesk-new.svg") %>
+                <span class="side-nav-label">
+                   Helpdesk Setup
+                </span>
+              </a>
+            </li>
+            <li class="<%= (request.original_url.include? '/units') ? 'main-active active' : '' %>">
+              <a href="/units" class="left-align">
+                <%= image_tag("setting-new.svg") %>
+                <span class="side-nav-label">
+                   Units
+                </span>
+              </a>
+            </li>
+          <% end %>
+          <% if @user.user_type == 'pms_admin' %>
+           <li class="<%= (request.original_url.include? '/sites') ? 'main-active active' : '' %>">
+              <a href="/sites" class="left-align">
+                <%= image_tag("setting-new.svg") %>
+                <span class="side-nav-label">
+                   Sites
+                </span>
+              </a>
+            </li>
+          <% end %>
+          <li class="<%= (request.original_url.include? '/pms/complaints') ? 'main-active active' : '' %>">
+            <a href="/pms/complaints" class="left-align">
+              <%= image_tag("helpdesk-new.svg") %>
+              <span class="side-nav-label">
+                 My Tickets
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var dropdownIcon = $(".navbar-static-side li.active i")
+    if($(dropdownIcon).hasClass("fa-caret-down")){
+      $(dropdownIcon).removeClass("fa-caret-down").addClass("fa-caret-up")
+    }
+  });
+  $(".dropdown-toggle").on('click', function(){
+    var inputs = $(".sidebar-collapse").find(".fa-caret-up")
+      Array.prototype.forEach.call( inputs, function( input ){
+        $(input).removeClass("fa-caret-up").addClass("fa-caret-down")
+      })
+      if($(this).parent().hasClass("active")){
+
+        $(this).find("i.fa-caret-up").removeClass("fa-caret-up").addClass("fa-caret-down")
+      } else {
+        if($(this).find("i").hasClass("fa-caret-down")){
+          $(this).find("i.fa-caret-down").removeClass("fa-caret-down").addClass("fa-caret-up")
+        } else {
+          $(this).find("i.fa-caret-up").removeClass("fa-caret-up").addClass("fa-caret-down")
+        }
+      }
+  })  
+</script>
+

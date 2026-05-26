@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  permit_type_id: 1
+  activity_id: 1
+  sub_activity_id: 1
+  hazard_category_id: 1
+  risk_description: MyText
+
+two:
+  permit_type_id: 1
+  activity_id: 1
+  sub_activity_id: 1
+  hazard_category_id: 1
+  risk_description: MyText

@@ -1,0 +1,174 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Room Availability Details</h4>
+          <div>
+            <%= link_to 'Edit', edit_room_availability_path(@room_availability), class: 'btn btn-primary btn-sm' %>
+            <%= link_to 'Back to List', room_availability_index_path, class: 'btn btn-secondary btn-sm' %>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h5>Basic Information</h5>
+              <table class="table table-bordered">
+                <tr>
+                  <th width="30%">Room:</th>
+                  <td><%= @room_availability.room.name %> (<%= @room_availability.room.room_type %>)</td>
+                </tr>
+                <tr>
+                  <th>Site:</th>
+                  <td><%= @room_availability.room.site.name %></td>
+                </tr>
+                <tr>
+                  <th>Date:</th>
+                  <td><%= @room_availability.available_date.strftime('%d %B %Y') %></td>
+                </tr>
+                <tr>
+                  <th>Day of Week:</th>
+                  <td><%= @room_availability.available_date.strftime('%A') %></td>
+                </tr>
+                <tr>
+                  <th>Status:</th>
+                  <td>
+                    <% if @room_availability.is_available %>
+                      <span class="badge badge-success">Available</span>
+                    <% else %>
+                      <span class="badge badge-danger">Not Available</span>
+                    <% end %>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            
+            <div class="col-md-6">
+              <h5>Availability Details</h5>
+              <table class="table table-bordered">
+                <tr>
+                  <th width="30%">Total Rooms:</th>
+                  <td><%= @room_availability.total_rooms %></td>
+                </tr>
+                <tr>
+                  <th>Available Rooms:</th>
+                  <td>
+                    <strong class="<%= @room_availability.available_rooms > 0 ? 'text-success' : 'text-danger' %>">
+                      <%= @room_availability.available_rooms %>
+                    </strong>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Booked Rooms:</th>
+                  <td>
+                    <span class="text-info">
+                      <%= @room_availability.total_rooms - @room_availability.available_rooms %>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Occupancy Rate:</th>
+                  <td>
+                    <% occupancy_rate = (((@room_availability.total_rooms - @room_availability.available_rooms).to_f / @room_availability.total_rooms) * 100).round(1) %>
+                    <div class="progress" style="height: 20px;">
+                      <div class="progress-bar bg-info" role="progressbar" 
+                           style="width: <%= occupancy_rate %>%" 
+                           aria-valuenow="<%= occupancy_rate %>" 
+                           aria-valuemin="0" aria-valuemax="100">
+                        <%= occupancy_rate %>%
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          
+          <% if @room_availability.reason_for_unavailability.present? %>
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <h5>Reason for Unavailability</h5>
+              <div class="alert alert-warning">
+                <%= simple_format(@room_availability.reason_for_unavailability) %>
+              </div>
+            </div>
+          </div>
+          <% end %>
+          
+          <!-- Current Bookings for this date -->
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <h5>Bookings for this Date</h5>
+              <% bookings = @room_availability.room.room_bookings.where(
+                   "check_in_date <= ? AND check_out_date > ?", 
+                   @room_availability.available_date, 
+                   @room_availability.available_date
+                 ) %>
+              <% if bookings.any? %>
+                <div class="table-responsive">
+                  <table class="table table-sm table-striped">
+                    <thead>
+                      <tr>
+                        <th>Booking ID</th>
+                        <th>Guest Name</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% bookings.each do |booking| %>
+                        <tr>
+                          <td><%= link_to "##{booking.id}", booking, class: 'text-primary' %></td>
+                          <td><%= booking.user.full_name rescue 'N/A' %></td>
+                          <td><%= booking.check_in_date.strftime('%d %b %Y') %></td>
+                          <td><%= booking.check_out_date.strftime('%d %b %Y') %></td>
+                          <td>
+                            <span class="badge badge-<%= booking.booking_status == 'confirmed' ? 'success' : 'warning' %>">
+                              <%= booking.booking_status.capitalize %>
+                            </span>
+                          </td>
+                          <td>
+                            <%= link_to 'View', booking, class: 'btn btn-sm btn-outline-primary' %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              <% else %>
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle"></i> No bookings found for this date.
+                </div>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <h5>Timeline Information</h5>
+              <table class="table table-sm">
+                <tr>
+                  <th>Created:</th>
+                  <td><%= @room_availability.created_at.strftime('%d %b %Y at %I:%M %p') %></td>
+                </tr>
+                <tr>
+                  <th>Last Updated:</th>
+                  <td><%= @room_availability.updated_at.strftime('%d %b %Y at %I:%M %p') %></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Initialize tooltips
+  $('[data-toggle="tooltip"]').tooltip();
+});
+</script>

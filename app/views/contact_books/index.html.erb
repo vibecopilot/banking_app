@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Contact Books</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Company Name</th>
+      <th>Contact Person Name</th>
+      <th>Site</th>
+      <th>Generic Info</th>
+      <th>Generic Sub Info</th>
+      <th>Mobile</th>
+      <th>Key Offering</th>
+      <th>Status</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @contact_books.each do |contact_book| %>
+      <tr>
+        <td><%= contact_book.company_name %></td>
+        <td><%= contact_book.contact_person_name %></td>
+        <td><%= contact_book.site_id %></td>
+        <td><%= contact_book.generic_info_id %></td>
+        <td><%= contact_book.generic_sub_info_id %></td>
+        <td><%= contact_book.mobile %></td>
+        <td><%= contact_book.key_offering %></td>
+        <td><%= contact_book.status %></td>
+        <td><%= link_to 'Show', contact_book %></td>
+        <td><%= link_to 'Edit', edit_contact_book_path(contact_book) %></td>
+        <td><%= link_to 'Destroy', contact_book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Contact Book', new_contact_book_path %>

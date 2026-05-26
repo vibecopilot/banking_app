@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  mom_detail: one
+  description: MyText
+  responsible_person_id: 1
+  target_date: 2025-03-30
+  responsible_person_email: MyString
+  responsible_person_type: MyString
+  responsible_person_name: MyString
+  company_tag_id: 1
+
+two:
+  mom_detail: two
+  description: MyText
+  responsible_person_id: 1
+  target_date: 2025-03-30
+  responsible_person_email: MyString
+  responsible_person_type: MyString
+  responsible_person_name: MyString
+  company_tag_id: 1

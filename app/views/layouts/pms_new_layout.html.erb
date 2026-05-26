@@ -1,0 +1,423 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title><%= @page_name %></title>
+<meta name="description" content="">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+
+
+
+<script type="text/javascript">
+  <% @loggedin_user = User.current %>
+  var gon = {
+    <% if @loggedin_user.present? %>
+      token: "<%= @loggedin_user.try(:api_key) %>" 
+    <% end %>
+  }
+</script>
+  <%= csrf_meta_tags %>
+  <%= javascript_include_tag "jquery-2.2.3.min.js" %>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+<%= javascript_include_tag "jquery-ui.min.js" %>
+<%= stylesheet_link_tag "bootstrap.css" %>
+<%= stylesheet_link_tag "bootstrap.min_v2.css" %>
+<%= javascript_include_tag "moment.min.js" %>
+<%= stylesheet_link_tag "daterangepicker" %>
+<%= javascript_include_tag "daterangepicker.js" %>
+<%= javascript_include_tag "calender.js" %>
+<%= stylesheet_link_tag "calender.css" %>
+<%= javascript_include_tag "semantic.js" %>
+<%= stylesheet_link_tag "datepicker3" %>
+<%#= javascript_include_tag "multiselect.min" %>
+
+<%= stylesheet_link_tag "toastr.min" %>
+<%= stylesheet_link_tag "animate.css" %>
+<%= stylesheet_link_tag "meanmenu.min.css" %>
+<%= stylesheet_link_tag "metisMenu.min.css" %>
+<%= stylesheet_link_tag "metisMenu-vertical-hover.css" %>
+<%= stylesheet_link_tag "bootstrap-table.css" %>
+<%= stylesheet_link_tag "style_new_pms.css" %>
+<%= stylesheet_link_tag "responsive.css" %>
+<%= stylesheet_link_tag "font-awesome.min.css" %>
+<%= stylesheet_link_tag "chosen.css" %>
+<%= stylesheet_link_tag "tabs.css" %>
+<%= stylesheet_link_tag "mainone.css" %>
+<%= stylesheet_link_tag "jquery.cardtabs" %>
+
+<%= stylesheet_link_tag "semantic.min" %>
+
+<%= javascript_include_tag "color-picker" %>
+<%= javascript_include_tag "bootstrap-datepicker" %>
+<%= javascript_include_tag "toastr.min" %>
+<%= javascript_include_tag "switchery" %>
+<%= javascript_include_tag "cookie" %>
+<%= javascript_include_tag "bootstrap-tagsinput" %>
+<%= javascript_include_tag "cbpFWTabs" %>
+<%= javascript_include_tag "jquery.cardtabs" %>
+<%= javascript_include_tag "color-picker" %> 
+<%= javascript_include_tag "multiple-select" %>
+    <%= stylesheet_link_tag "style_new_pms.css" %>
+<%= stylesheet_link_tag "multiple-select" %>
+
+<%= stylesheet_link_tag "pignose.calendar.min.css" %>
+<%= javascript_include_tag "pignose.calendar.full.min.js" %>
+<%= stylesheet_link_tag "blueimp-gallery.min" %>
+<%= stylesheet_link_tag "dashboard" %>
+<%= javascript_include_tag "jquery.blueimp-gallery.min" %>
+
+<style type="text/css">
+      body{
+        background: #e4e4e4 !important;
+      }
+      
+      @media screen and (max-width: 768px) {
+        body {
+          width: 100vw !important;
+          background: #e4e4e4 !important;
+        }
+
+        .container {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+        }
+
+        .complaint-type {
+          display: none;
+        }
+
+        #page-wrapper {
+          width: 100vw !important;
+          height: auto !important;
+        }
+
+        .ui.menu.top-menu {
+          justify-content: space-between !important;
+        }
+
+        .nav.navbar-top-links {
+          display: flex;
+        }
+
+        .navbar-top-links li {
+          padding: 0 10px !important;
+        }
+
+        .navbar-top-links .dropdown {
+          width: 125px !important;
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .navbar-top-links .dropdown-messages {
+          width: 175px !important;
+        }
+
+        .right {
+          width: 125px;
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .navbar-top-links .dropdown-messages li {
+          margin: 0 !important;
+          padding: 4px !important;
+        }
+
+         .navbar-top-links .dropdown-messages li a {
+          margin: 0 !important;
+          padding: 5px !important;
+        }
+
+        .nav.navbar-top-links li {
+          align-self: center;
+        }
+
+        .navbar-top-links li:last-child {
+          margin-right: 0 !important;
+        }
+
+       .img-circle {
+          margin-right: 0 !important;
+        }
+        
+        .navbar-default {
+          display: none !important;
+        }
+
+        .main-footer {
+          margin-left: 0 !important;
+          left: 0 !important;
+        }
+
+        .modal{
+          top: 60px;
+        }
+
+        .company_logo {
+          display: flex !important;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+
+      .ui.menu.top-menu {
+        display: flex !important;
+        justify-content: flex-end;
+      }
+
+      .nav.navbar-top-links {
+        display: flex;
+      }
+
+      .nav.navbar-top-links li {
+        align-self: center;
+      }
+
+      .white-bg {
+        background: #fff;
+      }
+
+      .sidenav {
+          height: 100%; /* 100% Full-height */
+          width: 0; /* 0 width - change this with JavaScript */
+          position: fixed; /* Stay in place */
+          z-index: 1; /* Stay on top */
+          top: 0; /* Stay at the top */
+          left: 0;
+          background-color: #111; /* Black*/
+          overflow-x: hidden; /* Disable horizontal scroll */
+          padding-top: 60px; /* Place content 60px from the top */
+          transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+        }
+
+      /* The navigation menu links */
+      .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 18px !important;
+        color: #fff !important;
+        display: block;
+        transition: 0.3s;
+      }
+
+      /* When you mouse over the navigation links, change their color */
+      .sidenav a:hover {
+        color: #f1f1f1;
+      }
+
+      /* Position and style the close button (top right corner) */
+      .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+      }
+
+      .main-footer {
+          background: #fff;
+          border-top: 1px solid #e7eaec;
+          margin-left: 115px;
+          display: block;
+          position: sticky;
+          bottom: 0;
+          padding: 0.5rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          left: 7px;
+        }
+
+      .main-footer img {
+        height: 50px;
+        width: 50px;
+      }
+
+      .img-circle {
+        width: 30px !important;
+        height: 30px !important;
+        margin-right: 10px !important;
+      }
+
+      .company_logo {
+        display: none;
+      }
+
+       .dropdown-menu > li > a {
+        padding: 5px !important;
+        text-align: left !important;
+      }
+
+      .dropdown-menu > li > a:hover{
+        background-color: transparent !important;
+        border-bottom: 2px solid #18a689;
+      }
+
+      .navbar-top-links .dropdown-menu li{
+        margin: 0;
+      }
+
+      .dropdown-menu > li > a{
+        border-bottom: none;
+      }
+
+      .dropdown-messages{
+        padding: 0;
+      }
+
+      .navbar-top-links li {
+        border: none;
+      }
+    </style>
+</head>
+
+<body>
+
+  <div class="mobile-view">
+    <%=  render :partial => "layouts/new_sidebar" %>
+
+    <div id="page-wrapper" class="white-bg">
+      <%= render partial: 'layouts/header' %>
+      <div style="padding: 10px;">
+        <%= yield %>
+      </div>
+    </div>
+
+    <footer class="main-footer hidden-xs">
+      <span class="powered-by">
+        Powered by Logicon      </span>
+
+    </footer>
+  </div>
+  
+      <% if flash.present? %>
+        <script type="text/javascript">
+          $(document).ready(function(){
+          <% flash.each do |key, value| %>
+            <% if flash[:success] || flash[:success_message] || flash[:notice]%> 
+               toastr.info("<%= value %>" ) ;
+            <% else %>
+              toastr.error("<%= value %> ") ;
+            <% end %>  
+          <% end %>
+          });
+        </script>
+      <% end %>
+
+    <%= javascript_include_tag "bootstrap.min.js" %>
+    <%= javascript_include_tag "jquery.meanmenu.js" %>
+    <%= javascript_include_tag "jquery.scrollUp.min.js" %> 
+    <%= javascript_include_tag "metisMenu.min.js" %>
+    <%= javascript_include_tag "bootstrap-table.js" %>
+    <%= javascript_include_tag "bootstrap-table-editable.js" %> 
+    <%= javascript_include_tag "bootstrap-table-resizable.js" %>
+    <%= javascript_include_tag "bootstrap-table-export.js" %>
+    <%= javascript_include_tag "data-table-active.js" %> 
+    <%= javascript_include_tag "plugins.js" %> 
+    <%= javascript_include_tag "main.js" %> 
+    <%= javascript_include_tag "chosen.jquery.js" %>
+    <%= javascript_include_tag "metisMenu-active.js" %>
+    <%= javascript_include_tag "cookie" %>
+    <%= javascript_include_tag "multiple-select" %>
+     <%= javascript_include_tag "lock_particular.js" %> 
+    <%= javascript_include_tag "tableExport.js" %> 
+
+
+<style>
+
+  @media (max-width: 767px) {
+    .columns.columns-right.btn-group.pull-right {
+        display: block;
+    }
+
+    .fixed-table-toolbar .columns, .fixed-table-toolbar .search {
+    float: right !important;
+  }
+  }
+  .site.dropdown-menu > li > a{
+    text-align: center;
+  }
+
+  .site.dropdown-menu{
+    max-height: 20.57142857rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-width: 100px;
+  }
+
+  .bg-project{
+    background: #d99529;
+    color: #333 !important;
+    font-size: 13px !important;
+    padding: 6px !important;
+  }
+
+  .menu ul li{
+    padding: 8px;
+    display: inline-block;
+  }
+
+  .chosen-container-multi, .chosen-container {
+    width: 100% !important;   
+  }
+  .collapse.in {
+    background: #e4e4e4 !important;
+}
+.nav-second-level{
+  background: #e4e4e4 !important;
+}
+</style>
+<script>
+var config = {
+  '.chosen-select'           : {},
+  '.chosen-select-deselect'  : { allow_single_deselect: true },
+  '.chosen-select-no-single' : { disable_search_threshold: 10 },
+  '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' },
+  '.chosen-select-rtl'       : { rtl: true },
+  '.chosen-select-width'     : { width: '100%' }
+}
+for (var selector in config) {
+  $(selector).chosen(config[selector]);
+}
+
+</script>
+    <script>
+    $(document).ready(function(){
+     $(".change_site").on('click', function(){
+        var url = "/change_site?token=" + gon.token +"&site_id=" + $(this).attr("data-siteid") + "&all_sites=" + $(this).attr("data-allsites");
+        window.location.href = url;
+      });
+
+     $("#custom-filterr").on('click',function(){
+    $("#filter-div").toggle()
+  });
+      
+    });
+
+
+      $(document).load(function(){
+
+        $(function () {
+          $('#user_setup').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+          });
+        });
+      });
+
+    </script>
+</body>
+</html>

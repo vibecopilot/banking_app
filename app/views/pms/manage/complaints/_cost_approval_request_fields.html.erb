@@ -1,0 +1,46 @@
+<div class='nested-fields'>
+  <%= f.hidden_field :created_by_id, value: @user.id %>
+  <div class="col-sm-12" style="border: 1px solid #e8e8e8; padding: 1.5rem; margin-bottom: 10px;">
+    <div class="row">
+      <% if f.object.id.present? %>  
+          <a href="/costapprequpdate/<%= f.object.id %>" class="btn btn-xs btn-danger" data-confirm="Are you sure you want to delete?" data-method="delete" style="margin-left: 29px;"><i class="fa fa-times"></i></a> 
+      <% end %>
+      <div class="form-group col-sm-2">
+        <div class="ui input fluid">
+          <%= f.text_field :cost, class: "form-control cost" , placeholder: "Enter Cost", :onkeypress => "return event.charCode >= 48 && event.charCode <= 57", disabled: f.object.persisted? %>
+        </div>
+      </div>
+
+      <div class="form-group col-sm-2">
+        <div class="ui input fluid">
+          <%= f.text_area :comment, class: "form-control" , style:"height:105px;",placeholder: "Enter Description", rows: 5, disabled: f.object.persisted? %>
+        </div>
+      </div>
+
+       <div class="form-group col-sm-4">
+          <div class="form-title">
+            <h3>Attachments </h3>
+            <div class="row">
+                <div class="col-sm-12">
+                  <%= f.fields_for :attachments do |attachment| %>
+                    <%= render 'attachment_fields', :f => attachment %>
+                  <% end %>
+                  <div class='links form-group'>
+                    <%= link_to_add_association raw("<i class='fa fa-plus'></i>"), f, :attachments, class: "btn btn-xs btn-primary" %>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <% if f.object.new_record? %>
+        <div class="form-group col-sm-2">
+          <div class="ui input fluid">
+            <%= link_to_remove_association raw("<i class='fa fa-times'></i>"), f, class: "btn btn-xs btn-danger",style: "    margin-left: 29px;" %>
+          </div>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>

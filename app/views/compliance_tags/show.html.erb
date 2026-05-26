@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @compliance_tag.name %>
+</p>
+
+<p>
+  <strong>Risk:</strong>
+  <%= @compliance_tag.risk %>
+</p>
+
+<p>
+  <strong>Nature:</strong>
+  <%= @compliance_tag.nature %>
+</p>
+
+<p>
+  <strong>Parent:</strong>
+  <%= @compliance_tag.parent_id %>
+</p>
+
+<p>
+  <strong>Resource:</strong>
+  <%= @compliance_tag.resource_id %>
+</p>
+
+<p>
+  <strong>Resource type:</strong>
+  <%= @compliance_tag.resource_type %>
+</p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @compliance_tag.company_id %>
+</p>
+
+<p>
+  <strong>Tag type:</strong>
+  <%= @compliance_tag.tag_type %>
+</p>
+
+<p>
+  <strong>Critical:</strong>
+  <%= @compliance_tag.critical %>
+</p>
+
+<%= link_to 'Edit', edit_compliance_tag_path(@compliance_tag) %> |
+<%= link_to 'Back', compliance_tags_path %>

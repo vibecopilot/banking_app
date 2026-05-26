@@ -1,0 +1,32 @@
+<%= form_with(model: compliance_tag_task, local: true) do |form| %>
+  <% if compliance_tag_task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(compliance_tag_task.errors.count, "error") %> prohibited this compliance_tag_task from being saved:</h2>
+
+      <ul>
+      <% compliance_tag_task.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :compliance_tag_task_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :weightage %>
+    <%= form.check_box :weightage, id: :compliance_tag_task_weightage %>
+  </div>
+
+  <div class="field">
+    <%= form.label :compliance_tag_id %>
+    <%= form.number_field :compliance_tag_id, id: :compliance_tag_task_compliance_tag_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  site_id: 
+  event_name: MyString
+  venue: MyString
+  discription: MyString
+  start_date_time: 2024-06-03 23:53:44
+  end_date_time: 2024-06-03 23:53:44
+
+two:
+  site_id: 
+  event_name: MyString
+  venue: MyString
+  discription: MyString
+  start_date_time: 2024-06-03 23:53:44
+  end_date_time: 2024-06-03 23:53:44

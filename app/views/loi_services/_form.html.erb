@@ -1,0 +1,82 @@
+<%= form_with(model: loi_service, local: true) do |form| %>
+  <% if loi_service.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(loi_service.errors.count, "error") %> prohibited this loi_service from being saved:</h2>
+
+      <ul>
+      <% loi_service.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :service_detail_id %>
+    <%= form.number_field :service_detail_id, id: :loi_service_service_detail_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :product_description %>
+    <%= form.text_field :product_description, id: :loi_service_product_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :quantity %>
+    <%= form.text_field :quantity, id: :loi_service_quantity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :rate %>
+    <%= form.text_field :rate, id: :loi_service_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :uom %>
+    <%= form.number_field :uom, id: :loi_service_uom %>
+  </div>
+
+  <div class="field">
+    <%= form.label :expected_date %>
+    <%= form.date_select :expected_date, id: :loi_service_expected_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :amount %>
+    <%= form.text_field :amount, id: :loi_service_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :total_amount %>
+    <%= form.text_field :total_amount, id: :loi_service_total_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :kind_attention %>
+    <%= form.text_field :kind_attention, id: :loi_service_kind_attention %>
+  </div>
+
+  <div class="field">
+    <%= form.label :subject %>
+    <%= form.text_field :subject, id: :loi_service_subject %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :loi_service_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :terms_and_conditions %>
+    <%= form.text_area :terms_and_conditions, id: :loi_service_terms_and_conditions %>
+  </div>
+
+  <div class="field">
+    <%= form.label :service_order_id %>
+    <%= form.number_field :service_order_id, id: :loi_service_service_order_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

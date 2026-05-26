@@ -1,0 +1,60 @@
+<%= form_with(model: other_project, local: true, multipart: true) do |form| %>
+  <% if other_project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(other_project.errors.count, "error") %> prohibited this other_project from being saved:</h2>
+
+      <ul>
+      <% other_project.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, id: :other_project_title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :other_project_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_field :address, id: :other_project_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.number_field :company_id, id: :other_project_company_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contact_us %>
+    <%= form.text_field :contact_us, id: :other_project_contact_us %>
+  </div>
+
+  <h3>Amenities</h3>
+  <div id="other_p_amenities">
+    <%= form.fields_for :other_p_amenities do |amenity_form| %>
+      <div class="field">
+        <%= amenity_form.label :name %>
+        <%= amenity_form.text_field :name %>
+        <%= label_tag "amenity_icon_#{amenity_form.index}", "Icon" %>
+        <%= file_field_tag "amenity_icons[#{amenity_form.index}]" %>
+        <% if amenity_form.object.amenity_icon&.document_url.present? %>
+          <%= image_tag amenity_form.object.amenity_icon.document_url, width: 50 %>
+        <% end %>
+        <%= amenity_form.hidden_field :_destroy %>
+        <%= link_to "Remove", "#", class: "remove-amenity" %>
+      </div>
+    <% end %>
+  </div>
+  <%= link_to "Add Amenity", "#", id: "add-amenity" %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

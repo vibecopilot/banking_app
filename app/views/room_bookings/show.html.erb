@@ -1,0 +1,375 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-calendar-check mr-2"></i>
+            Booking Details: <%= @room_booking.booking_reference %>
+          </h4>
+          <div>
+            <span class="badge badge-lg <%= case @room_booking.status
+                                          when 'pending' then 'badge-warning'
+                                          when 'confirmed' then 'badge-info'
+                                          when 'checked_in' then 'badge-success'
+                                          when 'checked_out' then 'badge-secondary'
+                                          when 'cancelled' then 'badge-danger'
+                                          when 'no_show' then 'badge-dark'
+                                          else 'badge-light'
+                                          end %>">
+              <%= @room_booking.status.humanize %>
+            </span>
+            
+            <% if @room_booking.is_overdue? %>
+              <span class="badge badge-lg badge-danger ml-2">Overdue</span>
+            <% end %>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <div class="row">
+            <!-- Booking Information -->
+            <div class="col-md-8">
+              <div class="row">
+                <!-- Guest Information -->
+                <div class="col-md-6">
+                  <h6><i class="fas fa-user mr-2"></i>Guest Information</h6>
+                  <table class="table table-sm">
+                    <tr>
+                      <td><strong>Name:</strong></td>
+                      <td><%= @room_booking.guest_name %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Email:</strong></td>
+                      <td><%= @room_booking.guest_email %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Phone:</strong></td>
+                      <td><%= @room_booking.guest_phone %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Guests:</strong></td>
+                      <td>
+                        <%= @room_booking.number_of_adults %> adult<%= 's' if @room_booking.number_of_adults > 1 %>
+                        <% if @room_booking.number_of_children > 0 %>
+                          + <%= @room_booking.number_of_children %> child<%= 'ren' if @room_booking.number_of_children > 1 %>
+                        <% end %>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                
+                <!-- Room Information -->
+                <div class="col-md-6">
+                  <h6><i class="fas fa-bed mr-2"></i>Room Information</h6>
+                  <table class="table table-sm">
+                    <tr>
+                      <td><strong>Room:</strong></td>
+                      <td><%= link_to @room_booking.room.display_name, room_path(@room_booking.room) %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Type:</strong></td>
+                      <td><%= @room_booking.room.room_type.humanize %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Floor:</strong></td>
+                      <td><%= @room_booking.room.floor_number || 'N/A' %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Capacity:</strong></td>
+                      <td><%= @room_booking.room.capacity %></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              
+              <div class="row mt-4">
+                <!-- Stay Information -->
+                <div class="col-md-6">
+                  <h6><i class="fas fa-calendar mr-2"></i>Stay Information</h6>
+                  <table class="table table-sm">
+                    <tr>
+                      <td><strong>Check-in:</strong></td>
+                      <td>
+                        <%= @room_booking.check_in_date.strftime('%A, %d %B %Y') %>
+                        <% if @room_booking.actual_check_in_time %>
+                          <br><small class="text-success">
+                            <i class="fas fa-check"></i> 
+                            Checked in: <%= @room_booking.actual_check_in_time.strftime('%d %b %Y at %H:%M') %>
+                          </small>
+                        <% end %>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Check-out:</strong></td>
+                      <td>
+                        <%= @room_booking.check_out_date.strftime('%A, %d %B %Y') %>
+                        <% if @room_booking.actual_check_out_time %>
+                          <br><small class="text-success">
+                            <i class="fas fa-check"></i> 
+                            Checked out: <%= @room_booking.actual_check_out_time.strftime('%d %b %Y at %H:%M') %>
+                          </small>
+                        <% end %>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>Duration:</strong></td>
+                      <td><%= @room_booking.duration_nights %> night<%= 's' if @room_booking.duration_nights > 1 %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Booked on:</strong></td>
+                      <td><%= @room_booking.created_at.strftime('%d %b %Y at %H:%M') %></td>
+                    </tr>
+                  </table>
+                </div>
+                
+                <!-- Payment Information -->
+                <div class="col-md-6">
+                  <h6><i class="fas fa-credit-card mr-2"></i>Payment Information</h6>
+                  <table class="table table-sm">
+                    <tr>
+                      <td><strong>Subtotal:</strong></td>
+                      <td>$<%= @room_booking.subtotal_amount %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Tax (<%= @room_booking.room.tax_percentage %>%):</strong></td>
+                      <td>$<%= @room_booking.tax_amount %></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Total Amount:</strong></td>
+                      <td class="text-primary"><strong>$<%= @room_booking.total_amount %></strong></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Payment Status:</strong></td>
+                      <td>
+                        <span class="badge <%= case @room_booking.payment_status
+                                              when 'unpaid' then 'badge-danger'
+                                              when 'partial' then 'badge-warning'
+                                              when 'paid' then 'badge-success'
+                                              when 'refunded' then 'badge-secondary'
+                                              else 'badge-light'
+                                              end %>">
+                          <%= @room_booking.payment_status.humanize %>
+                        </span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              
+              <% if @room_booking.special_requests.present? %>
+                <div class="row mt-4">
+                  <div class="col-12">
+                    <h6><i class="fas fa-comment mr-2"></i>Special Requests</h6>
+                    <div class="alert alert-info">
+                      <%= simple_format(@room_booking.special_requests) %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+              
+              <% if @room_booking.cancellation_reason.present? %>
+                <div class="row mt-4">
+                  <div class="col-12">
+                    <h6><i class="fas fa-times-circle mr-2"></i>Cancellation Information</h6>
+                    <div class="alert alert-warning">
+                      <strong>Cancelled on:</strong> <%= @room_booking.cancelled_at.strftime('%d %b %Y at %H:%M') %><br>
+                      <strong>Reason:</strong> <%= @room_booking.cancellation_reason %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <!-- Actions Panel -->
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Available Actions</h6>
+                </div>
+                <div class="card-body">
+                  <!-- Guest Actions -->
+                  <% if current_user == @room_booking.user %>
+                    <% if @room_booking.can_cancel? %>
+                      <%= link_to "Cancel Booking", 
+                                  cancel_room_booking_path(@room_booking), 
+                                  method: :post,
+                                  confirm: "Are you sure you want to cancel this booking?",
+                                  class: "btn btn-outline-danger btn-block mb-2" %>
+                    <% end %>
+                    
+                    <% if @room_booking.pending? || @room_booking.confirmed? %>
+                      <%= link_to "Edit Booking", 
+                                  edit_room_booking_path(@room_booking), 
+                                  class: "btn btn-outline-primary btn-block mb-2" %>
+                    <% end %>
+                  <% end %>
+                  
+                  <!-- Admin Actions -->
+                  <% if current_user.admin? || current_user.manager? %>
+                    <% if @room_booking.pending? %>
+                      <%= link_to "Confirm Booking", 
+                                  confirm_room_booking_path(@room_booking), 
+                                  method: :post,
+                                  class: "btn btn-success btn-block mb-2" %>
+                    <% end %>
+                    
+                    <% if @room_booking.can_check_in? %>
+                      <%= link_to "Check In Guest", 
+                                  check_in_room_booking_path(@room_booking), 
+                                  method: :post,
+                                  class: "btn btn-primary btn-block mb-2" %>
+                    <% end %>
+                    
+                    <% if @room_booking.can_check_out? %>
+                      <%= link_to "Check Out Guest", 
+                                  check_out_room_booking_path(@room_booking), 
+                                  method: :post,
+                                  class: "btn btn-info btn-block mb-2" %>
+                    <% end %>
+                    
+                    <% if @room_booking.can_cancel? %>
+                      <%= form_with url: cancel_room_booking_path(@room_booking), method: :post, local: true do |f| %>
+                        <%= f.text_area :reason, placeholder: "Cancellation reason...", class: "form-control mb-2", rows: 2 %>
+                        <%= f.submit "Cancel Booking", class: "btn btn-outline-danger btn-block" %>
+                      <% end %>
+                    <% end %>
+                    
+                    <hr>
+                    
+                    <%= link_to "Edit Booking", 
+                                edit_room_booking_path(@room_booking), 
+                                class: "btn btn-outline-secondary btn-block mb-2" %>
+                  <% end %>
+                  
+                  <hr>
+                  
+                  <%= link_to "View Room", 
+                              room_path(@room_booking.room), 
+                              class: "btn btn-outline-info btn-block mb-2" %>
+                  
+                  <%= link_to "All Bookings", 
+                              room_bookings_path, 
+                              class: "btn btn-outline-secondary btn-block" %>
+                </div>
+              </div>
+              
+              <!-- Booking Status History -->
+              <div class="card mt-4">
+                <div class="card-header">
+                  <h6 class="mb-0">Status History</h6>
+                </div>
+                <div class="card-body">
+                  <div class="timeline">
+                    <div class="timeline-item">
+                      <div class="timeline-marker bg-primary"></div>
+                      <div class="timeline-content">
+                        <h6 class="timeline-title">Booking Created</h6>
+                        <p class="timeline-text"><%= @room_booking.created_at.strftime('%d %b %Y at %H:%M') %></p>
+                      </div>
+                    </div>
+                    
+                    <% if @room_booking.confirmed? || @room_booking.checked_in? || @room_booking.checked_out? %>
+                      <div class="timeline-item">
+                        <div class="timeline-marker bg-success"></div>
+                        <div class="timeline-content">
+                          <h6 class="timeline-title">Booking Confirmed</h6>
+                        </div>
+                      </div>
+                    <% end %>
+                    
+                    <% if @room_booking.actual_check_in_time %>
+                      <div class="timeline-item">
+                        <div class="timeline-marker bg-info"></div>
+                        <div class="timeline-content">
+                          <h6 class="timeline-title">Guest Checked In</h6>
+                          <p class="timeline-text"><%= @room_booking.actual_check_in_time.strftime('%d %b %Y at %H:%M') %></p>
+                        </div>
+                      </div>
+                    <% end %>
+                    
+                    <% if @room_booking.actual_check_out_time %>
+                      <div class="timeline-item">
+                        <div class="timeline-marker bg-secondary"></div>
+                        <div class="timeline-content">
+                          <h6 class="timeline-title">Guest Checked Out</h6>
+                          <p class="timeline-text"><%= @room_booking.actual_check_out_time.strftime('%d %b %Y at %H:%M') %></p>
+                        </div>
+                      </div>
+                    <% end %>
+                    
+                    <% if @room_booking.cancelled? %>
+                      <div class="timeline-item">
+                        <div class="timeline-marker bg-danger"></div>
+                        <div class="timeline-content">
+                          <h6 class="timeline-title">Booking Cancelled</h6>
+                          <% if @room_booking.cancelled_at %>
+                            <p class="timeline-text"><%= @room_booking.cancelled_at.strftime('%d %b %Y at %H:%M') %></p>
+                          <% end %>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.badge-lg {
+  font-size: 0.9em;
+  padding: 0.5em 0.8em;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 0;
+  bottom: -20px;
+  width: 2px;
+  background-color: #dee2e6;
+}
+
+.timeline-item:last-child::before {
+  display: none;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -30px;
+  top: 5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #dee2e6;
+}
+
+.timeline-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-text {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-bottom: 0;
+}
+</style>

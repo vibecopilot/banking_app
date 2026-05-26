@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @hazard_category.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @hazard_category.description %>
+</p>
+
+<p>
+  <strong>Sub activity:</strong>
+  <%= @hazard_category.sub_activity_id %>
+</p>
+
+<p>
+  <strong>Activity:</strong>
+  <%= @hazard_category.activity_id %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @hazard_category.site_id %>
+</p>
+
+<%= link_to 'Edit', edit_hazard_category_path(@hazard_category) %> |
+<%= link_to 'Back', hazard_categories_path %>

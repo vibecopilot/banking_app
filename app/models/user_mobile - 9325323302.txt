@@ -1,0 +1,87 @@
+Id                             : 768
+Email                          : sangmeshwar.chat2@gmail.com
+Encrypted password             : $2a$11$9wgHMCTTVxp1S0QlZkXvDONv2RnN1TpM.206E.YW1vXzrQliJVF2K
+Firstname                      : Sangmeshwar
+Lastname                       : 
+Reset password token           : 
+Reset password sent at         : 
+Remember created at            : 
+Sign in count                  : 0
+Current sign in at             : 
+Last sign in at                : 
+Current sign in ip             : 
+Last sign in ip                : 
+Created at                     : 2025-01-10 04:17:25 +0530
+Updated at                     : 2025-01-11 19:33:12 +0530
+Provider                       : 
+Uid                            : 
+Api key                        : d460af8be0473366bd35d6a03facd478600a21f61df5cef2
+User type                      : employee
+Company                        : 43
+Mobile                         : 9325323302
+Unit                           : 
+Current site                   : 57
+Face added                     : 
+User face url                  : 
+Active                         : true
+User courtesy                  : Mr.
+User phase                     : Active
+User status                    : true
+Building                       : 
+User category                  : 
+User address                   : 
+Resident type                  : 
+Membership type                : 
+Lives here                     : 
+Allow fitout                   : 
+Birth date                     : 
+Anniversary                    : 
+Spouse birth date              : 
+Email 1                        : 
+Email 2                        : 
+Landline number                : 
+Intercom number                : 
+Gst number                     : 
+Pan number                     : 
+Ev connection                  : 
+No of adults                   : 
+No of childrens                : 
+No of pets                     : 
+Differently abled              : 
+Department                     : 
+Manager                        : 
+About me                       : 
+Position                       : 
+Connection                     : 
+Organization                   : 2
+Profile image file name        : 
+Profile image content type     : 
+Profile image file size        : 
+Profile image updated at       : 
+Delete request                 : 
+Lad long required              : 
+Vendor                         : 
+Otp                            : 
+Rotary club                    : 
+Wedding date                   : 
+Business name                  : 
+Business category              : 
+Education qualification        : 
+Office address                 : 
+Rbm by                         : 
+Member of rmb                  : 
+Facebook link                  : 
+Instagram link                 : 
+Linkedin profile               : 
+Date of joining                : 
+Blood group                    : 
+Otp sent at                    : 
+Moving date                    : 
+Profession                     : 
+Mgl customer number            : 
+Adani electricity account no   : 
+Net provider name              : 
+Net provider                   : 
+Floor                          : 
+Is admin approved              : 
+Created by                     : 

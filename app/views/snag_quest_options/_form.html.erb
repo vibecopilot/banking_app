@@ -1,0 +1,42 @@
+<%= form_with(model: snag_quest_option, local: true) do |form| %>
+  <% if snag_quest_option.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(snag_quest_option.errors.count, "error") %> prohibited this snag_quest_option from being saved:</h2>
+
+      <ul>
+      <% snag_quest_option.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :question_id %>
+    <%= form.number_field :question_id, id: :snag_quest_option_question_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :qname %>
+    <%= form.text_field :qname, id: :snag_quest_option_qname %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.number_field :active, id: :snag_quest_option_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.number_field :company_id, id: :snag_quest_option_company_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :option_type %>
+    <%= form.text_field :option_type, id: :snag_quest_option_option_type %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

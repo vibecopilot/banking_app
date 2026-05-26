@@ -1,0 +1,1 @@
+json.extract! asset_param, :id, :asset_id, :name, :param_type, :created_at, :updated_at, :dashboard_view, :consumption_view, :order, :digit,:alert_below , :alert_above , :min_val , :max_val , :check_prev, :unit_type, :multiplier_factor

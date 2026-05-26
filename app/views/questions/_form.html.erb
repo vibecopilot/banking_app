@@ -1,0 +1,62 @@
+<%= form_with(model: question, local: true) do |form| %>
+  <% if question.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(question.errors.count, "error") %> prohibited this question from being saved:</h2>
+
+      <ul>
+      <% question.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :checklist_id %>
+    <%= form.number_field :checklist_id, id: :question_checklist_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :question_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :qtype %>
+    <%= form.text_field :qtype, id: :question_qtype %>
+  </div>
+
+  <div class="field">
+    <%= form.label :option1 %>
+    <%= form.text_field :option1, id: :question_option1 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :option2 %>
+    <%= form.text_field :option2, id: :question_option2 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :option3 %>
+    <%= form.text_field :option3, id: :question_option3 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :option4 %>
+    <%= form.text_field :option4, id: :question_option4 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :question_mandatory %>
+    <%= form.check_box :question_mandatory, id: :question_question_mandatory %>
+  </div>
+
+  <div class="field">
+    <%= form.label :image_mandatory %>
+    <%= form.check_box :image_mandatory, id: :question_image_mandatory %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

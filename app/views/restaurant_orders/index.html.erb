@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Restaurant Orders</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Restaurant</th>
+      <th>Ondate</th>
+      <th>Ontime</th>
+      <th>User</th>
+      <th>Payment status</th>
+      <th>Total amount</th>
+      <th>Status</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @restaurant_orders.each do |restaurant_order| %>
+      <tr>
+        <td><%= restaurant_order.restaurant_id %></td>
+        <td><%= restaurant_order.ondate %></td>
+        <td><%= restaurant_order.ontime %></td>
+        <td><%= restaurant_order.user_id %></td>
+        <td><%= restaurant_order.payment_status %></td>
+        <td><%= restaurant_order.total_amount %></td>
+        <td><%= restaurant_order.status %></td>
+        <td><%= link_to 'Show', restaurant_order %></td>
+        <td><%= link_to 'Edit', edit_restaurant_order_path(restaurant_order) %></td>
+        <td><%= link_to 'Destroy', restaurant_order, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Restaurant Order', new_restaurant_order_path %>

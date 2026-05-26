@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Mom detail:</strong>
+  <%= @mom_task.mom_detail %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @mom_task.description %>
+</p>
+
+<p>
+  <strong>Responsible person:</strong>
+  <%= @mom_task.responsible_person_id %>
+</p>
+
+<p>
+  <strong>Target date:</strong>
+  <%= @mom_task.target_date %>
+</p>
+
+<p>
+  <strong>Responsible person email:</strong>
+  <%= @mom_task.responsible_person_email %>
+</p>
+
+<p>
+  <strong>Responsible person type:</strong>
+  <%= @mom_task.responsible_person_type %>
+</p>
+
+<p>
+  <strong>Responsible person name:</strong>
+  <%= @mom_task.responsible_person_name %>
+</p>
+
+<p>
+  <strong>Company tag:</strong>
+  <%= @mom_task.company_tag_id %>
+</p>
+
+<%= link_to 'Edit', edit_mom_task_path(@mom_task) %> |
+<%= link_to 'Back', mom_tasks_path %>

@@ -1,0 +1,47 @@
+<%= form_with(model: receipt_setup, local: true) do |form| %>
+  <% if receipt_setup.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(receipt_setup.errors.count, "error") %> prohibited this receipt_setup from being saved:</h2>
+
+      <ul>
+      <% receipt_setup.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :prefix %>
+    <%= form.text_field :prefix, id: :receipt_setup_prefix %>
+  </div>
+
+  <div class="field">
+    <%= form.label :next_number %>
+    <%= form.number_field :next_number, id: :receipt_setup_next_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :auto_generate %>
+    <%= form.check_box :auto_generate, id: :receipt_setup_auto_generate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :receipt_number %>
+    <%= form.text_field :receipt_number, id: :receipt_setup_receipt_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by %>
+    <%= form.number_field :created_by, id: :receipt_setup_created_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :receipt_setup_site_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

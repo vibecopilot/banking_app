@@ -1,0 +1,71 @@
+<p id="notice"><%= notice %></p>
+
+<h1 style="text-align: center;">Food And Beverages</h1>
+
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; margin: 0 auto;">
+  <thead>
+    <tr>
+      <th style="text-align: center;">Restaurant name</th>
+      <th style="text-align: center;">Cost for two</th>
+      <th style="text-align: center;">Mobile number</th>
+      <th style="text-align: center;">Alternate mobile number</th>
+      <th style="text-align: center;">Landline number</th>
+      <th style="text-align: center;">Delivery time</th>
+      <th style="text-align: center;">Cuisines</th>
+      <th style="text-align: center;">Serves alcohols</th>
+      <th style="text-align: center;">Wheelchair accessible</th>
+      <th style="text-align: center;">Cash on delivery</th>
+      <th style="text-align: center;">Pure veg</th>
+      <th style="text-align: center;">Address</th>
+      <th style="text-align: center;">Terms and conditions</th>
+      <th style="text-align: center;">Disclaimer</th>
+      <th style="text-align: center;">Closing message</th>
+      <th style="text-align: center;">Minimum person</th>
+      <th style="text-align: center;">Maximum person</th>
+      <th style="text-align: center;">Cancel before</th>
+      <th style="text-align: center;">Gst</th>
+      <th style="text-align: center;">Delivery charges</th>
+      <th style="text-align: center;">Minimum order</th>
+      <th style="text-align: center;">Status</th>
+      <th style="text-align: center;">Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @food_and_beverages.each do |food_and_beverage| %>
+      <tr>
+        <td><%= food_and_beverage.restaurant_name %></td>
+        <td><%= food_and_beverage.cost_for_two %></td>
+        <td><%= food_and_beverage.mobile_number %></td>
+        <td><%= food_and_beverage.alternate_mobile_number %></td>
+        <td><%= food_and_beverage.landline_number %></td>
+        <td><%= food_and_beverage.delivery_time %></td>
+        <td><%= food_and_beverage.cuisines %></td>
+        <td><%= food_and_beverage.serves_alcohols %></td>
+        <td><%= food_and_beverage.wheelchair_accessible %></td>
+        <td><%= food_and_beverage.cash_on_delivery %></td>
+        <td><%= food_and_beverage.pure_veg %></td>
+        <td><%= food_and_beverage.address %></td>
+        <td><%= food_and_beverage.terms_and_conditions %></td>
+        <td><%= food_and_beverage.disclaimer %></td>
+        <td><%= food_and_beverage.closing_message %></td>
+        <td><%= food_and_beverage.minimum_person %></td>
+        <td><%= food_and_beverage.maximum_person %></td>
+        <td><%= food_and_beverage.cancel_before %></td>
+        <td><%= food_and_beverage.gst %></td>
+        <td><%= food_and_beverage.delivery_charges %></td>
+        <td><%= food_and_beverage.minimum_order %></td>
+        <td><%= food_and_beverage.status %></td>
+        <td><%= food_and_beverage.created_by_id %></td>
+        <td><%= link_to 'Show', food_and_beverage %></td>
+        <td><%= link_to 'Edit', edit_food_and_beverage_path(food_and_beverage) %></td>
+        <td><%= link_to 'Destroy', food_and_beverage, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Food And Beverage', new_food_and_beverage_path %>

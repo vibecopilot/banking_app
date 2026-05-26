@@ -1,0 +1,21 @@
+<%= form_with model: @communication_group, local: true do |f| %>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+  </div>
+  <div>
+    <%= f.label :picture %>
+    <%= f.file_field :picture %>
+  </div>
+  <div>
+    <%= f.label :users, "Add Employees to Communication Group" %>
+    <%= f.collection_check_boxes :user_ids, @employees, :id, :name %>
+  </div>
+  <div>
+    <%= f.submit 'Create Communication Group' %>
+  </div>
+<% end %>

@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  compliance_tracker_id: 1
+  submitted_on: 2025-01-17 12:23:05
+  submitted_by_id: 1
+  compliance_tag_id: 1
+  observation: MyText
+  recommendtion: MyText
+  comment: MyText
+  compliance_tag_task_id: 1
+
+two:
+  compliance_tracker_id: 1
+  submitted_on: 2025-01-17 12:23:05
+  submitted_by_id: 1
+  compliance_tag_id: 1
+  observation: MyText
+  recommendtion: MyText
+  comment: MyText
+  compliance_tag_task_id: 1

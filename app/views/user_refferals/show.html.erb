@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>From user:</strong>
+  <%= @user_refferal.from_user_id %>
+</p>
+
+<p>
+  <strong>To user:</strong>
+  <%= @user_refferal.to_user_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @user_refferal.name %>
+</p>
+
+<p>
+  <strong>Mobile:</strong>
+  <%= @user_refferal.mobile %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @user_refferal.email %>
+</p>
+
+<p>
+  <strong>Business:</strong>
+  <%= @user_refferal.business %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @user_refferal.amount %>
+</p>
+
+<%= link_to 'Edit', edit_user_refferal_path(@user_refferal) %> |
+<%= link_to 'Back', user_refferals_path %>

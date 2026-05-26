@@ -1,0 +1,506 @@
+<%= csrf_meta_tag %>
+<%= javascript_include_tag "multiselect.min" %>
+<style type="text/css">
+  #report-accordion .panel {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  margin-bottom: 8px;
+}
+
+#report-accordion .panel-heading {
+  padding: 0;
+  border: none;
+}
+
+#report-accordion .panel-title a {
+  display: block;
+  color: #000;
+  background: #E4E4E4;
+  border-left: 4px solid #D99533;
+  padding: 15px 20px 15px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  position: relative;
+  transition: all 0.5s ease 0s;
+}
+
+#report-accordion .panel-title a.collapsed {
+  background: #E4E4E4;
+  border-left: 4px solid #D99533;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+#report-accordion .panel-title a:before {
+  content: "\f106";
+  font-family: 'FontAwesome';
+  font-size: 20px;
+  position: absolute;
+  top: 30%;
+  right: 20px;
+  transition: all 0.3s ease 0s;
+}
+
+#report-accordion .panel-title a.collapsed:before {
+  content: "\f107";
+  font-size: 20px;
+}
+
+#report-accordion .panel-body {
+  background: #f6f6f6;
+  /*border-left: 4px solid #D99533;*/
+  padding: 15px 20px 15px 10px;
+}
+
+#report-accordion .panel-body p {
+  font-size: 12px;
+  font-weight: normal;
+}
+.main-footer{
+  position: fixed;
+}
+</style>
+
+<div class="data-table-area mg-b-15" style="padding-bottom: 250px; background: #fff">
+  <div class="container">
+    <div id="report-accordion" role="tablist1" style="margin-top: 25px;">
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab1" id="headingOne">
+              <h4 class="panel-title"> <a role="button1" data-toggle="collapse"
+                      data-parent="#accordion" href="#collapseOne" aria-expanded="true"
+                      aria-controls="collapseOne" class="collapsed">Detailed Reports</a>
+              </h4>
+          </div>
+          <div id="collapseOne" class="collapse in" role="tabpanel1" aria-labelledby="headingOne">
+            <div class="panel-body">
+              <%= form_tag("/stream_complaint_reports.csv", method: :post,id: 'export-csv-form') do %>
+                <div style="margin-top: 20px !important;display: grid; grid-template-columns: repeat(5, 1fr); grid-gap: 10px;">
+                  <div class="form-group" style="grid-column: 3/4;">
+                    <!-- <label>From</label> -->
+                    <div class="input-group">
+                      <div class="input-group-addon"> <i class="fa fa-calendar"></i> 
+                      </div>
+                      <input type="text" name="q[date_range]" class="form-control pull-right helpdesk_reports_picker export-date-range" id="export-date-picker" placeholder="Select Date Range" style="height: 28px !important;">
+                    </div>
+                  </div>
+
+                  <div style="grid-column: 5/6;">
+                     <button type="button" style="display: flex; justify-content: center; align-items: center;" class="btn btn-info btn-md custom-button" id="advanced-filter-link"><i class="fa fa-filter margin-r-2" aria-hidden=""></i>Filter</button><br>
+                  </div>
+                </div>
+
+                <div id="extra-options" style="display: none;">
+                  <% @lup = current_user.lock_user_permission %>
+                  <% if @lup.present? %>  
+                    <span style="display: grid; grid-template-columns: repeat(3, 250px); grid-gap: 10px; justify-content: center; margin: 10px 50px; font-weight: bolder;">Location Filters</span>
+                    <div style="display: grid; grid-template-columns: repeat(3, 250px); grid-gap: 10px; justify-content: center; margin: 0 50px;">
+                      <% if %w(Country Company).include?(@lup.access_level)%>
+                        <div>
+                          <% if @lup.access_level.include?('Company')
+                              @countries = Pms::Headquarter.active.where(company_setup_id: current_user.company_id).includes(:country)
+                            elsif @lup.access_level.include?('Country') && @lup.access_to.present? 
+                              @countries = Pms::Headquarter.where(company_setup_id: current_user.company_id,country_id: @lup.access_to).includes(:country)
+
+                            end
+                          %>
+                            <%= select_tag 'q[headquarter_id_in][]',options_for_select(@countries.collect{|d| [d.name,d.id]}),:class=>"ui fluid search dropdown pull-right headquarters", id: "pms_zone_headquarter_id",:multiple => "true",:include_blank =>"Select Country" %>
+                        </div>
+                      <% end %>
+                      
+                      <% if %w(Country Company Region).include?(@lup.access_level) %>
+                        <div>
+                          <% if @lup.access_level.include?('Region') && @lup.access_to.present?
+                              @regions = Pms::Region.where(id: @lup.access_to).collect{|d| [d.name,d.id]} 
+                            else
+                              @regions = []
+                            end  
+                          %>
+                            <%= select_tag 'q[region_id_in][]',options_for_select(@regions),:class=>"ui fluid search dropdown pull-right regions", id: "pms_zone_region_id", :multiple => "true",:include_blank =>"Select Region" %>
+                        </div>
+                      <% end %>
+
+                      <% if %w(Country Company Region Zone).include?(@lup.access_level) %>
+                        <div>
+                          <% if @lup.access_level.include?('Zone') && @lup.access_to.present?
+                              @zones = Pms::Zone.where(id: @lup.access_to).collect{|d| [d.name,d.id]} 
+                            else
+                              @zones = []
+                            end  
+                          %>
+                          <%= select_tag 'q[zone_id_in][]',options_for_select(@zones),:class=>"ui fluid search dropdown pull-right zones", id: "pms_zone_id", :multiple => "true",:include_blank =>"Select Zone" %>
+                        </div>
+                      <% end %>
+
+                      <% if %w(Country Company Region Zone Site).include?(@lup.access_level) %>
+                        <div>
+                          <% if @lup.access_level.include?('Site') && @lup.access_to.present?
+                              @sites = Pms::Site.where(id: @lup.access_to).collect{|d| [d.name,d.id]} 
+                            else
+                              @sites = []
+                            end  
+                          %>
+                          <%= select_tag 'q[pms_site_id_in][]',options_for_select(@sites),:class=>"ui fluid search dropdown pull-right sites", id: "pms_site_id", :multiple => "true",:include_blank =>"Select Site" %>
+                        </div>
+                      <% end %>  
+                    </div><br>
+                  <% end %> 
+
+                  <span style="display: grid; grid-template-columns: repeat(3, 250px); grid-gap: 10px; justify-content: center; margin: 10px 50px; font-weight: bolder;">Other Filters</span>
+                  <div style="display: grid; grid-template-columns: repeat(3, 250px); grid-gap: 10px; justify-content: center; margin: 0 50px;">
+                    <div>
+                      <div class="form-group">
+                        <% @statuses = ComplaintStatus.pms.active.where(society_id: @user.company_id) %>
+                        <%= select_tag 'q[issue_status_in][]',options_for_select(@statuses.collect{|d| [d.name,d.id]}),:class=>"ui fluid search dropdown pull-right", :multiple => "true",:include_blank =>"Select Status" %>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="form-group">
+                        <% @category = HelpdeskCategory.pms.where(society_id: @user.company_id).active.collect{|d| [d.name,d.id] }.sort_by(&:first) %>
+                        <%= select_tag 'q[category_type_id_in][]',options_for_select(@category),:class=>"ui  fluid search dropdown pull-right", :multiple => "true",:include_blank =>"Select Category" %>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="form-group">
+                        <!-- <label>From</label> -->
+                        <% @staff = Spree::User.active_lups(@user.company_id).where('lock_user_permissions.user_type =?', "pms_technician").allowed_site_users_for([@user.selected_site_id]).collect{|d| [d.full_name,d.id] } %>
+                        <%= select_tag 'q[assigned_to_eq]',options_for_select(@staff),:class=>"form-control",:include_blank =>"Select Assigned To" %>
+                      </div>
+                   </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div class="form-group" style="display: grid; grid-template-columns: 350px 200px 350px; grid-gap: 10px; margin: 0 50px;">
+                        <div>
+                          <label>All Values</label>
+                          <select name="q[from][]" id="customSort" class="form-control" size="8" multiple="multiple">
+                            <option value="Id" data-position="1">Id</option>
+                            <option value="Ticket Number" data-position="2">Ticket Number</option>
+                            <option value="Created Date" data-position="3">Created Date</option>
+                            <option value="Created Time" data-position="4">Created Time</option>
+                            <option value="Updated Date" data-position="5">Updated Date</option>
+                            <option value="Updated Time" data-position="6">Updated Time</option>
+                            <option value="Closed Date" data-position="7">Closed Date</option>
+                            <option value="Closed Time" data-position="8">Closed Time</option>
+                            <option value="Ticket Title" data-position="9">Ticket Title</option>
+                            <option value="Status" data-position="10">Status</option>
+                            <option value="Category" data-position="11">Category</option>
+                            <option value="Subcategory" data-position="12">Subcategory</option>
+                            <option value="Created By" data-position="13">Created By</option>
+                            <option value="Email Id" data-position="14">Email Id</option>
+                            <option value="Contact Number" data-position="15">Contact Number</option>
+                            <option value="Country" data-position="16">Country</option>
+                            <option value="Region" data-position="17">Region</option>
+                            <option value="Zone" data-position="18">Zone</option>
+                            <option value="Site" data-position="19">Site</option>
+                            <option value="Unit" data-position="20">Unit</option>
+                            <option value="Department" data-position="21">Department</option>
+                            <option value="Admin Priority" data-position="22">Admin Priority</option>
+                            <option value="Customer Priority" data-position="23">Customer Priority</option>
+                            <option value="Assigned To" data-position="24">Assigned To</option>
+                            <option value="Associated To" data-position="25">Associated To</option>
+                            <option value="Asset Name" data-position="26">Asset Name</option>
+                            <option value="Service Name" data-position="27">Service Name</option>
+                            <option value="Proactive/Reactive" data-position="28">Proactive/Reactive</option>
+                            <option value="Response TAT" data-position="29">Response TAT</option>
+                            <option value="Response Time" data-position="30">Response Time</option>
+                            <option value="Resolution TAT" data-position="31">Resolution TAT</option>
+                            <option value="Resolution Time" data-position="32">Resolution Time</option>
+                            <option value="Response Escalation Level" data-position="33">Response Escalation Level</option>
+                            <option value="Response Escalated To" data-position="34">Response Escalated To</option>
+                            <option value="Resolution Escalation Level" data-position="35">Resolution Escalation Level</option>
+                            <option value="Resolution Escalated To" data-position="36">Resolution Escalated To</option>
+                            <option value="Mode" data-position="37">Mode</option>
+                            <option value="Preventive Action" data-position="38">Preventive Action</option>
+                            <option value="Corrective Action" data-position="39">Corrective Action</option>
+                            <option value="Root Cause" data-position="40">Root Cause</option>
+                            <option value="Impact" data-position="41">Impact</option>
+                            <option value="Service Type" data-position="42">Service Type</option>
+                            <option value="Responsible Person" data-position="43">Responsible Person</option>
+                            <option value="Review Tracking Date" data-position="44">Review Tracking Date</option>
+                            <option value="Rating" data-position="45">Rating</option>
+                            <option value="Latest Comment" data-position="46">Latest Comment</option>
+                            <option value="Feedback" data-position="47">Feedback</option>
+                            <option value="Response Time Difference" data-position="48">Response Time Difference</option>
+                            <option value="Resolution Time Difference" data-position="49">Resolution Time Difference</option>
+                            <option value="Aging" data-position="50">Aging</option>
+                            <option value="Resolution TAT Status" data-position="51">Resolution TAT Status</option>
+                            <option value="Response TAT Status" data-position="52">Response TAT Status</option>
+                          </select>
+                        </div>
+                        <div style="margin-top:20px;">
+                          <button type="button" id="customSort_rightAll" class="btn btn-sm btn-white btn-block"><i class="fa fa-forward"></i></button>
+                          <button type="button" id="customSort_rightSelected" class="btn btn-sm btn-white btn-block"><i class="fa fa-chevron-right"></i></button>
+                          <button type="button" id="customSort_leftSelected" class="btn btn-sm btn-white btn-block"><i class="fa fa-chevron-left"></i></button>
+                          <button type="button" id="customSort_leftAll" class="btn btn-sm btn-white btn-block"><i class="fa fa-backward"></i></button>
+                        </div>
+                        <div>
+                          <label>Selected Values</label>
+                          <select name="q[to][]" id="customSort_to" class="form-control" size="8" multiple="multiple">
+                          </select>
+                          <input type="hidden" name="commit" value="export">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 text-center">
+                  <button type="submit" id="export-btn" class="btn btn-info btn-sm"><i class="fa fa-download margin-r-5" aria-hidden="true"></i> Export</button>
+                </div>
+              <%end%>    
+            </div>
+          </div>
+        </div>
+    </div>
+    <div id="report-accordion" role="tablist2">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab2" id="headingTwo">
+            <h4 class="panel-title"> <a role="button1" data-toggle="collapse"
+                    data-parent="#accordion" href="#collapseTwo" aria-expanded="true"
+                    aria-controls="collapseTwo" class="collapsed">Aging Reports</a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="collapse" role="tabpanel2" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            <div class="col-sm-12">
+              <%= form_tag("/pms/admin/complaints/export_cfms_report.xlsx", method: :get) do %>
+                <div class="col-sm-3 form-group">
+                  <%= select_tag 'report_type',options_for_select([['Categorywise Open & Closed Tickets', 'report1'], ['Prioritywise Aging of Open & Closed Tickets', 'report2'], ['Categorywise Open & Closed Tickets with Aging', 'report3']]),:class=>"form-control",:include_blank =>"Select Report", required: true %>
+                </div>
+                <div class="col-sm-3 form-group">
+                  <div class="input-group">
+                    <div class="input-group-addon"> <i class="fa fa-calendar"></i> 
+                    </div>
+                    <input type="text" name="q[date_range]" style="height: 28px !important;" class="form-control pull-right helpdesk_reports_picker export-date-range" id="export-date-picker" placeholder="Select Date Range" required="true">
+                  </div>
+                </div>
+                <div class="col-sm-2 form-group">
+                  <button type="submit" class="btn btn-info btn-sm"><i class="fa fa-download margin-r-5" aria-hidden="true"></i> Export</button>
+                </div>
+              <%end%>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="report-accordion" role="tablist3">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab3" id="headingThree">
+            <h4 class="panel-title"> <a role="button1" data-toggle="collapse"
+                    data-parent="#accordion" href="#collapseThree" aria-expanded="true"
+                    aria-controls="collapseThree" class="collapsed">Cost Approval Reports</a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="collapse" role="tabpanel3" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            <div class="col-sm-12">
+              <%= form_tag("/pms/admin/complaints/export_cost_approval_report.xlsx", method: :get) do %>
+                <div class="col-sm-2 form-group">
+                  <label>Select Year</label>
+                  <%= select_year(Date.today, {:start_year => Time.zone.now.year - 13, :end_year => 13.years.from_now.year}, include_blank: true) %>
+                </div>
+                <div class="col-sm-4 form-group">
+                  <%= select_tag 'q[pms_month_id_in][]',options_for_select([['Jan','1'],['Feb','2'],['Mar','3'],['Apr','4'],['May','5'],['Jun','6'],['July','7'],['Aug','8'],['Sep','9'],['Oct','10'],['Nov','11'],['Dec','12']]),:class=>"ui fluid search dropdown pull-right sites", id: "pms_month_id", :multiple => "true",:include_blank =>"Select Months", required: true %>
+                </div>
+                <div class="col-sm-6 form-group">
+                  <button type="submit" class="btn btn-info btn-sm subcost" id="subcost"><i class="fa fa-download margin-r-5" aria-hidden="true"></i> Export</button>
+                </div>
+              <%end%>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+  </div>
+</div>
+
+<!-- <script type="text/javascript">
+  $(".multiselect-with-checkbox").multiselect({
+    includeSelectAllOption: true,
+    enableFiltering: true,
+    maxHeight: 200,
+    buttonWidth: '380px'
+  });
+</script> -->
+<script type="text/javascript">
+
+  jQuery(document).ready(function($) {
+    $('#customSort').multiselect({
+        sort: false
+    });
+    $('.helpdesk_reports_picker').daterangepicker({
+      opens: 'left',
+      locale: {
+        format: 'MM/DD/YYYY'
+      },
+      maxSpan: {
+          "days": 92
+      },
+      // startDate: "<%#= params[:q][:created_at_gteq].to_date.strftime('%m/%d/%Y') %>",
+      // endDate: "<%#= params[:q][:created_at_lteq].to_date.strftime('%m/%d/%Y') %>"
+
+      dateLimit: {
+         'months': 3
+       }
+    });
+  });
+  $('#advanced-filter-link').on("click", function() {
+    displayAdvancedFilterForExport()
+   });
+
+  function displayAdvancedFilterForExport() {
+    var x = document.getElementById("extra-options");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+  }
+
+  $('.ui.dropdown').dropdown();
+
+  $("#export-btn").click(function(r){
+    r.preventDefault();
+    a=$("#customSort_to option").length;
+    if(a < 1){
+      toastr.error("Please select columns to export");
+      return false;
+    }
+    else{
+       $("#export-csv-form").submit();
+       $(this).attr('disabled', 'disabled');
+    }
+  });
+
+
+  // $('#export-btn').attr('disabled', 'disabled');
+  $('.export-date-range').change(function(e){
+    if($(this).val != ""){
+      $('#export-btn').removeAttr('disabled');
+    }
+    else
+    {
+      // $('#export-btn').attr('disabled', 'disabled');
+    }
+  });
+
+  $('.export-date-range').keyup(function() {
+
+      var isEmpty = false;
+      $('.export-date-range').each(function() {
+          if ($(this).val() == '') {
+              isEmpty = true;
+          }
+      });
+
+      if (isEmpty) {
+          $('#export-btn').attr('disabled', 'disabled');
+      } else {
+          $('#export-btn').removeAttr('disabled');
+      }
+  });
+
+  $("#pms_zone_headquarter_id").change(function(){
+    $("#pms_zone_region_id").html("<option value = ''>Select Region</option>");
+    $("#pms_zone_region_id").trigger("chosen:updated");
+    var headquarter_id = $(this).val();
+    if(headquarter_id != null){
+      $.ajax({
+        type: 'GET',
+        url: '/pms/admin/complaints/'+headquarter_id+'/regions',
+        dataType: 'json',
+        success: function(data){
+          $("#pms_zone_region_id").html("<select class = 'form-control' required = 'required' name = 'q[region_id_in][]' id = 'pms_zone_region_id'>");
+          $("#pms_zone_region_id").html("<option value = ''>Select Region</option>");
+          for(i=0; i < data.regions.length; i++){
+            $("#pms_zone_region_id").append("<option value='" + data.regions[i].id + "' >" + data.regions[i].name +"</option>");
+          }
+          $("#pms_zone_region_id").append("</select>");
+          $("#pms_zone_region_id").trigger("chosen:updated");
+        }
+      });
+    }
+    else{
+      $("#pms_zone_region_id").html("<option value = ''>Select Region</option>");
+      $("#pms_zone_region_id").trigger("chosen:updated");
+      $(".sites,.zones,.regions").each(function(){
+        $(this).find(".icon").click();
+      });
+    }
+  });
+
+  $("#pms_zone_region_id").change(function(){
+    $("#pms_zone_id").html("<option value = ''>Select Zone</option>");
+    $("#pms_zone_id").trigger("chosen:updated");
+    var region_id = $(this).val();
+    if(region_id != null || region_id > 0){
+      $.ajax({
+        type: 'GET',
+        url: '/pms/admin/complaints/'+region_id+'/zones',
+        dataType: 'json',
+        success: function(data){
+          $("#pms_zone_id").html("<select class = 'form-control' required = 'required' name = 'q[zone_id_in][]' id = 'pms_zone_id'>");
+          $("#pms_zone_id").html("<option value = ''>Select Zone</option>");
+          for(i=0; i < data.zones.length; i++){
+            $("#pms_zone_id").append("<option value='" + data.zones[i].id + "' >" + data.zones[i].name +"</option>");
+          }
+          $("#pms_zone_id").append("</select>");
+          $("#pms_zone_id").trigger("chosen:updated");
+        }
+      });
+    }
+    else{
+      $("#pms_zone_id").html("<option value = ''>Select Zone</option>");
+      $("#pms_zone_id").trigger("chosen:updated");
+      $(".sites,.zones").each(function(){
+        $(this).find(".icon").click();
+      });
+    }
+  });
+
+  $("#pms_zone_id").change(function(){
+    $("#pms_site_id").html("<option value = ''>Select Site</option>");
+    $("#pms_site_id").trigger("chosen:updated");
+    var zone_id = $(this).val();
+    if(zone_id != null){
+      $.ajax({
+        type: 'GET',
+        url: '/pms/admin/complaints/'+zone_id+'/sites',
+        dataType: 'json',
+        success: function(data){
+          $("#pms_site_id").html("<select class = 'form-control' required = 'required' name = 'q[pms_site_id_in][]' id = 'pms_site_id'>");
+          $("#pms_site_id").html("<option value = ''>Select Site</option>");
+          for(i=0; i < data.sites.length; i++){
+            $("#pms_site_id").append("<option value='" + data.sites[i].id + "' >" + data.sites[i].name +"</option>");
+          }
+          $("#pms_site_id").append("</select>");
+          $("#pms_site_id").trigger("chosen:updated");
+        }
+      });
+    }
+    else{
+      $("#pms_site_id").html("<option value = ''>Select Site</option>");
+      $("#pms_site_id").trigger("chosen:updated");
+      $(".sites").each(function(){
+        $(this).find(".icon").click();
+      });
+    }
+  });
+
+  // tail.select(".select", {
+  //     search: true
+  // });
+  $(function() {
+      $( "#report-accordion" ).accordion({'collapsible':true,'active':false});
+ });
+</script>

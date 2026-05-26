@@ -1,0 +1,47 @@
+<%= form_with(model: business_card, local: true) do |form| %>
+  <% if business_card.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(business_card.errors.count, "error") %> prohibited this business_card from being saved:</h2>
+
+      <ul>
+      <% business_card.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :full_name %>
+    <%= form.text_field :full_name, id: :business_card_full_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :profession %>
+    <%= form.text_field :profession, id: :business_card_profession %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contact_number %>
+    <%= form.text_field :contact_number, id: :business_card_contact_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email_id %>
+    <%= form.text_field :email_id, id: :business_card_email_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :website_url %>
+    <%= form.text_field :website_url, id: :business_card_website_url %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_area :address, id: :business_card_address %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

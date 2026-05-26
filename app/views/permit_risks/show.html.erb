@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Permit type:</strong>
+  <%= @permit_risk.permit_type_id %>
+</p>
+
+<p>
+  <strong>Activity:</strong>
+  <%= @permit_risk.activity_id %>
+</p>
+
+<p>
+  <strong>Sub activity:</strong>
+  <%= @permit_risk.sub_activity_id %>
+</p>
+
+<p>
+  <strong>Hazard category:</strong>
+  <%= @permit_risk.hazard_category_id %>
+</p>
+
+<p>
+  <strong>Risk description:</strong>
+  <%= @permit_risk.risk_description %>
+</p>
+
+<%= link_to 'Edit', edit_permit_risk_path(@permit_risk) %> |
+<%= link_to 'Back', permit_risks_path %>

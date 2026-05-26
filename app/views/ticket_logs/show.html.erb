@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Ticket:</strong>
+  <%= @ticket_log.ticket_id %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @ticket_log.created_by_id %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @ticket_log.status %>
+</p>
+
+<p>
+  <strong>Log type:</strong>
+  <%= @ticket_log.log_type %>
+</p>
+
+<p>
+  <strong>Remarks:</strong>
+  <%= @ticket_log.remarks %>
+</p>
+
+<%= link_to 'Edit', edit_ticket_log_path(@ticket_log) %> |
+<%= link_to 'Back', ticket_logs_path %>

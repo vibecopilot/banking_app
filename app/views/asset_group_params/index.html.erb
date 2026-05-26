@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Asset Group Params</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Order</th>
+      <th>Dashboard view</th>
+      <th>Consumption view</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @asset_group_params.each do |asset_group_param| %>
+      <tr>
+        <td><%= asset_group_param.name %></td>
+        <td><%= asset_group_param.order %></td>
+        <td><%= asset_group_param.dashboard_view %></td>
+        <td><%= asset_group_param.consumption_view %></td>
+        <td><%= link_to 'Show', asset_group_param %></td>
+        <td><%= link_to 'Edit', edit_asset_group_param_path(asset_group_param) %></td>
+        <td><%= link_to 'Destroy', asset_group_param, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Asset Group Param', new_asset_group_param_path %>

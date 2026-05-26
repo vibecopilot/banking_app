@@ -1,0 +1,81 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Amenities</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Site</th>
+      <th>Fac type</th>
+      <th>Fac name</th>
+      <th>Member charges</th>
+      <th>Book before</th>
+      <th>Disclaimer</th>
+      <th>Cancellation policy</th>
+      <th>Cutoff min</th>
+      <th>Return percentage</th>
+      <th>Create by</th>
+      <th>Active</th>
+      <th>Member price adult</th>
+      <th>Member price child</th>
+      <th>Guest price adult</th>
+      <th>Guest price child</th>
+      <th>Tenant price adult</th>
+      <th>Tenant price child</th>
+      <th>Min people</th>
+      <th>Max people</th>
+      <th>Cancel before</th>
+      <th>Terms</th>
+      <th>Advance min</th>
+      <th>Deposit</th>
+      <th>Description</th>
+      <th>Max slots</th>
+      <th>Payment Methods</th>
+
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @amenities.each do |amenity| %>
+      <tr>
+        <td><%= amenity.site_id %></td>
+        <td><%= amenity.fac_type %></td>
+        <td><%= amenity.fac_name %></td>
+        <td><%= amenity.member_charges %></td>
+        <td><%= amenity.book_before %></td>
+        <td><%= amenity.disclaimer %></td>
+        <td><%= amenity.cancellation_policy %></td>
+        <td><%= amenity.cutoff_min %></td>
+        <td><%= amenity.return_percentage %></td>
+        <td><%= amenity.create_by %></td>
+        <td><%= amenity.active %></td>
+        <td><%= amenity.member_price_adult %></td>
+        <td><%= amenity.member_price_child %></td>
+        <td><%= amenity.guest_price_adult %></td>
+        <td><%= amenity.guest_price_child %></td>
+        <td><%= amenity.tenant_price_adult %></td>
+        <td><%= amenity.tenant_price_child %></td>
+        <td><%= amenity.min_people %></td>
+        <td><%= amenity.max_people %></td>
+        <td><%= amenity.cancel_before %></td>
+        <td><%= amenity.terms %></td>
+        <td><%= amenity.advance_booking %></td>
+        <td><%= amenity.deposit %></td>
+        <td><%= amenity.description %></td>
+        <td><%= amenity.max_slots %></td>
+         <td><%= amenity.payment_methods.to_a.join(", ") %></td>
+        <td><%= link_to 'Show', amenity %></td>
+        <td><%= link_to 'Edit', edit_amenity_path(amenity) %></td>
+        <td><%= link_to 'Destroy', amenity, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to "Add Payment Methods", add_payment_methods_amenity_path(amenity), method: :patch %>
+        </td>  
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Amenity', new_amenity_path %>

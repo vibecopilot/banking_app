@@ -1,0 +1,61 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Inventory Details</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Item</th>
+      <th>Expected quantity</th>
+      <th>Received quantity</th>
+      <th>Approved quantity</th>
+      <th>Rejected quantity</th>
+      <th>Rate</th>
+      <th>Csgt rate</th>
+      <th>Csgt amt</th>
+      <th>Sgst rate</th>
+      <th>Sgst amt</th>
+      <th>Igst rate</th>
+      <th>Igst amt</th>
+      <th>Tcs rate</th>
+      <th>Tcs amt</th>
+      <th>Tax amt</th>
+      <th>Inventory amount</th>
+      <th>Total amount</th>
+      <th>Grn</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @inventory_details.each do |inventory_detail| %>
+      <tr>
+        <td><%= inventory_detail.item_id %></td>
+        <td><%= inventory_detail.expected_quantity %></td>
+        <td><%= inventory_detail.received_quantity %></td>
+        <td><%= inventory_detail.approved_quantity %></td>
+        <td><%= inventory_detail.rejected_quantity %></td>
+        <td><%= inventory_detail.rate %></td>
+        <td><%= inventory_detail.csgt_rate %></td>
+        <td><%= inventory_detail.csgt_amt %></td>
+        <td><%= inventory_detail.sgst_rate %></td>
+        <td><%= inventory_detail.sgst_amt %></td>
+        <td><%= inventory_detail.igst_rate %></td>
+        <td><%= inventory_detail.igst_amt %></td>
+        <td><%= inventory_detail.tcs_rate %></td>
+        <td><%= inventory_detail.tcs_amt %></td>
+        <td><%= inventory_detail.tax_amt %></td>
+        <td><%= inventory_detail.inventory_amount %></td>
+        <td><%= inventory_detail.total_amount %></td>
+        <td><%= inventory_detail.grn_id %></td>
+        <td><%= link_to 'Show', inventory_detail %></td>
+        <td><%= link_to 'Edit', edit_inventory_detail_path(inventory_detail) %></td>
+        <td><%= link_to 'Destroy', inventory_detail, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Inventory Detail', new_inventory_detail_path %>

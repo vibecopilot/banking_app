@@ -1,0 +1,2 @@
+module AmenityBookingsHelper
+end

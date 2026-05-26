@@ -1,0 +1,37 @@
+<%= form_with(model: patrolling_history, local: true) do |form| %>
+  <% if patrolling_history.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(patrolling_history.errors.count, "error") %> prohibited this patrolling_history from being saved:</h2>
+
+      <ul>
+      <% patrolling_history.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :patrolling_history_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :patroling_id %>
+    <%= form.number_field :patrolling_id, id: :patrolling_history_patrolling_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :expected_time %>
+    <%= form.datetime_select :expected_time, id: :patrolling_history_expected_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :actual_time %>
+    <%= form.datetime_select :actual_time, id: :patrolling_history_actual_time %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

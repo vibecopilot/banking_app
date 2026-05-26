@@ -1,0 +1,44 @@
+<h2>Approval History</h2>
+
+<% if @approval_history.empty? %>
+  <div class="alert alert-info" role="alert">
+    No approval history found.
+  </div>
+<% else %>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead class="thead-light">
+        <tr>
+          <th>Visitor Name</th>
+          <th>Contact</th>
+          <th>Purpose</th>
+          <th>Expected Date</th>
+          <th>Expected Time</th>
+          <th>Status</th>
+          <th>Approval Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @approval_history.each do |history| %>
+          <tr>
+            <td><%= history[:visitor].name %></td>
+            <td><%= history[:visitor].contact_no %></td>
+            <td><%= history[:visitor].purpose %></td>
+            <td><%= history[:visitor].expected_date&.strftime('%Y-%m-%d') %></td>
+            <td><%= history[:visitor].expected_time&.strftime('%H:%M') %></td>
+            <td>
+              <% if history[:approved] %>
+                <span class="badge badge-success">Approved</span>
+              <% else %>
+                <span class="badge badge-danger">Denied</span>
+              <% end %>
+            </td>
+            <td><%= history[:approval_date].strftime('%Y-%m-%d %H:%M') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<%= link_to 'Back', visitors_path, class: 'btn btn-secondary mt-3' %>

@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Amenity Bookings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Amenity</th>
+      <th>Amenity slot</th>
+      <th>User</th>
+      <th>Booking date</th>
+      <th>Site</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @amenity_bookings.each do |amenity_booking| %>
+      <tr>
+        <td><%= amenity_booking.amenity_id %></td>
+        <td><%= amenity_booking.amenity_slot_id %></td>
+        <td><%= amenity_booking.user_id %></td>
+        <td><%= amenity_booking.booking_date %></td>
+        <td><%= amenity_booking.site_id %></td>
+        <td><%= link_to 'Show', amenity_booking %></td>
+        <td><%= link_to 'Edit', edit_amenity_booking_path(amenity_booking) %></td>
+        <td><%= link_to 'Destroy', amenity_booking, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Amenity Booking', new_amenity_booking_path %>

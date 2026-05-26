@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Mom detail:</strong>
+  <%= @mom_attendee.mom_detail %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @mom_attendee.name %>
+</p>
+
+<p>
+  <strong>Organization:</strong>
+  <%= @mom_attendee.organization %>
+</p>
+
+<p>
+  <strong>Role:</strong>
+  <%= @mom_attendee.role %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @mom_attendee.email %>
+</p>
+
+<p>
+  <strong>Company tag name:</strong>
+  <%= @mom_attendee.company_tag_name %>
+</p>
+
+<p>
+  <strong>Attendees:</strong>
+  <%= @mom_attendee.attendees_id %>
+</p>
+
+<p>
+  <strong>Attendees type:</strong>
+  <%= @mom_attendee.attendees_type %>
+</p>
+
+<%= link_to 'Edit', edit_mom_attendee_path(@mom_attendee) %> |
+<%= link_to 'Back', mom_attendees_path %>

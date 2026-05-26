@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CAM Bill - <%= @cam_bill.invoice_number || @cam_bill.id %></title>
+  <style type="text/css">
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    @page {
+      size: A4;
+      margin: 10mm;
+    }
+    
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #333;
+      background: #fff;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 100%;
+      padding: 10px;
+    }
+    
+    /* Header */
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      color: #1e40af;
+      margin-bottom: 5px;
+    }
+    
+    .header .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+    }
+    
+    /* Invoice Info Section */
+    .invoice-info {
+      display: table;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    
+    .invoice-info .left, .invoice-info .right {
+      display: table-cell;
+      width: 50%;
+      vertical-align: top;
+    }
+    
+    .invoice-info .right {
+      text-align: right;
+    }
+    
+    .info-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 15px;
+    }
+    
+    .info-box h3 {
+      font-size: 13px;
+      color: #1e40af;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+    
+    .info-row {
+      margin-bottom: 5px;
+    }
+    
+    .info-label {
+      font-weight: bold;
+      color: #374151;
+      display: inline-block;
+      width: 130px;
+    }
+    
+    .info-value {
+      color: #4b5563;
+    }
+    
+    /* Status Badge */
+    .status-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    
+    .status-paid {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    
+    .status-overdue {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    table th {
+      background: #1e40af;
+      color: #fff;
+      font-weight: bold;
+      padding: 10px 8px;
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    
+    table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 11px;
+    }
+    
+    table tr:nth-child(even) {
+      background: #f9fafb;
+    }
+    
+    table tr:hover {
+      background: #f3f4f6;
+    }
+    
+    .text-right {
+      text-align: right;
+    }
+    
+    .text-center {
+      text-align: center;
+    }
+    
+    /* Summary Section */
+    .summary-section {
+      margin-top: 20px;
+    }
+    
+    .summary-table {
+      width: 300px;
+      margin-left: auto;
+    }
+    
+    .summary-table td {
+      padding: 8px 12px;
+    }
+    
+    .summary-table .label {
+      font-weight: bold;
+      color: #374151;
+    }
+    
+    .summary-table .total-row {
+      background: #1e40af;
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .summary-table .total-row td {
+      padding: 12px;
+    }
+    
+    /* Notes Section */
+    .notes-section {
+      margin-top: 25px;
+      padding: 12px;
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      border-radius: 6px;
+    }
+    
+    .notes-section h4 {
+      color: #92400e;
+      margin-bottom: 8px;
+    }
+    
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+      font-size: 10px;
+      color: #9ca3af;
+    }
+    
+    /* Two Column Layout */
+    .two-col {
+      display: table;
+      width: 100%;
+    }
+    
+    .two-col .col {
+      display: table-cell;
+      width: 48%;
+      vertical-align: top;
+      padding-right: 15px;
+    }
+    
+    .two-col .col:last-child {
+      padding-right: 0;
+      padding-left: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1><%= @cam_bill.site&.name || 'Property Management' %></h1>
+      <div class="subtitle">Common Area Maintenance Bill</div>
+    </div>
+    
+    <!-- Invoice Info -->
+    <div class="two-col">
+      <div class="col">
+        <div class="info-box">
+          <h3>📄 Invoice Details</h3>
+          <div class="info-row">
+            <span class="info-label">Invoice No:</span>
+            <span class="info-value"><strong><%= @cam_bill.invoice_number || "CAM-#{@cam_bill.id}" %></strong></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Invoice Type:</span>
+            <span class="info-value"><%= @cam_bill.invoice_type || 'N/A' %></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Bill Date:</span>
+            <span class="info-value"><%= @cam_bill.bill_date&.strftime('%d %b %Y') || 'N/A' %></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Due Date:</span>
+            <span class="info-value"><%= @cam_bill.due_date&.strftime('%d %b %Y') || 'N/A' %></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Supply Date:</span>
+            <span class="info-value"><%= @cam_bill.supply_date&.strftime('%d %b %Y') || 'N/A' %></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Status:</span>
+            <span class="status-badge <%= @cam_bill.payment_status == 'paid' ? 'status-paid' : (@cam_bill.due_date && @cam_bill.due_date < Date.today ? 'status-overdue' : 'status-pending') %>">
+              <%= @cam_bill.payment_status || @cam_bill.status || 'Pending' %>
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col">
+        <div class="info-box">
+          <h3>🏠 Bill To</h3>
+          <div class="info-row">
+            <span class="info-label">Name:</span>
+            <span class="info-value"><%= @cam_bill.user&.name || @cam_bill.user&.firstname.to_s + ' ' + @cam_bill.user&.lastname.to_s || 'N/A' %></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Building:</span>
+            <span class="info-value"><%= @cam_bill.building&.b_name || 'N/A' %></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Unit:</span>
+            <span class="info-value"><%= @cam_bill.unit&.unit_no || 'N/A' %></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Email:</span>
+            <span class="info-value"><%= @cam_bill.user&.email || 'N/A' %></span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Phone:</span>
+            <span class="info-value"><%= @cam_bill.user&.mobile || 'N/A' %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Bill Period Info -->
+    <% if @cam_bill.bill_period_start_date.present? || @cam_bill.bill_period_end_date.present? %>
+    <div class="info-box" style="margin-bottom: 20px;">
+      <h3>📅 Bill Period</h3>
+      <div class="info-row">
+        <span class="info-label">Period:</span>
+        <span class="info-value">
+          <%= @cam_bill.bill_period_start_date&.strftime('%d %b %Y') || 'N/A' %> 
+          to 
+          <%= @cam_bill.bill_period_end_date&.strftime('%d %b %Y') || 'N/A' %>
+        </span>
+      </div>
+    </div>
+    <% end %>
+    
+    <!-- Charges Table -->
+    <h3 style="margin-bottom: 10px; color: #1e40af;">📋 Charge Details</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 5%;">#</th>
+          <th style="width: 25%;">Description</th>
+          <th style="width: 8%;">HSN</th>
+          <th class="text-right" style="width: 8%;">Qty</th>
+          <th class="text-right" style="width: 10%;">Rate</th>
+          <th class="text-right" style="width: 10%;">Amount</th>
+          <th class="text-center" style="width: 8%;">Disc %</th>
+          <th class="text-right" style="width: 8%;">CGST</th>
+          <th class="text-right" style="width: 8%;">SGST</th>
+          <th class="text-right" style="width: 10%;">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if @cam_bill.cam_bill_charges.any? %>
+          <% @cam_bill.cam_bill_charges.each_with_index do |charge, index| %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= charge.description || 'N/A' %></td>
+              <td><%= charge.hsn_id || '-' %></td>
+              <td class="text-right"><%= charge.quantity || 1 %> <%= charge.unit %></td>
+              <td class="text-right">₹ <%= number_with_precision(charge.rate || 0, precision: 2) %></td>
+              <td class="text-right">₹ <%= number_with_precision(charge.charge_amount || charge.sub_amount || 0, precision: 2) %></td>
+              <td class="text-center"><%= charge.discount_percent || 0 %>%</td>
+              <td class="text-right">
+                ₹ <%= number_with_precision(charge.cgst_amount || 0, precision: 2) %>
+                <% if charge.cgst_rate.present? && charge.cgst_rate > 0 %>
+                  <br><small>(<%= charge.cgst_rate %>%)</small>
+                <% end %>
+              </td>
+              <td class="text-right">
+                ₹ <%= number_with_precision(charge.sgst_amount || 0, precision: 2) %>
+                <% if charge.sgst_rate.present? && charge.sgst_rate > 0 %>
+                  <br><small>(<%= charge.sgst_rate %>%)</small>
+                <% end %>
+              </td>
+              <td class="text-right"><strong>₹ <%= number_with_precision(charge.total || charge.total_value || 0, precision: 2) %></strong></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="10" class="text-center" style="padding: 20px; color: #9ca3af;">No charges found</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    
+    <!-- Summary -->
+    <div class="summary-section">
+      <table class="summary-table">
+        <tr>
+          <td class="label">Sub Total:</td>
+          <td class="text-right">₹ <%= number_with_precision(@cam_bill.sub_amount || 0, precision: 2) %></td>
+        </tr>
+        <% 
+          total_cgst = @cam_bill.cam_bill_charges.sum { |c| c.cgst_amount || 0 }
+          total_sgst = @cam_bill.cam_bill_charges.sum { |c| c.sgst_amount || 0 }
+          total_igst = @cam_bill.cam_bill_charges.sum { |c| c.igst_amount || 0 }
+          total_discount = @cam_bill.cam_bill_charges.sum { |c| c.discount_amount || 0 }
+        %>
+        <% if total_discount > 0 %>
+        <tr>
+          <td class="label">Discount:</td>
+          <td class="text-right" style="color: #059669;">- ₹ <%= number_with_precision(total_discount, precision: 2) %></td>
+        </tr>
+        <% end %>
+        <% if total_cgst > 0 %>
+        <tr>
+          <td class="label">CGST:</td>
+          <td class="text-right">₹ <%= number_with_precision(total_cgst, precision: 2) %></td>
+        </tr>
+        <% end %>
+        <% if total_sgst > 0 %>
+        <tr>
+          <td class="label">SGST:</td>
+          <td class="text-right">₹ <%= number_with_precision(total_sgst, precision: 2) %></td>
+        </tr>
+        <% end %>
+        <% if total_igst > 0 %>
+        <tr>
+          <td class="label">IGST:</td>
+          <td class="text-right">₹ <%= number_with_precision(total_igst, precision: 2) %></td>
+        </tr>
+        <% end %>
+        <% if @cam_bill.due_amount_interst.present? && @cam_bill.due_amount_interst > 0 %>
+        <tr>
+          <td class="label" style="color: #dc2626;">Interest:</td>
+          <td class="text-right" style="color: #dc2626;">₹ <%= number_with_precision(@cam_bill.due_amount_interst, precision: 2) %></td>
+        </tr>
+        <% end %>
+        <tr class="total-row">
+          <td>Total Amount:</td>
+          <td class="text-right">₹ <%= number_with_precision(@cam_bill.total_amount || 0, precision: 2) %></td>
+        </tr>
+        <% if @cam_bill.due_amount.present? && @cam_bill.due_amount > 0 %>
+        <tr style="background: #fef2f2;">
+          <td class="label" style="color: #dc2626;">Due Amount:</td>
+          <td class="text-right" style="color: #dc2626; font-weight: bold;">₹ <%= number_with_precision(@cam_bill.due_amount, precision: 2) %></td>
+        </tr>
+        <% end %>
+      </table>
+    </div>
+    
+    <!-- Notes -->
+    <% if @cam_bill.note.present? %>
+    <div class="notes-section">
+      <h4>📝 Notes</h4>
+      <p><%= @cam_bill.note %></p>
+    </div>
+    <% end %>
+    
+    <!-- Recall Reason -->
+    <% if @cam_bill.recall_reason.present? %>
+    <div class="notes-section" style="background: #fef2f2; border-color: #fca5a5;">
+      <h4 style="color: #991b1b;">⚠️ Recall Reason</h4>
+      <p><%= @cam_bill.recall_reason %></p>
+    </div>
+    <% end %>
+    
+    <!-- Invoice Address -->
+    <% if @cam_bill.address.present? %>
+    <div class="info-box" style="margin-top: 20px;">
+      <h3>📍 Invoice Address</h3>
+      <p>
+        <%= @cam_bill.address.address_line1 %><br>
+        <% if @cam_bill.address.address_line2.present? %>
+          <%= @cam_bill.address.address_line2 %><br>
+        <% end %>
+        <%= @cam_bill.address.city %>, <%= @cam_bill.address.state %> - <%= @cam_bill.address.pincode %><br>
+        <% if @cam_bill.address.gstin.present? %>
+          <strong>GSTIN:</strong> <%= @cam_bill.address.gstin %>
+        <% end %>
+      </p>
+    </div>
+    <% end %>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <p>This is a computer generated invoice and does not require a signature.</p>
+      <p>Generated on <%= Time.current.strftime('%d %b %Y at %I:%M %p') %></p>
+      <p style="margin-top: 5px;"><strong><%= @cam_bill.site&.name %></strong></p>
+    </div>
+  </div>
+</body>
+</html>

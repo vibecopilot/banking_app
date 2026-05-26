@@ -1,0 +1,27 @@
+<%= form_with(model: permit_type, local: true) do |form| %>
+  <% if permit_type.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(permit_type.errors.count, "error") %> prohibited this permit_type from being saved:</h2>
+
+      <ul>
+      <% permit_type.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :permit_type_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :permit_type_site_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

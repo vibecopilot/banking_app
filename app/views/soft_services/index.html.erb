@@ -1,0 +1,94 @@
+<p id="notice"><%= notice %></p>
+<h1>Soft Services</h1>
+<br>
+<%= link_to 'Download All QR Codes', soft_services_qr_codes_soft_services_path(format: :pdf), class: 'btn btn-primary' %>
+<br>
+<br>
+<%= link_to 'Download all services Excel', download_all_log_excel_soft_services_path(format: :xlsx), style: 'font-weight: bold; color: blue;' %>
+<br>
+<br>
+<%= link_to 'New Soft Service', new_soft_service_path, style: 'font-weight: bold; color: blue;' %>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Site</th>
+      <th>Building</th>
+      <th>Floor</th>
+      <th>Unit</th>
+      <th>Name</th>
+      <th>User</th>
+      <th>QR Code</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @soft_services.each do |soft_service| %>
+      <tr>
+        <td><%= soft_service.site_id %></td>
+        <td><%= soft_service.building_id %></td>
+        <td><%= soft_service.floor_id %></td>
+        <td><%= soft_service.unit_id %></td>
+        <td><%= soft_service.name %></td>
+        <td><%= soft_service.user_id %></td>
+        <td>
+          <% if soft_service.qr_code_image.present? %>
+            <%= link_to '#', data: { toggle: 'modal', target: '#soft-service-qr-preview', 'soft-service-id': soft_service.id } do %>
+              <%= image_tag soft_service.qr_code_image.image.url, alt: "QR Code", style: "width: 50px; height: 50px;", class: "soft-service-qr" %>
+            <% end %>
+          <% else %>
+            No QR Code
+          <% end %>
+        </td>
+        <td><%= link_to 'Show', soft_service %></td>
+        <td><%= link_to 'Edit', edit_soft_service_path(soft_service) %></td>
+        <td><%= link_to 'Destroy', soft_service, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br>
+
+<!-- QR Code Preview Modal -->
+<div class="modal fade" id="soft-service-qr-preview" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Soft Service QR Image</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="soft_service_qr_div">
+          <img src="" style="width: 200px; height: 200px">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="download-qr">Download QR Code</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var cursrc = "";
+    var currentSoftServiceId = "";
+    $(".soft-service-qr").click(function(e) {
+      cursrc = $(this).attr("src");
+      currentSoftServiceId = $(this).closest("a").data("soft-service-id");
+      $("#soft_service_qr_div").find("img").attr("src", cursrc);
+    });
+    $("#download-qr").click(function() {
+      if (cursrc) {
+        var link = document.createElement('a');
+        link.href = cursrc;
+        link.download = 'soft_service_qr_' + currentSoftServiceId + '.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    });
+  });
+</script>

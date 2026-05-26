@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Fitout category:</strong>
+  <%= @fitout_document.fitout_category %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @fitout_document.active %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @fitout_document.name %>
+</p>
+
+<%= link_to 'Edit', edit_fitout_document_path(@fitout_document) %> |
+<%= link_to 'Back', fitout_documents_path %>

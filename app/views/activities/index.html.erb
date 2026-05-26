@@ -1,0 +1,48 @@
+<p id="notice"><%= notice %></p>
+
+<div class="col-sm-12">
+    <h4 class="pull-left" style="width: 100%; text-align: left;"> Activities  <hr></h4>
+  </div>
+<div class="ml-2  mr-2">
+  
+<div id="toolbar">
+</div>
+<table class="table " id="user_setup" data-toggle="table" data-pagination="true" data-search="true" data-trim-on-search="false" data-show-columns="true" data-show-refresh="true" data-sortable="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">  <thead>
+    <tr>
+      <th></th>
+      <th>ID</th>
+      <th>Asset</th>
+      <th>Checklist</th>
+      <th>Start time</th>
+      <th>Type</th>
+      <th>Status</th>
+      <th>Assigned to</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @activities.each do |activity| %>
+      <tr>
+        <td> <% if activity.status == "pending" && Date.today == activity.start_time.to_date %> <a href="/submissions/new?activity_id=<%= activity.id %>&<%= 'wv=1' if params[:wv].present? %>">Perform</a><% end %> </td>
+        <% checklist = Checklist.unscoped.find_by(id: activity.checklist_id) %>
+        <td><%= activity.id %></td>
+        <td><%= activity.site_asset&.name %></td>
+        <td><%= checklist&.name %></td>
+        <td><%= activity.start_time.strftime("%d/%m/%Y %l:%M %p") %></td>
+        <td><%= checklist&.ctype %></td>
+        <td><%= activity.get_status %></td>
+        <td><%= activity.user&.full_name %></td>
+        <td><%= link_to 'Show', activity %></td>
+        <td><%= link_to 'Edit', edit_activity_path(activity) %></td>
+        <td><%= link_to 'Destroy', activity, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  <%# <%= will_paginate @activities %>
+  <%= will_paginate(@activities) if @activities.respond_to?(:total_pages) %>
+</table>
+
+<br>
+
+<%#= link_to 'New Activity', new_activity_path %>

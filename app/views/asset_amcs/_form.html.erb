@@ -1,0 +1,42 @@
+<%= form_with(model: asset_amc, local: true) do |form| %>
+  <% if asset_amc.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(asset_amc.errors.count, "error") %> prohibited this asset_amc from being saved:</h2>
+
+      <ul>
+      <% asset_amc.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :vendor_id %>
+    <%= form.number_field :vendor_id, id: :asset_amc_vendor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :asset_id %>
+    <%= form.number_field :asset_id, id: :asset_amc_asset_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.date_select :start_date, id: :asset_amc_start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date %>
+    <%= form.date_select :end_date, id: :asset_amc_end_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :frequency %>
+    <%= form.text_field :frequency, id: :asset_amc_frequency %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

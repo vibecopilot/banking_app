@@ -1,0 +1,72 @@
+<%= form_with(model: fitness_appointment, local: true) do |form| %>
+  <% if fitness_appointment.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(fitness_appointment.errors.count, "error") %> prohibited this fitness_appointment from being saved:</h2>
+
+      <ul>
+      <% fitness_appointment.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :booking_type %>
+    <%= form.text_field :booking_type, id: :fitness_appointment_booking_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :fitness_appointment_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :relationship %>
+    <%= form.text_field :relationship, id: :fitness_appointment_relationship %>
+  </div>
+
+  <div class="field">
+    <%= form.label :age %>
+    <%= form.number_field :age, id: :fitness_appointment_age %>
+  </div>
+
+  <div class="field">
+    <%= form.label :gender %>
+    <%= form.text_field :gender, id: :fitness_appointment_gender %>
+  </div>
+
+  <div class="field">
+    <%= form.label :marital_status %>
+    <%= form.text_field :marital_status, id: :fitness_appointment_marital_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date %>
+    <%= form.date_select :date, id: :fitness_appointment_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :modile_number %>
+    <%= form.text_field :modile_number, id: :fitness_appointment_modile_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :preference %>
+    <%= form.text_field :preference, id: :fitness_appointment_preference %>
+  </div>
+
+  <div class="field">
+    <%= form.label :trainer %>
+    <%= form.number_field :trainer, id: :fitness_appointment_trainer %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reason_for_appointment %>
+    <%= form.text_area :reason_for_appointment, id: :fitness_appointment_reason_for_appointment %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

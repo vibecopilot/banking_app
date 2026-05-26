@@ -1,0 +1,2 @@
+module PermitExtensionsHelper
+end

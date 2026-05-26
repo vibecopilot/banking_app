@@ -1,0 +1,268 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-calendar-alt mr-2"></i>
+            Availability Management: <%= @room.display_name %>
+          </h4>
+          <div>
+            <%= link_to "Calendar View", calendar_room_room_availability_path(@room), 
+                        class: "btn btn-info" %>
+            <%= link_to "View Room", room_path(@room), class: "btn btn-outline-secondary" %>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <!-- Room Information -->
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <div class="alert alert-info">
+                <h6><i class="fas fa-info-circle mr-2"></i>Room Information</h6>
+                <div class="row">
+                  <div class="col-md-3">
+                    <strong>Room:</strong> <%= @room.display_name %>
+                  </div>
+                  <div class="col-md-3">
+                    <strong>Type:</strong> <%= @room.room_type.humanize %>
+                  </div>
+                  <div class="col-md-3">
+                    <strong>Status:</strong> 
+                    <span class="badge <%= 'badge-success' if @room.available? %>
+                                        <%= 'badge-warning' if @room.occupied? %>
+                                        <%= 'badge-danger' if @room.maintenance? || @room.out_of_order? %>">
+                      <%= @room.status.humanize %>
+                    </span>
+                  </div>
+                  <div class="col-md-3">
+                    <strong>Active:</strong> 
+                    <span class="badge <%= @room.active? ? 'badge-success' : 'badge-danger' %>">
+                      <%= @room.active? ? 'Yes' : 'No' %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <!-- Block Dates -->
+                    <div class="col-md-6">
+                      <%= form_with url: block_dates_room_room_availability_path(@room), method: :post, local: true, class: "border p-3" do |f| %>
+                        <h6><i class="fas fa-ban mr-2 text-danger"></i>Block Dates</h6>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <%= f.date_field :start_date, class: "form-control mb-2", placeholder: "Start Date", required: true %>
+                          </div>
+                          <div class="col-md-6">
+                            <%= f.date_field :end_date, class: "form-control mb-2", placeholder: "End Date", required: true %>
+                          </div>
+                        </div>
+                        <%= f.text_field :reason, class: "form-control mb-2", placeholder: "Reason for blocking", required: true %>
+                        <%= f.submit "Block Dates", class: "btn btn-danger btn-sm" %>
+                      <% end %>
+                    </div>
+                    
+                    <!-- Unblock Dates -->
+                    <div class="col-md-6">
+                      <%= form_with url: unblock_dates_room_room_availability_path(@room), method: :post, local: true, class: "border p-3" do |f| %>
+                        <h6><i class="fas fa-check mr-2 text-success"></i>Unblock Dates</h6>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <%= f.date_field :start_date, class: "form-control mb-2", placeholder: "Start Date", required: true %>
+                          </div>
+                          <div class="col-md-6">
+                            <%= f.date_field :end_date, class: "form-control mb-2", placeholder: "End Date", required: true %>
+                          </div>
+                        </div>
+                        <div class="mb-2">&nbsp;</div>
+                        <%= f.submit "Unblock Dates", class: "btn btn-success btn-sm" %>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Availability Records -->
+          <% if @room_availability.any? %>
+            <div class="card">
+              <div class="card-header">
+                <h6 class="mb-0">Current Availability Restrictions</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead class="thead-light">
+                      <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Reason</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @room_availability.each do |availability| %>
+                        <tr class="<%= availability.available? ? 'table-success' : 'table-danger' %>">
+                          <td>
+                            <strong><%= availability.date.strftime('%A, %d %B %Y') %></strong>
+                          </td>
+                          <td>
+                            <% if availability.available? %>
+                              <span class="badge badge-success">Available</span>
+                            <% else %>
+                              <span class="badge badge-danger">Blocked</span>
+                            <% end %>
+                          </td>
+                          <td>
+                            <%= availability.display_reason %>
+                          </td>
+                          <td>
+                            <small class="text-muted">
+                              <%= availability.created_at.strftime('%d %b %Y at %H:%M') %>
+                            </small>
+                          </td>
+                          <td>
+                            <div class="btn-group" role="group">
+                              <%= form_with url: set_availability_room_room_availability_path(@room), method: :post, local: true, style: "display: inline;" do |f| %>
+                                <%= f.hidden_field :date, value: availability.date %>
+                                <%= f.hidden_field :available, value: !availability.available %>
+                                <% if availability.available? %>
+                                  <%= f.submit "Block", class: "btn btn-sm btn-outline-danger" %>
+                                <% else %>
+                                  <%= f.submit "Unblock", class: "btn btn-sm btn-outline-success" %>
+                                <% end %>
+                              <% end %>
+                              
+                              <%= link_to "Delete", room_room_availability_path(@room, availability), 
+                                          method: :delete,
+                                          confirm: "Are you sure you want to remove this availability record?",
+                                          class: "btn btn-sm btn-outline-secondary" %>
+                            </div>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          <% else %>
+            <div class="text-center py-5">
+              <i class="fas fa-calendar-check fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">No availability restrictions</h5>
+              <p class="text-muted">
+                This room has no specific availability restrictions. 
+                It follows the room's general status and any existing bookings.<br>
+                Use the quick actions above to block specific dates when needed.
+              </p>
+            </div>
+          <% end %>
+
+          <!-- Upcoming Bookings -->
+          <% 
+            upcoming_bookings = @room.room_bookings
+                                     .where('check_in_date >= ?', Date.current)
+                                     .where(status: ['confirmed', 'checked_in'])
+                                     .order(:check_in_date)
+                                     .limit(10)
+          %>
+          <% if upcoming_bookings.any? %>
+            <div class="card mt-4">
+              <div class="card-header">
+                <h6 class="mb-0">Upcoming Bookings (Automatically Blocked Dates)</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Booking Reference</th>
+                        <th>Guest</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% upcoming_bookings.each do |booking| %>
+                        <tr>
+                          <td><%= link_to booking.booking_reference, room_booking_path(booking) %></td>
+                          <td><%= booking.guest_name %></td>
+                          <td><%= booking.check_in_date.strftime('%d %b %Y') %></td>
+                          <td><%= booking.check_out_date.strftime('%d %b %Y') %></td>
+                          <td>
+                            <span class="badge <%= 'badge-info' if booking.confirmed? %>
+                                                <%= 'badge-success' if booking.checked_in? %>">
+                              <%= booking.status.humanize %>
+                            </span>
+                          </td>
+                          <td>
+                            <%= link_to "View", room_booking_path(booking), class: "btn btn-xs btn-outline-primary" %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Set minimum dates for date fields
+  const today = new Date().toISOString().split('T')[0];
+  document.querySelectorAll('input[type="date"]').forEach(input => {
+    if (!input.hasAttribute('min')) {
+      input.setAttribute('min', today);
+    }
+  });
+  
+  // Auto-update end date when start date changes
+  document.querySelectorAll('form').forEach(form => {
+    const startDate = form.querySelector('input[name="start_date"]');
+    const endDate = form.querySelector('input[name="end_date"]');
+    
+    if (startDate && endDate) {
+      startDate.addEventListener('change', function() {
+        endDate.setAttribute('min', this.value);
+        if (endDate.value && endDate.value < this.value) {
+          endDate.value = this.value;
+        }
+      });
+    }
+  });
+});
+</script>
+
+<style>
+.btn-xs {
+  padding: 0.125rem 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  border-radius: 0.15rem;
+}
+
+.border {
+  border-radius: 5px;
+  background-color: #f8f9fa;
+}
+</style>

@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @aminity_booking.date %>
+</p>
+
+<p>
+  <strong>Aminity:</strong>
+  <%= @aminity_booking.aminity_id %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @aminity_booking.comment %>
+</p>
+
+<p>
+  <strong>Cancellation policy:</strong>
+  <%= @aminity_booking.cancellation_policy %>
+</p>
+
+<p>
+  <strong>Terms and conditions:</strong>
+  <%= @aminity_booking.terms_and_conditions %>
+</p>
+
+<p>
+  <strong>Payment method:</strong>
+  <%= @aminity_booking.payment_method %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @aminity_booking.user_id %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @aminity_booking.status %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @aminity_booking.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_aminity_booking_path(@aminity_booking) %> |
+<%= link_to 'Back', aminity_bookings_path %>

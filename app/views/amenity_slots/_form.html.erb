@@ -1,0 +1,42 @@
+<%= form_with(model: amenity_slot, local: true) do |form| %>
+  <% if amenity_slot.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(amenity_slot.errors.count, "error") %> prohibited this amenity_slot from being saved:</h2>
+
+      <ul>
+      <% amenity_slot.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :amenity_id %>
+    <%= form.number_field :amenity_id, id: :amenity_slot_amenity_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_hr %>
+    <%= form.number_field :start_hr, id: :amenity_slot_start_hr %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_hr %>
+    <%= form.number_field :end_hr, id: :amenity_slot_end_hr %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_min %>
+    <%= form.number_field :start_min, id: :amenity_slot_start_min %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_min %>
+    <%= form.number_field :end_min, id: :amenity_slot_end_min %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

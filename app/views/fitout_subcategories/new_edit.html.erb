@@ -1,0 +1,17 @@
+<h1><%= @fitout_subcategory.new_record? ? 'New' : 'Edit' %> Fitout Subcategory</h1>
+
+<%= form_with model: @fitout_subcategory, local: true do |form| %>
+  <p>
+    <%= form.label :helpdesk_category_name %><br>
+    <%= form.text_field :helpdesk_category_name %>
+  </p>
+  <p>
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </p>
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', fitout_subcategories_path %>

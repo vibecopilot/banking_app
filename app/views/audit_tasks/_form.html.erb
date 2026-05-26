@@ -1,0 +1,72 @@
+<%= form_with(model: audit_task, local: true) do |form| %>
+  <% if audit_task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(audit_task.errors.count, "error") %> prohibited this audit_task from being saved:</h2>
+
+      <ul>
+      <% audit_task.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :group %>
+    <%= form.number_field :group, id: :audit_task_group %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sub_group %>
+    <%= form.number_field :sub_group, id: :audit_task_sub_group %>
+  </div>
+
+  <div class="field">
+    <%= form.label :task %>
+    <%= form.text_field :task, id: :audit_task_task %>
+  </div>
+
+  <div class="field">
+    <%= form.label :input_type %>
+    <%= form.text_field :input_type, id: :audit_task_input_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mandatory %>
+    <%= form.check_box :mandatory, id: :audit_task_mandatory %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reading %>
+    <%= form.check_box :reading, id: :audit_task_reading %>
+  </div>
+
+  <div class="field">
+    <%= form.label :help_text %>
+    <%= form.check_box :help_text, id: :audit_task_help_text %>
+  </div>
+
+  <div class="field">
+    <%= form.label :weightage %>
+    <%= form.text_field :weightage, id: :audit_task_weightage %>
+  </div>
+
+  <div class="field">
+    <%= form.label :rating %>
+    <%= form.check_box :rating, id: :audit_task_rating %>
+  </div>
+
+  <div class="field">
+    <%= form.label :audit_id %>
+    <%= form.number_field :audit_id, id: :audit_task_audit_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :audit_task_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

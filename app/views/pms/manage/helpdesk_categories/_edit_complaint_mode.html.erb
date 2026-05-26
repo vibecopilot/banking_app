@@ -1,0 +1,27 @@
+<div class="modal fade" id="myComplaintModeModal<%= @complaint_mode.id %>" role="dialog">
+  <div class="modal-dialog" role="document">
+    <%= form_tag  "/pms/admin/update_complaint_mode" do %>
+    <input type="hidden" name="id" value="<%=@complaint_mode.id%>">
+    <input type="hidden" name="custom_redirect" value="/pms/admin/helpdesk_categories">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Edit Complaint Mode</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group col-sm-12">
+                <label>Compalint Mode</label>
+                <input type="text" name="complaint_mode[name]" class="form-control" placeholder="Enter Complaint Mode" value="<%= @complaint_mode.name%>">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success btn-sm updatecomplaintmodal">Update</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

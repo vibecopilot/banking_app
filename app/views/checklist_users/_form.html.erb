@@ -1,0 +1,37 @@
+<%= form_with(model: checklist_user, local: true) do |form| %>
+  <% if checklist_user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(checklist_user.errors.count, "error") %> prohibited this checklist_user from being saved:</h2>
+
+      <ul>
+      <% checklist_user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :resource_id %>
+    <%= form.number_field :resource_id, id: :checklist_user_resource_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :checklist_id %>
+    <%= form.number_field :checklist_id, id: :checklist_user_checklist_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :resource_type %>
+    <%= form.text_field :resource_type, id: :checklist_user_resource_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :checklist_user_user_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

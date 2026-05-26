@@ -1,0 +1,44 @@
+<h1>Visitor Visits for <%= @visitor.name %></h1>
+
+<h2>Check In/Out</h2>
+
+<%= form_tag check_visitor_visitor_visitor_visits_path(@visitor), method: :post do %>
+  <%= label_tag :check_in, "Check In Time:" %>
+  <%= datetime_local_field_tag :check_in, Time.current.strftime('%Y-%m-%dT%H:%M'), class: 'form-control' %>
+  <%= submit_tag 'Check In', class: 'button' %>
+<% end %>
+
+<%= form_tag check_visitor_visitor_visitor_visits_path(@visitor), method: :post do %>
+  <%= label_tag :check_out, "Check Out Time:" %>
+  <%= datetime_local_field_tag :check_out, Time.current.strftime('%Y-%m-%dT%H:%M'), class: 'form-control' %>
+  <%= submit_tag 'Check Out', class: 'button' %>
+<% end %>
+
+<h2>Visit History</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Check In</th>
+      <th>Check Out</th>
+      <th>Duration</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @visitor_visits.each do |visit| %>
+      <tr>
+        <td><%= visit.check_in&.strftime('%Y-%m-%d %H:%M:%S') %></td>
+        <td><%= visit.check_out&.strftime('%Y-%m-%d %H:%M:%S') %></td>
+        <td>
+          <% if visit.check_in && visit.check_out %>
+            <%= distance_of_time_in_words(visit.check_in, visit.check_out) %>
+          <% elsif visit.check_in %>
+            Ongoing
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Back to Visitor', visitor_path(@visitor) %>

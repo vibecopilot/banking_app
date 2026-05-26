@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Event:</strong>
+  <%= @event_guest.event_id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @event_guest.name %>
+</p>
+
+<p>
+  <strong>Rsvp:</strong>
+  <%= @event_guest.rsvp %>
+</p>
+
+<p>
+  <strong>Company name:</strong>
+  <%= @event_guest.company_name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @event_guest.email %>
+</p>
+
+<p>
+  <strong>Mobile:</strong>
+  <%= @event_guest.mobile %>
+</p>
+
+<p>
+  <strong>Business:</strong>
+  <%= @event_guest.business %>
+</p>
+
+<p>
+  <strong>Rules:</strong>
+  <%= @event_guest.rules %>
+</p>
+
+<p>
+  <strong>Charges:</strong>
+  <%= @event_guest.charges %>
+</p>
+
+<p>
+  <strong>Industry:</strong>
+  <%= @event_guest.industry %>
+</p>
+
+<%= link_to 'Edit', edit_event_guest_path(@event_guest) %> |
+<%= link_to 'Back', event_guests_path %>

@@ -1,0 +1,104 @@
+<%= form_with(model: contact_book, local: true, multipart: true) do |form| %>
+  <% if contact_book.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(contact_book.errors.count, "error") %> prohibited this contact_book from being saved:</h2>
+
+      <ul>
+      <% contact_book.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="field">
+    <%= form.label :logo %>
+    <%= form.file_field :logo %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :comapany_name %>
+    <%= form.text_field :company_name, id: :contact_book_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contact_person_name %>
+    <%= form.text_field :contact_person_name, id: :contact_book_contact_person_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :mobile %>
+    <%= form.number_field :mobile, id: :contact_book_mobile %>
+  </div>
+
+  <div class="field">
+    <%= form.label :landline_no %>
+    <%= form.text_field :landline_no, id: :contact_book_landline_no %>
+  </div>  
+
+  <div class="field">
+    <%= form.label :primary_email %>
+    <%= form.email_field :primary_email, id: :contact_book_primary_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :secondary_email %>
+    <%= form.email_field :secondary_email, id: :contact_book_secondary_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :website %>
+    <%= form.text_field :website, id: :contact_book_website %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_area :address, id: :contact_book_address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :contact_book_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :generic_info_id %>
+    <%= form.number_field :generic_info_id, id: :contact_book_generic_info_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :generic_sub_info_id %>
+    <%= form.number_field :generic_sub_info_id, id: :contact_book_generic_sub_info_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :key_offering %>
+    <%= form.text_field :key_offering, id: :contact_book_key_offering %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :contact_book_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :profile %>
+    <%= form.text_area :profile, id: :contact_book_profile %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.check_box :status, id: :contact_book_status  %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attachfiles %>
+    <%= form.file_field :attachfiles %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

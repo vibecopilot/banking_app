@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  category: MyString
+  code: MyString
+  sgst_rate: 1.5
+  cgst_rate: 1.5
+  igst_rate: 1.5
+  active: false
+  created_by: 1
+  updated_by: 1
+  company_id: 1
+  hsn_type: 1
+
+two:
+  type: 
+  category: MyString
+  code: MyString
+  sgst_rate: 1.5
+  cgst_rate: 1.5
+  igst_rate: 1.5
+  active: false
+  created_by: 1
+  updated_by: 1
+  company_id: 1
+  hsn_type: 1

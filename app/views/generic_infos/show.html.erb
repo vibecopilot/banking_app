@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @generic_info.name %>
+</p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @generic_info.company_id %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @generic_info.site_id %>
+</p>
+
+<p>
+  <strong>Info type:</strong>
+  <%= @generic_info.info_type %>
+</p>
+
+<%= link_to 'Edit', edit_generic_info_path(@generic_info) %> |
+<%= link_to 'Back', generic_infos_path %>

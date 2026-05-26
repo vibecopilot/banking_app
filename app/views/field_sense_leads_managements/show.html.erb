@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Lead name:</strong>
+  <%= @field_sense_leads_management.lead_name %>
+</p>
+
+<p>
+  <strong>Lead source:</strong>
+  <%= @field_sense_leads_management.lead_source %>
+</p>
+
+<p>
+  <strong>Contact phone:</strong>
+  <%= @field_sense_leads_management.contact_phone %>
+</p>
+
+<p>
+  <strong>Contact email:</strong>
+  <%= @field_sense_leads_management.contact_email %>
+</p>
+
+<p>
+  <strong>Company name:</strong>
+  <%= @field_sense_leads_management.company_name %>
+</p>
+
+<p>
+  <strong>Lead status:</strong>
+  <%= @field_sense_leads_management.lead_status %>
+</p>
+
+<p>
+  <strong>Assigned sales representative:</strong>
+  <%= @field_sense_leads_management.assigned_sales_representative %>
+</p>
+
+<p>
+  <strong>Last contact date:</strong>
+  <%= @field_sense_leads_management.last_contact_date %>
+</p>
+
+<p>
+  <strong>Next follow up date:</strong>
+  <%= @field_sense_leads_management.next_follow_up_date %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @field_sense_leads_management.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_field_sense_leads_management_path(@field_sense_leads_management) %> |
+<%= link_to 'Back', field_sense_leads_managements_path %>

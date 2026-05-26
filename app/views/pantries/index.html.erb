@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Pantries</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Item name</th>
+      <th>Stock</th>
+      <th>Description</th>
+      <th>Ordered by</th>
+      <th>Status</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @pantries.each do |pantry| %>
+      <tr>
+        <td><%= pantry.item_name %></td>
+        <td><%= pantry.stock %></td>
+        <td><%= pantry.description %></td>
+        <td><%= pantry.created_by.firstname %> <%= pantry.created_by.lastname %></td>
+        <td><%= pantry.status %></td>
+        <td><%= link_to 'Show', pantry %></td>
+        <td><%= link_to 'Edit', edit_pantry_path(pantry) %></td>
+        <td><%= link_to 'Destroy', pantry, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Pantry', new_pantry_path %>

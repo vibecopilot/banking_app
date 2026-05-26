@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @approval.site_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @approval.user_id %>
+</p>
+
+<p>
+  <strong>Level:</strong>
+  <%= @approval.level_id %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @approval.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @approval.end_date %>
+</p>
+
+<p>
+  <strong>Resource:</strong>
+  <%= @approval.resource_id %>
+</p>
+
+<p>
+  <strong>Resource type:</strong>
+  <%= @approval.resource_type %>
+</p>
+
+<p>
+  <strong>Comments:</strong>
+  <%= @approval.comments %>
+</p>
+
+<p>
+  <strong>Approved by:</strong>
+  <%= @approval.approved_by_id %>
+</p>
+
+<p>
+  <strong>Approver comments:</strong>
+  <%= @approval.approver_comments %>
+</p>
+
+<%= link_to 'Edit', edit_approval_path(@approval) %> |
+<%= link_to 'Back', approvals_path %>

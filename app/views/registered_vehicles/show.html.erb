@@ -1,0 +1,70 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Slot number:</strong>
+  <%= @registered_vehicle.slot_number %>
+</p>
+
+<p>
+  <strong>Vehicle category:</strong>
+  <%= @registered_vehicle.vehicle_category %>
+</p>
+
+<p>
+  <strong>Vehicle type:</strong>
+  <%= @registered_vehicle.vehicle_type %>
+</p>
+
+<p>
+  <strong>Sticker number:</strong>
+  <%= @registered_vehicle.sticker_number %>
+</p>
+
+<p>
+  <strong>Registration number:</strong>
+  <%= @registered_vehicle.registration_number %>
+</p>
+
+<p>
+  <strong>Insurance number:</strong>
+  <%= @registered_vehicle.insurance_number %>
+</p>
+
+<p>
+  <strong>Insurance valid till:</strong>
+  <%= @registered_vehicle.insurance_valid_till %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @registered_vehicle.category %>
+</p>
+
+<p>
+  <strong>Vehicle number:</strong>
+  <%= @registered_vehicle.vehicle_number %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @registered_vehicle.unit_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @registered_vehicle.user_id %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @registered_vehicle.created_by_id %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @registered_vehicle.status %>
+</p>
+
+
+<%= link_to 'Edit', edit_registered_vehicle_path(@registered_vehicle) %> |
+<%= link_to 'Back', registered_vehicles_path %>

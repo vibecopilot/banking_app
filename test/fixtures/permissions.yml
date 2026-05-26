@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  role_accesses: one
+  role_modules: one
+  can_create: false
+  can_view: false
+  can_update: false
+  can_delete: false
+
+two:
+  role_accesses: two
+  role_modules: two
+  can_create: false
+  can_view: false
+  can_update: false
+  can_delete: false

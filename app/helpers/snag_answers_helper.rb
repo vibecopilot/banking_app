@@ -1,0 +1,2 @@
+module SnagAnswersHelper
+end

@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Order:</strong>
+  <%= @restaurant_order_item.order_id %>
+</p>
+
+<p>
+  <strong>Restaurant menu:</strong>
+  <%= @restaurant_order_item.restaurant_menu_id %>
+</p>
+
+<p>
+  <strong>Quantity:</strong>
+  <%= @restaurant_order_item.quantity %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= @restaurant_order_item.amount %>
+</p>
+
+<p>
+  <strong>Rate:</strong>
+  <%= @restaurant_order_item.rate %>
+</p>
+
+<%= link_to 'Edit', edit_restaurant_order_item_path(@restaurant_order_item) %> |
+<%= link_to 'Back', restaurant_order_items_path %>

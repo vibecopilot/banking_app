@@ -1,0 +1,77 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Patrolling Name:</strong>
+  <%= @patrolling.patrolling_name %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @patrolling.site.try(:name) %>
+</p>
+
+<p>
+  <strong>Building:</strong>
+  <%= @patrolling.building_id %>
+</p>
+
+<p>
+  <strong>Floor:</strong>
+  <%= @patrolling.floor_id %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @patrolling.unit_id %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @patrolling.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @patrolling.end_date %>
+</p>
+
+<p>
+  <strong>Start time:</strong>
+  <%= @patrolling.start_time %>
+</p>
+
+<p>
+  <strong>End time:</strong>
+  <%= @patrolling.end_time %>
+</p>
+
+<p>
+  <strong>Time intervals:</strong>
+  <%= @patrolling.time_intervals %>
+</p>
+
+<h2>Logs</h2>
+
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; margin: 0 auto; ">
+  <thead>
+    <tr>
+      <th style="text-align: center;">Expected Time</th>
+      <th style="text-align: center;">Actual Time</th>
+      <th style="text-align: center;">User</th>
+      <th style="text-align: center;">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @patrolling_histories.each do |history| %>
+      <tr>
+        <td><%= history.expected_time.strftime('%Y-%m-%d %H:%M:%S') %></td>
+        <td><%= history.actual_time ? history.actual_time.strftime('%Y-%m-%d %H:%M:%S') : 'Not recorded' %></td>
+        <td><%= history.user.present? ? "#{history.user.firstname} #{history.user.lastname}" : '---' %></td>
+        <td><%= history.user_id.present? ? 'Completed' : 'Not completed' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Edit', edit_patrolling_path(@patrolling) %> |
+<%= link_to 'Back', patrollings_path %>

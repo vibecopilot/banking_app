@@ -1,0 +1,45 @@
+wb = xlsx_package.workbook
+if params[:date_range].present?
+ @date_range = params[:date_range].split(" - ")
+ params[:q] = {}
+ params[:q][:start_time_lteq] = Date.strptime(@date_range[1], "%m/%d/%Y").strftime("%d/%m/%Y")
+ params[:q][:start_time_gteq] = Date.strptime(@date_range[0], "%m/%d/%Y").strftime("%d/%m/%Y")
+end
+
+params[:q] = params[:q].present? ? params[:q] : {start_time_gteq: Date.today.beginning_of_month.strftime('%d/%m/%Y'), start_time_lteq: Date.today.end_of_month.strftime('%d/%m/%Y')}
+
+checklistids = params[:checklistids].split(",")
+checklistids.each do |asetid|
+  asset = SiteAsset.find_by(id: asetid)
+  params[:q][:asset_id_eq] = asset.id
+  @occurrences = Activity.ransack(params[:q]).result
+
+  sd = params[:q][:start_time_gteq].split("/")
+  ed = params[:q][:start_time_lteq].split("/")
+  st_date = Date.new(sd[2].to_i, sd[1].to_i, sd[0].to_i)
+  en_date = Date.new(ed[2].to_i, ed[1].to_i, ed[0].to_i)
+
+  firstrow =  ['Date', 'Time']
+  asset.asset_params.each do |param|
+    firstrow << param.try(:name)
+  end
+  wb.add_worksheet(name: asset.name) do |sheet|
+    sheet.add_row firstrow
+    (st_date..en_date).each do |sdate| 
+      occ = @occurrences.where("DATE(activities.start_time)=?", sdate)
+      if occ.count > 0 
+        occ.each do |oc|
+          secondrow = []
+          secondrow << oc.start_time.strftime("%d/%m/%Y")
+          secondrow << oc.start_time.strftime("%l:%M %p")
+          asset.asset_params.each do |param|
+            response = Submission.find_by(activity_id: oc.id, asset_param_id: param.id)
+            secondrow << response.try(:value)
+          end
+          sheet.add_row secondrow
+        end
+      end
+    end
+  end
+
+end

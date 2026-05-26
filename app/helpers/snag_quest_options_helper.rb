@@ -1,0 +1,2 @@
+module SnagQuestOptionsHelper
+end

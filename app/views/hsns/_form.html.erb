@@ -1,0 +1,72 @@
+<%= form_with(model: hsn, local: true) do |form| %>
+  <% if hsn.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(hsn.errors.count, "error") %> prohibited this hsn from being saved:</h2>
+
+      <ul>
+      <% hsn.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :type %>
+    <%= form.text_field :type, id: :hsn_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :category %>
+    <%= form.text_field :category, id: :hsn_category %>
+  </div>
+
+  <div class="field">
+    <%= form.label :code %>
+    <%= form.text_field :code, id: :hsn_code %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sgst_rate %>
+    <%= form.text_field :sgst_rate, id: :hsn_sgst_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cgst_rate %>
+    <%= form.text_field :cgst_rate, id: :hsn_cgst_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :igst_rate %>
+    <%= form.text_field :igst_rate, id: :hsn_igst_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.check_box :active, id: :hsn_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by %>
+    <%= form.number_field :created_by, id: :hsn_created_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :updated_by %>
+    <%= form.number_field :updated_by, id: :hsn_updated_by %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_id %>
+    <%= form.number_field :company_id, id: :hsn_company_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :hsn_type %>
+    <%= form.number_field :hsn_type, id: :hsn_hsn_type %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

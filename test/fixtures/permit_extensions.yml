@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  permit_id: 1
+  site_id: 1
+  reason: MyText
+  ext_date: 2025-02-01
+  ext_time: 2025-02-01 16:27:39
+  assign_to_ids: MyText
+
+two:
+  permit_id: 1
+  site_id: 1
+  reason: MyText
+  ext_date: 2025-02-01
+  ext_time: 2025-02-01 16:27:39
+  assign_to_ids: MyText

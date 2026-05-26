@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Permit:</strong>
+  <%= @extension.permit_id %>
+</p>
+
+<p>
+  <strong>Ext date:</strong>
+  <%= @extension.ext_date %>
+</p>
+
+<p>
+  <strong>Ext time:</strong>
+  <%= @extension.ext_time %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @extension.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_extension_path(@extension) %> |
+<%= link_to 'Back', extensions_path %>

@@ -1,0 +1,90 @@
+wb = xlsx_package.workbook
+
+# Sort users by full_unit_name in ascending order
+sorted_users = @users.sort_by { |u| u.full_unit_name.to_s }
+
+# ============================================
+# SHEET 1: SUMMARY
+# ============================================
+wb.add_worksheet(name: "Summary") do |sheet|
+  
+  sheet.add_row ['COUNT SUMMARY']
+  
+  # Count app downloads
+  downloaded_count = sorted_users.count { |u| u.user_devices.any? }
+  
+  # Total users count
+  sheet.add_row ['Total Users', sorted_users.count]
+  sheet.add_row ['Total App Downloaded Users', downloaded_count]
+  sheet.add_row []
+  
+  # Users by Building/Unit (clean column format)
+  sheet.add_row ['Users by Building/Unit:']
+  sheet.add_row ['Building/Unit', 'User Count']
+  
+  site_counts = sorted_users.group_by { |u| u.full_unit_name || 'No Site' }.transform_values(&:count)
+  sorted_site_counts = site_counts.sort_by { |site_name, count| site_name.to_s }
+  
+  sorted_site_counts.each do |site_name, count|
+    sheet.add_row [site_name, count]
+  end
+  
+  sheet.add_row []
+  
+  # Additional summary counts
+  sheet.add_row ['Total Count Summary:']
+  
+  # Extract building, floor, unit from full_unit_name (format: Building-Floor-Unit)
+  buildings = sorted_users.map { |u| u.full_unit_name&.split('-')&.first }.compact.uniq
+  floors = sorted_users.map { |u| 
+    parts = u.full_unit_name&.split('-')
+    parts.first(2).join('-') if parts && parts.size >= 2 
+  }.compact.uniq
+  units = sorted_users.map { |u| u.full_unit_name }.compact.uniq
+  
+  sheet.add_row ['Total Buildings', buildings.count]
+  sheet.add_row ['Total Floors', floors.count]
+  sheet.add_row ['Total Units', units.count]
+end
+
+# ============================================
+# SHEET 2: USER DETAILS
+# ============================================
+wb.add_worksheet(name: "User Details") do |sheet|
+
+  sheet.add_row [
+    'ID', 'First Name', 'Last Name', 'Email', 'Mobile',
+    'App Downloaded',
+    'User Type', 'Blood Group', 'Site', 'Address', 'Building-Floor-Unit', 'Created On',
+    'Date Of Birth', 'Date Of Joining', 'Wedding Date',
+    'Education Qualification', 'Office Address',
+    'Facebook Link', 'Instagram Link', 'LinkedIn Profile'
+  ]
+
+  sorted_users.each do |user|
+    app_downloaded = user.user_devices.any?
+
+    sheet.add_row [
+      user.id,
+      user.firstname,
+      user.lastname,
+      user.email,
+      user.mobile,
+      app_downloaded,              
+      user.user_type,
+      user&.blood_group,
+      user&.site&.name,
+      user&.user_address,
+      user&.full_unit_name,
+      user&.created_at,
+      user.birth_date,
+      user&.date_of_joining,
+      user&.wedding_date,
+      user&.education_qualification,
+      user&.office_address,
+      user&.facebook_link,
+      user&.instagram_link,
+      user&.linkedin_profile
+    ]
+  end
+end

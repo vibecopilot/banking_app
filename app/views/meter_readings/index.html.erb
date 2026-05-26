@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Meter Readings</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Meter</th>
+      <th>Opening</th>
+      <th>Closing</th>
+      <th>Consumption</th>
+      <th>Parameter</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @meter_readings.each do |meter_reading| %>
+      <tr>
+        <td><%= meter_reading.meter_id %></td>
+        <td><%= meter_reading.opening %></td>
+        <td><%= meter_reading.closing %></td>
+        <td><%= meter_reading.consumption %></td>
+        <td><%= meter_reading.parameter %></td>
+        <td><%= link_to 'Show', meter_reading %></td>
+        <td><%= link_to 'Edit', edit_meter_reading_path(meter_reading) %></td>
+        <td><%= link_to 'Destroy', meter_reading, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Meter Reading', new_meter_reading_path %>

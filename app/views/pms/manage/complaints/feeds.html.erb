@@ -1,0 +1,443 @@
+<style type="text/css">
+  strong{
+    font-weight: bold !important;
+  }
+
+/*
+  body, table, td, a {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }*/
+  table, td {
+    mso-table-lspace: 0pt;
+    mso-table-rspace: 0pt;
+  }
+  img {
+    -ms-interpolation-mode: bicubic;
+  }
+  .attachment {
+    width: 110px;
+    height: auto;
+    display: inline-block;
+    margin: 10px 5px 5px 0px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+    padding: 5px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+  }
+  .attachment img {
+    width: 75%;
+  }
+  /* RESET STYLES */
+  img {
+    border: 0;
+    height: auto;
+    line-height: 100%;
+    outline: none;
+    text-decoration: none;
+  }
+  table {
+    border-collapse: collapse !important;
+  }
+/*  body {
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    font-size: 13px !important;
+  }*/
+  /* iOS BLUE LINKS */
+  a[x-apple-data-detectors] {
+    color: inherit !important;
+    text-decoration: none !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+  }
+  @media all and (max-width: 600px) {
+  .floater {
+    width: 320px;
+  }
+  }
+
+      
+      /* MOBILE STYLES */
+      @media screen and (max-width:600px) {
+  h1 {
+    font-size: 32px !important;
+    line-height: 32px !important;
+  }
+  h5, p {
+    margin: 0px !important;
+  }
+  }
+
+  tr {
+    border: none !important;
+  }
+
+  .modal-body {
+    padding: 0 !important;
+  }
+</style>
+
+<% complaint_normal = { preventive_action: "Preventive Action", review_tracking_date: "Review (Tracking)", root_cause: "Root Cause", impact: "Impact",  correction: "Corrective Action",  service_type: "Service Type", external_priority: "External Priority", asset_id: "Associated To", service_id: "Associated To",proactive_reactive:"Proactive/Reactive",person_id: "Responsible Person Name",sub_category_id: "Sub Category Type", complaint_mode_id: "Mode",assigned_to: "Assigned To",catgory_type_id: "Category Type", priority: "Admin Priority", complaint_mode_id: "Complaint Mode", assigned_to: "Assigned To", corrective_action: "Corrective Action"} %>
+<div class="ibox">
+  <div class="ibox-content">
+    <div class="row" id="lead">
+      <div class="col-sm-12">
+        <h1 class="account-title">Feeds</h1>
+      </div>
+      <div class="col-sm-12">
+        <div class="lead-timeline">
+          <% @abouts.each do |date, logs| %>
+          <div class="timeline-date"><%= date.strftime("%b %d, %Y")%></div>
+            <% logs.each do |log| %>
+              <div class="timeline-item">
+                <div class="row">
+                  <% if log.log_of == "Complaint" %>
+                  <% elsif log.log_of == "EscHistory" %>
+                    <div class="col-xs-3 date"> <i class="fa fa-calendar" aria-hidden="true"></i> <%= log.created_at.strftime("%I:%M %p")%><br/>
+                    </div>
+                    <div class="col-xs-7 content no-top-border">
+                      <% eh = EscHistory.find_by(id: log.log_of_id) %>
+                      <% esc = eh.escalation_matrix %>
+                      <p class="m-b-xs"> <%= esc.complaint_worker.try(:esc_type).try(:capitalize)  %> Escalation </p>
+                      <p> <label class="label label-border"><%= esc.name  %></label> escalated to <strong class="font12"><%= Spree::User.where(id: esc.escalate_to_users).map { |e| e.full_name }.join(', ') %></strong></p>
+                    </div>
+                  <% elsif log.log_of == "ComplaintLog" %>
+                    <% complaint_log = ComplaintLog.find_by(id: log.log_of_id)%>
+                    <%if complaint_log.present?%>
+                      <div class="col-xs-3 date"> <i class="fa fa-file-text" aria-hidden="true"></i> <%= log.created_at.strftime("%I:%M %p")%><br/>
+                      </div>
+                      <div class="col-xs-7 content no-top-border">
+                        <div class="feed-element" style="border:none;">
+                            <!-- <div class="media-body"> -->
+                            <%if complaint_log.user.present?%>
+                            <p>
+                               <strong><%= complaint_log.user.try(:full_name)%></strong> - made below changes.
+                            </p>
+                            <% elsif complaint_log.mode.present?%>
+                              Ticket status has been Auto Updated.
+                            <% else %>
+                                Ticket Created.
+                                <% if @complaint.try(:vendor_mail_logs).present? 
+                                  log = @complaint.vendor_mail_logs.last.try(:changed_attr) 
+                                  ven_emails = log.present? ? JSON.parse(log) : "" %>
+                                  <div style="margin-top: 10px;">
+                                    <span style="padding: 0; border:none;"><strong class="font12">Emails triggers to below vendors</strong></span>
+                                    <div style="width: 100%; overflow-x: auto">
+                                      <span style="padding: 0; border:none;">
+                                        - <%= ven_emails.uniq.join(",") %>
+                                      </span>
+                                    </div>
+                                     <a data-toggle="modal" data-target="#previewMail-<%= @complaint.id %>" style="color: purple !important; text-decoration: underline !important;">Email Preview</></a>
+                                  </div>
+                                <% end %>
+                            <% end %>
+                               <ul class="list-group">
+                                  <% if complaint_log.complaint_status_id.present?  %>
+                                    <li><strong>Status</strong> - 
+                                    <%= complaint_log.complaint_status.try(:name) %></li>
+                                  <% end %>
+                                </ul>
+                                <% @update_logs = complaint_log.update_params.present? ? complaint_log.update_params.except(:updated_at) : {} %>
+                                <% if @update_logs.present? %>
+                                  <%  update_comps = @update_logs.keys
+                                      update_comps.each do |comp|
+                                  %>
+                                    <p class="m-b-xs">
+                                      <% if comp.present? && @update_logs[comp.to_sym][1].present? %>
+                                        <strong>
+                                          <%= complaint_normal[comp.to_sym] || comp.titleize %>
+                                        </strong>
+                                      <% end %>  
+                                      <% if @update_logs[comp.to_sym][0].present? %> 
+                                        <!-- && !("complaint_type,issue_related_to").include?(comp) from  -->
+                                        <strong>
+                                          <% if ("priority,preventive_action,review_tracking_date,root_cause,impact,correction,service_type,external_priority,corrective_action,proactive_reactive").include?(comp)%>
+                                            <%= @update_logs[comp][0] %> 
+                                          <% elsif comp == "asset_id" %>
+                                            <% asset = Pms::Asset.find_by(id: @update_logs[comp.to_sym][0])%>
+                                            <%= asset.try(:name)%> - <%= asset.try(:asset_code)%>
+                                          <% elsif comp == "service_id" %>
+                                            <% service = Pms::Service.find_by(id: @update_logs[comp.to_sym][0])%> <%= service.try(:service_name)%> - <%= service.try(:service_code)%>
+                                          <% elsif comp == "person_id" %>
+                                            <%= Spree::User.where(id: @update_logs[comp.to_sym][0]).map { |e| e.full_name }.join(', ') %>
+                                          <% elsif comp == "sub_category_id" %>
+                                            <%= HelpdeskSubCategory.find_by_id(@update_logs[comp.to_sym][0]).try(:name)%>
+                                          <% elsif comp == "complaint_mode_id" %>
+                                            <%= ComplaintMode.find_by_id(@update_logs[comp.to_sym][0]).try(:name)%>
+                                          <% elsif comp == "assigned_to" %>
+                                            <%= Spree::User.where(id: @update_logs[comp.to_sym][1]).map { |e| e.full_name}.join(', ')%>
+<!--                                           <#% else %>
+                                            <#%= @update_logs[comp.to_sym][0] %> -->
+                                          <% end %>
+                                        </strong>
+                                      <% end %>
+                                      <% if @update_logs[comp.to_sym][1].present? %> 
+                                        <!-- && !("complaint_type,issue_related_to").include?(comp) to -->
+                                       <strong>
+                                            <% if ("priority,preventive_action,review_tracking_date,root_cause,impact,correction,service_type,external_priority,corrective_action,proactive_reactive").include?(comp)%>
+                                              <%= @update_logs[comp][1] %>
+                                            <% elsif comp == "asset_id" %>
+                                              <% asset = Pms::Asset.find_by(id: @update_logs[comp.to_sym][1])%>
+                                              <%= asset.try(:name)%> - <%= asset.try(:asset_code)%>
+                                            <% elsif comp == "service_id" %>
+                                              <% service = Pms::Service.find_by(id: @update_logs[comp.to_sym][1])%> <%= service.try(:service_name)%> - <%= service.try(:service_code)%>
+                                            <% elsif comp == "person_id" %>
+                                              <%= Spree::User.where(id: @update_logs[comp.to_sym][1]).map { |e| e.full_name }.join(', ') %>
+                                            <% elsif comp == "sub_category_id" %>
+                                              <%= HelpdeskSubCategory.find_by_id(@update_logs[comp.to_sym][1]).try(:name)%>
+                                            <% elsif comp == "complaint_mode_id" %>
+                                              <%= ComplaintMode.find_by_id(@update_logs[comp.to_sym][1]).try(:name)%>
+                                            <% elsif comp == "assigned_to" %>
+                                              <%= Spree::User.where(id: @update_logs[comp.to_sym][1]).map { |e| e.full_name}.join(', ') %>
+<!--                                             <#% else %>
+                                              <#%= @update_logs[comp.to_sym][1]%> -->
+                                            <% end %>
+                                          </strong>
+                                      <%end%>
+                                    </p> 
+                                <% end %>
+                                <% if @complaint.cost_approval_requests.present? %>
+                                  <% @complaint.cost_approval_requests.each do |request| %>
+                                    <% @logs = SystemLog.where(about_id: request.id,about: "CostApprovalRequest") %>                                                                 
+                                     <% @logs.each do |log| %>
+                                        <% if log.log_type == "pending" %>
+                                            <div style="margin-top: 10px;">
+                                                <span style="padding: 0; border:none;"><strong class="font12"><%= Spree::User.find_by(id: log.changed_by).try(:full_name) %> raised a cost approval request.</strong></span>
+                                                <span style="padding: 0; border:none;"><strong class="font12"> 
+                                                  Cost Approval email triggered for <%= CostApprovalHistory.find_by(id: log.log_of_id).cost_approval_level.try(:name) %>.</strong></span>
+                                            </div>   
+                                         <% end %>                                   
+                                         <% if log.log_type == "approved" %>
+                                             <div style="margin-top: 10px;">     
+                                                <span style="padding: 0; border:none;"><strong class="font12">Cost Approval request approved on <%= CostApprovalHistory.find_by(id: log.log_of_id).cost_approval_level.try(:name) %> by <%= CostApprovalHistory.find_by(id: log.log_of_id).try(:updated_by).try(:full_name) %>. </strong></span>
+                                                <span style="padding: 0; border:none;"><strong class="font12">
+                                                  Cost Approval email triggered for <%= CostApprovalHistory.find_by(id: log.log_of_id).cost_approval_level.try(:name) %>. </strong></span>
+                                              </div>
+                                           <% end %>    
+                                           <% if log.log_type == "cancelled" %>     
+                                              <div style="margin-top: 10px;">
+                                                <span style="padding: 0; border:none;"><strong class="font12">Cost Approval request is cancelled by <%= CostApprovalHistory.find_by(id: log.log_of_id).try(:updated_by).try(:full_name) %>.</strong></span>
+                                                <span style="padding: 0; border:none;"><strong class="font12">
+                                                 Cost Approval cancellation email is triggered.</strong></span>
+                                               </div>
+                                           <% end %>    
+                                           <% if log.log_type == "rejected" %>     
+                                            <div style="margin-top: 10px;">
+                                                <span style="padding: 0; border:none;"><strong class="font12">Cost Approval request rejected on <%= CostApprovalHistory.find_by(id: log.log_of_id).cost_approval_level.try(:name) %> by <%= CostApprovalHistory.find_by(id: log.log_of_id).try(:updated_by).try(:full_name) %>.</strong></span>
+                                            </div>
+                                          <% end %>
+                                    <% end %>
+                                  <% end %>
+                                <% end %>
+
+                              <% end %>
+                              
+                              <% @complaint_comments = ComplaintComment.where(complaint_log_id: complaint_log.id) %>    
+                              <%if @complaint_comments.present? %>
+                                <div class="col-sm-6 nopadding">
+                                  <strong><%= complaint_log.user.try(:full_name) %></strong> - Commented
+                                  <div class="well">
+                                    <%= @complaint_comments.last.comment %>
+                                  </div>
+                                </div>
+                                <% img = Attachfile.where("relation = 'ComplaintComment' and relation_id = ?", @complaint_comments.last.id) %>
+                                <% if img.present? %>
+                                  <div class="col-sm-6">
+                                    <h5>Attachment</h5>
+                                  <div class="ibox-content">
+                                    <%= render "pms/manage/complaints/documents", object: img %>
+                                 </div>
+                                 </div>
+                                <% end %>
+                              <% end %>                               
+                            <!-- </div>  -->
+                        </div>
+
+                      </div>
+                    <%end%>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="previewMail-<%= @complaint.id %>" role="dialog">
+  <div class="modal-dialog" style="width: 55%;">
+    <div class="modal-content">
+      <div class="modal-header" style="background: #31b0d5; color: #fff;">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Email Preview</h4>
+      </div>
+      <div class="modal-body">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <!-- LOGO -->
+  <tr>
+    <td bgcolor="#e3e3e3 " align="center"><!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+
+      
+      <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]--></td>
+  </tr>
+ 
+  <!-- COPY BLOCK -->
+  <tr>
+    <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;"><!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+      
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;" >
+        <!-- COPY --> 
+        
+        <!-- COPY -->
+        <tr>
+          <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-weight: 400; line-height: 25px;" ><ul style="margin:0px; padding:0px; text-align:right;">
+              <li style="list-style-type:none; display:inline-block; margin-right:5px;">
+                <div style="float:right; background-color:#2196F3; color:#ffffff; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px; padding:0px 8px;">New</div>
+              </li>
+            </ul></td>
+        </tr>
+
+        <tr>
+          <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;
+  padding-top: 5px; padding-bottom:5px; background:#ffffff;">
+  <table border="0" cellpadding="0" cellspacing="0" align="left"
+    width="600" style="border-collapse: collapse; border-spacing: 0; padding: 0; max-width: 600px;">
+              <tr>
+                <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;padding-right: 0px;" class="floaters">
+                  <table width="180" border="0" cellpadding="0" cellspacing="0" align="left" valign="top" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; margin: 0; padding: 0; display: inline-table; float: none;" class="floater">
+                    <tr>
+                      <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; font-size: 13px; font-weight: 500; line-height:180%; padding-top: 10px; font-family:Arial, Helvetica, sans-serif; color: #666666;"><strong>Ticket Number</strong><br>
+                        <span style="color:#36a211;"><%= "#{@complaint.ticket_number}" %></span></td>
+                    </tr>
+                  </table>
+                  <table width="180" border="0" cellpadding="0" cellspacing="0" align="left" valign="top" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; margin: 0; padding: 0; display: inline-table; float: none;" class="floater">
+                    <tr>
+                      <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; font-size: 13px; font-weight: 500; line-height:180%; padding-top: 10px; font-family:Arial, Helvetica, sans-serif; color: #666666;"><strong>Category</strong><br>
+                        <span style="color:#36a211; "><%= @complaint.category_type.try(:name) %></span></td>
+                    </tr>
+                  </table>
+                  <table width="180" border="0" cellpadding="0" cellspacing="0" align="let" valign="top" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; margin: 0; padding: 0; display: inline-table; float: none;" class="floater">
+                    <tr>
+                      <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; font-size: 13px; font-weight: 500; line-height:180%; padding-top: 10px; font-family:Arial, Helvetica, sans-serif; color: #666666;"><strong>Created On</strong><br>
+                        <span style="color:#36a211;"><%= "#{@complaint.created_at.strftime('%e %B %Y %l: %M %p')}" %></span></td>
+                    </tr>
+                  </table></td>
+              </tr>
+
+              <tr>
+                <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0;padding-right: 0px;" class="floaters">
+                  <table width="180" border="0" cellpadding="0" cellspacing="0" align="left" valign="top" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; margin: 0; padding: 0; display: inline-table; float: none;" class="floater">
+                    <tr>
+                      <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; font-size: 13px; font-weight: 500; line-height:180%; padding-top: 10px; font-family:Arial, Helvetica, sans-serif; color: #666666;"><strong>Created by</strong><br>
+                        <span style="color:#36a211;"><%= @complaint.user.try(:full_name) %></span></td>
+                    </tr>
+                  </table>
+                  <table width="180" border="0" cellpadding="0" cellspacing="0" align="left" valign="top" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; margin: 0; padding: 0; display: inline-table; float: none;" class="floater">
+                    <tr>
+                      <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; font-size: 13px; font-weight: 500; line-height:180%; padding-top: 10px; font-family:Arial, Helvetica, sans-serif; color: #666666;"><strong>Sub Category</strong><br>
+                        <span style="color:#36a211; "><%= @complaint.sub_category.try(:name) %></span></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <tr>
+                <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-right: 0px;" class="floaters">
+                  <table width="180" border="0" cellpadding="0" cellspacing="0" align="let" valign="top" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0; margin: 0; padding: 0; display: inline-table; float: none;" class="floater">
+                    <tr>
+                      <td align="left" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; font-size: 13px; font-weight: 500; line-height:180%; padding-top: 10px; font-family:Arial, Helvetica, sans-serif; color: #666666;"><strong>Title</strong><br>
+                        <span style="color:#36a211;"><%=  @complaint.heading %></span></td>
+                    </tr>
+                  </table></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <% if @complaint.text.present? && @complaint.text != "" %>
+          <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 10px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif;  font-size: 13px; font-weight: 400; line-height: 25px;" ><p style="margin: 0;"><strong>Description</strong><br>
+              <%= "#{@complaint.text}" %> </p></td>
+          <% end %>    
+        </tr>
+        <% @complaint_comments = ComplaintComment.where(complaint_id: @complaint.id) %>
+        <% if @complaint_comments.present? %>
+        <tr>
+          <td bgcolor="#ffffff" align="left" style="padding: 5px 30px 5px 30px; color: #666666; font-family:Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 400; font-weight:600" >Comments
+            <% @complaint_comments.each do |complaint_comment| %>
+            <div style="border:1px dashed #a1d286; background-color:#f4fdef; padding:5px 10px; margin-top:10px; font-size:12px;">
+              <p style=" margin:0px; line-height:18px; font-weight:normal"><%= complaint_comment.try(:comment) %></p>
+              <p style="color:#F44336; font-size:11px; font-weight:600; margin:5px 0px; font-weight:normal"><%= complaint_comment.user.try(:full_name) %> <%= complaint_comment.created_at.strftime('%d/%m/%Y/ %l: %M %p')%></p>
+            </div>
+            <% end %>
+          </td>
+        </tr>
+        <% end %>
+        
+      </table>
+      
+      <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]--></td>
+  </tr>
+  <!-- COPY CALLOUT -->
+
+
+  <tr>
+    <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;"><!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+      
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+        <!-- HEADLINE -->
+        <tr>
+          <td bgcolor="#ffffff" align="center" style="padding: 5px 10px 20px 30px; color: #777777; border-top:1px solid #999999; font-family:Arial, Helvetica, sans-serif;  font-size: 18px; font-weight: 400; " ><h2 style="font-size: 11px; font-weight: 400; margin: 0;  margin-bottom:4px;">Note: This is an auto generated email. Please do not reply.</h2></td>
+        </tr>
+        <!-- COPY --> 
+        
+        <!-- COPY -->
+        
+      </table>
+      
+      <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]--></td>
+  </tr>
+  
+  <!-- SUPPORT CALLOUT --> 
+  
+  <!-- FOOTER -->
+  
+</table>
+      </div>
+    </div>
+  </div>
+</div>

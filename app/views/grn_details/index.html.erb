@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Grn Details</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Loi detail</th>
+      <th>Vendor</th>
+      <th>Payment mode</th>
+      <th>Invoice number</th>
+      <th>Related to</th>
+      <th>Invoice amount</th>
+      <th>Invoice date</th>
+      <th>Posting date</th>
+      <th>Other expenses</th>
+      <th>Loading expenses</th>
+      <th>Adjustment amount</th>
+      <th>Notes</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @grn_details.each do |grn_detail| %>
+      <tr>
+        <td><%= grn_detail.loi_detail_id %></td>
+        <td><%= grn_detail.vendor_id %></td>
+        <td><%= grn_detail.payment_mode %></td>
+        <td><%= grn_detail.invoice_number %></td>
+        <td><%= grn_detail.related_to %></td>
+        <td><%= grn_detail.invoice_amount %></td>
+        <td><%= grn_detail.invoice_date %></td>
+        <td><%= grn_detail.posting_date %></td>
+        <td><%= grn_detail.other_expenses %></td>
+        <td><%= grn_detail.loading_expenses %></td>
+        <td><%= grn_detail.adjustment_amount %></td>
+        <td><%= grn_detail.notes %></td>
+        <td><%= link_to 'Show', grn_detail %></td>
+        <td><%= link_to 'Edit', edit_grn_detail_path(grn_detail) %></td>
+        <td><%= link_to 'Destroy', grn_detail, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Grn Detail', new_grn_detail_path %>

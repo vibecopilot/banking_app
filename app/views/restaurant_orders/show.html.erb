@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Restaurant:</strong>
+  <%= @restaurant_order.restaurant_id %>
+</p>
+
+<p>
+  <strong>Ondate:</strong>
+  <%= @restaurant_order.ondate %>
+</p>
+
+<p>
+  <strong>Ontime:</strong>
+  <%= @restaurant_order.ontime %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @restaurant_order.user_id %>
+</p>
+
+<p>
+  <strong>Payment status:</strong>
+  <%= @restaurant_order.payment_status %>
+</p>
+
+<p>
+  <strong>Total amount:</strong>
+  <%= @restaurant_order.total_amount %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @restaurant_order.status %>
+</p>
+
+<%= link_to 'Edit', edit_restaurant_order_path(@restaurant_order) %> |
+<%= link_to 'Back', restaurant_orders_path %>

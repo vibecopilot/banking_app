@@ -1,0 +1,2 @@
+module PermitSubActivitiesHelper
+end

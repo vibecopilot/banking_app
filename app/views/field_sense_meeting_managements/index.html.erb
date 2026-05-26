@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Field Sense Meeting Managements</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Meeting title</th>
+      <th>Meeting date and time</th>
+      <th>Participants</th>
+      <th>Location</th>
+      <th>Travel mode</th>
+      <th>Expenses</th>
+      <th>Meeting agenda</th>
+      <th>Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @field_sense_meeting_managements.each do |field_sense_meeting_management| %>
+      <tr>
+        <td><%= field_sense_meeting_management.meeting_title %></td>
+        <td><%= field_sense_meeting_management.meeting_date_and_time %></td>
+        <td><%= field_sense_meeting_management.participants %></td>
+        <td><%= field_sense_meeting_management.location %></td>
+        <td><%= field_sense_meeting_management.travel_mode %></td>
+        <td><%= field_sense_meeting_management.expenses %></td>
+        <td><%= field_sense_meeting_management.meeting_agenda %></td>
+        <td><%= field_sense_meeting_management.created_by_id %></td>
+        <td><%= link_to 'Show', field_sense_meeting_management %></td>
+        <td><%= link_to 'Edit', edit_field_sense_meeting_management_path(field_sense_meeting_management) %></td>
+        <td><%= link_to 'Destroy', field_sense_meeting_management, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Field Sense Meeting Management', new_field_sense_meeting_management_path %>

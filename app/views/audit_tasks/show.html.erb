@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Group:</strong>
+  <%= @audit_task.group %>
+</p>
+
+<p>
+  <strong>Sub group:</strong>
+  <%= @audit_task.sub_group %>
+</p>
+
+<p>
+  <strong>Task:</strong>
+  <%= @audit_task.task %>
+</p>
+
+<p>
+  <strong>Input type:</strong>
+  <%= @audit_task.input_type %>
+</p>
+
+<p>
+  <strong>Mandatory:</strong>
+  <%= @audit_task.mandatory %>
+</p>
+
+<p>
+  <strong>Reading:</strong>
+  <%= @audit_task.reading %>
+</p>
+
+<p>
+  <strong>Help text:</strong>
+  <%= @audit_task.help_text %>
+</p>
+
+<p>
+  <strong>Weightage:</strong>
+  <%= @audit_task.weightage %>
+</p>
+
+<p>
+  <strong>Rating:</strong>
+  <%= @audit_task.rating %>
+</p>
+
+<p>
+  <strong>Audit:</strong>
+  <%= @audit_task.audit_id %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @audit_task.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_audit_task_path(@audit_task) %> |
+<%= link_to 'Back', audit_tasks_path %>

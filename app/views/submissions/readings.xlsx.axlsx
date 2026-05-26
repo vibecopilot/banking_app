@@ -1,0 +1,59 @@
+wb = xlsx_package.workbook
+
+# Find asset or soft service
+asset = SiteAsset.find_by(id: params[:asset_id])
+soft_service = SoftService.find_by(id: params[:soft_service_id])
+
+# Date range filter
+if params[:date_range].present?
+  @date_range = params[:date_range].split(" - ")
+  params[:q] ||= {}
+  params[:q][:start_time_lteq] = Date.strptime(@date_range[1], "%m/%d/%Y").strftime("%d/%m/%Y")
+  params[:q][:start_time_gteq] = Date.strptime(@date_range[0], "%m/%d/%Y").strftime("%d/%m/%Y")
+end
+
+# Default to current month
+params[:q] ||= { 
+  start_time_gteq: Date.today.beginning_of_month.strftime('%d/%m/%Y'), 
+  start_time_lteq: Date.today.end_of_month.strftime('%d/%m/%Y') 
+}
+
+# Apply filters
+if asset.present?
+  params[:q][:asset_id_eq] = asset.id
+elsif soft_service.present?
+  params[:q][:soft_service_id_eq] = soft_service.id
+end
+
+@occurrences = Activity.ransack(params[:q]).result
+
+# Date range
+sd = params[:q][:start_time_gteq].split("/")
+ed = params[:q][:start_time_lteq].split("/")
+st_date = Date.new(sd[2].to_i, sd[1].to_i, sd[0].to_i)
+en_date = Date.new(ed[2].to_i, ed[1].to_i, ed[0].to_i)
+
+# Header row
+firstrow = ['Date', 'Time', 'Parameter', 'Closing / Value', 'Submitted By']
+wb.add_worksheet(name: 'Readings') do |sheet|
+  sheet.add_row firstrow
+
+  (st_date..en_date).each do |sdate| 
+    occ = @occurrences.where("DATE(activities.start_time)=?", sdate)
+    next if occ.blank?
+
+    occ.each do |oc|
+      submissions = Submission.where(activity_id: oc.id)
+
+      submissions.each do |submission|
+        sheet.add_row [
+          oc.start_time.strftime("%d/%m/%Y"),       # Date
+          oc.start_time.strftime("%I:%M %p"),       # Time
+          submission.asset_param&.name || submission.question&.name, # Parameter
+          submission.value,                         # Closing / Value
+          submission.user&.full_name                # Submitted By
+        ]
+      end
+    end
+  end
+end

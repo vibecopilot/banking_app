@@ -1,0 +1,52 @@
+<div class="modal fade" id="cmtmd<%= @task.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+
+  <div class="modal-dialog" role="document" style="">
+    <%= form_for(Comment.new, :html => { :class => "form-horizontal",  :multipart => true}) do |f| %>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Comments</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        <%= f.hidden_field :task_id, :value => @task.id %>
+        <div class="row">
+          <label>Comment</label>
+          <%= f.text_area :ctext, id: :comment_ctext %>
+        </div><br>
+        <div class="form-group">
+          <div class="row">
+            <label>File 1 </label>
+            <%= file_field_tag "comment[attachfiles_attributes][1][image]", id: :attachfile_image %>
+          </div><br>
+          <div class="row">
+            <label>File 2</label>
+            <%= file_field_tag "comment[attachfiles_attributes][2][image]", id: :attachfile_image %>
+          </div><br>
+          <div class="row">
+            <label>File 3</label>
+            <%= file_field_tag "comment[attachfiles_attributes][3][image]", id: :attachfile_image %>
+          </div><br>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-info addcmt">Submit</button>
+        </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="modal-body">
+      <% @task.comments.each do |c| %>
+        <div class="col-sm-12">
+          <div class="col-sm-8">
+          <label><%= c.ctext %> </label>
+          </div><div class="col-sm-4"> <span class="small"><%= c.created_at.strftime('%d/%m/%Y %l:%M %p') %></span></div>
+          <div  style="width: 100%">
+            <% c.attachfiles.each do |d| %>
+            <div class="col-sm-1">
+              <a href="<%= d.image.url %>" data-gallery=""><img style="width: 100px; height: 100px;" src="<%= d.image.url %>" class="image"></a>
+            </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

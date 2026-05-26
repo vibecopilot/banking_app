@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CAM Statement - <%= @unit.name %></title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+body {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 10px;
+  color: #000;
+}
+
+.container {
+  width: 100%;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  border: 1.5px solid #000;
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.header h1 {
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.header .address {
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.site-ref {
+  color: #cc0000;
+  font-weight: bold;
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+/* TITLE */
+.title {
+  text-align: center;
+  border: 1.5px solid #000;
+  background: #e8e8e8;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 5px;
+  margin-bottom: 0;
+}
+
+/* UNIT DETAILS */
+.unit-details {
+  border: 1.5px solid #000;
+  border-top: none;
+  margin-bottom: 8px;
+}
+
+.unit-details table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.unit-details td {
+  border: 1px solid #000;
+  padding: 4px 6px;
+  font-size: 10px;
+}
+
+.unit-details tr:nth-child(1) td,
+.unit-details tr:nth-child(2) td {
+  background: #f5f5f5;
+}
+
+.label {
+  font-weight: bold;
+}
+
+/* MAIN STATEMENT TABLE */
+.statement-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1.5px solid #000;
+  margin-bottom: 8px;
+}
+
+.statement-table th,
+.statement-table td {
+  border: 1px solid #000;
+  padding: 3px 6px;
+  font-size: 10px;
+}
+
+.statement-table thead th {
+  background: #e8e8e8;
+  font-weight: bold;
+  text-align: left;
+}
+
+.col-sr   { width: 55px; text-align: center; }
+.col-part { text-align: left; }
+.col-sub  { width: 100px; text-align: right; }
+.col-amt  { width: 120px; text-align: right; }
+
+.row-summary td {
+  background: #e6e6e6;
+  font-weight: bold;
+}
+
+.row-balance td {
+  background: #f5f0dc;
+  font-weight: bold;
+}
+
+/* FOOTER */
+.footer-notes {
+  font-size: 9px;
+  margin-top: 8px;
+  line-height: 1.7;
+}
+
+.footer-notes p {
+  margin-bottom: 1px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1><%= @company_data[:company_name] %></h1>
+    <% if @company_data[:address].present? %>
+    <div class="address"><%= @company_data[:address] %></div>
+    <% end %>
+    <div class="address">
+      <%= [@company_data[:city], @company_data[:state], @company_data[:pincode]].compact.join(', ') %>
+    </div>
+    <div class="site-ref">SITE: <%= @company_data[:site_name] || 'XYZ' %></div>
+  </div>
+
+  <!-- TITLE (seamlessly joins unit-details below) -->
+  <div class="title">
+    STATEMENT OF COMMON AREA MAINTENANCE EXPENSES
+  </div>
+
+  <!-- UNIT DETAILS -->
+  <div class="unit-details">
+    <table>
+      <tr>
+        <td>
+          <span class="label">Period:</span>
+          <%= "#{@from_date.strftime('%B %Y')} to #{@to_date.strftime('%B %Y')}" %>
+        </td>
+        <td style="text-align:right;">
+          <span class="label">No.:</span>
+          NGC/E/<%= "#{Date.today.year}-#{Date.today.month}/1" %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="label">Flat No:</span> <%= @unit.name %>
+        </td>
+        <td style="text-align:right;">
+          <span class="label">Date:</span> <%= Date.today.strftime('%d/%m/%Y') %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span class="label">Name:</span> <%= @unit_owner_name || 'N/A' %>
+        </td>
+        <td style="text-align:right;">
+          <% if @report_data[:unit][:carpet_area].present? && @report_data[:unit][:carpet_area] > 0 %>
+          <span class="label">Area:</span> <%= number_with_precision(@report_data[:unit][:carpet_area], precision: 2, delimiter: ',') %> sq.ft.
+          <% end %>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- COMBINED STATEMENT TABLE — single table matching image -->
+  <table class="statement-table">
+    <thead>
+      <tr>
+        <th class="col-sr">Sr. No.</th>
+        <th class="col-part">Particulars</th>
+        <th class="col-sub" style="text-align:right;">Amt. (Rs.)</th>
+        <th class="col-amt" style="text-align:right;">Amount (in Rs.)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- A: Advance Maintenance (conditional) -->
+      <% if @report_data[:income][:advance_maintenance_received] > 0 %>
+      <tr>
+        <td class="col-sr">A</td>
+        <td class="col-part">Advance Maintenance charges received</td>
+        <td class="col-sub"></td>
+        <td class="col-amt">
+          <%= number_with_precision(@report_data[:income][:advance_maintenance_received], precision: 2, delimiter: ',') %>
+        </td>
+      </tr>
+      <% end %>
+
+      <!-- B: Apex transfer (conditional) -->
+      <% if @report_data[:apex][:contribution_amount] > 0 %>
+      <tr>
+        <td class="col-sr">B</td>
+        <td class="col-part">Less: Transfer to Apex Body @ <%= @report_data[:apex][:contribution_percentage] %>%</td>
+        <td class="col-sub"></td>
+        <td class="col-amt">
+          <%= number_with_precision(@report_data[:apex][:contribution_amount], precision: 2, delimiter: ',') %>
+        </td>
+      </tr>
+      <% end %>
+
+      <!-- C: Balance for building (conditional) -->
+      <% balance_c = @report_data[:income][:advance_maintenance_received] - @report_data[:apex][:contribution_amount] %>
+      <% if balance_c > 0 %>
+      <tr class="row-summary">
+        <td class="col-sr">C</td>
+        <td class="col-part">Balance for Building Maintenance Charges</td>
+        <td class="col-sub"></td>
+        <td class="col-amt">
+          <%= number_with_precision(balance_c, precision: 2, delimiter: ',') %>
+        </td>
+      </tr>
+      <% end %>
+
+      <!-- D: Maintenance charges header row (conditional) -->
+      <% if @report_data[:expenses][:total] > 0 %>
+      <tr>
+        <td class="col-sr">D</td>
+        <td class="col-part">Less: Maintenance Charges for the above period</td>
+        <td class="col-sub" style="font-weight:bold;"></td>
+        <td class="col-amt">
+          <%= number_with_precision(@report_data[:expenses][:total], precision: 2, delimiter: ',') %>
+        </td>
+      </tr>
+      <% end %>
+
+      <!-- Sub-header row for expense breakdown -->
+      <tr class="row-subheader">
+        <td class="col-sr" style="font-weight:bold; background:#e8e8e8;">Sr. No.</td>
+        <td class="col-part" style="font-weight:bold; background:#e8e8e8;">Particulars</td>
+        <td class="col-sub" style="font-weight:bold; background:#e8e8e8; text-align:right;">Amt. (Rs.)</td>
+        <td class="col-amt" style="background:#e8e8e8;"></td>
+      </tr>
+
+      <!-- Expense breakdown rows -->
+      <% if @report_data[:expenses][:breakdown].present? %>
+        <% @report_data[:expenses][:breakdown].each_with_index do |expense, index| %>
+        <tr>
+          <td class="col-sr"><%= index + 1 %></td>
+          <td class="col-part"><%= expense[:name] %></td>
+          <td class="col-sub">
+            <%= number_with_precision(expense[:amount], precision: 2, delimiter: ',') %>
+          </td>
+          <td class="col-amt"></td>
+        </tr>
+        <% end %>
+        <% if @report_data[:unit][:carpet_area].present? && @report_data[:unit][:carpet_area] > 0 && @report_data[:expenses][:total] > 0 %>
+        <tr style="background:#f9f9f9;">
+          <td class="col-sr" colspan="2" style="font-size:9px; color:#666;">
+            *Expenses equally divided based on active days share (<%= number_with_precision(@report_data[:unit][:share_percentage], precision: 2) %>%)
+          </td>
+          <td class="col-sub" style="font-size:9px; color:#666; text-align:right;">
+            <%= number_with_precision(@report_data[:expenses][:total], precision: 2, delimiter: ',') %>
+          </td>
+          <td class="col-amt"></td>
+        </tr>
+        <% end %>
+      <% end %>
+
+      <!-- E: Other income (conditional) -->
+      <% if (@report_data[:income][:other_income] || 0) > 0 %>
+      <tr>
+        <td class="col-sr">E</td>
+        <td class="col-part">Add: Total Income (other income)</td>
+        <td class="col-sub"></td>
+        <td class="col-amt">
+          <%= number_with_precision(@report_data[:income][:other_income] || 0, precision: 2, delimiter: ',') %>
+        </td>
+      </tr>
+      <% end %>
+
+      <!-- F: Balance fund (conditional) -->
+      <% balance_f = (@report_data[:income][:advance_maintenance_received] - @report_data[:apex][:contribution_amount]) - @report_data[:expenses][:total] + (@report_data[:income][:other_income] || 0) %>
+      <% if true %> <%# Always show balance row %>
+      <tr class="row-balance">
+        <td class="col-sr">F</td>
+        <td class="col-part" colspan="2" style="text-align:right;">
+          Balance Fund Available (F = <%= @report_data[:income][:advance_maintenance_received] > 0 ? 'A' : '' %><%= @report_data[:apex][:contribution_amount] > 0 ? '-B' : '' %><%= @report_data[:expenses][:total] > 0 ? '-D' : '' %><%= (@report_data[:income][:other_income] || 0) > 0 ? '+E' : '' %>)
+        </td>
+        <td class="col-amt">
+          <%= number_with_precision(balance_f, precision: 2, delimiter: ',') %>
+        </td>
+      </tr>
+      <% end %>
+
+    </tbody>
+  </table>
+
+  <!-- FOOTER NOTES -->
+  <div class="footer-notes">
+    <% @pdf_remarks.each_with_index do |remark, idx| %>
+      <% next if remark.blank? %>
+      <p><strong><%= idx + 1 %>.</strong> <%= remark %></p>
+    <% end %>
+  </div>
+
+  <!-- BANK DETAILS -->
+  <% if @company_data[:bank_name].present? || @company_data[:account_number].present? %>
+  <div style="margin-top: 15px; border: 1px solid #000; padding: 8px;">
+    <table style="width:100%; border-collapse:collapse; font-size:9px;">
+      <tr>
+        <td colspan="4" style="font-weight:bold; font-size:10px; padding-bottom:5px; border-bottom:1px solid #ccc;">Bank Details</td>
+      </tr>
+      <% if @company_data[:favouring_name].present? %>
+      <tr>
+        <td style="width:15%; padding:3px 5px; font-weight:bold;">Favouring Name:</td>
+        <td style="width:35%; padding:3px 5px;"><%= @company_data[:favouring_name] %></td>
+        <td style="width:15%; padding:3px 5px; font-weight:bold;">Bank Name:</td>
+        <td style="width:35%; padding:3px 5px;"><%= @company_data[:bank_name] %></td>
+      </tr>
+      <% else %>
+      <tr>
+        <td style="width:15%; padding:3px 5px; font-weight:bold;">Bank Name:</td>
+        <td colspan="3" style="padding:3px 5px;"><%= @company_data[:bank_name] %></td>
+      </tr>
+      <% end %>
+      <tr>
+        <td style="padding:3px 5px; font-weight:bold;">Branch:</td>
+        <td style="padding:3px 5px;"><%= @company_data[:branch_name] %></td>
+        <td style="padding:3px 5px; font-weight:bold;">A/C No:</td>
+        <td style="padding:3px 5px;"><%= @company_data[:account_number] %></td>
+      </tr>
+      <tr>
+        <td style="padding:3px 5px; font-weight:bold;">IFSC Code:</td>
+        <td style="padding:3px 5px;"><%= @company_data[:ifsc_code] %></td>
+        <% if @company_data[:account_type].present? %>
+        <td style="padding:3px 5px; font-weight:bold;">Account Type:</td>
+        <td style="padding:3px 5px;"><%= @company_data[:account_type] %></td>
+        <% elsif @company_data[:swift_code].present? %>
+        <td style="padding:3px 5px; font-weight:bold;">SWIFT Code:</td>
+        <td style="padding:3px 5px;"><%= @company_data[:swift_code] %></td>
+        <% else %>
+        <td></td><td></td>
+        <% end %>
+      </tr>
+      <% if @company_data[:account_type].present? && @company_data[:swift_code].present? %>
+      <tr>
+        <td style="padding:3px 5px; font-weight:bold;">SWIFT Code:</td>
+        <td colspan="3" style="padding:3px 5px;"><%= @company_data[:swift_code] %></td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+  <% end %>
+
+</div>
+</body>
+</html>

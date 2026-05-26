@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Snag Answers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Question</th>
+      <th>Quest option</th>
+      <th>Ans descr</th>
+      <th>Comments</th>
+      <th>User</th>
+      <th>Company</th>
+      <th>Checklist</th>
+      <th>Answer type</th>
+      <th>Answer mode</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @snag_answers.each do |snag_answer| %>
+      <tr>
+        <td><%= snag_answer.question_id %></td>
+        <td><%= snag_answer.quest_option_id %></td>
+        <td><%= snag_answer.ans_descr %></td>
+        <td><%= snag_answer.comments %></td>
+        <td><%= snag_answer.user_id %></td>
+        <td><%= snag_answer.company_id %></td>
+        <td><%= snag_answer.checklist_id %></td>
+        <td><%= snag_answer.answer_type %></td>
+        <td><%= snag_answer.answer_mode %></td>
+        <td><%= link_to 'Show', snag_answer %></td>
+        <td><%= link_to 'Edit', edit_snag_answer_path(snag_answer) %></td>
+        <td><%= link_to 'Destroy', snag_answer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Snag Answer', new_snag_answer_path %>

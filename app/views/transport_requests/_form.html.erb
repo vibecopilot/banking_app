@@ -1,0 +1,72 @@
+<%= form_with(model: transport_request, local: true) do |form| %>
+  <% if transport_request.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(transport_request.errors.count, "error") %> prohibited this transport_request from being saved:</h2>
+
+      <ul>
+      <% transport_request.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :employee_name %>
+    <%= form.text_field :employee_name, id: :transport_request_employee_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :employee_id %>
+    <%= form.number_field :employee_id, id: :transport_request_employee_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pickup_location %>
+    <%= form.text_field :pickup_location, id: :transport_request_pickup_location %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date_and_time %>
+    <%= form.datetime_select :date_and_time, id: :transport_request_date_and_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :special_requirements %>
+    <%= form.text_area :special_requirements, id: :transport_request_special_requirements %>
+  </div>
+
+  <div class="field">
+    <%= form.label :driver_contact_information %>
+    <%= form.text_area :driver_contact_information, id: :transport_request_driver_contact_information %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vehicle_details %>
+    <%= form.text_area :vehicle_details, id: :transport_request_vehicle_details %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_confirmation_number %>
+    <%= form.number_field :booking_confirmation_number, id: :transport_request_booking_confirmation_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_status %>
+    <%= form.text_field :booking_status, id: :transport_request_booking_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :manager_approval %>
+    <%= form.check_box :manager_approval, id: :transport_request_manager_approval %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_confirmation_email %>
+    <%= form.text_field :booking_confirmation_email, id: :transport_request_booking_confirmation_email %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

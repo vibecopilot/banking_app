@@ -1,0 +1,32 @@
+<div class="modal fade" id="taskmd<%= @task.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+  <div class="modal-dialog" role="document" style="">
+    <%= form_for([@project, @task]) do |form| %>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Edit</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="row">
+          <label>Name</label>
+          <%= form.text_field :name, id: :task_name %>
+        </div>
+        <div class="row">
+          <label>Deadline</label>
+          <%= form.date_select :tat, id: :task_tat %>
+        </div>
+        <div class="row">
+          <label>Priority</label>
+          <%= form.number_field :priority, id: :priority, :min =>"1", :max => "10" %>
+        </div>
+     </div>
+     <div class="modal-footer">
+      <% if @task.status != 1 %>
+       <button type="submit" class="btn btn-info addprj">Submit</button>
+       <% end %>
+     </div>
+   </div>
+   <% end %>
+ </div>
+</div>

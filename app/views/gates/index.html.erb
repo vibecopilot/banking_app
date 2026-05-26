@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Gates</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Site</th>
+      <th>User</th>
+      <th>Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @gates.each do |gate| %>
+      <tr>
+        <td><%= gate.name %></td>
+        <td><%= gate.site_id %></td>
+        <td><%= gate.user_id %></td>
+        <td><%= gate.created_by_id %></td>
+        <td><%= link_to 'Show', gate %></td>
+        <td><%= link_to 'Edit', edit_gate_path(gate) %></td>
+        <td><%= link_to 'Destroy', gate, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Gate', new_gate_path %>

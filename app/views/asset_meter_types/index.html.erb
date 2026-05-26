@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Asset Meter Types</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+      <th>Active</th>
+      <th>Unit name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @asset_meter_types.each do |asset_meter_type| %>
+      <tr>
+        <td><%= asset_meter_type.name %></td>
+        <td><%= asset_meter_type.value %></td>
+        <td><%= asset_meter_type.active %></td>
+        <td><%= asset_meter_type.unit_name %></td>
+        <td><%= link_to 'Show', asset_meter_type %></td>
+        <td><%= link_to 'Edit', edit_asset_meter_type_path(asset_meter_type) %></td>
+        <td><%= link_to 'Destroy', asset_meter_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Asset Meter Type', new_asset_meter_type_path %>

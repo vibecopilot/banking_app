@@ -1,0 +1,62 @@
+<%= form_with(model: ticket, local: true) do |form| %>
+  <% if ticket.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(ticket.errors.count, "error") %> prohibited this ticket from being saved:</h2>
+
+      <ul>
+      <% ticket.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= form.hidden_field :site_id, value: current_user.current_site_id %>
+  <%= form.hidden_field :created_by_id, value: current_user.id %>
+
+  <div class="grid">
+    <label class="fields">Category Type :</label>
+    <% @helpdesk_categories = HelpdeskCategory.where(society_id: current_user.current_site_id) %>
+    <%= form.select :category_id, options_for_select(@helpdesk_categories.map { |e| [e.name, e.id] }),{:include_blank=>"Select Category"},{:class => 'custom-dropdown category-type'}%>
+  </div>
+<br>
+  <div class="grid">
+      <label class="fields">Sub Category :</label>
+    <% @sbs = @ticket.category_id.present? ? HelpdeskCategory.find_by(id: @ticket.category_id).helpdesk_sub_categories : [] %>
+    <select class="custom-dropdown sub-categories sub_category" name="ticket[sub_category_id]" id="complaint_log_sub_category_id">
+      <option value="">Select Sub Category</option>
+      <% @sbs.each do |sc|%>
+        <option data-ht="<%= sc.helpdesk_text %>" value="<%= sc.id%>" <%= @ticket.sub_category_id == sc.id ? 'selected' : '' %>><%= sc.name %></option>
+      <% end %>
+    </select>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status, id: :ticket_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :ticket_description %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :assigned_to_id %>
+    <%= form.number_field :assigned_to_id, id: :ticket_assigned_to_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :total_cost %>
+    <%= form.text_field :total_cost, id: :ticket_total_cost %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tm_id %>
+    <%= form.number_field :tm_id, id: :ticket_tm_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

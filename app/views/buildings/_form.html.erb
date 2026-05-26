@@ -1,0 +1,31 @@
+<div class="col-sm-12" >
+  <div class="row">
+    <%= form_with(model: building, local: true) do |form| %>
+      <% if building.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(building.errors.count, "error") %> prohibited this building from being saved:</h2>
+
+          <ul>
+          <% building.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :name %>
+        <%= form.text_field :name, id: :building_name %>
+      </div>
+
+      <div class="field">
+        <%= form.label :site_id %>
+        <%= select_tag 'building[site_id]', options_for_select( @user.sites.map { |e| [e.name_with_region, e.id] }, :selected => building.site_id), :include_blank => "Select Site", :class=>"ui dropdown" %>
+      </div>
+
+      <div class="actions">
+        <%= form.submit %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,278 @@
+<% asset = SiteAsset.find_by(id: params[:asset_id]) %>
+
+<p id="notice"><%= notice %></p>
+<div class="row">
+  <div class="col-sm-12">
+    <div class="col-sm-4">  
+      <strong>Site:</strong>
+      <%= asset.site.try(:name) %>
+    </div>
+    <div class="col-sm-4">  
+      <strong>Asset:</strong>
+      <%= asset.try(:name) %>
+    </div>
+  </div>
+</div>
+
+
+<% if asset.present? %>
+<style media="screen">
+      table thead tr th{
+        background: #44546a;
+        color: white;
+        border-top: 3px solid #0a0a0a !important;
+      }
+      .table-resposnsive{
+        overflow-x: scroll;
+
+      }
+      .color_green{
+        color: #4dc179;
+        font-weight: 600;
+      }
+      table{
+        border-bottom: 3px solid #0a0a0a !important;
+        border-top: none !important;
+      }
+      table tbody tr{
+        border-left: 5px solid #0a0a0a !important;
+        border-right: 5px solid #0a0a0a !important;
+
+      }
+      bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
+    border: 1px solid #d8d8d8 ;
+
+}
+
+
+.table-scroll {
+  position:relative;
+  max-width:100%;
+  margin:auto;
+  overflow:hidden;
+  border:1px solid #000;
+}
+.table-wrap {
+  width:100%;
+  overflow:auto;
+}
+.table-scroll table {
+  width:100%;
+  margin:auto;
+  border-collapse:separate;
+  border-spacing:0;
+}
+.table-scroll th, .table-scroll td {
+  padding:5px 10px;
+  border:1px solid gray !important;
+  white-space:nowrap;
+  vertical-align:top;
+  font-size: 12px;
+
+}
+.table-scroll thead, .table-scroll tfoot {
+  background:#f9f9f9;
+}
+.clone {
+  position:absolute;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+.clone th, .clone td {
+  visibility:hidden
+}
+.clone td, .clone th {
+  border-color:transparent
+}
+.clone tbody th {
+  visibility:visible;
+  color:red;
+}
+.clone .fixed-side {
+  visibility:visible;
+}
+.clone thead, .clone tfoot{background:transparent;}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+  padding: 4px;
+font-size: 13px;
+}
+.border_black{
+  border: 2px solid #0a0a0a !important;
+/* font-weight: 600; */
+border-bottom: none !important;
+font-size: 13px;
+}
+body{
+  overflow: hidden;
+
+}
+
+.table-scroll {
+  position:relative;
+  max-width:100%;
+  margin:auto;
+  overflow:hidden;
+  border:1px solid #000;
+}
+.table-wrap {
+  width:100%;
+  overflow:auto;
+}
+.table-scroll table {
+  width:100%;
+  margin:auto;
+  border-collapse:separate;
+  border-spacing:0;
+}
+.table-scroll th, .table-scroll td {
+  padding:5px 10px;
+  border:1px solid gray !important;
+  white-space:nowrap;
+  vertical-align:top;
+  font-size: 12px;
+
+}
+.table-scroll thead, .table-scroll tfoot {
+  background:#f9f9f9;
+}
+.clone {
+  position:absolute;
+  top:0;
+  left:0;
+  pointer-events:none;
+}
+.clone th, .clone td {
+  visibility:hidden
+}
+.clone td, .clone th {
+  border-color:transparent
+}
+.clone tbody th {
+  visibility:visible;
+}
+.clone .fixed-side {
+  visibility:visible;
+  background-color: white;
+}
+.clone thead, .clone tfoot{background:transparent;}
+</style>
+<div class="wrapper wrapper-content" style="height: 500px; overflow-y: scroll;">
+  <section class="content">
+    <div class="ibox">
+      <div class="ibox-content">
+        <div class="row" id="myDiv" style="display: block;">
+          <% 
+          if params[:q].present? && params[:q][:date_range].present?
+           @date_range = params[:q][:date_range].split(" - ")
+           params[:q][:start_time_lteq] = Date.strptime(@date_range[1], "%m/%d/%Y").strftime("%d/%m/%Y")
+           params[:q][:start_time_gteq] = Date.strptime(@date_range[0], "%m/%d/%Y").strftime("%d/%m/%Y")
+          end
+          params[:q] = params[:q].present? ? params[:q] : {start_time_gteq: Date.today.beginning_of_month.strftime('%d/%m/%Y'), start_time_lteq: Date.today.end_of_month.strftime('%d/%m/%Y')} %>
+          <%= form_tag request.original_fullpath, :method => 'get', :id=>"filters" do %>
+            <div class="col-sm-8" style="padding-left: 0px;">
+              <div class="form-group col-sm-4 helpdesk-filter" >
+                <div class="input-group">
+                  <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                  <input type="hidden" name="asset_id" value="<%= params[:asset_id]%>">
+                  <input type="text" name='q[date_range]' id ="date_range" class="reservation form-control pull-right" placeholder="Select Date Range" value="<%= params[:q][:date_range] %>">
+                </div>
+              </div>
+              <div class="col-sm-4 form-group">
+                <button type="button" class="applyfilter btn btn-success btn-sm"> Apply</button>
+                <a href="<%= request.original_fullpath %>"><button type="button" id="" class="btn btn-info btn-sm"> Reset</button></a>
+                <button type="button" class="applyfilter2 btn btn-success btn-sm"> Export</button>
+              </div>
+            </div>
+        
+          <% end %>
+          <% level = ApprovalLevel.find_by(site_id: @user.current_site_id, user_id: @user.id, order: 1)
+          if level.present? %>
+            <button data-toggle="modal" data-target="#feedback" type="button" class="btn btn-success btn-sm">Approve Readings</button>
+          <% end %>
+            <button data-toggle="modal" data-target="#feedback_comment" type="button" class="btn btn-info btn-sm">Approvals</button>
+
+        </div>
+        <div  id="table-scroll" class="table-scroll">
+          <div class="table-wrap">
+            <table class="main-table">
+              <thead>
+                <tr>
+                  <%
+                  # params[:q] = params[:q].present? ? params[:q] : {start_time_gteq: Date.today.beginning_of_month.strftime('%d/%m/%Y'), start_time_lteq: Date.today.end_of_month.strftime('%d/%m/%Y')}
+                  params[:q][:checklist_id_null] = 1
+                  params[:q][:asset_id_eq] = asset.id
+                  @occurrences = Activity.ransack(params[:q]).result
+                  sd = params[:q][:start_time_gteq].split("/")
+                  ed = params[:q][:start_time_lteq].split("/")
+                  st_date = Date.new(sd[2].to_i, sd[1].to_i, sd[0].to_i)
+                  en_date = Date.new(ed[2].to_i, ed[1].to_i, ed[0].to_i) %>
+                  <td class="text-center border_black" > Date</td>
+                  <td class="text-center border_black" > Time </td>
+                  <% asset.asset_params.each do |param| %>
+                    <td class="text-center border_black" >
+                     <%= param.try(:name) %>
+                    </td>
+                  <% end %>
+                  <td>User Name</td>
+                </tr>
+              </thead>
+              <tbody>
+                <% (st_date..en_date).each do |sdate| 
+                    occ = @occurrences.where("DATE(activities.start_time)=?", sdate) %>
+                    <% if occ.count > 0  
+                      occ.each do |oc| 
+                         %>
+                        <tr>
+                          <td> <%= oc.start_time.strftime("%d/%m/%Y") %> </td>
+                          <td> <%= oc.start_time.strftime("%l:%M %p") %> </td>
+                          <% asset.asset_params.each do |param|
+                            response = Submission.find_by(activity_id: oc.id, asset_param_id: param.id) %>
+                            <td>
+                              <%= response.try(:value)  %>
+                            </td>
+                          <% end %>
+                          <% responsed =  Submission.where(activity_id: oc.id, asset_param_id: asset.asset_params.pluck(:id)) %>
+                          <td><%= User.find_by(id: responsed.pluck(:user_id).uniq).try(:full_name) %></td>
+                        </tr>
+                      <% end %>
+                    <% else %>
+                        <tr>
+                          <td> <%= sdate.strftime("%d/%m/%Y") %> </td>
+                          <td></td>
+                        </tr>
+                    <%  end %>
+                <%  end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<% end %>
+<% if level.present? %>
+  <%= render partial: '/approvals/form', :locals => { :level => level} %>
+<% end %>
+<% level2 = ApprovalLevel.find_by(site_id: @user.current_site_id, user_id: @user.id, order: 2)%>
+
+  <%= render partial: '/approvals/index', :locals => { :asset_id => params[:asset_id], level2: level2} %>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.datepicker').datepicker({
+      format: "dd/mm/yyyy"
+    });
+    $('.reservation').daterangepicker({
+      startDate: moment().startOf('month'),
+      endDate: moment().endOf('month'),
+    });
+  });
+  $('.applyfilter').click(function(){
+  $("#filters").submit();
+});
+$('.applyfilter2').click(function(){
+  window.location = "/show_readings.xlsx?asset_id=<%= params[:asset_id]%>&date_range=" + $("#date_range").val();
+});
+</script>

@@ -1,0 +1,67 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Other Bills</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Vendor</th>
+      <th>Bill date</th>
+      <th>Invoice number</th>
+      <th>Related to</th>
+      <th>Tds percentage</th>
+      <th>Retention percentage</th>
+      <th>Deduction remarks</th>
+      <th>Deduction amount</th>
+      <th>Additional expenses</th>
+      <th>Payment tenure</th>
+      <th>Cgst rate</th>
+      <th>Cgst amount</th>
+      <th>Sgst rate</th>
+      <th>Sgst amount</th>
+      <th>Igst rate</th>
+      <th>Igst amount</th>
+      <th>Tcs rate</th>
+      <th>Tcs amount</th>
+      <th>Tax amount</th>
+      <th>Total amount</th>
+      <th>Description</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @other_bills.each do |other_bill| %>
+      <tr>
+        <td><%= other_bill.vendor_id %></td>
+        <td><%= other_bill.bill_date %></td>
+        <td><%= other_bill.invoice_number %></td>
+        <td><%= other_bill.related_to %></td>
+        <td><%= other_bill.tds_percentage %></td>
+        <td><%= other_bill.retention_percentage %></td>
+        <td><%= other_bill.deduction_remarks %></td>
+        <td><%= other_bill.deduction_amount %></td>
+        <td><%= other_bill.additional_expenses %></td>
+        <td><%= other_bill.payment_tenure %></td>
+        <td><%= other_bill.cgst_rate %></td>
+        <td><%= other_bill.cgst_amount %></td>
+        <td><%= other_bill.sgst_rate %></td>
+        <td><%= other_bill.sgst_amount %></td>
+        <td><%= other_bill.igst_rate %></td>
+        <td><%= other_bill.igst_amount %></td>
+        <td><%= other_bill.tcs_rate %></td>
+        <td><%= other_bill.tcs_amount %></td>
+        <td><%= other_bill.tax_amount %></td>
+        <td><%= other_bill.total_amount %></td>
+        <td><%= other_bill.description %></td>
+        <td><%= link_to 'Show', other_bill %></td>
+        <td><%= link_to 'Edit', edit_other_bill_path(other_bill) %></td>
+        <td><%= link_to 'Destroy', other_bill, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Other Bill', new_other_bill_path %>

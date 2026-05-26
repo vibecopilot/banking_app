@@ -1,0 +1,233 @@
+<style>
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 15px;
+  }
+
+  th {
+    font-weight: bold;
+    font-size: 11px;
+    background-color: #f5f5f5;
+  }
+
+  td {
+    min-width: 70px;
+    font-size: 10px;
+  }
+
+  tr:nth-of-type(even) {
+    background-color: #fbfdfd;
+  }
+
+  .date-picker {
+    display: flex;
+    justify-content: center;
+  }
+
+   .form-title {
+    min-height: 0px
+  }
+
+  /*.content {
+    min-height: -webkit-fill-available;
+  }*/
+
+  .tab-content {
+    min-height: -webkit-fill-available;
+  }
+   .assetheader{
+   padding: 15px; 
+   border-left: 5px solid #d99529 !important;
+   letter-spacing: 1px !important;
+   color: #707070 !important;
+   background-color: #e4e4e4 !important;
+   font-size: 17px !important;
+   padding: 10px !important;
+  height: 35px;
+ }
+ .ui.structured.celled.table tr td, .ui.structured.celled.table tr th {
+    text-align: center !important;
+}
+
+.attach-asset {
+  width: 23%;
+}
+.link {
+  background: white !important;
+}
+.nav > li.link-tab.active {
+  background: white !important;
+}
+.nav > li.link-tab {
+  margin-right: 1px;
+}
+
+}
+</style>
+<%  startdt = params[:q][:created_at_gteq]
+    enddt = params[:q][:created_at_lteq]
+     %>
+<div class="row" id="myDiv" style="display: block;">
+  <%= form_tag "/consumption", :method => 'get', :id=>"filters" do %>
+    <div class="col-sm-12" style="padding-left: 0px;">
+      <div class="form-group col-sm-3 helpdesk-filter" >
+        <div class="input-group">
+          <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+          <input type="text" name='q[date_range]' id ="date_range" class="reservation form-control pull-right" placeholder="Select Date Range" value="<%= params[:q][:date_range] %>">
+        </div>
+      </div>
+
+      <div class="col-sm-3 form-group" >
+        <button type="submit" class="applyfilter btn btn-success btn-sm"> Apply</button>
+        <a href="/consumption"><button type="button" id="" class="btn btn-info btn-sm"> Reset</button></a>
+        <!-- <a href="/consumption"><button  id="" class="applyfilter2 btn btn-info btn-sm"> Export</button></a> -->
+        <button type="button" id="" class="btn btn-info btn-sm"> 
+        <%= link_to 'Export',consumption_path(format: :xlsx,)%> </button>    
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<h4 style="background-color: #f5f5f5; border-left: 5px solid orange; padding: 10px;">Consumption</h4>
+<div style="overflow: auto;">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-left: 0;">
+
+   <div class="sparkline13-list" style="padding-left: 0;">
+          <div class="sparkline13-graph"> 
+  
+            <div class="datatable-dashv1-list custom-datatable-overright">
+                    <div id="toolbar"></div>
+  <table class="table table-striped table-responsive sortable scrollbar" id="table" data-toggle="table" data-pagination="false" data-search="true" data-trim-on-search="false" data-show-columns="true" data-show-refresh="false" data-sortable="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar"  style="overflow-x: scroll;">
+      <thead>
+      <tr>
+        <th>Asset </th>
+        <th>Parameter </th>
+        <th>Balance</th>
+        <% std = startdt
+          while true %>
+        <th><%= std.strftime("%d %^b") %></th>
+        <% std = std + 1.day
+           break if std > enddt
+          end %>
+      </tr>
+    </thead>
+    <tbody>
+
+      <% @asset_with_params.each do |asid| 
+      asset_param_line_data = []
+      @ap = nil
+      @assets_params.where(asset_id: asid).each do |ap| %>
+        <tr>
+            <td><%= ap&.site_asset.name %></td>
+            <td><%= ap.name %></td>
+            <td>Opening</td>
+            <% std = startdt - 1.day
+              while true %>
+            <td><%= Submission.where(asset_param_id: ap.id).ransack(created_on_eq: std).result.last.try(:value).to_f.round(3) %></td>
+            <% std = std + 1.day
+               break if std >= enddt
+              end %>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td>Closing</td>
+          <% std = startdt
+              while true  %>
+            <td><%= Submission.where(asset_param_id: ap.id).ransack(created_on_eq: std).result.last.try(:value).to_f.round(3) %></td>
+            <% std = std + 1.day
+               break if std > enddt
+              end %>
+        </tr>
+        <tr style="border-bottom: 1px solid rgb(125, 125, 125) !important;">
+          <td></td>
+          <td></td>
+          <td>Consumption</td>
+          <% std = startdt
+              while true
+                fv = Submission.where(asset_param_id: ap.id).ransack(created_on_eq: std).result.last.try(:value).to_f.round(3)
+                sv = Submission.where(asset_param_id: ap.id).ransack(created_on_eq: std - 1.day).result.last.try(:value).to_f.round(3)
+
+          %>
+            <td><%= ( fv > 0 ) ? (fv - sv) : 0  %></td>
+            <% std = std + 1.day
+               break if std > enddt
+              end %>
+        </tr>
+      <%end%>
+      <%end%>
+    </tbody>
+  </table>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<br> <br> 
+
+
+<script type="text/javascript">
+  $('.applyfilter2').click(function(){
+    $.ajax({
+      url: "/consumption.xlsx",
+      data: {date_range:" + $("#date_range").val()"},
+      method: "GET"
+    });
+    });
+
+  function onSelectHandler(date, context) {
+    var $element = context.element;
+    var $calendar = context.calendar;
+    // var $box = $element.siblings('.box').show();
+    var text = "";
+    var allow = false;
+    if (date[0] !== null) {
+      text += date[0].format("MM/DD/YYYY");
+    }
+
+    if (date[0] !== null && date[1] !== null) {
+      allow = true;
+      text += " - ";
+    } else if (date[0] === null && date[1] == null) {
+      // text += 'nothing';
+      $(".apply-btn").attr("disabled", true);
+    } else {
+      $(".apply-btn").attr("disabled", false);
+    }
+
+    if (date[1] !== null) {
+      text += date[1].format("MM/DD/YYYY");
+    }
+    $element.val(text);
+    const date1 = new Date(date[0]);
+    const date2 = new Date(date[1]);
+    const diffTime = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+      console.log(diffDays );
+    if (diffDays > 30) {
+      $(".apply-btn").attr("disabled", true);
+      toastr.error("Please select range of 30 days")
+    } else if (allow) {
+      $(".apply-btn").attr("disabled", false);
+    }
+  }
+
+  $(function() {
+    $(".calendar").pignoseCalendar({
+      format: "MM/DD/YYYY", // date format string. (2017-02-02)
+      theme: "blue", // light, dark, blue
+      multiple: true,
+      // maxDate: "<%= Date.today.to_s %>",
+      select: onSelectHandler
+    });
+  });
+
+
+</script>

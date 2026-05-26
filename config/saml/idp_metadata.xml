@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:EntityDescriptor entityID="https://sso.jumpcloud.com/saml2/vibeconnect"
+  xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+  xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <md:IDPSSODescriptor WantAuthnRequestsSigned="false"
+    protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:KeyDescriptor use="signing">
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <ds:X509Certificate>MIIFfjCCA2agAwIBAgIUN/Ls2oSauFs4E48d4L14aoy0PG8wDQYJKoZIhvcNAQELBQAweTELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNPMRAwDgYDVQQHEwdCb3VsZGVyMRQwEgYDVQQKEwt2aWJlY29ubmVjdDEZMBcGA1UECxMQSnVtcENsb3VkU0FNTElkUDEaMBgGA1UEAxMRSnVtcENsb3VkU0FNTFVzZXIwHhcNMjYwNDA2MTU0NjU3WhcNMzEwNDA2MTU0NjU3WjB5MQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ08xEDAOBgNVBAcTB0JvdWxkZXIxFDASBgNVBAoTC3ZpYmVjb25uZWN0MRkwFwYDVQQLExBKdW1wQ2xvdWRTQU1MSWRQMRowGAYDVQQDExFKdW1wQ2xvdWRTQU1MVXNlcjCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCCAgoCggIBALcKBRrHY0f0MkmQoH+0Dz3WfZ0LSRxDJeuGNkchTNxpiJxmf8W5Z3G8Xn4Uog565DhCQIJdwySClVmpqLWpT1D4EUX+fP0IWWXeGAhDTZAoI3ZUGq4M0HjhKlTBH6owUvdWxXMYgSDjLrTg4aYOQV48KlykC5FoM7vqT54FXAgXSzSaolpdKgS8ubJVrtvn3Vx9QuaiWhk51jsSuEJdsY5x6WPSfXnR+OAB4E9Z2aQpaZ87ZWC8RQsbckRZtW9KCl/Hrlb2TvyiRg5xhr20w+w+stXsJRp02TqT2ZCQWKBiPBV9dDyn9qkEL8087Vy+BBt0ytrEk+1GyNDcUFCMlnBhm6bVujrC6MrihOA6F4KNnlinSOBY+QUVxapn4yVOY5gc3RRAi5dgrKLcivVax2YzjAtO0SXP31bkKF8RzRzd7a5lRs/+Bnrg39zU+SUhjdsSSEPdDtfB3PhRV1nItYp+hlKQTjs86f0ZIGBrxArf+eq/45aal7avHBJGJOE89g9o/o4TDH4K+4MUN/3xSR5SiJ1ihcv5dlSfUFp5CwZQRHgBUpxRERzrZK3xr4N1r6FbIvan8bfqOduUZskML6KkcOGOnZx2yAssgBocEa8c00D21NTCWZbADyPy+KYMPUZYv2O4LjTnjIe5EqoYls5V1bAGndjc/w+cWnlRyhHTAgMBAAEwDQYJKoZIhvcNAQELBQADggIBAKoRY4VvDNhcnxSVvzWZfF4jYeYvxfeUfr06TgtD4gx7ipbPyURLp+y0y1oxIhacZOZRugPDnPZ/ry46C92gmicAcSqujSZfGXS0S4dFuyENba7AcCvnrNSPt/YcmEvH3iocncaQvMM3Wy4QYLw1LuLJpnsWLFwzwmk3aeUHQZrbZSL13aajisI7b5I0DQ+D96l3er4t1/3e8Y+1o+vI+JpMrJioZ/1/7vZCDJwdlVkqaTbQVhmQ+THZ8d8LbgNVzrbf7OeeAjdIT+q0LuwDXsKAepVt9csfEDg7NAdXyWdoZ0Vw03q3ioCI9+iHTMCEluAzrwIZbsvnkTjigwVGPXT+T0uSLtXxrZg39vlu6V+Fdu7WshzSgTLM9VwwKWre1IYtqRNIsd3KVD3ua+fSnMk5G+bB+gV/7Da63VCpRDrrs+jSUNSdB6iM8wzkg3Cvqn3nXZgmXbUKEyU+2HM3CQX46y3sbgXMchEd1ap76exjw2a/VHTL+VtfeLDac3YBjNcm680jdiqPHNIPQd8a83xCH9U6fmcqnJiWPMQNucUU2a6tIhy3aXvp4V51iMrXi/SBRgt4duh8TD9RtM0Cf9/Z3lpLdZWAkchsMl1efb7dFyCKsl3bMLoNbyuEwdZnyIPP8WmGTIjkyQJNjKfYeWd6NeebXFWlFctUBrACXiJp</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</md:NameIDFormat>
+    <md:SingleSignOnService
+      Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+      Location="https://sso.jumpcloud.com/saml2/vibeconnect"/>
+  </md:IDPSSODescriptor>
+</md:EntityDescriptor>

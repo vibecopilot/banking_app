@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Restaurant:</strong>
+  <%= @blocked_day.restaurant_id %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @blocked_day.start_date %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @blocked_day.start_date %>
+</p>
+
+<p>
+  <strong>Reason:</strong>
+  <%= @blocked_day.reason %>
+</p>
+
+<p>
+  <strong>Booking allowed:</strong>
+  <%= @blocked_day.booking_allowed %>
+</p>
+
+<p>
+  <strong>Order allowed:</strong>
+  <%= @blocked_day.order_allowed %>
+</p>
+
+<%= link_to 'Edit', edit_blocked_day_path(@blocked_day) %> |
+<%= link_to 'Back', blocked_days_path %>

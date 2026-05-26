@@ -1,0 +1,47 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Transport Requests</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Employee name</th>
+      <th>Employee</th>
+      <th>Pickup location</th>
+      <th>Date and time</th>
+      <th>Special requirements</th>
+      <th>Driver contact information</th>
+      <th>Vehicle details</th>
+      <th>Booking confirmation number</th>
+      <th>Booking status</th>
+      <th>Manager approval</th>
+      <th>Booking confirmation email</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @transport_requests.each do |transport_request| %>
+      <tr>
+        <td><%= transport_request.employee_name %></td>
+        <td><%= transport_request.employee_id %></td>
+        <td><%= transport_request.pickup_location %></td>
+        <td><%= transport_request.date_and_time %></td>
+        <td><%= transport_request.special_requirements %></td>
+        <td><%= transport_request.driver_contact_information %></td>
+        <td><%= transport_request.vehicle_details %></td>
+        <td><%= transport_request.booking_confirmation_number %></td>
+        <td><%= transport_request.booking_status %></td>
+        <td><%= transport_request.manager_approval %></td>
+        <td><%= transport_request.booking_confirmation_email %></td>
+        <td><%= link_to 'Show', transport_request %></td>
+        <td><%= link_to 'Edit', edit_transport_request_path(transport_request) %></td>
+        <td><%= link_to 'Destroy', transport_request, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Transport Request', new_transport_request_path %>

@@ -1,0 +1,67 @@
+<%= form_with(model: unit, local: true) do |form| %>
+  <% if unit.errors.any? %>
+    <div id="error_explanation">
+      <h5><%= pluralize(unit.errors.count, "error") %> prohibited this unit from being saved:</h5>
+      <ul>
+      <% unit.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+ <div class="col-sm-12" >
+
+<div class="row">
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <label>Building </label>
+    <input type="hidden" name="unit[site_id]" value="<%= @user.current_site_id %>">
+      <%= select_tag 'unit[building_id]', options_for_select( Building.where(site_id: @user.current_site_id).map { |e| [e.name, e.id] }, :selected => unit.building_id), :include_blank => "Select Building", :class=>"ui dropdown building-select" %>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+    <label>Floor </label>
+      <%= select_tag 'unit[floor_id]', options_for_select( Floor.where(building_id: unit.building_id).map { |e| [e.name, e.id] }, :selected => unit.floor_id), :include_blank => "Select Floor", :class=>"ui dropdown" %>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="field text-left mb-3">
+      <%= form.label :name %>
+      <%= form.text_field :name, id: :unit_name %>
+    </div>
+  </div>
+
+</div>
+<br>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+        $('.ui.dropdown').dropdown();
+  $('#unit_building_id').change(function() {
+      var category_type_id = $(this).val();
+      var sub_categories_options = "<option value=''>Select Floor</option>";
+      if (category_type_id.length > 0) {
+        var url = "/floors.json?q[building_id_eq]=" + category_type_id + "&token=" + gon.token;
+
+        $.ajax({
+          type: "GET",
+          url: url,
+          success: function(response){
+            if(response.length > 0){
+              for (var i = 0; i < response.length; i++) {
+                var sub_category = response[i];
+                sub_categories_options += "<option value='"+sub_category.id+"'>"+sub_category.name+"</option>"
+              }
+            }
+            $("#unit_floor_id").html(sub_categories_options);
+          }
+        });
+      } else {
+        $("#unit_floor_id").html(sub_categories_options);
+      }
+  });
+</script>

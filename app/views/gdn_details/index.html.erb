@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Gdn Details</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Gdn date</th>
+      <th>Description</th>
+      <th>Status</th>
+      <th>Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @gdn_details.each do |gdn_detail| %>
+      <tr>
+        <td><%= gdn_detail.gdn_date %></td>
+        <td><%= gdn_detail.description %></td>
+        <td><%= gdn_detail.status %></td>
+        <td><%= gdn_detail.created_by_id %></td>
+        <td><%= link_to 'Show', gdn_detail %></td>
+        <td><%= link_to 'Edit', edit_gdn_detail_path(gdn_detail) %></td>
+        <td><%= link_to 'Destroy', gdn_detail, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Gdn Detail', new_gdn_detail_path %>

@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Content:</strong>
+  <%= @folder_document.content %>
+</p>
+
+<p>
+  <strong>Folder:</strong>
+  <%= @folder_document.folder_id %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @folder_document.site_id %>
+</p>
+
+<p>
+  <strong>Uploaded by:</strong>
+  <%= @folder_document.uploaded_by %>
+</p>
+
+<p>
+  <strong>Folder type:</strong>
+  <%= @folder_document.folder_type %>
+</p>
+
+<p>
+  <strong>Of phase:</strong>
+  <%= @folder_document.of_phase %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @folder_document.unit_id %>
+</p>
+
+<p>
+  <strong>Heavy video url:</strong>
+  <%= @folder_document.heavy_video_url %>
+</p>
+
+<%= link_to 'Edit', edit_folder_document_path(@folder_document) %> |
+<%= link_to 'Back', folder_documents_path %>

@@ -1,0 +1,531 @@
+<style type="text/css">
+  .help{
+    margin: 0px !important;
+  }
+</style>
+ <section id="section-linemove-2" >
+  <div class="row help">
+    <div class="col-sm-12">
+      <div class="ui top attached tabular menu"><a class="item res active" data-tab="response">Response Escalation</a> <a class="item res" data-tab="escalation">Resolution Escalation</a>
+       </div>
+          <div class="col-sm-12 padding-left-0">
+
+            <div class="ui bottom attached tab segment ess" data-tab="escalation">
+              <div class="row escalation-create">
+                <%= form_for(ComplaintWorker.new,  :url => "/pms/admin/create_complaint_worker" ) do |f| %>
+                  <%= f.hidden_field :society_id, :value => @user.current_site_id%>                
+                  <%= f.hidden_field :of_atype, :value => "Pms::Site" %>
+                  <%= f.hidden_field :esc_type, :value => "resolution" %>
+                  <%= f.hidden_field :of_phase, :value => "pms" %>
+                  <%= f.hidden_field "custom_redirect", :name => "custom_redirect", :value =>  "/pms/admin/helpdesk_categories"  %>
+                     <div class="col-sm-12 padding-left-0 padding-right-0">
+                    <div class=" col-sm-2 category_ids">
+                      <%= select_tag 'category_ids', options_for_select( @helpdesk_categories_mapped.sort_by(&:first)), :include_blank => "Select Category Type", :class=>" ui fluid search dropdown multiple", :multiple => true %>
+                    </div>
+                    <div class="col-sm-10 padding-left-0 padding-right-0">
+                      <div class="divTable">
+                        <div class="divTableHeading">
+                          <div class="divTableRow">
+                            <div class="divTableCell width5">Levels</div>
+                            <div class="divTableCell width22">Escalation To</div>
+                            <div class="divTableCell width1 ">P1 </div>
+                            <div class="divTableCell width1 ">P2 </div>
+                            <div class="divTableCell width1 ">P3 </div>
+                            <div class="divTableCell width1 ">P4 </div>
+                            <div class="divTableCell width1 ">P5 </div>
+                          </div>
+                        </div>
+                        <div class="divTableBody">
+                          <% (1..5).each do  |e|  %>
+                            <div class="divTableRow">
+                            
+                              <div class="divTableCell">E<%= e%></div>
+                              <div class="divTableCell">
+                              <input type="hidden" name="escalation_matrix[e<%= e %>]][name]" value="E<%= e %>">                                
+                              <%= select_tag "escalation_matrix[e#{e}][escalate_to_users][]", options_for_select(@usmapped), :class=>" ui fluid search dropdown multiple userss", :multiple =>true %>
+                              </div>
+                              <% (1..5).each do  |p|  %>
+                                <div class="divTableCell">
+                                  <div class="row dhmholder">
+                                    <input type="hidden" class="form-control actualinput" placeholder="Days" name="escalation_matrix[e<%= e %>][p<%= p %>]">
+                                    <div class="col-sm-12">
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control dayinput" placeholder="Days" name="" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                                      </div>
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control hrsinput" placeholder="Hrs" name="" onkeypress='return event.charCode >= 48 && event.charCode <= 57' >
+                                      </div>
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control mininput" placeholder="Min" name="" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <% end %>
+                              
+                            </div>
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 text-center">
+                      <div class="hr-line-dashed"></div>
+                       <button type="button" name="commit" class="btn btn-success btn-xs escaltecreate">Submit</button>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+
+
+              <div class="row help">
+                <div class="col-sm-12 escalation-filter">
+                  <h5>Filter</h5>
+                  <%= form_tag "/pms/admin/helpdesk_categories",:class=>"form-inline",:role=>"form" do %>
+                    <div class="form-group">
+                      <%= select_tag 'q[category_id_eq]', options_for_select(@helpdesk_categories_mapped,params[:q].present? ? params[:q][:category_id_eq] : nil), :include_blank => "Select Category Type", :class=>"form-control" %>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-sm" style="margin-top:-8px;">Apply</button>
+                    <a href="/pms/admin/helpdesk_categories" class="btn btn-info btn-sm" style="margin-top:-8px;">Reset</a>
+                  <% end %>
+                </div>
+              </div>
+            
+
+              <div id="escalationbox" style="display: none">
+                <div class="row help">
+                  <div class="col-sm-12">
+                    <div class="col-sm-2">
+                      <label>From</label>
+                      <select class="form-control">
+                        <option value="" selected>Select Person</option>
+                        <option>option 1</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-2">
+                      <label>To</label>
+                      <select class="form-control">
+                        <option value="" selected>Select Person</option>
+                        <option>option 1</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-8">
+                      <div class="divTable">
+                        <div class="divTableHeading">
+                          <div class="divTableRow">
+                            <div class="divTableCell width1 bg-lr">Levels</div>
+                            <div class="divTableCell width1 ">P1 </div>
+                            <div class="divTableCell width1 ">P2 </div>
+                            <div class="divTableCell width1 ">P3 </div>
+                            <div class="divTableCell width1 ">P4 </div>
+                            <div class="divTableCell width1 ">P5 </div>
+                            <div class="divTableCell width1 bg-lr">Levels</div>
+                            <div class="divTableCell width1 ">P1 </div>
+                            <div class="divTableCell width1 ">P2 </div>
+                            <div class="divTableCell width1 ">P3 </div>
+                            <div class="divTableCell width1 ">P4 </div>
+                            <div class="divTableCell width1 ">P5 </div>
+                            <div class="divTableCell width1 bg-lr">Levels</div>
+                            <div class="divTableCell width1 ">P1 </div>
+                            <div class="divTableCell width1 ">P2 </div>
+                            <div class="divTableCell width1 ">P3 </div>
+                            <div class="divTableCell width1 ">P4 </div>
+                            <div class="divTableCell width1 ">P5 </div>
+                          </div>
+                        </div>
+                        <div class="divTableBody">
+                          <div class="divTableRow">
+                            <div class="divTableCell bg-lr">E1</div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell bg-lr">E2</div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell bg-lr">E3</div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                            <div class="divTableCell">
+                              <input type="text" class="form-control">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12 text-center">
+                      <div class="hr-line-dashed"></div>
+                      <button type="button" class="btn btn-xs btn-success">Update</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <% 
+                if params[:q].present?
+                  params[:q][:escalations_cw_id_not_null] = 1
+                  @cw = ComplaintWorker.pms.includes(:category).includes(:escalations).active.where(society_id: @user.current_site_id).where("complaint_workers.esc_type = 'resolution' or complaint_workers.esc_type is null").ransack(params[:q]).ransack(params[:q]).result.order('id desc')
+                else
+                  @cw = ComplaintWorker.pms.includes(:category).includes(:escalations).active.where(society_id: @user.current_site_id).where("complaint_workers.esc_type = 'resolution' or complaint_workers.esc_type is null").distinct 
+                end 
+                @reso_cw = @cw
+              %>
+              <% if @cw.present?
+              @cw.each_with_index do |cw, i| %>
+                <% @complaint_worker = cw %>
+                <div class="row help">
+                  <div class="col-sm-12">
+                    <h4 class="rule-title">
+                      Rule <%= i+1 %> 
+                      <span class="edit-tools">
+                        <a href="#" data-toggle="modal" data-target="#esc_clone<%= @complaint_worker.id %>"><i class="fa fa-copy text-warning"></i> </a>
+                        <a href="#" data-toggle="modal" data-target="#esc_edit<%= @complaint_worker.id %>"><i class="fa fa-edit text-orange"></i> </a>
+                        <%= form_for(ComplaintWorker.new,  :url => "/pms/admin/delete_complaint_worker", :html => {:style=>"display: inline"} ) do |f| %>
+                            <%= f.hidden_field "id", :name => "id", :value => cw.id %><%= f.hidden_field "assign", :name => "complaint_worker[assign]", :value => 0 %> <%= f.hidden_field "custom_redirect", :name => "custom_redirect", :value =>"/pms/admin/helpdesk_categories"  %><i class="fa fa-trash-o text-danger delete-esc "></i> <% end %> 
+                      </span>
+                    </h4>
+                    <% matrices = cw.escalations %>
+                    <% if matrices.present? %>
+                    <table class="ui celled structured table">
+                      <thead>
+                        <tr>
+                          <th rowspan="2" width="10%">Category Type</th>
+                          <th rowspan="2" width="10%">Levels</th>
+                          <th rowspan="2" width="20%"> Escalation To</th>
+                          <th rowspan="2" width="10%">P1 </th>
+                          <th rowspan="2" width="10%">P2 </th>
+                          <th rowspan="2" width="10%">P3 </th>
+                          <th rowspan="2" width="10%">P4 </th>
+                          <th rowspan="2" width="10%">P5 </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <% dsp = ComplaintStatus.new %>
+                        <% matrices.order("name asc").each_with_index do |esc, r| %>
+                        <tr>
+                          <% if r < 1 %>
+                          <td rowspan="5"><%= cw.category.try(:name) %></td>
+
+                          <% end %>
+
+                          <td><%= esc.name %></td>
+                          
+                          <td><% @c = esc.escalate_to_users.try(:count) || 0
+                            if @c > 2
+                              @s = User.where(id: esc.escalate_to_users[0..1]).map{|s| s.try(:full_name)}.join(" , ")
+                              @n = User.where(id: esc.escalate_to_users[2..@c]).map{|s| s.try(:full_name)}.join(" , ")
+                            else
+                              @s = @s = User.where(id: esc.escalate_to_users).map{|s| s.try(:full_name)}.join(" , ")
+                            end
+                            %>
+                            <%= @s %> <% if @c > 2 %> <a class="ui label orange small circular inline link" data-content="<%= @n %>" data-variation="wide">+<%= @c - 2 %></a><% end %>
+                          
+                          <td><%= esc.p1.present? ? dsp.dhm(esc.p1) : nil %></td>
+                          <td><%= esc.p2.present? ? dsp.dhm(esc.p2) : nil %></td>
+                          <td><%= esc.p3.present? ? dsp.dhm(esc.p3) : nil %></td>
+                          <td><%= esc.p4.present? ? dsp.dhm(esc.p4) : nil %></td>
+                          <td><%= esc.p5.present? ? dsp.dhm(esc.p5) : nil %></td>
+                        </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+              <% end %>
+              <% if @cw.blank? %>
+                  <div class="error-page">
+                    <div class="error-content"> <img src="<%= asset_path "no-result.png" %>" alt="Page Not Found" class="img-responsive" style="margin-top:20px;height: 200px;">
+                      <h3>No Result Found</h3>
+                    </div>
+                </div>
+              <% end %>  
+            </div>
+            
+            <div class="ui bottom attached tab segment ess active " data-tab="response">
+              <div class="row help">
+                <%= form_for(ComplaintWorker.new,  :url => "/pms/admin/create_complaint_worker" ) do |f| %>
+                        <%= f.hidden_field :society_id, :value => @user.current_site_id %>
+                        <%= f.hidden_field :esc_type, :value => "response" %>
+                        <%= f.hidden_field :of_phase, :value => "pms" %>
+                        <%= f.hidden_field :of_atype, :value => "Pms::Site" %> 
+                        <%= f.hidden_field "custom_redirect", :name => "custom_redirect", :value =>  "/pms/admin/helpdesk_categories"  %>
+                        <div class="col-sm-12">
+                          <div class=" col-sm-3">
+                            <%= select_tag 'category_ids', options_for_select( @helpdesk_categories_mapped.sort_by(&:first)), :include_blank => "Select Category Type", :class=>" ui fluid search dropdown multiple", :multiple => true %>
+                          </div>
+                          <div class="col-sm-9">
+                            <div class="divTable">
+                              <div class="divTableHeading">
+                                <div class="divTableRow">
+                                  <div class="divTableCell width5">Levels</div>
+                                  <div class="divTableCell width40">Escalation To</div>
+                                </div>
+                              </div>
+                              <div class="divTableBody">
+                                <div class="divTableRow">
+                                  <div class="divTableCell">E1<input type="hidden" name="escalation_matrix[e1][name]" value="E1"></div>
+                                  <div class="divTableCell">
+                                    <%= select_tag 'escalation_matrix[e1][escalate_to_users][]', options_for_select(@usmapped), :class=>" ui fluid search dropdown multiple escalation_matrix", :multiple =>true %>
+                                  </div>
+                                  
+                                </div>
+                                <div class="divTableRow">
+                                  <div class="divTableCell">E2<input type="hidden" name="escalation_matrix[e2][name]" value="E2"></div>
+                                  <div class="divTableCell">
+                                    <%= select_tag 'escalation_matrix[e2][escalate_to_users][]', options_for_select( @usmapped), :class=>" ui fluid search dropdown multiple escalation_matrix", :multiple =>true %>
+                                  </div>
+                                  
+                                </div>
+                                <div class="divTableRow">
+                                  <div class="divTableCell">E3<input type="hidden" name="escalation_matrix[e3][name]" value="E3"></div>
+                                  <div class="divTableCell">
+                                    <%= select_tag 'escalation_matrix[e3][escalate_to_users][]', options_for_select( @usmapped), :class=>" ui fluid search dropdown multiple escalation_matrix", :multiple =>true %>
+                                  </div>
+                                  
+                                </div>
+                                <div class="divTableRow">
+                                  <div class="divTableCell">E4<input type="hidden" name="escalation_matrix[e4][name]" value="E4"></div>
+                                  <div class="divTableCell">
+                                    <%= select_tag 'escalation_matrix[e4][escalate_to_users][]', options_for_select( @usmapped), :class=>" ui fluid search dropdown multiple escalation_matrix", :multiple =>true %>
+                                  </div>
+                                  
+                                </div>
+                                <div class="divTableRow">
+                                  <div class="divTableCell">E5<input type="hidden" name="escalation_matrix[e5][name]" value="E5"></div>
+                                  <div class="divTableCell">
+                                    <%= select_tag 'escalation_matrix[e5][escalate_to_users][]', options_for_select( @usmapped), :class=>" ui fluid search dropdown multiple escalation_matrix", :multiple =>true %>
+                                  </div>
+                                  
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-12 text-center">
+                            <div class="hr-line-dashed"></div>
+                             <button type="submit" name="commit" class="btn btn-success btn-xs setup-btn">Submit</button>
+                          </div>
+                        </div>
+                      <% end %>
+              </div>
+              <div class="row help">
+                <div class="col-sm-12 escalation-filter">
+                  <h5>Filter</h5>
+                  <%= form_tag "/pms/admin/helpdesk_categories",:class=>"form-inline",:role=>"form" do %>                  
+                    <div class="form-group">
+                      <%= select_tag 'q[category_id_eq]', options_for_select(@helpdesk_categories_mapped, params[:q].present? ? params[:q][:category_id_eq] : nil), :include_blank => "Select Category Type", :class=>"form-control" %>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-sm" style="margin-top:-8px;">Apply</button>
+                    <a href="/pms/admin/helpdesk_categories" class="btn btn-info btn-sm" style="margin-top:-8px;">Reset</a>
+                  <% end %>
+                </div>
+              </div>
+              <div id="escalationbox" style="display: none">
+                <div class="row help">
+                  <div class="col-sm-12">
+                    <div class="col-xs-2">
+                      <h6>Levels</h6>
+                      <ul>
+                        <li>
+                          <input type="checkbox">
+                          E1</li>
+                        <li>
+                          <input type="checkbox">
+                          E2</li>
+                        <li>
+                          <input type="checkbox">
+                          E3</li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-3">
+                      <label>From</label>
+                      <select multiple class="ui fluid search dropdown">
+                        <option value="" selected>Select Person</option>
+                        <option>option 1</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-3">
+                      <label>To</label>
+                      <select multiple class="ui fluid search dropdown">
+                        <option value="" selected>Select Person</option>
+                        <option>option 1</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-3">
+                      <label>Update Category</label>
+                      <select multiple class="ui fluid search dropdown">
+                        <option value="" selected>Select Category</option>
+                        <option>Category 1</option>
+                        <option>Category 2</option>
+                        <option>Category 3</option>
+                        <option>Category 4</option>
+                        <option>Category 5</option>
+                      </select>
+                    </div>
+                    <div class="col-sm-1">
+                      <button type="button" class="btn btn-sm btn-success marginTop25">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <% if params[:q].present?
+                  @cw = ComplaintWorker.pms.includes(:category).includes(:escalations).active.where(society_id: @user.current_site_id, esc_type: "response").ransack(params[:q]).result.uniq
+                else
+                  @cw = ComplaintWorker.pms.includes(:category).includes(:escalations).active.where(society_id: @user.current_site_id, esc_type: "response") 
+                end
+                @respo_esc = @cw
+              %>
+              <% @cw.each_with_index do |cw, i| %>
+                <% @complaint_worker = cw %>
+                <div class="row help">
+                  <div class="col-sm-12">
+                    <h4 class="rule-title">
+                      Rule <%= i+1 %> 
+                      <span class="edit-tools">
+                        <a href="#" data-toggle="modal" data-target="#esc_clone<%= @complaint_worker.id %>"><i class="fa fa-copy text-warning"></i> </a>
+                        <a href="#" data-toggle="modal" data-target="#esc_edit_response<%= @complaint_worker.id %>"><i class="fa fa-edit text-orange"></i> </a>
+                        <%= form_for(ComplaintWorker.new,  :url => "/pms/admin/delete_complaint_worker", :html => {:style=>"display: inline"} ) do |f| %>
+                            <%= f.hidden_field "id", :name => "id", :value => cw.id %><%= f.hidden_field "assign", :name => "complaint_worker[assign]", :value => 0 %> <%= f.hidden_field "custom_redirect", :name => "custom_redirect", :value =>  "/pms/admin/helpdesk_categories"  %><i class="fa fa-trash-o text-danger delete-escre "></i> <% end %> 
+                      </span>
+
+                    </h4>
+                    <% matrices = cw.escalations %>
+                    <% if matrices.present? %>
+                      <table class="ui celled structured table">
+                        <thead>
+                          <tr>
+                            <th rowspan="2" width="10%">Category Type</th>
+                            <th rowspan="2" width="10%">Levels</th>
+                            <th rowspan="2" width="20%"> Escalation To</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% matrices.each_with_index do |esc, r| %>
+                            <tr>
+                              <% if r < 1 %>
+                              <td rowspan="5"><%= cw.category.try(:name) %></td>
+                              <% end %>
+                              <td><%= esc.name %></td>
+                              <% @c = esc.escalate_to_users.try(:count) || 0
+                                if @c > 2
+                                  @s = Spree::User.where(id: esc.escalate_to_users[0..1]).map{|s| s.try(:full_name)}.join(" , ")
+                                  @n = Spree::User.where(id: esc.escalate_to_users[2..@c]).map{|s| s.try(:full_name)}.join(" , ")
+                                else
+                                  @s = Spree::User.where(id: esc.escalate_to_users).map{|s| s.try(:full_name)}.join(" , ")
+                                end
+                              %>
+                              <td><%= @s %> <% if @c > 2 %> <a class="ui label orange small circular inline link" data-content="<%= @n %>" data-variation="wide">+<%= @c - 2 %></a><% end %>
+                            </td>
+                            </tr>
+                          <% end %>
+                        </tbody>
+                      </table>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+    </div>
+  </div>
+</section>
+<section id="section-linemove-3">            
+      <%= render partial: 'pms/manage/cost_approvals/index' %>
+</section>
+
+
+<script type="text/javascript">
+$(".escaltecreate").click(function(r){
+  r.preventDefault();
+  form = $(this)  .parents("form");
+  vl = form.find('.category_ids').val();
+
+  var emc = [];
+  $('.category_ids').each(function(){
+    thisrow = $(this);
+    emc.push(thisrow.find(".label.transition").text());
+  });
+  emc = emc.filter(function(x){
+    return (x !== (undefined || null || ''));
+  });
+  if(emc.length < 1)
+  {
+    toastr.error("Please Select Category");
+    return false;
+  }
+
+  var em = [];
+  form.find('.userss').each(function(){
+    thisrow = $(this).parents(".divTableRow");
+    em.push(thisrow.find(".label.transition").text());
+  });
+  em = em.filter(function(x){
+    return (x !== (undefined || null || ''));
+  });
+  if (em.length < 1) {
+    toastr.error("Please select members");
+    return;
+  }
+  $(".dhmholder").each(function(){ 
+      days= $(this).find(".dayinput").val();
+      hours = $(this).find(".hrsinput").val(); 
+      mins = $(this).find(".mininput").val(); 
+    console.log(days + " == " + hours + "==" + mins);
+    var actv = ((parseInt(days) || 0) * 24 * 60) + ((parseInt(hours) || 0) * 60) + (parseInt(mins) || 0);
+    console.log(actv);
+    $(this).find(".actualinput").val(actv);
+  });
+  form.submit();
+});
+
+
+</script>

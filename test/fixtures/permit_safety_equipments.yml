@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  safety_equipment_name: MyString
+  permit_type_id: 1
+  activity_id: 1
+  sub_activity_id: 1
+  hazard_category_id: 1
+  permit_risk_id: 1
+
+two:
+  safety_equipment_name: MyString
+  permit_type_id: 1
+  activity_id: 1
+  sub_activity_id: 1
+  hazard_category_id: 1
+  permit_risk_id: 1

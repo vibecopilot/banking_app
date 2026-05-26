@@ -1,0 +1,52 @@
+<%= form_with(model: aminity_setup, local: true) do |form| %>
+  <% if aminity_setup.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(aminity_setup.errors.count, "error") %> prohibited this aminity_setup from being saved:</h2>
+
+      <ul>
+      <% aminity_setup.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :aminity_id %>
+    <%= form.number_field :aminity_id, id: :aminity_setup_aminity_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :aminity_setup_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :aminity_setup_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit_id %>
+    <%= form.number_field :unit_id, id: :aminity_setup_unit_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_time %>
+    <%= form.datetime_select :start_time, id: :aminity_setup_start_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_time %>
+    <%= form.datetime_select :end_time, id: :aminity_setup_end_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :slot_frequency %>
+    <%= form.number_field :slot_frequency, id: :aminity_setup_slot_frequency %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

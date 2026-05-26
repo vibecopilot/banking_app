@@ -1,0 +1,54 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Complaints") do |sheet|
+  # Define the header row
+  sheet.add_row [
+    "Ticket Number", "Created By", "Created On", "On Behalf of", "Ticket Type", "Complaint Mode", "Priority Level", 
+    "Building", "Floor", "Unit", "Customer Name", "Category", "Sub Category", "Title", 
+    "Description", "Assigned To", "Status", "Modify by", "Modify on", "Impact", 
+    "Correction", "Corrective Action", "Preventive Action", "Cost Involved", "Resolution TAT", 
+    "Response Breached", "Resolution Breached"
+  ]
+
+  @complaints.find_each do |complaint|
+    # Calculate resolution TAT separately
+    resolution_tat = complaint.calculate_resolution_tat
+
+    # Safely determine status name
+    status = if complaint.issue_status.present?
+               ComplaintStatus.find_by(id: complaint.issue_status)&.name
+             else
+               ""
+             end
+
+    sheet.add_row [
+      complaint.ticket_number,                          # Ticket Number
+      complaint.user&.full_name,                        # Created By
+      complaint.created_at,                             # Created On
+      complaint.on_behalf_of,                           # On Behalf of
+      complaint.complaint_type,                         # Ticket Type
+      complaint.complaint_mode&.name,                   # Complaint Mode
+      complaint.priority,                               # Priority Level
+      complaint.tower&.name,                            # Building
+      complaint.floor&.name,                            # Floor
+      complaint.unit&.name,                             # Unit
+      complaint.user&.full_name,                        # Customer Name
+      complaint.category_type&.name,                    # Category
+      complaint.sub_category&.name,                     # Sub Category
+      complaint.heading,                                # Title
+      complaint.text,                                   # Description
+      complaint.assigned_to_user&.full_name,            # Assigned To
+      status,                                           # Status
+      complaint.updated_by,                             # Modified By
+      complaint.updated_at,                             # Modified On
+      complaint.impact,                                 # Impact
+      complaint.correction,                             # Correction
+      complaint.corrective_action,                      # Corrective Action
+      complaint.preventive_action,                      # Preventive Action
+      complaint.cost_involved,                          # Cost Involved
+      resolution_tat[:resolution_tat],                  # Resolution TAT
+      complaint.response_breached?,                     # Response Breached
+      complaint.resolution_breached?                    # Resolution Breached
+    ]
+  end
+end

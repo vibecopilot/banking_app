@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @parking_slot.site_id %>
+</p>
+
+<p>
+  <strong>Start hr:</strong>
+  <%= @parking_slot.start_hr %>
+</p>
+
+<p>
+  <strong>Start min:</strong>
+  <%= @parking_slot.start_min %>
+</p>
+
+<p>
+  <strong>End hr:</strong>
+  <%= @parking_slot.end_hr %>
+</p>
+
+<p>
+  <strong>End min:</strong>
+  <%= @parking_slot.end_min %>
+</p>
+
+<%= link_to 'Edit', edit_parking_slot_path(@parking_slot) %> |
+<%= link_to 'Back', parking_slots_path %>

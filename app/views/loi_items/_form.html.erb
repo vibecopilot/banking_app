@@ -1,0 +1,109 @@
+<%= form_with(model: loi_item, local: true) do |form| %>
+  <% if loi_item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(loi_item.errors.count, "error") %> prohibited this loi_item from being saved:</h2>
+
+      <ul>
+      <% loi_item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :loi_detail_id %>
+    <%= form.number_field :loi_detail_id, id: :loi_item_loi_detail_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :item_id %>
+    <%= form.number_field :item_id, id: :loi_item_item_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sac_code %>
+    <%= form.text_field :sac_code, id: :loi_item_sac_code %>
+  </div>
+
+  <div class="field">
+    <%= form.label :quantity %>
+    <%= form.number_field :quantity, id: :loi_item_quantity %>
+  </div>
+
+  <div class="field">
+    <%= form.label :standard_unit_id %>
+    <%= form.number_field :standard_unit_id, id: :loi_item_standard_unit_id %>
+  </div>
+
+
+  <div class="field">
+      <%= form.label :expected_date %>
+      <%= form.datetime_field :expected_date %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :rate %>
+    <%= form.text_field :rate, id: :loi_item_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :csgt_rate %>
+    <%= form.text_field :csgt_rate, id: :loi_item_csgt_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :csgt_amt %>
+    <%= form.text_field :csgt_amt, id: :loi_item_csgt_amt %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sgst_rate %>
+    <%= form.text_field :sgst_rate, id: :loi_item_sgst_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sgst_amt %>
+    <%= form.text_field :sgst_amt, id: :loi_item_sgst_amt %>
+  </div>
+
+  <div class="field">
+    <%= form.label :igst_rate %>
+    <%= form.text_field :igst_rate, id: :loi_item_igst_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :igst_amt %>
+    <%= form.text_field :igst_amt, id: :loi_item_igst_amt %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tcs_rate %>
+    <%= form.text_field :tcs_rate, id: :loi_item_tcs_rate %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tcs_amt %>
+    <%= form.text_field :tcs_amt, id: :loi_item_tcs_amt %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tax_amt %>
+    <%= form.text_field :tax_amt, id: :loi_item_tax_amt %>
+  </div>
+
+  <div class="field">
+    <%= form.label :amount %>
+    <%= form.text_field :amount, id: :loi_item_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :total_amount %>
+    <%= form.text_field :total_amount, id: :loi_item_total_amount %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

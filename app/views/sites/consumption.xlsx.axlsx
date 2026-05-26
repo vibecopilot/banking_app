@@ -1,0 +1,77 @@
+wb = xlsx_package.workbook
+
+if params[:q].present? && params[:q][:date_range].present?
+  @date_range = params[:q][:date_range].split(" - ")
+  params[:q][:created_at_lteq] = Date.strptime(@date_range[1], "%d/%m/%Y")
+  params[:q][:created_at_gteq] = Date.strptime(@date_range[0], "%d/%m/%Y")
+else
+  params[:q] = params[:q].present? ? params[:q] : {created_at_gteq: Date.today.beginning_of_month, created_at_lteq: Date.today.end_of_month}
+  params[:q][:date_range] = "#{params[:q][:created_at_gteq].strftime('%d/%m/%Y')} - #{params[:q][:created_at_lteq].strftime('%d/%m/%Y')}"
+end
+
+@sites = Site.where(id: @user.current_site_id)
+@siteids = @sites.pluck(:id)
+@assets_params = AssetParam.ransack(site_asset_site_id_in: @siteids, consumption_view_eq: 1).result
+@asset_with_params = @assets_params.pluck(:asset_id).uniq
+
+firstrow = ['Asset', 'Parameter', 'Balance']
+startdt = params[:q][:created_at_gteq]
+enddt = params[:q][:created_at_lteq]
+std = startdt
+
+while true 
+  firstrow << std.strftime("%d %^b")
+  std = std + 1.day
+  break if std > enddt
+end 
+
+wb.add_worksheet(name: "consumption report") do |sheet|
+  sheet.add_row firstrow
+
+  @asset_with_params.each do |asid| 
+    asset_param_line_data = []
+    @ap = nil
+
+    @assets_params.where(asset_id: asid).each do |ap| 
+      openingrow = []
+      openingrow << ap&.site_asset.name 
+      openingrow << ap.name 
+      openingrow << "Opening"
+
+      std = startdt - 1.day
+      while true 
+        openingrow << Submission.where(asset_param_id: ap.id).ransack(created_on_eq: std).result.last.try(:value).to_f 
+        std = std + 1.day
+        break if std >= enddt
+      end 
+
+      sheet.add_row openingrow
+
+      closingrow = [ " ", " "]
+      closingrow << "Closing"
+
+      std = startdt
+      while true  
+        closingrow << Submission.where(asset_param_id: ap.id).ransack(created_on_eq: std).result.last.try(:value).to_f 
+        std = std + 1.day
+        break if std > enddt
+      end 
+
+      sheet.add_row closingrow
+
+      consumptionrow = ["",""]
+      consumptionrow << "Consumption"
+
+      std = startdt
+      while true
+        fv = Submission.where(asset_param_id: ap.id).ransack(created_on_eq: std).result.last.try(:value).to_f
+        sv = Submission.where(asset_param_id: ap.id).ransack(created_on_eq: std - 1.day).result.last.try(:value).to_f
+        consumptionrow << ((fv > 0) ? (fv - sv) : 0)
+        std = std + 1.day
+        break if std > enddt
+      end 
+
+      sheet.add_row consumptionrow
+    end
+  end
+end

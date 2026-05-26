@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>On behalf of:</strong>
+  <%= @transportation.on_behalf_of %>
+</p>
+
+<p>
+  <strong>Pickup location:</strong>
+  <%= @transportation.pickup_location %>
+</p>
+
+<p>
+  <strong>Dropoff location:</strong>
+  <%= @transportation.dropoff_location %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @transportation.date %>
+</p>
+
+<p>
+  <strong>Time:</strong>
+  <%= @transportation.time %>
+</p>
+
+<p>
+  <strong>No of passengers:</strong>
+  <%= @transportation.no_of_passengers %>
+</p>
+
+<p>
+  <strong>Additional note:</strong>
+  <%= @transportation.additional_note %>
+</p>
+
+<p>
+  <strong>Transportation type:</strong>
+  <%= @transportation.transportation_type %>
+</p>
+
+<%= link_to 'Edit', edit_transportation_path(@transportation) %> |
+<%= link_to 'Back', transportations_path %>

@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Amenity Slots</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Amenity</th>
+      <th>Start hr</th>
+      <th>End hr</th>
+      <th>Start min</th>
+      <th>End min</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @amenity_slots.each do |amenity_slot| %>
+      <tr>
+        <td><%= amenity_slot.amenity_id %></td>
+        <td><%= amenity_slot.start_hr %></td>
+        <td><%= amenity_slot.end_hr %></td>
+        <td><%= amenity_slot.start_min %></td>
+        <td><%= amenity_slot.end_min %></td>
+        <td><%= link_to 'Show', amenity_slot %></td>
+        <td><%= link_to 'Edit', edit_amenity_slot_path(amenity_slot) %></td>
+        <td><%= link_to 'Destroy', amenity_slot, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Amenity Slot', new_amenity_slot_path %>

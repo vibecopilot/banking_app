@@ -1,0 +1,2 @@
+class FitoutSubcategory < ApplicationRecord
+end

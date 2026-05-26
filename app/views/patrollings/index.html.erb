@@ -1,0 +1,94 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Patrollings</h1>
+
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; margin: 0 auto; ">
+  <thead>
+    <tr>
+      <th>Patrolling Name</th>
+      <th>Site</th>
+      <th>Building</th>
+      <th>Floor</th>
+      <th>Unit</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>Start time</th>
+      <th>End time</th>
+      <th>Time intervals</th>
+      <th>QR Code</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @patrollings.each do |patrolling| %>
+      <tr>
+        <td><%= patrolling.patrolling_name %></td>
+        <td><%= patrolling.site.try(:name) %></td>
+        <td><%= patrolling.building_id %></td>
+        <td><%= patrolling.floor_id %></td>
+        <td><%= patrolling.unit_id %></td>
+        <td><%= patrolling.start_date %></td>
+        <td><%= patrolling.end_date %></td>
+        <td><%= patrolling.start_time %></td>
+        <td><%= patrolling.end_time %></td>
+        <td><%= patrolling.time_intervals %></td>
+        <td>
+          <a href="#patrolling-qr-preview" data-toggle="modal" data-patrolling-id="<%=patrolling.id%>">
+            <img class="patrollingqr" src="<%= patrolling.qr_code_image.try(:document_url) %>" style="width:50px; height: 50px;">
+          </a>
+        </td>
+        <td><%= link_to 'Show', patrolling %></td>
+        <td><%= link_to 'Edit', edit_patrolling_path(patrolling) %></td>
+        <td><%= link_to 'Destroy', patrolling, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Patrolling', new_patrolling_path %>
+
+<!-- QR Code Preview Modal -->
+<div class="modal fade" id="patrolling-qr-preview" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Patrolling QR Image</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="patrolling_qr_div">
+          <img src="" style="width: 200px; height: 200px">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="download-qr">Download QR Code</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var cursrc = "";
+    var currentPatrollingId = "";
+    $(".patrollingqr").click(function(e) {
+      cursrc = $(this).attr("src");
+      currentPatrollingId = $(this).closest("a").data("patrolling-id");
+      $("#patrolling_qr_div").find("img").attr("src", cursrc);
+    });
+    $("#download-qr").click(function() {
+      if (cursrc) {
+        var link = document.createElement('a');
+        link.href = cursrc;
+        link.download = 'patrolling_qr_' + currentPatrollingId + '.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    });
+  });
+</script>

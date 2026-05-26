@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @invoice_type.name %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @invoice_type.created_by_id %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @invoice_type.site_id %>
+</p>
+
+<%= link_to 'Edit', edit_invoice_type_path(@invoice_type) %> |
+<%= link_to 'Back', invoice_types_path %>

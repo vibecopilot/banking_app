@@ -1,0 +1,261 @@
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 297mm;
+    height: 210mm;
+  }
+
+  .cert-container {
+    width: 297mm;
+    height: 210mm;
+    padding: 15mm;
+    box-sizing: border-box;
+    background-color: #e8ede8;
+    font-family: Georgia, 'Times New Roman', serif;
+    text-align: center;
+    color: #2d3a2d;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Wavy pattern background */
+  .cert-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(180, 195, 180, 0.3) 2px,
+      rgba(180, 195, 180, 0.3) 4px
+    );
+    background-size: 100% 8px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .outer-border {
+    border: 3px solid #3d4a3d;
+    padding: 8px;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  .inner-border {
+    border: 1px solid #3d4a3d;
+    height: 100%;
+    padding: 30px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 48px;
+    margin-bottom: 15px;
+    font-weight: normal;
+    font-style: italic;
+    color: #2d3a2d;
+  }
+
+  .subtitle {
+    font-size: 16px;
+    margin-bottom: 20px;
+    font-weight: normal;
+  }
+
+  .entity-name {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 36px;
+    margin: 15px 0;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+
+  .description {
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto 20px auto;
+  }
+
+  .footer-row {
+    display: table;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .signature-column {
+    display: table-cell;
+    width: 33.33%;
+    vertical-align: bottom;
+    text-align: center;
+  }
+
+  .signature-column.left { text-align: left; padding-left: 20px; }
+  .signature-column.right { text-align: right; padding-right: 20px; }
+  .signature-column.center { text-align: center; }
+
+  .signature-block {
+    border-top: 2px solid #2d3a2d;
+    display: inline-block;
+    padding-top: 8px;
+    min-width: 180px;
+  }
+
+  .signature-block strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .signature-block small {
+    font-size: 12px;
+    color: #4a5a4a;
+  }
+
+  .cert-id {
+    font-size: 11px;
+    margin-top: 10px;
+    color: #3d4a3d;
+  }
+
+  .seal-container {
+    display: table-cell;
+    width: 33.33%;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .seal {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    position: relative;
+    display: inline-block;
+  }
+
+  .seal-outer {
+    width: 100px;
+    height: 100px;
+    background: #3d4a3d;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .seal-outer::before {
+    content: '';
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    top: -5px;
+    left: -5px;
+    background: #3d4a3d;
+    border-radius: 50%;
+    clip-path: polygon(
+      50% 0%, 61% 8%, 75% 3%, 80% 18%, 95% 22%, 93% 38%,
+      100% 50%, 93% 62%, 95% 78%, 80% 82%, 75% 97%, 61% 92%,
+      50% 100%, 39% 92%, 25% 97%, 20% 82%, 5% 78%, 7% 62%,
+      0% 50%, 7% 38%, 5% 22%, 20% 18%, 25% 3%, 39% 8%
+    );
+    z-index: -1;
+  }
+
+  .seal-inner {
+    width: 70px;
+    height: 70px;
+    background: #e8ede8;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #3d4a3d;
+  }
+
+  .seal-inner .certified {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .seal-inner .year {
+    font-size: 22px;
+    line-height: 1;
+  }
+</style>
+
+<div class="cert-container">
+  <div class="outer-border">
+    <div class="inner-border">
+      <div class="content-wrapper">
+        <h1>Certificate of Compliance</h1>
+        <p class="subtitle">This is to certify that</p>
+        
+        <div class="entity-name">'<%= @certificate.try(:name) %>'</div>
+        
+        <p class="description">
+          Complies with regulatory requirements and can provide<br>
+          meal services using mobility aids.
+        </p>
+      </div>
+
+      <div class="footer-row">
+        <div class="signature-column left">
+          <div class="signature-block">
+            <strong><%= @certificate&.reviewer.try(:full_name) %></strong>
+            <small>Chief Inspector</small>
+          </div>
+          <p class="cert-id">Certificate ID: <%= @certificate&.cert_number %></p>
+        </div>
+
+        <div class="seal-container">
+          <div class="seal">
+            <div class="seal-outer">
+              <div class="seal-inner">
+                <span class="certified">CERTIFIED</span>
+                <span class="year"><%= Date.today.year %></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="signature-column right">
+          <div class="signature-block">
+            <strong><%= @certificate&.assign_to.try(:full_name) %></strong>
+            <small>Expert</small>
+          </div>
+          <p class="cert-id">Expiration date: <%= @certificate.end_date.strftime("%d.%m.%y") %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

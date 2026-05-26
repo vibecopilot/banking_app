@@ -1,0 +1,12 @@
+<h1>Add Payment Methods to <%= @amenity.name %></h1>
+
+<%= form_with url: add_payment_methods_amenity_path(@amenity), method: :patch, local: true do |form| %>
+  <div>
+    <%= form.label :payment_methods, "Select Payment Methods" %><br>
+    <%= form.select :payment_methods, Amenity::PAYMENT_METHODS, {}, multiple: true %>
+  </div>
+
+  <div>
+    <%= form.submit "Add Payment Methods" %>
+  </div>
+<% end %>

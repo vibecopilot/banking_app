@@ -1,0 +1,2 @@
+module ReceiptSetupsHelper
+end

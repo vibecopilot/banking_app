@@ -1,0 +1,45 @@
+<h2>Visitor Approval</h2>
+
+<% if @visitors_by_host.empty? %>
+  <p class="alert alert-info">No pending visitors for approval.</p>
+<% else %>
+  <table class="table table-striped">
+    <thead class="thead-light">
+      <tr>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Purpose</th>
+        <th>Expected Date</th>
+        <th>Expected Time</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @visitors_by_host.each do |host, visitors| %>
+        <% visitors.each do |visitor| %>
+          <tr>
+            <td><%= visitor.name %></td>
+            <td><%= visitor.contact_no %></td>
+            <td><%= visitor.purpose %></td>
+            <td><%= visitor.expected_date %></td>
+            <td><%= visitor.expected_time %></td>
+            <td>
+              <div class="btn-group" role="group">
+                <%= form_with(url: approve_visitor_visitor_path(visitor), method: :patch, local: true) do |form| %>
+                  <%= form.hidden_field :approve, value: true %>
+                  <%= form.submit "Approve", class: "btn btn-success btn-sm" %>
+                <% end %>
+                <%= form_with(url: approve_visitor_visitor_path(visitor), method: :patch, local: true) do |form| %>
+                  <%= form.hidden_field :approve, value: false %>
+                  <%= form.submit "Deny", class: "btn btn-danger btn-sm" %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<%= link_to 'Back', visitors_path, class: 'btn btn-secondary' %>

@@ -1,0 +1,117 @@
+<%= form_with(model: service_order, local: true, multipart: true) do |form| %>
+  <% if service_order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(service_order.errors.count, "error") %> prohibited this service_order from being saved:</h2>
+
+      <ul>
+      <% service_order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :service_order_date %>
+    <%= form.datetime_select :service_order_date, id: :service_order_service_order_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :billing_address_id %>
+    <%= form.number_field :billing_address_id, id: :service_order_billing_address_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :retention %>
+    <%= form.text_field :retention, id: :service_order_retention %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tds %>
+    <%= form.text_field :tds, id: :service_order_tds %>
+  </div>
+
+  <div class="field">
+    <%= form.label :qc %>
+    <%= form.text_field :qc, id: :service_order_qc %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_tenure %>
+    <%= form.text_field :payment_tenure, id: :service_order_payment_tenure %>
+  </div>
+
+  <div class="field">
+    <%= form.label :advance_amount %>
+    <%= form.text_field :advance_amount, id: :service_order_advance_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :related_to %>
+    <%= form.text_field :related_to, id: :service_order_related_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :kind_attention %>
+    <%= form.text_field :kind_attention, id: :service_order_kind_attention%>
+  </div>
+
+    <div class="field">
+    <%= form.label :subject %>
+    <%= form.text_field :subject, id: :service_order_subject %>
+  </div>
+
+    <div class="field">
+    <%= form.label :description %>
+    <%= form.text_field :description, id: :service_order_description %>
+  </div>
+
+    <div class="field">
+    <%= form.label :terms_and_conditions %>
+    <%= form.text_field :terms_and_conditions, id: :service_order_terms_and_conditions %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :service_order_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vendor_id %>
+    <%= form.number_field :vendor_id, id: :service_order_vendor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :service_order_created_by_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reference %>
+    <%= form.text_field :reference, id: :service_order_reference %>
+  </div>
+
+  <div class="field">
+    <%= form.label :active %>
+    <%= form.check_box :active, id: :service_order_active %>
+  </div>
+
+  <div class="field">
+    <%= form.label :approved_status %>
+    <%= form.check_box :approved_status, id: :service_order_approved_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :total_amount %>
+    <%= form.text_field :total_amount, id: :service_order_total_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attachfiles %>
+    <%= form.file_field :attachfiles %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

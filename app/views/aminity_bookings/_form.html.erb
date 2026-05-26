@@ -1,0 +1,62 @@
+<%= form_with(model: aminity_booking, local: true) do |form| %>
+  <% if aminity_booking.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(aminity_booking.errors.count, "error") %> prohibited this aminity_booking from being saved:</h2>
+
+      <ul>
+      <% aminity_booking.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :date %>
+    <%= form.date_select :date, id: :aminity_booking_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :aminity_id %>
+    <%= form.number_field :aminity_id, id: :aminity_booking_aminity_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :comment %>
+    <%= form.text_area :comment, id: :aminity_booking_comment %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cancellation_policy %>
+    <%= form.text_area :cancellation_policy, id: :aminity_booking_cancellation_policy %>
+  </div>
+
+  <div class="field">
+    <%= form.label :terms_and_conditions %>
+    <%= form.text_area :terms_and_conditions, id: :aminity_booking_terms_and_conditions %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_method %>
+    <%= form.text_field :payment_method, id: :aminity_booking_payment_method %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :aminity_booking_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status, id: :aminity_booking_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :aminity_booking_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

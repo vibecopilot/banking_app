@@ -1,0 +1,2 @@
+module HazardCategoriesHelper
+end

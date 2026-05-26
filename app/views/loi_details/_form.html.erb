@@ -1,0 +1,107 @@
+<%= form_with(model: loi_detail, local: true, multipart: true) do |form| %>
+  <% if loi_detail.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(loi_detail.errors.count, "error") %> prohibited this loi_detail from being saved:</h2>
+
+      <ul>
+      <% loi_detail.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :loi_type %>
+    <%= form.text_field :loi_type, id: :loi_detail_loi_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reference %>
+    <%= form.text_field :reference, id: :loi_detail_reference %>
+  </div>
+
+  <div class="field">
+    <%= form.label :loi_date %>
+    <%= form.date_select :loi_date, id: :loi_detail_loi_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :loi_detail_created_by_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :billing_address_id %>
+    <%= form.number_field :billing_address_id, id: :loi_detail_billing_address_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :delivery_address_id %>
+    <%= form.number_field :delivery_address_id, id: :loi_detail_delivery_address_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vendor_id %>
+    <%= form.text_field :vendor_id, id: :loi_detail_vendor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :transportation_amount %>
+    <%= form.text_field :transportation_amount, id: :loi_detail_transportation_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :retention %>
+    <%= form.text_field :retention, id: :loi_detail_retention %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tds %>
+    <%= form.text_field :tds, id: :loi_detail_tds %>
+  </div>
+
+  <div class="field">
+    <%= form.label :qc %>
+    <%= form.text_field :qc, id: :loi_detail_qc %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_tenure %>
+    <%= form.text_field :payment_tenure, id: :loi_detail_payment_tenure %>
+  </div>
+
+  <div class="field">
+    <%= form.label :advance_amount %>
+    <%= form.number_field :advance_amount, id: :loi_detail_advance_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :related_to %>
+    <%= form.text_field :related_to, id: :loi_detail_related_to %>
+  </div>
+
+  <div class="field">
+    <%= form.label :terms %>
+    <%= form.text_area :terms, id: :loi_detail_terms %>
+  </div>
+
+  <div class="field">
+    <%= form.label :is_approved %>
+    <%= form.check_box :is_approved, id: :loi_detail_is_approved %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :loi_detail_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attachfiles %>
+    <%= form.file_field :attachfiles %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Standard Units</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Unit name</th>
+      <th>Convention</th>
+      <th>Company</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @standard_units.each do |standard_unit| %>
+      <tr>
+        <td><%= standard_unit.unit_name %></td>
+        <td><%= standard_unit.convention %></td>
+        <td><%= standard_unit.company_id %></td>
+        <td><%= link_to 'Show', standard_unit %></td>
+        <td><%= link_to 'Edit', edit_standard_unit_path(standard_unit) %></td>
+        <td><%= link_to 'Destroy', standard_unit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Standard Unit', new_standard_unit_path %>

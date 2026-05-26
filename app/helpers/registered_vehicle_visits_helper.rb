@@ -1,0 +1,2 @@
+module RegisteredVehicleVisitsHelper
+end

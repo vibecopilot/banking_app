@@ -1,0 +1,32 @@
+<%= form_with(model: aminity_slot, local: true) do |form| %>
+  <% if aminity_slot.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(aminity_slot.errors.count, "error") %> prohibited this aminity_slot from being saved:</h2>
+
+      <ul>
+      <% aminity_slot.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :aminity_id %>
+    <%= form.number_field :aminity_id, id: :aminity_slot_aminity_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_time %>
+    <%= form.datetime_select :start_time, id: :aminity_slot_start_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_time %>
+    <%= form.datetime_select :end_time, id: :aminity_slot_end_time %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

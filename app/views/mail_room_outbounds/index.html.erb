@@ -1,0 +1,53 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Mail Room Outbounds</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Vendor</th>
+      <th>Sending date</th>
+      <th>Sender</th>
+      <th>Recipient name</th>
+      <th>Mobile number</th>
+      <th>Awb number</th>
+      <th>Recipient email</th>
+      <th>Recipient address 1</th>
+      <th>Recipient address 2</th>
+      <th>State</th>
+      <th>City</th>
+      <th>Pincode</th>
+      <th>Type</th>
+      <th>Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @mail_room_outbounds.each do |mail_room_outbound| %>
+      <tr>
+        <td><%= mail_room_outbound.vendor_id %></td>
+        <td><%= mail_room_outbound.sending_date %></td>
+        <td><%= mail_room_outbound.sender_id %></td>
+        <td><%= mail_room_outbound.recipient_name %></td>
+        <td><%= mail_room_outbound.mobile_number %></td>
+        <td><%= mail_room_outbound.awb_number %></td>
+        <td><%= mail_room_outbound.recipient_email_id %></td>
+        <td><%= mail_room_outbound.recipient_address_1 %></td>
+        <td><%= mail_room_outbound.recipient_address_2 %></td>
+        <td><%= mail_room_outbound.state %></td>
+        <td><%= mail_room_outbound.city %></td>
+        <td><%= mail_room_outbound.pincode %></td>
+        <td><%= mail_room_outbound.mail_outbound_type %></td>
+        <td><%= mail_room_outbound.created_by_id %></td>
+        <td><%= link_to 'Show', mail_room_outbound %></td>
+        <td><%= link_to 'Edit', edit_mail_room_outbound_path(mail_room_outbound) %></td>
+        <td><%= link_to 'Destroy', mail_room_outbound, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Mail Room Outbound', new_mail_room_outbound_path %>

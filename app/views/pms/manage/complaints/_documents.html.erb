@@ -1,0 +1,24 @@
+<% object.each do |document| %>
+  <% if document.persisted? %>
+    <div class="file-box">
+      <div class="file"> 
+        <% if ["image/jpeg", "image/png", "image/jpg"].include? document.image_content_type   %>
+          <div class="image"> <a href="<%= document.document_url %>" data-gallery=""><img alt="image" class="img-responsive" src="<%= document.document_url %>"></a> </div>
+          <div class="file-name"><a href = "<%= document.document_url %>" download> </a> <span><%= document.image_file_name %></span> </div>
+        <% elsif ["application/pdf"].include? document.image_content_type   %>
+          <div class="image"> <i class="file pdf outline icon"></i> </div>
+          <div class="file-name"><a href = "<%= document.document_url %>" download> <i class="fa fa-download" aria-hidden="true"></i></a> <span><%= document.image_file_name %></span> </div>
+        <% elsif ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include? document.image_content_type   %>
+          <div class="image"> <i class="file excel outline icon"></i> </div>
+          <div class="file-name"><a href = "<%= document.document_url %>" download> <i class="fa fa-download" aria-hidden="true"></i></a> <span><%= document.image_file_name %></span> </div>
+        <% elsif ["text/plain", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"].include? document.image_content_type   %>
+          <div class="image"> <i class="file word outline icon"></i> </div>
+          <div class="file-name"><a href = "<%= document.document_url %>" download> <i class="fa fa-download" aria-hidden="true"></i></a> <span><%= document.image_file_name %></span> </div>
+        <% else %>
+          <div class="image"> <i class="file word outline icon"></i> </div>
+          <div class="file-name"><a href = "<%= document.document_url %>" download> <i class="fa fa-download" aria-hidden="true"></i></a> <span><%= document.image_file_name %></span> </div>
+        <% end %>
+        </div>
+    </div>
+  <% end %>
+<% end %>

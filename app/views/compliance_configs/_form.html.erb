@@ -1,0 +1,67 @@
+<%= form_with(model: compliance_config, local: true) do |form| %>
+  <% if compliance_config.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(compliance_config.errors.count, "error") %> prohibited this compliance_config from being saved:</h2>
+
+      <ul>
+      <% compliance_config.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :compliance_config_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :frequency %>
+    <%= form.text_field :frequency, id: :compliance_config_frequency %>
+  </div>
+
+  <div class="field">
+    <%= form.label :due_in_days %>
+    <%= form.number_field :due_in_days, id: :compliance_config_due_in_days %>
+  </div>
+
+  <div class="field">
+    <%= form.label :priority %>
+    <%= form.text_field :priority, id: :compliance_config_priority %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :compliance_config_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :assign_to_id %>
+    <%= form.number_field :assign_to_id, id: :compliance_config_assign_to_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reviewer_id %>
+    <%= form.number_field :reviewer_id, id: :compliance_config_reviewer_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.datetime_select :start_date, id: :compliance_config_start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date %>
+    <%= form.datetime_select :end_date, id: :compliance_config_end_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :compliance_config_site_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

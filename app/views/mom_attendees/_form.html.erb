@@ -1,0 +1,57 @@
+<%= form_with(model: mom_attendee, local: true) do |form| %>
+  <% if mom_attendee.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(mom_attendee.errors.count, "error") %> prohibited this mom_attendee from being saved:</h2>
+
+      <ul>
+      <% mom_attendee.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :mom_detail_id %>
+    <%= form.text_field :mom_detail_id, id: :mom_attendee_mom_detail_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :mom_attendee_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :organization %>
+    <%= form.text_field :organization, id: :mom_attendee_organization %>
+  </div>
+
+  <div class="field">
+    <%= form.label :role %>
+    <%= form.text_field :role, id: :mom_attendee_role %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email, id: :mom_attendee_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_tag_name %>
+    <%= form.text_field :company_tag_name, id: :mom_attendee_company_tag_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attendees_id %>
+    <%= form.number_field :attendees_id, id: :mom_attendee_attendees_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attendees_type %>
+    <%= form.text_field :attendees_type, id: :mom_attendee_attendees_type %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,56 @@
+<div class="modal fade" id="feedback_comment" role="dialog">
+  <div class="modal-dialog  modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Approval</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+    <% Approval.where(resource_id: asset_id, resource_type: "SiteAsset").each do |approval| %>
+        <div class="col-sm-12">
+
+        <div class="col-sm-2">
+          Date: <%= approval.created_at.strftime("%d/%m/%Y") %>
+        </div>
+        <div class="col-sm-2">
+          <%= approval.user&.full_name %>  / 
+          <%= approval.approval_level&.name %>
+        </div>
+        <div class="col-sm-2">
+          Start Date: <%= approval.start_date %>
+        <br>
+          End Date: <%= approval.end_date %>
+        </div>
+        <div class="col-sm-2">
+          <%= approval.comments %>
+        </div>
+
+        <% if approval.approved_by_id.present? %>
+          <div class="col-sm-2">
+            <%= approval.approved_by&.full_name %>
+            <br><%= approval.approver_comments %>
+          </div>
+        <% elsif level2.present? %>
+        <br>
+          <%= form_for(approval) do |form| %>
+            <div class="form-group">
+          <%= form.hidden_field :cusdirect, :name => "cusdirect", :value => "/show_readings?asset_id=#{params[:asset_id]}" %>
+              <%= form.label :approver_comments %>
+              <%= form.hidden_field :approved_by_id, :value => @user.id %>
+              <%= form.text_area :approver_comments, id: :approval_comments %>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-success btn-sm" >Approve</button>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+  </div>
+</div>
+
+    </div>
+</div>
+</div>

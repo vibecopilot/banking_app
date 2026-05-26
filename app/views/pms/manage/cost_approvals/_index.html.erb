@@ -1,0 +1,177 @@
+<style type="text/css">
+  .input-switch .input:checked + .switch::before{
+    background-color: #18a689;
+  }
+</style>
+
+<div class="row help">
+
+  <div class="ui bottom attached tab segment ess active" data-tab="fm">
+    <%= form_for(CostApproval.new,  :url => "/pms/admin/cost_approvals" ) do |f| %>
+      <%= f.hidden_field :related_to, :value => "FM" %>
+      <%= f.hidden_field :level %>
+      <div class="col-sm-12">
+        <div class=" col-sm-3">
+          <%= f.select :cost_unit, options_for_select([["Between","between"],["Greater Than","greater_than"],["Greater Than Equal","greater_than_equal"]]), {:include_blank=> "Select Unit"}, {:class => "form-control cost-unit ",required: true} %>
+
+        </div>
+        <div class="col-sm-2 cost-start" style="display: none;">
+          <%= f.text_field :cost_from, class: 'form-control', placeholder: 'Enter Cost' %>
+        </div>
+        <div class="col-sm-2 cost-end" style="display: none;">
+          <%= f.text_field :cost_to, class: 'form-control', placeholder: 'Enter Cost'%>
+        </div>
+        <div class="col-sm-5">
+          <div class="divTable">
+            <div class="divTableHeading">
+              <div class="divTableRow">
+                <div class="divTableCell width5">Levels</div>
+                <div class="divTableCell width40">Approvers</div>
+              </div>
+            </div>
+            <div class="divTableBody">
+              <% %w(L1 L2 L3 L4 L5).each do |level| %>
+              <%= f.fields_for :cost_approval_levels, f.object.cost_approval_levels.build do |l| %>
+                <div class="divTableRow">
+                  <div class="divTableCell">
+                    <%= "#{level}" %>
+                    <%= l.hidden_field :name, value: level %>
+                  </div>
+                  <div class="divTableCell">
+                    <%= l.select :escalate_to_users, options_for_select(@usmapped), {include_blank: 'Select Users'}, {:class=>" ui fluid search dropdown multiple escalation-users", :multiple =>true} %>
+                  </div>
+
+              </div>
+            <% end %>
+          <% end %>
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="col-sm-12 text-center form-group">
+        <div class="hr-line-dashed"></div>
+         <%= f.submit 'Submit', class: 'btn btn-success btn-xs fm-submit' %>
+      </div>
+    <% end %>
+
+    <% fm_cost_approvals = CostApproval.active.applicable_approvals('FM', "user_level") %>
+
+    <% fm_cost_approvals.each_with_index do |ca, i| %>
+      <h4 class="rule-title">
+        Rule <%= i+1 %> 
+      </h4>
+      <span class="edit-tools">
+        <%= form_for ca, url: pms_manage_cost_approval_path(ca), method: :patch do |f| %>
+            <%= f.hidden_field :active, value: false %>
+          <button type='submit', class="btn btn-white btn-sm" data-confirm="Are you sure you want to delete the Cost Approval?">
+                              <i class="fa fa-trash-o text-danger"></i></button> 
+        <% end %>
+      </span>
+      <table class="ui celled structured table">
+        <thead>
+          <tr>
+            <th rowspan="2" width="10%">Cost Range</th>
+            <% if ca.level != "user_level"  %>
+              <th rowspan="2" width="10%">Access Level</th>
+            <% end %>
+            <th rowspan="2" width="10%">Levels</th>
+            <th rowspan="2" width="20%">Approvers</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% ca.cost_approval_levels.each_with_index do |level, i| %>
+            <tr>
+
+              <% if i < 1 %>
+              <td rowspan="5"><%= ca.cost_range %></td>
+              <% end %>
+              <% if ca.level != "user_level"  %>
+                <td><%= level.access_level %></td>
+              <% end %>
+              <td><%= level.name %></td>
+              <% c = level.escalate_to_users.try(:count) || 0
+                if c > 2
+                  s = Spree::User.where(id: level.escalate_to_users[0..1]).map{|s| s.try(:full_name)}.join(" , ")
+                  n = Spree::User.where(id: level.escalate_to_users[2..c]).map{|s| s.try(:full_name)}.join(" , ")
+                else
+                  s = Spree::User.where(id: level.escalate_to_users).map{|s| s.try(:full_name)}.join(" , ")
+                end
+              %>
+              <td><%= s %> <% if c > 2 %> <a class="ui label orange small circular inline link" data-content="<%= n %>" data-variation="wide">+<%= c - 2 %></a><% end %>
+            </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+</div>
+  <script type="text/javascript">
+
+    $('[name="pms_company_setup[user_approval_level]"]').change(function(){    
+      form = $(this).parents("form");
+      $.ajax({
+        type: 'PUT',
+        url: form.attr("action") + ".json",
+        data: form.serialize(),
+        success: function(response) {
+          window.location.href = "/pms/admin/helpdesk_categories";
+        }
+      });
+  });
+
+    $(".cost-unit").change(function(){
+      var form =  $(this).parents('form');
+      if($(this).val() == "between"){
+        form.find(".cost-start").show();
+        form.find(".cost-end").show();
+      }
+      else if ($(this).val() == "") {
+        form.find(".cost-start").hide();
+        form.find(".cost-end").hide();
+      }
+      else{
+        form.find(".cost-end").show();
+        form.find(".cost-start").hide();
+      }   
+  });
+
+    $(".fm-submit").click(function(e){
+        e.preventDefault();
+        form = $(this).parents("form");
+        if(form.find('[name="cost_approval[cost_unit]"]').val() == ""){
+          toastr.error("Please Select Unit");
+          return false;
+        }
+        if(form.find('.cost-unit').val() == 'between') {
+          if (form.find('[name="cost_approval[cost_from"]').val() == ""){
+            toastr.error("Please Enter Cost Start Amount");
+            return false;
+          }
+          if (form.find('[name="cost_approval[cost_to]"]').val() == ""){
+            toastr.error("Please Enter Cost End Amount");
+            return false;
+          }
+        }
+        else{
+          if (form.find('[name="cost_approval[cost_to]"]').val() == ""){
+            toastr.error("Please Enter Cost Amount");
+            return false;
+          }
+        }
+
+          var em = [];
+          form.find('.escalation-users').each(function(){
+            thisrow = $(this).parents(".divTableRow");
+            em.push(thisrow.find(".label.transition").text());
+          });
+          em = em.filter(function(x){
+            return (x !== (undefined || null || ''));
+          });
+          if (em.length < 1) {
+            toastr.error("Please Select Members");
+            return false;
+          }
+        form.submit();
+      });
+  </script>

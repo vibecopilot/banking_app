@@ -1,0 +1,53 @@
+<p id="notice"><%= notice %></p>
+<div class="col-sm-12">
+    <h4 class="pull-left" style="width: 100%; text-align: left;"> Checklists  <hr></h4>
+  </div>
+<div class="ml-2  mr-2">
+  
+<div id="toolbar">
+  <% if @user.user_type == 'pms_admin' && @ppm %>
+  <%= link_to 'Add PPM ', "/checklists/new?ppm=1",  :class => "create_user" %>
+  <% elsif @user.user_type == 'pms_admin' %>
+  <%= link_to 'Add Checklist', "/checklists/new",  :class => "create_user" %>
+    <% end %>
+  
+</div>
+<table class="table " id="user_setup" data-toggle="table" data-pagination="true" data-search="true" data-trim-on-search="false" data-show-columns="true" data-show-refresh="true" data-sortable="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+  <thead>
+    <tr>
+      <th>Edit</th>
+      <th>ID</th>
+      <th>Site</th>
+      <th>Name</th>
+      <th>Frequency</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>No. Of Questions</th>
+      <th>Created By</th>
+      <th>Associations</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @checklists.each do |checklist| %>
+      <tr>
+        <td><a href="/checklists/<%= checklist.id%>/edit" class="btn btn-xs"><i class="fa fa-pencil text-info" aria-hidden="true"></i></a></td>
+        <td><%= checklist.id %></td>
+        <td><%= checklist.site.name_with_region %></td>
+        <td><%= checklist.name %></td>
+        <td><%= checklist.frequency %></td>
+        <td><%= checklist.start_date %></td>
+        <td><%= checklist.end_date %></td>
+        <td><%= checklist.questions.count %></td>
+        <td><%= checklist.user.try(:fullname) %></td>
+        <td><%= checklist.activities.pluck(:asset_id).uniq.count %> <a href="/activities/new?checklist_id=<%= checklist.id %>" type="button">Associate</a></td>
+        <td><%= link_to 'Destroy', checklist , method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%#= link_to 'New Checklist', new_checklist_path %>

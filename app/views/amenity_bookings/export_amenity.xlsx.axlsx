@@ -1,0 +1,146 @@
+wb = xlsx_package.workbook
+
+# Helper method to format time with AM/PM
+def format_time(hr, min)
+  return "" if hr.blank?
+  hour = hr.to_i
+  minute = min.to_i
+  period = hour >= 12 ? "PM" : "AM"
+  display_hour = hour % 12
+  display_hour = 12 if display_hour == 0
+  format("%d:%02d %s", display_hour, minute, period)
+end
+
+# Helper method to format payment mode
+def format_payment_mode(mode)
+  return "" if mode.blank?
+  case mode.to_s.downcase
+  when 'post', 'postpaid'
+    'Postpaid'
+  when 'pre', 'prepaid'
+    'Prepaid'
+  else
+    mode.to_s.capitalize
+  end
+end
+
+wb.add_worksheet(name: "Summary") do |sheet|
+  total_bookings = @amenity_bookings.count
+  today = Date.current
+  today_bookings = @amenity_bookings.where(booking_date: today).count
+  
+  # Status counts
+  booked_count = @amenity_bookings.where(status: 'booked').count
+  cancelled_count = @amenity_bookings.where(status: 'cancelled').count
+  paid_count = @amenity_bookings.where(status: 'paid').count
+  
+  # Totals
+  total_amount = @amenity_bookings.sum(:amount) || 0
+  total_members = @amenity_bookings.sum('COALESCE(member_adult, 0) + COALESCE(member_child, 0)') || 0
+  total_guests = @amenity_bookings.sum('COALESCE(guest_adult, 0) + COALESCE(guest_child, 0)') || 0
+  
+  # Date range - first booking to last booking
+  first_booking_date = @amenity_bookings.minimum(:booking_date)
+  last_booking_date = @amenity_bookings.maximum(:booking_date)
+  
+  # Amenity-wise counts
+  amenity_counts = @amenity_bookings.joins(:amenity).group('amenities.fac_name').count
+  
+  # Payment mode counts
+  postpaid_count = @amenity_bookings.where("LOWER(payment_mode) IN ('post', 'postpaid')").count
+  prepaid_count = @amenity_bookings.where("LOWER(payment_mode) IN ('pre', 'prepaid')").count
+  
+  sheet.add_row ["Amenity Bookings Summary"]
+  sheet.add_row []
+  sheet.add_row ["Report Generated At", Time.current.strftime("%Y-%m-%d %H:%M:%S")]
+  sheet.add_row ["Site", Site.find_by(id: @user.current_site_id)&.name || "Unknown"]
+  sheet.add_row []
+  
+  sheet.add_row ["--- Booking Overview ---"]
+  sheet.add_row ["Total Bookings", total_bookings]
+  sheet.add_row ["Today's Bookings", today_bookings]
+  sheet.add_row ["First Booking Date", first_booking_date.present? ? first_booking_date.strftime("%Y-%m-%d") : "N/A"]
+  sheet.add_row ["Last Booking Date", last_booking_date.present? ? last_booking_date.strftime("%Y-%m-%d") : "N/A"]
+  sheet.add_row []
+  
+  sheet.add_row ["--- Status Breakdown ---"]
+  sheet.add_row ["Booked", booked_count]
+  sheet.add_row ["Paid", paid_count]
+  sheet.add_row ["Cancelled", cancelled_count]
+  sheet.add_row []
+  
+  sheet.add_row ["--- Payment Mode ---"]
+  sheet.add_row ["Postpaid Bookings", postpaid_count]
+  sheet.add_row ["Prepaid Bookings", prepaid_count]
+  sheet.add_row []
+  
+  sheet.add_row ["--- Financial Summary ---"]
+  sheet.add_row ["Total Amount", total_amount.round(2)]
+  sheet.add_row []
+  
+  sheet.add_row ["--- Members & Guests ---"]
+  sheet.add_row ["Total Members", total_members]
+  sheet.add_row ["Total Guests", total_guests]
+  sheet.add_row []
+  
+  sheet.add_row ["--- Amenity-wise Bookings ---"]
+  amenity_counts.each do |amenity_name, count|
+    sheet.add_row [amenity_name&.titleize || "Unknown", count]
+  end
+end
+
+wb.add_worksheet(name: "Booking Details") do |sheet|
+  sheet.add_row [
+    "Booking ID",
+    "Amenity",
+    "Facility Type",
+    "Booking Date",
+    "Start Time",
+    "End Time",
+    "Members",
+    "Guests",
+    "Amount",
+    "Payment Mode",
+    "Status",
+    "SGST",
+    "Fixed Amount",
+    "Pay On Facility",
+    "Prepaid",
+    "Is Hotel",
+    "Created At",
+    "Site"
+  ]
+  
+  @amenity_bookings.includes(:amenity, :amenity_slot).find_each do |booking|
+    amenity = booking.amenity
+    slot = booking.amenity_slot
+    
+    # Handle null values properly
+    sgst_value = amenity&.sgst
+    sgst_display = (sgst_value.present? && sgst_value.to_s != 'null') ? sgst_value : ""
+    
+    fixed_amount_value = amenity&.fixed_amount
+    fixed_amount_display = (fixed_amount_value.present? && fixed_amount_value.to_s != 'null') ? fixed_amount_value : ""
+    
+    sheet.add_row [
+      booking.id,
+      amenity&.fac_name&.titleize,
+      amenity&.fac_type&.titleize,
+      booking.booking_date,
+      slot ? format_time(slot.start_hr, slot.start_min) : "",
+      slot ? format_time(slot.end_hr, slot.end_min) : "",
+      booking.member_adult.to_i + booking.member_child.to_i,
+      booking.guest_adult.to_i + booking.guest_child.to_i,
+      booking.amount,
+      format_payment_mode(booking.payment_mode),
+      booking.status&.capitalize,
+      sgst_display,
+      fixed_amount_display,
+      amenity&.pay_on_facility ? "Yes" : "No",
+      amenity&.prepaid ? "Yes" : "No",
+      amenity&.is_hotel ? "Yes" : "No",
+      booking.created_at.strftime("%Y-%m-%d %H:%M"),
+      Site.find_by(id: booking.site_id)&.name
+    ]
+  end
+end

@@ -1,0 +1,207 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">Create Room Availability</h4>
+          <%= link_to 'Back to List', room_availability_index_path, class: 'btn btn-secondary btn-sm' %>
+        </div>
+        <div class="card-body">
+          <%= form_with(model: @room_availability, local: true, class: 'needs-validation', novalidate: true) do |form| %>
+            <% if @room_availability.errors.any? %>
+              <div class="alert alert-danger">
+                <h6><%= pluralize(@room_availability.errors.count, "error") %> prohibited this availability from being saved:</h6>
+                <ul class="mb-0">
+                  <% @room_availability.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :room_id, class: 'form-label' %>
+                  <%= form.collection_select :room_id, Room.includes(:site).all, :id, 
+                      ->(room) { "#{room.name} (#{room.site.name} - #{room.room_type})" }, 
+                      { prompt: 'Select a room' }, 
+                      { class: 'form-control', required: true } %>
+                  <div class="invalid-feedback">
+                    Please select a room.
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :available_date, class: 'form-label' %>
+                  <%= form.date_field :available_date, class: 'form-control', required: true %>
+                  <div class="invalid-feedback">
+                    Please select an availability date.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :total_rooms, class: 'form-label' %>
+                  <%= form.number_field :total_rooms, min: 1, class: 'form-control', required: true %>
+                  <small class="form-text text-muted">Total number of rooms of this type</small>
+                  <div class="invalid-feedback">
+                    Please enter the total number of rooms.
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <%= form.label :available_rooms, class: 'form-label' %>
+                  <%= form.number_field :available_rooms, min: 0, class: 'form-control', required: true %>
+                  <small class="form-text text-muted">Number of rooms available for booking</small>
+                  <div class="invalid-feedback">
+                    Please enter the number of available rooms.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-check">
+                  <%= form.check_box :is_available, class: 'form-check-input', checked: true %>
+                  <%= form.label :is_available, 'Available for Booking', class: 'form-check-label' %>
+                  <small class="form-text text-muted">Uncheck to mark as unavailable</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <%= form.label :reason_for_unavailability, class: 'form-label' %>
+                  <%= form.text_area :reason_for_unavailability, rows: 3, 
+                      class: 'form-control', 
+                      placeholder: 'Specify reason if rooms are not available (e.g., maintenance, private event, etc.)...' %>
+                  <small class="form-text text-muted">Only required if marking as unavailable</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bulk Creation Option -->
+            <div class="row mt-4">
+              <div class="col-md-12">
+                <div class="card bg-light">
+                  <div class="card-header">
+                    <h6 class="mb-0">
+                      <input type="checkbox" id="bulk-create-toggle" class="mr-2">
+                      Bulk Create Availability (Optional)
+                    </h6>
+                  </div>
+                  <div class="card-body" id="bulk-create-section" style="display: none;">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="bulk_end_date" class="form-label">End Date</label>
+                          <input type="date" id="bulk_end_date" name="bulk_end_date" class="form-control">
+                          <small class="form-text text-muted">Create availability from selected date to this end date</small>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="form-label">Days to Include</label>
+                          <div class="form-check-group">
+                            <% ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].each_with_index do |day, index| %>
+                              <div class="form-check form-check-inline">
+                                <input type="checkbox" id="day_<%= index %>" name="bulk_days[]" value="<%= index + 1 %>" class="form-check-input" checked>
+                                <label for="day_<%= index %>" class="form-check-label"><%= day[0..2] %></label>
+                              </div>
+                            <% end %>
+                          </div>
+                          <small class="form-text text-muted">Select which days of the week to include</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="form-group">
+              <%= form.submit 'Create Availability', class: 'btn btn-primary' %>
+              <%= link_to 'Cancel', room_availability_index_path, class: 'btn btn-secondary ml-2' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  // Form validation
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      var forms = document.getElementsByClassName('needs-validation');
+      Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+  // Bulk create toggle
+  $('#bulk-create-toggle').change(function() {
+    if ($(this).is(':checked')) {
+      $('#bulk-create-section').slideDown();
+    } else {
+      $('#bulk-create-section').slideUp();
+    }
+  });
+
+  // Available rooms validation
+  $('#room_availability_total_rooms, #room_availability_available_rooms').on('input', function() {
+    var totalRooms = parseInt($('#room_availability_total_rooms').val()) || 0;
+    var availableRooms = parseInt($('#room_availability_available_rooms').val()) || 0;
+    
+    if (availableRooms > totalRooms) {
+      alert('Available rooms cannot be more than total rooms');
+      $('#room_availability_available_rooms').val(totalRooms);
+    }
+  });
+
+  // Availability status toggle
+  $('#room_availability_is_available').change(function() {
+    if (!$(this).is(':checked')) {
+      $('#room_availability_reason_for_unavailability').attr('required', true);
+    } else {
+      $('#room_availability_reason_for_unavailability').removeAttr('required');
+    }
+  });
+
+  // Set minimum date to today
+  var today = new Date().toISOString().split('T')[0];
+  $('#room_availability_available_date').attr('min', today);
+  $('#bulk_end_date').attr('min', today);
+
+  // Room selection change handler
+  $('#room_availability_room_id').change(function() {
+    var roomId = $(this).val();
+    if (roomId) {
+      // Here you could make an AJAX call to get room details
+      // and auto-fill total_rooms based on room configuration
+    }
+  });
+});
+</script>

@@ -1,0 +1,57 @@
+<%= form_with(model: transportation, local: true) do |form| %>
+  <% if transportation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(transportation.errors.count, "error") %> prohibited this transportation from being saved:</h2>
+
+      <ul>
+      <% transportation.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :on_behalf_of %>
+    <%= form.text_field :on_behalf_of, id: :transportation_on_behalf_of %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pickup_location %>
+    <%= form.text_field :pickup_location, id: :transportation_pickup_location %>
+  </div>
+
+  <div class="field">
+    <%= form.label :dropoff_location %>
+    <%= form.text_field :dropoff_location, id: :transportation_dropoff_location %>
+  </div>
+
+  <div class="field">
+    <%= form.label :date %>
+    <%= form.date_select :date, id: :transportation_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :time %>
+    <%= form.time_select :time, id: :transportation_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :no_of_passengers %>
+    <%= form.number_field :no_of_passengers, id: :transportation_no_of_passengers %>
+  </div>
+
+  <div class="field">
+    <%= form.label :additional_note %>
+    <%= form.text_area :additional_note, id: :transportation_additional_note %>
+  </div>
+
+  <div class="field">
+    <%= form.label :transportation_type %>
+    <%= form.text_field :transportation_type, id: :transportation_transportation_type %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Mom Tasks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mom detail</th>
+      <th>Description</th>
+      <th>Responsible person</th>
+      <th>Target date</th>
+      <th>Responsible person email</th>
+      <th>Responsible person type</th>
+      <th>Responsible person name</th>
+      <th>Company tag</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @mom_tasks.each do |mom_task| %>
+      <tr>
+        <td><%= mom_task.mom_detail %></td>
+        <td><%= mom_task.description %></td>
+        <td><%= mom_task.responsible_person_id %></td>
+        <td><%= mom_task.target_date %></td>
+        <td><%= mom_task.responsible_person_email %></td>
+        <td><%= mom_task.responsible_person_type %></td>
+        <td><%= mom_task.responsible_person_name %></td>
+        <td><%= mom_task.company_tag_id %></td>
+        <td><%= link_to 'Show', mom_task %></td>
+        <td><%= link_to 'Edit', edit_mom_task_path(mom_task) %></td>
+        <td><%= link_to 'Destroy', mom_task, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Mom Task', new_mom_task_path %>

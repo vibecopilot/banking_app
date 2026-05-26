@@ -1,0 +1,52 @@
+<%= form_with(model: user_device, local: true) do |form| %>
+  <% if user_device.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(user_device.errors.count, "error") %> prohibited this user_device from being saved:</h2>
+
+      <ul>
+      <% user_device.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :user_device_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :device_id %>
+    <%= form.number_field :device_id, id: :user_device_device_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :device_type %>
+    <%= form.text_field :device_type, id: :user_device_device_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :gcm_key %>
+    <%= form.text_field :gcm_key, id: :user_device_gcm_key %>
+  </div>
+
+  <div class="field">
+    <%= form.label :device_name %>
+    <%= form.text_field :device_name, id: :user_device_device_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :device_os_version %>
+    <%= form.text_field :device_os_version, id: :user_device_device_os_version %>
+  </div>
+
+  <div class="field">
+    <%= form.label :app_id %>
+    <%= form.number_field :app_id, id: :user_device_app_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

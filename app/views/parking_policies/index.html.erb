@@ -1,0 +1,51 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Parking Policies</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Who can park</th>
+      <th>Max vechille per flat</th>
+      <th>Allowed vehicle type</th>
+      <th>Type of</th>
+      <th>Payment type</th>
+      <th>Billing frequency</th>
+      <th>Ev charging available</th>
+      <th>Charging type</th>
+      <th>Ev charge location</th>
+      <th>Ev charge fee</th>
+      <th>Who can access</th>
+      <th>Visitor parking allowed</th>
+      <th>Terms and condition</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @parking_policies.each do |parking_policy| %>
+      <tr>
+        <td><%= parking_policy.who_can_park %></td>
+        <td><%= parking_policy.max_vechille_per_flat %></td>
+        <td><%= parking_policy.allowed_vehicle_type %></td>
+        <td><%= parking_policy.type_of %></td>
+        <td><%= parking_policy.payment_type %></td>
+        <td><%= parking_policy.billing_frequency %></td>
+        <td><%= parking_policy.ev_charging_available %></td>
+        <td><%= parking_policy.charging_type %></td>
+        <td><%= parking_policy.ev_charge_location %></td>
+        <td><%= parking_policy.ev_charge_fee %></td>
+        <td><%= parking_policy.who_Can_access %></td>
+        <td><%= parking_policy.visitor_parking_allowed %></td>
+        <td><%= parking_policy.terms_and_condition %></td>
+        <td><%= link_to 'Show', parking_policy %></td>
+        <td><%= link_to 'Edit', edit_parking_policy_path(parking_policy) %></td>
+        <td><%= link_to 'Destroy', parking_policy, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Parking Policy', new_parking_policy_path %>

@@ -1,0 +1,217 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="card-title mb-0">
+            <i class="fas fa-calendar-check mr-2"></i>
+            Room Bookings
+          </h4>
+          <div>
+            <%= link_to "Search Rooms", search_rooms_path, class: "btn btn-primary" %>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <!-- Filters -->
+          <div class="row mb-4">
+            <div class="col-md-12">
+              <%= form_with url: room_bookings_path, method: :get, local: true, class: "form-inline" do |f| %>
+                <div class="form-group mr-3">
+                  <%= f.select :status, 
+                      options_for_select([
+                        ['All Status', ''],
+                        ['Pending', 'pending'],
+                        ['Confirmed', 'confirmed'],
+                        ['Checked In', 'checked_in'],
+                        ['Checked Out', 'checked_out'],
+                        ['Cancelled', 'cancelled'],
+                        ['No Show', 'no_show']
+                      ], params[:status]), 
+                      {}, 
+                      { class: "form-control" } %>
+                </div>
+                
+                <div class="form-group mr-3">
+                  <%= f.date_field :start_date, value: params[:start_date], class: "form-control", placeholder: "From Date" %>
+                </div>
+                
+                <div class="form-group mr-3">
+                  <%= f.date_field :end_date, value: params[:end_date], class: "form-control", placeholder: "To Date" %>
+                </div>
+                
+                <% if current_user.admin? || current_user.manager? %>
+                  <div class="form-group mr-3">
+                    <%= f.select :room_id, 
+                        options_from_collection_for_select(
+                          Room.where(site: current_user.site).order(:room_number), 
+                          :id, :display_name, params[:room_id]
+                        ), 
+                        { prompt: 'All Rooms' }, 
+                        { class: "form-control" } %>
+                  </div>
+                <% end %>
+                
+                <%= f.submit "Filter", class: "btn btn-secondary mr-2" %>
+                <%= link_to "Clear", room_bookings_path, class: "btn btn-outline-secondary" %>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Bookings Table -->
+          <% if @room_bookings.any? %>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="thead-light">
+                  <tr>
+                    <th>Booking Reference</th>
+                    <th>Room</th>
+                    <th>Guest</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Guests</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @room_bookings.each do |booking| %>
+                    <tr class="<%= 'table-warning' if booking.is_overdue? %>">
+                      <td>
+                        <%= link_to booking.booking_reference, room_booking_path(booking), class: "font-weight-bold" %>
+                        <% if booking.is_overdue? %>
+                          <br><small class="text-danger">Overdue</small>
+                        <% end %>
+                      </td>
+                      <td>
+                        <%= booking.room.display_name %>
+                        <br><small class="text-muted"><%= booking.room.room_type.humanize %></small>
+                      </td>
+                      <td>
+                        <%= booking.guest_name %>
+                        <br><small class="text-muted"><%= booking.guest_phone %></small>
+                      </td>
+                      <td>
+                        <%= booking.check_in_date.strftime('%d %b %Y') %>
+                        <% if booking.actual_check_in_time %>
+                          <br><small class="text-success">
+                            Actual: <%= booking.actual_check_in_time.strftime('%d %b %H:%M') %>
+                          </small>
+                        <% end %>
+                      </td>
+                      <td>
+                        <%= booking.check_out_date.strftime('%d %b %Y') %>
+                        <% if booking.actual_check_out_time %>
+                          <br><small class="text-success">
+                            Actual: <%= booking.actual_check_out_time.strftime('%d %b %H:%M') %>
+                          </small>
+                        <% end %>
+                      </td>
+                      <td>
+                        <%= booking.number_of_adults %> adult<%= 's' if booking.number_of_adults > 1 %>
+                        <% if booking.number_of_children > 0 %>
+                          <br><%= booking.number_of_children %> child<%= 'ren' if booking.number_of_children > 1 %>
+                        <% end %>
+                      </td>
+                      <td>
+                        <strong>$<%= booking.total_amount %></strong>
+                        <br><small class="text-muted">
+                          <%= booking.duration_nights %> night<%= 's' if booking.duration_nights > 1 %>
+                        </small>
+                      </td>
+                      <td>
+                        <span class="badge <%= case booking.status
+                                              when 'pending' then 'badge-warning'
+                                              when 'confirmed' then 'badge-info'
+                                              when 'checked_in' then 'badge-success'
+                                              when 'checked_out' then 'badge-secondary'
+                                              when 'cancelled' then 'badge-danger'
+                                              when 'no_show' then 'badge-dark'
+                                              else 'badge-light'
+                                              end %>">
+                          <%= booking.status.humanize %>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge <%= case booking.payment_status
+                                              when 'unpaid' then 'badge-danger'
+                                              when 'partial' then 'badge-warning'
+                                              when 'paid' then 'badge-success'
+                                              when 'refunded' then 'badge-secondary'
+                                              else 'badge-light'
+                                              end %>">
+                          <%= booking.payment_status.humanize %>
+                        </span>
+                      </td>
+                      <td>
+                        <div class="btn-group" role="group">
+                          <%= link_to "View", room_booking_path(booking), class: "btn btn-sm btn-outline-primary" %>
+                          
+                          <% if current_user.admin? || current_user.manager? %>
+                            <div class="btn-group" role="group">
+                              <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-toggle="dropdown">
+                                Actions
+                              </button>
+                              <div class="dropdown-menu">
+                                <% if booking.can_check_in? %>
+                                  <%= link_to "Check In", check_in_room_booking_path(booking), 
+                                              method: :post, class: "dropdown-item text-success" %>
+                                <% end %>
+                                
+                                <% if booking.can_check_out? %>
+                                  <%= link_to "Check Out", check_out_room_booking_path(booking), 
+                                              method: :post, class: "dropdown-item text-info" %>
+                                <% end %>
+                                
+                                <% if booking.pending? %>
+                                  <%= link_to "Confirm", confirm_room_booking_path(booking), 
+                                              method: :post, class: "dropdown-item text-primary" %>
+                                <% end %>
+                                
+                                <% if booking.can_cancel? %>
+                                  <div class="dropdown-divider"></div>
+                                  <%= link_to "Cancel", cancel_room_booking_path(booking), 
+                                              method: :post, class: "dropdown-item text-danger",
+                                              confirm: "Are you sure you want to cancel this booking?" %>
+                                <% end %>
+                              </div>
+                            </div>
+                          <% end %>
+                        </div>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          <% else %>
+            <div class="text-center py-5">
+              <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">No bookings found</h5>
+              <p class="text-muted">
+                <% if params.values.any?(&:present?) %>
+                  No bookings match your current filters.<br>
+                  <%= link_to "Clear filters", room_bookings_path %> to see all bookings.
+                <% else %>
+                  No room bookings have been made yet.<br>
+                  <%= link_to "Search for available rooms", search_rooms_path, class: "btn btn-primary" %>
+                <% end %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.table td {
+  vertical-align: middle;
+}
+.btn-group .dropdown-menu {
+  min-width: 150px;
+}
+</style>

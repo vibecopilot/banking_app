@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @poll.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @poll.description %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @poll.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @poll.end_date %>
+</p>
+
+<p>
+  <strong>Visibility:</strong>
+  <%= @poll.visibility %>
+</p>
+
+<p>
+  <strong>Target groups:</strong>
+  <%= @poll.target_groups %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @poll.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_poll_path(@poll) %> |
+<%= link_to 'Back', polls_path %>

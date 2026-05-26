@@ -1,0 +1,75 @@
+<section class="content">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="wrapper-content animated fadeInUp">
+        <div class="ibox">
+          <div class="ibox-content">
+            <div class="project-list"> 
+              <% if @att_user.user_face_url.present? %>
+              <%= image_tag "#{@att_user.user_face_url}", class: "profile-user-img img-responsive img-circle" %>
+              <% else %>
+                <%= form_with(model: @att_user, url: "/add_user_face", method: :post, multipart: true) do |form| %>
+                   <!--<div class="col-sm-8">
+                    <div class="col-sm-4">
+                      <%= form.label "Add User Face " %>
+                      <input type="file" name="face">
+                      <input type="hidden" name="web" value="y">
+                      <input type="hidden" name="user_id" value="<%= @att_user.id %>">
+                      <br>
+                      <button type="button" class="submitbtn">Submit</button>
+                      <br>
+                    </div>
+                  </div> -->
+                <% end %>
+              <% end %>
+              
+              <h3 class="profile-username text-center"><%#= @att_user.full_name %></h3>
+              <table class="table table-hover">
+                <thead>
+                      <tr>
+                      <th> Date </th>
+                      <th> Punched In Time </th>
+                      <th> Punched Out Time </th>
+                      <th> Duration </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% @att_user.attendances.order(punched_in_at: :desc).each do |attendace| %>
+                      
+                      <tr>
+                        <td><%= attendace.formatted_date%></td>
+                        <td><%= attendace.punched_in_time%></td>
+                        <td><%= attendace.punched_out_time%></td>
+                        <td><%= attendace.duration %></td>
+                    </tr>
+                    <% end %>
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%#= link_to 'Back', attendances_path %>
+  </section>
+
+<script type="text/javascript">
+  $(".submitbtn").click(function(r){
+    r.preventDefault();
+    form = $(this).parents("form")
+    form.submit();
+    // $.ajax({
+    //   url: "/add_user_face.json",
+    //   type: "POST",
+    //   data: form.serialize(),
+    //   success: function(data) {
+    //    location.reload();
+    //   },
+    //   error: function(xhr, status, error) {
+    //     var err = eval("(" + xhr.responseText + ")");
+    //     alert(err.Message);
+    //   }
+    // })
+  })
+</script>

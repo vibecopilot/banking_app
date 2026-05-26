@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Amenity Booking Rules</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Enumerator</th>
+      <th>Duration</th>
+      <th>Level</th>
+      <th>Active</th>
+      <th>Amenity</th>
+      <th>Site</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @amenity_booking_rules.each do |amenity_booking_rule| %>
+      <tr>
+        <td><%= amenity_booking_rule.enumerator %></td>
+        <td><%= amenity_booking_rule.duration %></td>
+        <td><%= amenity_booking_rule.level %></td>
+        <td><%= amenity_booking_rule.active %></td>
+        <td><%= amenity_booking_rule.amenity_id %></td>
+        <td><%= amenity_booking_rule.site_id %></td>
+        <td><%= link_to 'Show', amenity_booking_rule %></td>
+        <td><%= link_to 'Edit', edit_amenity_booking_rule_path(amenity_booking_rule) %></td>
+        <td><%= link_to 'Destroy', amenity_booking_rule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Amenity Booking Rule', new_amenity_booking_rule_path %>

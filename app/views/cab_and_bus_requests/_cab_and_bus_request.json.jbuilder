@@ -1,0 +1,21 @@
+json.extract! cab_and_bus_request, 
+              :id, 
+              :employee_name, 
+              :employee_id, 
+              :pickup_location, 
+              :drop_off_location, 
+              :date_and_time, 
+              :number_of_passengers, 
+              :transportation_type, 
+              :special_requirements, 
+              :driver_contact_information, 
+              :vehicle_details, 
+              :booking_confirmation_number, 
+              :booking_status, 
+              :manager_approval, 
+              :booking_confirmation_email, 
+              :created_at, 
+              :updated_at, 
+              :mobile_no
+
+json.url cab_and_bus_request_url(cab_and_bus_request, format: :json)

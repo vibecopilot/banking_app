@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1 style="text-align: center;">Booking Parkings</h1>
+
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; margin: 0 auto;">
+  <thead>
+    <tr>
+      <th style="text-align: center;">Parking</th>
+      <th style="text-align: center;">Booking Date</th>
+      <th style="text-align: center;">Booking Start Time</th>
+      <th style="text-align: center;">Booking End Time</th>
+      <th style="text-align: center;">User</th>
+      <th style="text-align: center;">Site</th>
+      <th style="text-align: center;">Status</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody style="text-align: center;">
+    <% @booking_parkings.each do |booking_parking| %>
+      <tr>
+        <td><%= booking_parking.parking_configuration&.name || 'N/A' %></td>
+        <td><%= booking_parking.booking_date %></td>
+        <td><%= booking_parking.booking_start_time %></td>
+        <td><%= booking_parking.booking_end_time %></td>
+        <td><%= booking_parking.user_id %></td>
+        <td><%= booking_parking.site_id %></td>
+        <td><%= booking_parking.status %></td>
+        <td><%= link_to 'Show', booking_parking %></td>
+        <td><%= link_to 'Edit', edit_booking_parking_path(booking_parking) %></td>
+        <td><%= link_to 'Destroy', booking_parking, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Booking Parking', new_booking_parking_path %>

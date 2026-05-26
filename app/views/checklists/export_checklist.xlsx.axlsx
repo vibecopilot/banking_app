@@ -1,0 +1,38 @@
+wb = xlsx_package.workbook
+
+  # Add the worksheet and header row
+  wb.add_worksheet(name: "Checklists") do |sheet|
+    sheet.add_row [
+      "ID", "Checklist Name", "Start Date", "End Date", 
+      "Grace Period", "Assigned To", 
+      "Created At", "Supplier Name", "Supervisor Name",
+      "Site Name", "Patrolling ID", "Frequency", "Category ID", 
+      "Cron Expression", "Assigned Users"
+    ]
+
+    # Add data rows for each checklist
+    @checklists.each do |checklist|
+      assigned_users = checklist.checklist_users.map { |cu| cu.user.try(:full_name) }.join(", ")
+      supervisor_ids = checklist.supervisior_id.present? ? JSON.parse(checklist.supervisior_id) : []
+      supervisors = User.where(id: supervisor_ids)
+      supervisor_names = supervisors.map(&:full_name).join(", ")
+
+      sheet.add_row [
+        checklist.id,                        # Checklist ID
+        checklist.name,                      # Checklist Name
+        checklist.start_date,                # Start Date
+        checklist.end_date,                  # End Date
+        checklist.grace_period,              # Grace Period
+        checklist.user.try(:full_name),      # Assigned To (User who created it)
+        checklist.created_at,                # Created At
+        checklist.vendor.try(:vendor_name),               # Supplier ID
+        supervisor_names,                    # Supervisor ID (ensure this is correctly fetched)
+        checklist.site.try(:name),           # Site Name (assuming `name` is the field you need)
+        checklist.patrolling_id,             # Patrolling ID
+        checklist.frequency,                 # Frequency
+        checklist.category_id,               # Category ID
+        checklist.checklist_cron.try(:expression),   # Cron ID (if exists)
+        assigned_users                       # Assigned Users (from checklist_users association)
+      ]
+    end
+  end

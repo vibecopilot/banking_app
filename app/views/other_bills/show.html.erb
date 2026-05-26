@@ -1,0 +1,109 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Vendor:</strong>
+  <%= @other_bill.vendor_id %>
+</p>
+
+<p>
+  <strong>Bill date:</strong>
+  <%= @other_bill.bill_date %>
+</p>
+
+<p>
+  <strong>Invoice number:</strong>
+  <%= @other_bill.invoice_number %>
+</p>
+
+<p>
+  <strong>Related to:</strong>
+  <%= @other_bill.related_to %>
+</p>
+
+<p>
+  <strong>Tds percentage:</strong>
+  <%= @other_bill.tds_percentage %>
+</p>
+
+<p>
+  <strong>Retention percentage:</strong>
+  <%= @other_bill.retention_percentage %>
+</p>
+
+<p>
+  <strong>Deduction remarks:</strong>
+  <%= @other_bill.deduction_remarks %>
+</p>
+
+<p>
+  <strong>Deduction amount:</strong>
+  <%= @other_bill.deduction_amount %>
+</p>
+
+<p>
+  <strong>Additional expenses:</strong>
+  <%= @other_bill.additional_expenses %>
+</p>
+
+<p>
+  <strong>Payment tenure:</strong>
+  <%= @other_bill.payment_tenure %>
+</p>
+
+<p>
+  <strong>Cgst rate:</strong>
+  <%= @other_bill.cgst_rate %>
+</p>
+
+<p>
+  <strong>Cgst amount:</strong>
+  <%= @other_bill.cgst_amount %>
+</p>
+
+<p>
+  <strong>Sgst rate:</strong>
+  <%= @other_bill.sgst_rate %>
+</p>
+
+<p>
+  <strong>Sgst amount:</strong>
+  <%= @other_bill.sgst_amount %>
+</p>
+
+<p>
+  <strong>Igst rate:</strong>
+  <%= @other_bill.igst_rate %>
+</p>
+
+<p>
+  <strong>Igst amount:</strong>
+  <%= @other_bill.igst_amount %>
+</p>
+
+<p>
+  <strong>Tcs rate:</strong>
+  <%= @other_bill.tcs_rate %>
+</p>
+
+<p>
+  <strong>Tcs amount:</strong>
+  <%= @other_bill.tcs_amount %>
+</p>
+
+<p>
+  <strong>Tax amount:</strong>
+  <%= @other_bill.tax_amount %>
+</p>
+
+<p>
+  <strong>Total amount:</strong>
+  <%= @other_bill.total_amount %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @other_bill.description %>
+</p>
+
+<%= link_to 'Edit', edit_other_bill_path(@other_bill) %> |
+<%= link_to 'Back', other_bills_path %>

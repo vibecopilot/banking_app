@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Goods In Outs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Visitor</th>
+      <th>No of goods</th>
+      <th>Description</th>
+      <th>Ward type</th>
+      <th>Vehicle no</th>
+      <th>Person name</th>
+      <th>Goods in time</th>
+      <th>Goods out time</th>
+      <th>Staff</th>
+      <th>Created by</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @goods_in_outs.each do |goods_in_out| %>
+      <tr>
+        <td><%= goods_in_out.visitor_id %></td>
+        <td><%= goods_in_out.no_of_goods %></td>
+        <td><%= goods_in_out.description %></td>
+        <td><%= goods_in_out.ward_type %></td>
+        <td><%= goods_in_out.vehicle_no %></td>
+        <td><%= goods_in_out.person_name %></td>
+        <td><%= goods_in_out.goods_in_time %></td>
+        <td><%= goods_in_out.goods_out_time %></td>
+        <td><%= goods_in_out.staff_id %></td>
+        <td><%= goods_in_out.created_by_id %></td>
+        <td><%= link_to 'Show', goods_in_out %></td>
+        <td><%= link_to 'Edit', edit_goods_in_out_path(goods_in_out) %></td>
+        <td><%= link_to 'Destroy', goods_in_out, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Goods In Out', new_goods_in_out_path %>

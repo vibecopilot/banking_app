@@ -1,0 +1,32 @@
+<%= form_with(model: permit_activity_setup, local: true) do |form| %>
+  <% if permit_activity_setup.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(permit_activity_setup.errors.count, "error") %> prohibited this permit_activity_setup from being saved:</h2>
+
+      <ul>
+      <% permit_activity_setup.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :permit_type_id %>
+    <%= form.number_field :permit_type_id, id: :permit_activity_setup_permit_type_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :permit_activity_setup_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :permit_activity_setup_site_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

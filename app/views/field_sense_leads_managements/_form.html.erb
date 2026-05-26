@@ -1,0 +1,67 @@
+<%= form_with(model: field_sense_leads_management, local: true) do |form| %>
+  <% if field_sense_leads_management.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(field_sense_leads_management.errors.count, "error") %> prohibited this field_sense_leads_management from being saved:</h2>
+
+      <ul>
+      <% field_sense_leads_management.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :lead_name %>
+    <%= form.text_field :lead_name, id: :field_sense_leads_management_lead_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :lead_source %>
+    <%= form.text_field :lead_source, id: :field_sense_leads_management_lead_source %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contact_phone %>
+    <%= form.text_field :contact_phone, id: :field_sense_leads_management_contact_phone %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contact_email %>
+    <%= form.text_field :contact_email, id: :field_sense_leads_management_contact_email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :company_name %>
+    <%= form.text_field :company_name, id: :field_sense_leads_management_company_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :lead_status %>
+    <%= form.text_field :lead_status, id: :field_sense_leads_management_lead_status %>
+  </div>
+
+  <div class="field">
+    <%= form.label :assigned_sales_representative %>
+    <%= form.text_field :assigned_sales_representative, id: :field_sense_leads_management_assigned_sales_representative %>
+  </div>
+
+  <div class="field">
+    <%= form.label :last_contact_date %>
+    <%= form.date_select :last_contact_date, id: :field_sense_leads_management_last_contact_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :next_follow_up_date %>
+    <%= form.date_select :next_follow_up_date, id: :field_sense_leads_management_next_follow_up_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :field_sense_leads_management_created_by_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

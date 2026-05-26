@@ -1,0 +1,72 @@
+<%= form_with(model: goods_in_out, local: true) do |form| %>
+  <% if goods_in_out.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(goods_in_out.errors.count, "error") %> prohibited this goods_in_out from being saved:</h2>
+
+      <ul>
+      <% goods_in_out.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :visitor_id %>
+    <%= form.number_field :visitor_id, id: :goods_in_out_visitor_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :no_of_goods %>
+    <%= form.number_field :no_of_goods, id: :goods_in_out_no_of_goods %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_field :description, id: :goods_in_out_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ward_type %>
+    <%= form.text_field :ward_type, id: :goods_in_out_ward_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vehicle_no %>
+    <%= form.text_field :vehicle_no, id: :goods_in_out_vehicle_no %>
+  </div>
+
+  <div class="field">
+    <%= form.label :person_name %>
+    <%= form.text_field :person_name, id: :goods_in_out_person_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :goods_in_time %>
+    <%= form.datetime_select :goods_in_time, id: :goods_in_out_goods_in_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :goods_out_time %>
+    <%= form.datetime_select :goods_out_time, id: :goods_in_out_goods_out_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :staff_id %>
+    <%= form.number_field :staff_id, id: :goods_in_out_staff_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :created_by_id %>
+    <%= form.number_field :created_by_id, id: :goods_in_out_created_by_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :goods_files, "Attach files" %>
+    <%= file_field_tag "goods_files[]", multiple: true, id: :goods_files %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

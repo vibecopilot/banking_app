@@ -1,0 +1,74 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Employee name:</strong>
+  <%= @cab_and_bus_request.employee_name %>
+</p>
+
+<p>
+  <strong>Employee:</strong>
+  <%= @cab_and_bus_request.employee_id %>
+</p>
+
+<p>
+  <strong>Pickup location:</strong>
+  <%= @cab_and_bus_request.pickup_location %>
+</p>
+
+<p>
+  <strong>Drop off location:</strong>
+  <%= @cab_and_bus_request.drop_off_location %>
+</p>
+
+<p>
+  <strong>Date and time:</strong>
+  <%= @cab_and_bus_request.date_and_time %>
+</p>
+
+<p>
+  <strong>Number of passengers:</strong>
+  <%= @cab_and_bus_request.number_of_passengers %>
+</p>
+
+<p>
+  <strong>Transportation type:</strong>
+  <%= @cab_and_bus_request.transportation_type %>
+</p>
+
+<p>
+  <strong>Special requirements:</strong>
+  <%= @cab_and_bus_request.special_requirements %>
+</p>
+
+<p>
+  <strong>Driver contact information:</strong>
+  <%= @cab_and_bus_request.driver_contact_information %>
+</p>
+
+<p>
+  <strong>Vehicle details:</strong>
+  <%= @cab_and_bus_request.vehicle_details %>
+</p>
+
+<p>
+  <strong>Booking confirmation number:</strong>
+  <%= @cab_and_bus_request.booking_confirmation_number %>
+</p>
+
+<p>
+  <strong>Booking status:</strong>
+  <%= @cab_and_bus_request.booking_status %>
+</p>
+
+<p>
+  <strong>Manager approval:</strong>
+  <%= @cab_and_bus_request.manager_approval %>
+</p>
+
+<p>
+  <strong>Booking confirmation email:</strong>
+  <%= @cab_and_bus_request.booking_confirmation_email %>
+</p>
+
+<%= link_to 'Edit', edit_cab_and_bus_request_path(@cab_and_bus_request) %> |
+<%= link_to 'Back', cab_and_bus_requests_path %>

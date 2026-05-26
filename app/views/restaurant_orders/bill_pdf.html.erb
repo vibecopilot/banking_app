@@ -1,0 +1,373 @@
+<% restaurant = @order.food_and_beverage %>
+<% items = @order.restaurant_order_items.includes(:restaurant_menu) %>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bill #<%= @order.id %></title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      background: #fff;
+    }
+
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #000;
+      width: 280px;
+      margin: 0;
+      padding: 6px 8px;
+    }
+
+    .restaurant-header {
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .restaurant-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    .divider,
+    .divider-solid {
+      width: 100%;
+      margin: 6px 0;
+    }
+
+    .divider {
+      border-top: 1px dashed #000;
+    }
+
+    .divider-solid {
+      border-top: 1px solid #000;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin-bottom: 2px;
+    }
+
+    .small-text {
+      font-size: 9px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 3px 0;
+      vertical-align: top;
+    }
+
+    th {
+      border-bottom: 1px solid #000;
+      font-weight: bold;
+    }
+
+    .col-name {
+      text-align: left;
+      width: 45%;
+      word-break: break-word;
+    }
+
+    .col-qty {
+      text-align: center;
+      width: 15%;
+    }
+
+    .col-rate,
+    .col-amount {
+      text-align: right;
+      width: 20%;
+    }
+
+    .summary-table td {
+      padding: 2px 0;
+    }
+
+    .summary-left {
+      text-align: left;
+    }
+
+    .summary-right {
+      text-align: right;
+    }
+
+    .total-left,
+    .total-right {
+      font-weight: bold;
+      font-size: 15px;
+      padding-top: 4px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <div class="restaurant-header">
+    <div class="restaurant-name">
+      <%= restaurant&.restaurant_name || 'Restaurant' %>
+    </div>
+
+    <% if restaurant&.address.present? %>
+      <div><%= restaurant.address %></div>
+    <% end %>
+
+    <% if restaurant&.gst_number.present? %>
+      <div class="small-text">
+        GST: <%= restaurant.gst_number %>
+      </div>
+    <% end %>
+
+    <% if restaurant&.fssai_number.present? %>
+      <div class="small-text">
+        FSSAI: <%= restaurant.fssai_number %>
+      </div>
+    <% end %>
+
+    <% if restaurant&.license_number.present? %>
+      <div class="small-text">
+        License: <%= restaurant.license_number %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Order Details -->
+  <div class="meta-row">
+    <span>Order #: <%= @order.id %></span>
+    <span>Date: <%= @order.ondate %></span>
+  </div>
+
+  <div class="meta-row">
+    <span>
+      Time:
+      <%= @order.ontime&.strftime('%I:%M %p') rescue @order.created_at&.strftime('%I:%M %p') %>
+    </span>
+
+    <span>
+      <%= @order.order_type&.capitalize || 'Dine-in' %>
+    </span>
+  </div>
+
+  <% if @order.table_name.present? || @order.table_number.present? %>
+    <div class="small-text">
+      Table:
+      <%= @order.table_name.presence || @order.table_number %>
+    </div>
+  <% end %>
+
+  <% if @order.customer_name.present? %>
+    <div class="small-text">
+      Customer:
+      <%= @order.customer_name %>
+    </div>
+  <% end %>
+
+  <div class="divider"></div>
+
+  <!-- Items -->
+  <table>
+    <thead>
+      <tr>
+        <th class="col-name">Item</th>
+        <th class="col-qty">Qty</th>
+        <th class="col-rate">Rate</th>
+        <th class="col-amount">Amount</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% items.each do |item| %>
+        <tr>
+          <td class="col-name">
+            <%= item.restaurant_menu&.name || "Item ##{item.restaurant_menu_id}" %>
+          </td>
+
+          <td class="col-qty">
+            <%= item.quantity %>
+          </td>
+
+          <td class="col-rate">
+            <%= number_with_precision(item.rate, precision: 2) %>
+          </td>
+
+          <td class="col-amount">
+            <%= number_with_precision(item.amount, precision: 2) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- Summary -->
+  <table class="summary-table">
+
+    <tr>
+      <td class="summary-left">
+        Subtotal
+      </td>
+
+      <td class="summary-right">
+        <%= number_with_precision(@order.subtotal, precision: 2) %>
+      </td>
+    </tr>
+
+    <% if @order.service_charge.to_f > 0 %>
+      <tr>
+        <td class="summary-left">
+          Service Charge
+        </td>
+
+        <td class="summary-right">
+          <%= number_with_precision(@order.service_charge, precision: 2) %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if @order.tax_amount.to_f > 0 %>
+      <tr>
+        <td class="summary-left">
+          Tax
+        </td>
+
+        <td class="summary-right">
+          <%= number_with_precision(@order.tax_amount, precision: 2) %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if @order.discount.to_f > 0 %>
+      <tr>
+        <td class="summary-left">
+          Discount
+        </td>
+
+        <td class="summary-right">
+          -<%= number_with_precision(@order.discount, precision: 2) %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if @order.delivery_charges.to_f > 0 %>
+      <tr>
+        <td class="summary-left">
+          Delivery Charges
+        </td>
+
+        <td class="summary-right">
+          <%= number_with_precision(@order.delivery_charges, precision: 2) %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if @order.convenience_fee.to_f > 0 %>
+      <tr>
+        <td class="summary-left">
+          Convenience Fee
+        </td>
+
+        <td class="summary-right">
+          <%= number_with_precision(@order.convenience_fee, precision: 2) %>
+        </td>
+      </tr>
+    <% end %>
+
+  </table>
+
+  <div class="divider-solid"></div>
+
+  <!-- Total -->
+  <table class="summary-table">
+
+    <tr>
+      <td class="summary-left total-left">
+        Total
+      </td>
+
+      <td class="summary-right total-right">
+        ₹ <%= number_with_precision(@order.total_amount, precision: 2) %>
+      </td>
+    </tr>
+
+    <% if @order.paid_amount.to_f > 0 %>
+      <tr>
+        <td class="summary-left">
+          Paid Amount
+        </td>
+
+        <td class="summary-right">
+          ₹ <%= number_with_precision(@order.paid_amount, precision: 2) %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if @order.payment_mode.present? %>
+      <tr>
+        <td class="summary-left">
+          Payment Mode
+        </td>
+
+        <td class="summary-right">
+          <%= @order.payment_mode.capitalize %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if @order.payment_status.present? %>
+      <tr>
+        <td class="summary-left">
+          Payment Status
+        </td>
+
+        <td class="summary-right">
+          <%= @order.payment_status %>
+        </td>
+      </tr>
+    <% end %>
+
+  </table>
+
+  <div class="divider"></div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Thank you! Visit again!</p>
+
+    <% if @order.id.present? %>
+      <p class="small-text">
+        Bill #<%= @order.id %> |
+        <%= Time.current.strftime('%d-%b-%Y %I:%M %p') %>
+      </p>
+    <% end %>
+  </div>
+
+</body>
+</html>

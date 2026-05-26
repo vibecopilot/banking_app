@@ -1,0 +1,82 @@
+<%= form_with(model: invoice_receipt, local: true) do |form| %>
+  <% if invoice_receipt.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(invoice_receipt.errors.count, "error") %> prohibited this invoice_receipt from being saved:</h2>
+
+      <ul>
+      <% invoice_receipt.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :receipt_number %>
+    <%= form.text_field :receipt_number, id: :invoice_receipt_receipt_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :invoice_number %>
+    <%= form.text_field :invoice_number, id: :invoice_receipt_invoice_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :building_id %>
+    <%= form.number_field :building_id, id: :invoice_receipt_building_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :unit_id %>
+    <%= form.number_field :unit_id, id: :invoice_receipt_unit_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address_id %>
+    <%= form.number_field :address_id, id: :invoice_receipt_address_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_mode %>
+    <%= form.text_field :payment_mode, id: :invoice_receipt_payment_mode %>
+  </div>
+
+  <div class="field">
+    <%= form.label :amount_received %>
+    <%= form.text_field :amount_received, id: :invoice_receipt_amount_received %>
+  </div>
+
+  <div class="field">
+    <%= form.label :transaction_or_cheque_number %>
+    <%= form.text_field :transaction_or_cheque_number, id: :invoice_receipt_transaction_or_cheque_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :bank_name %>
+    <%= form.text_field :bank_name, id: :invoice_receipt_bank_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :branch_name %>
+    <%= form.text_field :branch_name, id: :invoice_receipt_branch_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_date %>
+    <%= form.date_select :payment_date, id: :invoice_receipt_payment_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :receipt_date %>
+    <%= form.date_select :receipt_date, id: :invoice_receipt_receipt_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, id: :invoice_receipt_notes %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Generic Sub Infos</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Generic info</th>
+      <th>Name</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @generic_sub_infos.each do |generic_sub_info| %>
+      <tr>
+        <td><%= generic_sub_info.generic_info_id %></td>
+        <td><%= generic_sub_info.name %></td>
+        <td><%= link_to 'Show', generic_sub_info %></td>
+        <td><%= link_to 'Edit', edit_generic_sub_info_path(generic_sub_info) %></td>
+        <td><%= link_to 'Destroy', generic_sub_info, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Generic Sub Info', new_generic_sub_info_path %>

@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Aminity Setups</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Aminity</th>
+      <th>Name</th>
+      <th>Site</th>
+      <th>Unit</th>
+      <th>Start time</th>
+      <th>End time</th>
+      <th>Slot frequency</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @aminity_setups.each do |aminity_setup| %>
+      <tr>
+        <td><%= aminity_setup.aminity_id %></td>
+        <td><%= aminity_setup.name %></td>
+        <td><%= aminity_setup.site_id %></td>
+        <td><%= aminity_setup.unit_id %></td>
+        <td><%= aminity_setup.start_time %></td>
+        <td><%= aminity_setup.end_time %></td>
+        <td><%= aminity_setup.slot_frequency %></td>
+        <td><%= link_to 'Show', aminity_setup %></td>
+        <td><%= link_to 'Edit', edit_aminity_setup_path(aminity_setup) %></td>
+        <td><%= link_to 'Destroy', aminity_setup, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Aminity Setup', new_aminity_setup_path %>

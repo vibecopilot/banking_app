@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Time and date:</strong>
+  <%= @incident.time_and_date %>
+</p>
+
+<p>
+  <strong>Primary incident category:</strong>
+  <%= @incident.primary_incident_category %>
+</p>
+
+<p>
+  <strong>Secondary incident category:</strong>
+  <%= @incident.secondary_incident_category %>
+</p>
+
+<p>
+  <strong>Incident severity:</strong>
+  <%= @incident.incident_severity %>
+</p>
+
+<p>
+  <strong>Incident level:</strong>
+  <%= @incident.incident_level %>
+</p>
+
+<p>
+  <strong>Building:</strong>
+  <%= @incident.building_id %>
+</p>
+
+<p>
+  <strong>Probability:</strong>
+  <%= @incident.probability %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @incident.description %>
+</p>
+
+<p>
+  <strong>Created by:</strong>
+  <%= @incident.created_by_id %>
+</p>
+
+<%= link_to 'Edit', edit_incident_path(@incident) %> |
+<%= link_to 'Back', incidents_path %>

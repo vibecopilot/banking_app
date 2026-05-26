@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Vehicle category:</strong>
+  <%= @vehicle_setup.vehicle_category %>
+</p>
+
+<p>
+  <strong>Vehicle type name:</strong>
+  <%= @vehicle_setup.vehicle_type_name %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @vehicle_setup.status %>
+</p>
+
+<%= link_to 'Edit', edit_vehicle_setup_path(@vehicle_setup) %> |
+<%= link_to 'Back', vehicle_setups_path %>

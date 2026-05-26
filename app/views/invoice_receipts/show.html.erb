@@ -1,0 +1,69 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Receipt number:</strong>
+  <%= @invoice_receipt.receipt_number %>
+</p>
+
+<p>
+  <strong>Invoice number:</strong>
+  <%= @invoice_receipt.invoice_number %>
+</p>
+
+<p>
+  <strong>Building:</strong>
+  <%= @invoice_receipt.building_id %>
+</p>
+
+<p>
+  <strong>Unit:</strong>
+  <%= @invoice_receipt.unit_id %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @invoice_receipt.address_id %>
+</p>
+
+<p>
+  <strong>Payment mode:</strong>
+  <%= @invoice_receipt.payment_mode %>
+</p>
+
+<p>
+  <strong>Amount received:</strong>
+  <%= @invoice_receipt.amount_received %>
+</p>
+
+<p>
+  <strong>Transaction or cheque number:</strong>
+  <%= @invoice_receipt.transaction_or_cheque_number %>
+</p>
+
+<p>
+  <strong>Bank name:</strong>
+  <%= @invoice_receipt.bank_name %>
+</p>
+
+<p>
+  <strong>Branch name:</strong>
+  <%= @invoice_receipt.branch_name %>
+</p>
+
+<p>
+  <strong>Payment date:</strong>
+  <%= @invoice_receipt.payment_date %>
+</p>
+
+<p>
+  <strong>Receipt date:</strong>
+  <%= @invoice_receipt.receipt_date %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @invoice_receipt.notes %>
+</p>
+
+<%= link_to 'Edit', edit_invoice_receipt_path(@invoice_receipt) %> |
+<%= link_to 'Back', invoice_receipts_path %>

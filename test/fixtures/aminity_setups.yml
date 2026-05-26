@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  aminity_id: 1
+  name: MyString
+  site_id: 1
+  unit_id: 1
+  start_time: 2024-07-17 00:41:21
+  end_time: 2024-07-17 00:41:21
+  slot_frequency: 1
+
+two:
+  aminity_id: 1
+  name: MyString
+  site_id: 1
+  unit_id: 1
+  start_time: 2024-07-17 00:41:21
+  end_time: 2024-07-17 00:41:21
+  slot_frequency: 1

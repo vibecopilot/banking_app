@@ -1,0 +1,305 @@
+  <style type="text/css">
+    
+    .reminder-days {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 35px;
+        width: 35px;
+        cursor: pointer;
+    }
+
+    .selected-date {
+        background: #b4b4b4;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+  </style>
+
+<% if @checklist.persisted? %>
+  <% question = @checklist.questions.build %>
+  <!-- render the form fields for the new question -->
+<% end %> 
+<%= form_with(model: checklist, local: true) do |form| %>
+  <% if checklist.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(checklist.errors.count, "error") %> prohibited this checklist from being saved:</h2>
+
+      <ul>
+      <% checklist.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<div class="col-sm-12" >
+  <div class="row">
+    <input type="hidden" name="checklist[site_id]" value="<%= @user.current_site_id %>">
+    <input type="hidden" name="checklist[occurs]" value="">
+    <% if params[:ppm].present? %>
+      <input type="hidden" name="checklist[ctype]" value="ppm">
+    <% end %>
+    <div class="col-sm-3">
+      <div class="field text-left mb-3">
+        <%= form.label :name %>
+        <%= form.text_field :name, :class => "form-control" %>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="field text-left mb-3">
+        <%= form.label :frequency %>
+        <% freqs = [["One Time","one_time"], ["Hourly", "hourly"], ["Daily", "daily"], ["Weekly", "weekly"],  ["Monthly", "monthly"], ["Quarterly", "quarterly"], ["Half Yearly", "half_yearly"], ["Yearly", "yearly"]] %>
+        <%= select_tag :frequency, options_for_select(freqs, checklist.frequency),{ :include_blank => "Select", :class => "form-control", :id =>"freqn" } %>
+      </div>
+    </div>
+    <div class="col-sm-3 freqselect remdiv" style="display: none;">
+      <div style="display: flex; align-items: center; cursor: pointer;" class="reminder-container">
+          Specific Hours &nbsp;&nbsp;
+      </div>
+      <div class="col-sm-8" style="margin-top: 10px;">
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); grid-gap: 5px; background: #f8f8f8;">
+          <%  ds = 00..23 
+            ds.each do |d| %>
+            <span class="reminder-days" vl="<%= d %>"> <%= d < 10 ? "0#{d}" : d %></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="field text-left mb-3">
+        <%= form.label :start_date %>
+        <%= form.date_select :start_date, id: :checklist_start_date %>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="field text-left mb-3">
+        <%= form.label :end_date %>
+        <%= form.date_select :end_date, id: :checklist_end_date %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="field text-left mb-3">
+        <%= form.label :grace_period_unit %>
+        <%= form.select :grace_period_unit, options_for_select([['Minutes', 'minutes'], ['Hours', 'hours'], ['Days', 'days'], ['Weeks', 'weeks']], checklist.grace_period_unit), { include_blank: 'Select unit' }, { class: "form-control" } %>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="field text-left mb-3">
+        <%= form.label :grace_period %>
+        <%= form.number_field :grace_period_value, min: 0, class: "form-control" %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+        <%= form.hidden_field :user_id, id: :checklist_user_id, value: @user.id %>
+      <% checklist.questions.each_with_index do |question,i| %>
+        <div class="checklist" style="padding: 0.6rem 1.2rem; background: #f1f1f1; border: 1px solid #f1f1f1; border-radius: 10px;">
+            <input type="hidden" name="question[][id]" value="<%= question.id %>">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Question <%= i + 1 %></span>
+                <%= link_to 'Delete', delete_question_checklist_path(@checklist, question_id: question.id), method: :delete, data: { confirm: 'Are you sure you want to delete this question?' }, class: 'btn btn-danger btn-sm' %>
+            </div><br>
+            <!-- New fields for mandatory and image required -->
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+              <input type="checkbox" name="question[][question_mandatory]" value="1" id="new_question_mandatory" style="margin-right: 5px;" <%= question.question_mandatory? ? 'checked="checked"' : '' %>>
+              <label for="new_question_mandatory">Mandatory Question</label>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+              <input type="checkbox" name="question[][image_mandatory]" value="1" id="new_question_image_mandatory" style="margin-right: 5px;" <%= question.image_mandatory? ? 'checked="checked"' : '' %>>
+              <label for="new_question_image_mandatory">Image Mandatory</label>
+            </div>
+            <div>
+                <input type="text" name="question[][name]" placeholder="   Enter your Question" class="form-control-input question" style="background: #fff;width: 450px" value="<%= question.try(:name) %>">
+            </div><br>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Select Answer Type</span>
+            </div><br>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="flex-basis: 60%;">
+                    <select name="question[][type]" class="categories answer" style="background: #fff;">
+                        <option value="">Choose Answer Type</option>
+                        <option <%= question.present? ? (question.qtype == "multiple" ? 'selected="selected"' : '') : '' %> value="multiple">Multiple Choice</option>
+                        <option <%= question.present? ? (question.qtype == "inputbox" ? 'selected="selected"' : '') : '' %> value="inputbox">Input Box</option>
+                        <option <%= question.present? ? (question.qtype == "description" ? 'selected="selected"' : '') : '' %> value="description">Description Box</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div id="multiple-choice-answer" class="multiple-choice-answer" style="justify-content: space-between;display: block;">
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 15px; row-gap: 5px;">
+              <% [1,2,3,4].each do |opt| %>
+                <div id="" class="d-flex ques_option">
+                  <input type="text" name="question[][option<%= opt %>]" value="<%= question.try("option#{opt}".to_sym) %>">
+                  <%= select_tag "question[][value_type#{opt}]", options_for_select([["Select", ""], ["P", "P"], ["N", "N"]], question.try("value_type#{opt}".to_sym)), { onchange: "changeBackgroundColor(this)" } %>
+                </div>
+              <% end %>    
+              </div>
+            </div>
+        </div>
+      <% end %>
+      <div id="checklist" class="checklist" style="padding: 0.6rem 1.2rem; background: #f1f1f1; border: 1px solid #f1f1f1; border-radius: 10px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>New Question</span>
+              <%= image_tag "cancel.png",:alt => "Cancel Checklist",:class => "rmicon" %>
+          </div>
+          <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <input type="checkbox" name="question[][question_mandatory]" value="1" id="new_question_mandatory" style="margin-right: 5px;" <%= question.try(:question_mandatory?) ? 'checked="checked"' : '' %>>
+            <label for="new_question_mandatory">Mandatory Question</label>
+          </div>
+          <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <input type="checkbox" name="question[][image_mandatory]" value="1" id="new_question_image_mandatory" style="margin-right: 5px;" <%= question.try(:image_mandatory?) ? 'checked="checked"' : '' %>>
+            <label for="new_question_image_mandatory">Image Mandatory</label>
+          </div>
+          <div>
+              <input type="text" name="question[][name]" placeholder="   Enter your Question" class="form-control-input question" style="background: #fff;width: 450px">
+          </div><br>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span>Select Answer Type</span>
+          </div><br>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="flex-basis: 60%;">
+                <select name="question[][type]" class="categories answer" style="background: #fff;">
+                    <option>Choose Answer Type</option>
+                    <option value="multiple">Multiple Choice</option>
+                    <option value="inputbox">Input Box</option>
+                    <option value="description">Description Box</option>
+                </select>
+            </div>
+          </div>
+          <br>
+          <div id="multiple-choice-answer" class="multiple-choice-answer" style="justify-content: space-between; display: none;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 15px; row-gap: 5px;">
+              <div id="clonequest_option" class="d-flex ques_option">
+                <input type="text" name="question[][option1]" class="form-control-input quest_option" style="background: #fff;" placeholder="Answer Option ">
+                <%= select_tag "question[][value_type1]", options_for_select([["Select", ""], ["P", "P"], ["N", "N"]], ""), { onchange: "changeBackgroundColor(this)" } %>
+              </div>
+              <div id="clonequest_option" class="d-flex ques_option">
+                <input type="text" name="question[][option2]" class="form-control-input quest_option" style="background: #fff;" placeholder="Answer Option ">
+                <%= select_tag "question[][value_type2]", options_for_select([["Select", ""], ["P", "P"], ["N", "N"]], ""), { onchange: "changeBackgroundColor(this)" } %>
+              </div>
+              <div id="clonequest_option" class="d-flex ques_option">
+                <input type="text" name="question[][option3]" class="form-control-input quest_option" style="background: #fff;" placeholder="Answer Option ">
+                <%= select_tag "question[][value_type3]", options_for_select([["Select", ""], ["P", "P"], ["N", "N"]], ""), { onchange: "changeBackgroundColor(this)" } %>
+              </div>
+              <div id="clonequest_option" class="d-flex ques_option">
+                <input type="text" name="question[][option4]" class="form-control-input quest_option" style="background: #fff;" placeholder="Answer Option ">
+                <%= select_tag "question[][value_type4]", options_for_select([["Select", ""], ["P", "P"], ["N", "N"]], ""), { onchange: "changeBackgroundColor(this)" } %>
+              </div>
+            </div>
+          </div>
+      </div>
+
+    <div id="add-icon" class="add-checklist" class="flex-column" style="padding: 4rem; background: #f8f8f8; border: 1px solid #f8f8f8; border-radius: 10px;">
+        <div class="flex-center">
+            <button type="button">Add Question</button>
+        </div>
+    </div>
+  </div>
+    <br>
+
+    <div class="actions">
+      <%= form.submit %>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<script type="text/javascript">
+var checklist_clone = $("#checklist").html();
+  $("#checklist-container .checklist").each(function(){            
+    var val = $(this).find(".answer").closest('[name="question[][type]"]').val();
+    if(val == "multiple"){
+        $(this).find(".multiple-choice-answer").show();
+    }
+  });
+  function answer(){
+    $(".answer").off("change");  
+    $(".answer").change(function () {
+        let answer = $(this).val();
+        if (answer === "multiple" || answer === "dropdown" || answer === "checkbox" ) {
+            $(this).parents(".checklist").find(".multiple-choice-answer").css("display", "flex");
+            $(this).parents(".checklist").find("#rating").css("display", "none");
+        } else if (answer === "Ratings") {
+            $(this).parents(".checklist").find("#rating").css("display", "flex");
+            $(this).parents(".checklist").find(".multiple-choice-answer").css("display", "none");
+        } else {
+            $(this).parents(".checklist").find("#rating").css("display", "none");
+            $(this).parents(".checklist").find(".multiple-choice-answer").css("display", "none");
+        }
+    });
+    // removequestion();
+  }
+  function mcqdd() {
+    $(".rmicon").off("click");
+    $(".rmicon").click(function () {
+      pdiv = $(this).parents(".checklist")
+      pdiv.remove()
+    });
+  }
+  function add_checklist(){
+    var str = '<div  class="checklist" style="padding: 0.6rem 1.2rem; background: #f1f1f1; border: 1px solid #f1f1f1; border-radius: 10px;">'
+    str += checklist_clone
+    str += '</div>'
+    $(str).insertBefore(".add-checklist");
+    answer();
+    // add_option();
+    mcqdd();
+    var size = $(".checklist").size();
+    $(".questcount").text(size);                    
+  }
+
+  $("#add-icon").click(function () {
+      add_checklist();
+  });
+
+  answer();
+  $(document).on("click",".reminder-days",function() {
+    vl = $(this).attr("vl");
+    pdiv = $(this).parents(".remdiv")
+    dv = pdiv.find('[dv="'+vl+'"]')
+    if(dv.length > 0){
+        $(this).removeClass("selected-date")
+        dv.remove();
+    } else{
+        dv = '<span class="occurrences" dv="'+vl+'">'+$(this).text() + ',&nbsp;</span>'
+        pdiv.find(".reminder-container").append(dv);
+        $(this).addClass("selected-date");
+    }
+  });
+  $('[name="frequency"]').change(function(e){
+    if ($(this).val() == "hourly"){
+      $(".freqselect").show();
+    } else {
+      $(".freqselect").hide();
+    }
+  });
+  $('[name="commit"]').click(function(e){
+    e.preventDefault();
+    form = $(this).parents('form');
+    occ = []
+    form.find(".reminder-container").each(function(){
+      $(this).find("[dv]").each(function(){
+        occ.push($(this).attr('dv'))
+      })
+    });
+    form.find('[name="checklist[occurs]"]').val(occ);
+    form.submit();
+  });
+
+  function changeBackgroundColor(select) {
+    if (select.value === "P") {
+      select.style.backgroundColor = "green";
+    } else if (select.value === "N") {
+      select.style.backgroundColor = "red";
+    } else {
+      select.style.backgroundColor = "#fff"; // reset to default
+    }
+  }
+</script>

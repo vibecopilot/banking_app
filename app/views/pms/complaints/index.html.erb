@@ -1,0 +1,302 @@
+<style>
+  .project-title {
+    max-width: 255px !important;
+  }
+</style>
+
+<%= csrf_meta_tag %>
+<div class="data-table-area mg-b-15">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 complaint-type" style="margin-top: 20px !important">
+              <% params[:q] = params[:q] || {} %>
+            
+              <% @complaints = @user_complaints.search(params[:q]).result %>
+              <% @open_complaint = @user_complaints.search({m: "or",complaint_status_fixed_state_not_eq: "closed", complaint_status_fixed_state_null: 1}).result.count %>
+              <% @close_complaint = @user_complaints.search(complaint_status_fixed_state_eq: "closed").result.count %>
+              
+              <% @complaint = @user_complaints.where(complaint_type: "Complaint").count %>
+
+          <a href="/pms/complaints?q[complaint_status_fixed_state_eq]=closed">    
+          <div class="col-sm-3 w20">
+            <div class="small-box">
+              <div class="inner bg-green">
+                <h3><%= @close_complaint %></h3>
+                <p>Close Ticket</p>
+              </div>
+              <div class="icon"></div>
+            </div>
+          </div>
+          </a>
+
+          <!-- <a href="/pms/admin/complaints?q[complaint_status_fixed_state_not_eq]=closed"> -->
+          <%= link_to  pms_complaints_path(q: {m: "or",complaint_status_fixed_state_not_eq: "closed", complaint_status_fixed_state_null: 1}) do %>
+          <div class="col-sm-3 w20">
+            <div class="small-box">
+              <div class="inner bg-red">
+                <h3><%= @open_complaint %></h3>
+                <p>Open Ticket</p>
+              </div>
+              <div class="icon"> </div>
+            </div>
+          </div>
+          <% end %>
+        </div>
+
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="sparkline13-list">
+            <div class="sparkline13-graph">
+              <div class="datatable-dashv1-list custom-datatable-overright">
+                <div id="toolbar">
+                  <% @lup = User.current.lock_user_permission %>
+                  <% if @lup.present? %>  
+                      <button class="btn btn-primary btn-md custom-button" >
+                        <a href="/pms/complaints/new">
+                          <i class="fa fa-plus margin-r-2" aria-hidden="true"></i>Add
+                        </a>
+                      </button>
+
+                    <%end%>  
+                    <button class="btn btn-primary btn-md custom-button" onclick="ShowDiv()" id="filter_container">
+                      <i class="fa fa-filter margin-r-2" aria-hidden="true"></i>Filter
+                    </button>                   
+
+
+                </div>       
+                
+
+                    <% @category= HelpdeskCategory.pms.where(society_id: @user.company_id) %>
+
+                    <% @ty= ComplaintStatus.pms.active.where(society_id: @user.company_id).collect{|s| [s.name, s.id] }%>
+                  <%  
+                    inc = false
+                      @ty.each do |t|
+                        if t.include?("pending") || t.include?("Pending")
+                          inc = true
+                        end
+                      end
+                    if !inc 
+                      #@ty= @ty + [["pending","pending"]] 
+                    end
+                  %>
+                    <% params[:q] = params[:q] || {} %>
+                  <div class="row" id="myDiv" style="display: none;">
+                    <%= form_tag pms_complaints_path, :method => 'get', :id=>"filters" do %>
+                  <div class="col-sm-12" style="margin: 10px 0px;">
+                    <h5>Filter</h5>
+                  </div>
+                  
+                  <div class="col-sm-12" style="padding-left: 0px;">
+                    <div class="col-sm-2 form-group helpdesk-filter">
+                      <%= select_tag 'q[category_type_id_eq]',options_for_select(@category.pluck(:name, :id)),:class=>"form-control",:include_blank =>"Select Category Type",:id => 'category' %>
+                    </div>
+       
+                    <div class="form-group col-sm-2 helpdesk-filter" >
+                      <div class="input-group">
+                        <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                        <input type="text" name='q[date_range]' id ="date_range" class="reservation form-control pull-right" placeholder="Select Date Range">
+                      </div>
+                    </div>
+
+                     <div class="col-sm-2 form-group helpdesk-filter">
+                      <%= select_tag 'q[issue_status_eq]',options_for_select(@ty, :selected => params[:q][:issue_status_eq]),:class=>"form-control",:include_blank =>"Select Status" %>
+                    </div> 
+                     <% if @user.available_site.try(:complaint_urgency_enabled?) %>
+                     <div class="col-sm-2 form-group helpdesk-filter">
+                       <% urgency = [["High",1],["Medium", 2],["Low", 3]] %>
+                        <%= select_tag "q[urgency_eq]", options_for_select(urgency), :include_blank =>"Select Urgency", :class => 'form-control' %>
+                    </div>
+                    <% end %>
+                  </div>
+
+                   <div class="col-sm-12">
+                      <button type="button" id="" class="applyfilter btn btn-success btn-sm"> Apply</button>
+                      <a href="<%= pms_complaints_path %>"><button type="button" id="" class="btn btn-info btn-sm"> Reset</button></a>
+                    </div>
+                  
+                  <% end %>
+                </div>
+           
+                  <div id="applied_filters_container"></div>
+               
+                    <!-- </form>     --> 
+                  </div>             
+               </div>
+
+                 <table class="table table-striped table-responsive " id="table" data-toggle="table" data-pagination="true" data-search="true" data-trim-on-search="false" data-show-columns="true" data-show-refresh="true" data-sortable="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true" data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+
+                 <thead>
+                    <tr class="table-row" data-href="#">
+                        <th></th>
+                        <th>Ticket Number</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Created By</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Created On</th>
+                        <th>Assigned To</th>
+                        <th>Response Escalation</th>  
+                        <th>Response TAT(Min)</th>
+                        <th>Response Time(D :H :M)</th>
+                        <th>Response Escalation Level</th>
+                        <th>Resolution Escalation</th>
+                        <th>Resolution TAT(Min)</th>
+                        <th>Resolution Time(D :H :M)</th>
+                        <th>Resolution Escalation Level</th>
+                        <th colspan="3"></th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                      <% @complaints.order('created_at desc').each do |complaint| %> 
+                      <tr class="table-row" data-href="#">
+                          <% img = Attachfile.where("relation = 'Complaint' and relation_id = ?" , complaint.id )%>
+                        <td>
+                          <a href="/pms/complaints/<%= complaint.id%>" class="btn btn-xs"><i class="fa fa-eye text-info" aria-hidden="true"></i></a><% if img.present? %><a class="btn btn-xs"><i class="fa fa-paperclip text-info" aria-hidden="true"></i></a>
+                          <% end %>
+                        </td>
+                        <td><%= complaint.ticket_number %></td>
+                        <td class="project-title"><a href="/pms/complaints/<%= complaint.id%>"><span title="<%= complaint.heading %>"><%= complaint.heading %></span></a></td>
+                        <td>
+                         <%= complaint.category_type.try(:name) %>
+                        </td>
+                        <td><%= complaint.id_user.present? ? complaint.user.full_name : "" %></td>
+                        <td>
+                          <% stat = complaint.issue_status.present? ? (ComplaintStatus.find_by_id(complaint.issue_status).try(:name) || complaint.issue_status ) : "pending" %>
+                          <label  style="border-left: 3px solid <%= complaint.complaint_status.try(:color_code) ? complaint.complaint_status.try(:color_code) : "#00c0ef";  %>;padding-left: 4px;"><%= stat %></label>
+                        </td>
+
+                        <td><%= complaint.try(:priority).try(:titleize) %></td>
+                        <td><%= complaint.try(:created_at).strftime('%d/%m/%Y') %></td>
+                        <td><%= complaint.try(:complaint_type) %></td>
+                        <td><%= User.find_by(id: complaint.try(:assigned_to)).try(:full_name)%>
+                        <td> <%= complaint.response_breached ? "Breached" : "Achieved" %></td>
+                        <td><%= complaint.try(:response_tat_time).try(:strftime,'%d/%m/%Y %h:%m %p')  %></td>
+                        <td><%= complaint.try(:response_time).try(:strftime,'%d/%m/%Y %h:%m %p')  %></td>
+                        <td>
+                          <% eh_resp = complaint.esc_histories.ransack({escalation_matrix_complaint_worker_esc_type_eq: "response"}).result %>
+                          <% esc_resp = EscalationMatrix.find_by(id: eh_resp.last.try(:esc_id))%>
+                          <% if esc_resp.present? %>
+                              <%= esc_resp.try(:name) %>
+                           <% end %>
+                        </td>
+                        <td><%= complaint.resolution_breached ? "Breached" : "Achieved" %></td>
+                        <td>
+                            <% reso = EscalationMatrix.joins(:complaint_worker).active.where("complaint_workers.esc_type = 'resolution'").
+                              search({complaint_worker_issue_type_id_eq: complaint.issue_type_id, complaint_worker_category_id_eq: complaint.category_type_id, complaint_worker_society_id_eq: complaint.site_id}).result.first %>
+                            <%  resotat = complaint.priority.present? ? reso.try(complaint.priority.downcase) : nil %>
+                            <%= resotat %>
+                        </td>
+                        <td><%= complaint.try(:resolution_time).try(:strftime,'%d/%m/%Y %h:%m %p')  %></td>
+                        <td>
+                            <% eh_reso = complaint.esc_histories.ransack({m: "or",escalation_matrix_complaint_worker_esc_type_eq: "resolution", escalation_matrix_complaint_worker_esc_type_null: 1}).result %>
+                            <% esc_reso = EscalationMatrix.find_by(id: eh_reso.last.try(:esc_id))%>
+                            <% if esc_reso.present? %>
+                                <%= esc_reso.try(:name) %>
+                            <% end %>
+                        </td>
+                        <td><%= link_to 'Show', pms_complaint_path(complaint) %></td>
+                        <td><%= link_to 'Edit', edit_pms_complaint_path(complaint) %></td>
+                        <td><%= link_to 'Destroy', pms_complaint_path(complaint), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                      </tr>                    
+                     <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+var config = {
+  '.chosen-select'           : {},
+  '.chosen-select-deselect'  : { allow_single_deselect: true },
+  '.chosen-select-no-single' : { disable_search_threshold: 10 },
+  '.chosen-select-no-results': { no_results_text: 'Oops, nothing found!' },
+  '.chosen-select-rtl'       : { rtl: true },
+  '.chosen-select-width'     : { width: '95%' }
+}
+for (var selector in config) {
+  // $(selector).chosen(config[selector]);
+}
+
+
+$(function() {
+  // $('#menu1').metisMenu();
+});
+
+  
+</script>
+
+
+   
+<script type="text/javascript">
+    
+
+$(function () {
+    $(document).on('click', ".update-multi",function () {
+        if ($(".update-multi:checked").length > 0) {
+            $("#complaint_horizontal").show();
+        } else {
+            $("#complaint_horizontal").hide();
+        }
+    });
+
+    $(document).on("click",".all_complaint_checkbox",function(e) {
+        e.stopPropagation();
+        if ($(this).is(":checked")) {
+            $('.update-multi').prop('checked', true);
+            $("#complaint_horizontal").show();
+        } else {
+            $('.update-multi').prop('checked', false);
+            $("#complaint_horizontal").hide();
+        }
+    });
+});
+
+</script>
+
+<script>
+$(document).ready(function(){
+  $('.reservation').daterangepicker();
+  $("#filter_container").click(function(){
+    $("#myDiv").toggle();
+  });
+});
+</script>
+<script>
+    // $(function () {
+  
+    // $('.reservation').daterangepicker();
+    // });
+
+    $(document).on("change","#category", function(){
+      pms_helpdesk_subcategory_from_category($(this), $("#sub_category")) 
+    });
+ </script> 
+
+  <script>
+    // $('.ui.dropdown').dropdown();
+    $('.applyfilter').click(function(){
+
+      var category_type = $("#q_category_type_id_eq").val();
+      var department = $("#q_dept_id_eq").val();
+      var date_range = $("#date_range").val();
+
+      var site_id = $("#q_site_id_eq").val();
+      var unit_id = $("#q_unit_id_eq").val();
+      var sub_category_id = $("#q_sub_category_id_eq").val();
+
+      if(category_type == "" && department == "" && date_range == "" && site_id == "" && unit_id == "" && sub_category_id == ""){
+        toastr.error("Please select any one filter");
+        return false;
+      }
+
+      $("#filters").submit();
+    });
+  </script>

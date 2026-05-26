@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Aminity:</strong>
+  <%= @aminity_slot.aminity_id %>
+</p>
+
+<p>
+  <strong>Start time:</strong>
+  <%= @aminity_slot.start_time %>
+</p>
+
+<p>
+  <strong>End time:</strong>
+  <%= @aminity_slot.end_time %>
+</p>
+
+<%= link_to 'Edit', edit_aminity_slot_path(@aminity_slot) %> |
+<%= link_to 'Back', aminity_slots_path %>

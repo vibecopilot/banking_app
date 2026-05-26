@@ -1,0 +1,52 @@
+<%= form_with(model: booking_parking, local: true) do |form| %>
+  <% if booking_parking.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(booking_parking.errors.count, "error") %> prohibited this booking_parking from being saved:</h2>
+
+      <ul>
+      <% booking_parking.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :parking_id %>
+    <%= form.number_field :parking_id, id: :booking_parking_parking_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_date %>
+    <%= form.date_select :booking_date, id: :booking_parking_booking_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_start_time %>
+    <%= form.datetime_select :booking_start_time, id: :booking_parking_booking_start_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :booking_end_time %>
+    <%= form.datetime_select :booking_end_time, id: :booking_parking_booking_end_time %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id %>
+    <%= form.number_field :user_id, id: :booking_parking_user_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :booking_parking_site_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.check_box :status, id: :booking_parking_status %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

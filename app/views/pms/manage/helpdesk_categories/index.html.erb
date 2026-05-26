@@ -1,0 +1,949 @@
+<style>
+  .ui.structured.celled.table tr td, .ui.structured.celled.table tr th{
+    text-align: center !important;
+  }
+  .help{
+    margin: 0px !important;
+  }
+  .project_emails .bootstrap-tagsinput , .edit-project-emails .bootstrap-tagsinput {
+      height: 30px;
+      width: 83%;
+      margin-left: 20px;
+  }
+  .extra-bottom-padding{
+    padding-bottom: 100px;
+  }
+  #page-wrapper{
+    height: 100%;
+  }
+  #category-table > thead > tr > th {
+    padding-top: 10px!important;
+    padding-bottom: 10px !important;
+  }
+
+  #category-table th, #category-table td{
+    padding-left: 10px !important;
+  }
+
+  #category-table th{
+    background: #3bafda !important;
+    color: white;
+    font-weight: bold;
+  }
+</style>
+<div class="wrapper wrapper-content">
+  <section class="content">
+    <div class="row help">
+      <div class="col-sm-12">
+        <div class="tabs tabs-style-flip extra-bottom-padding">
+          <nav>
+            <ul>
+              <li><a href="#section-linemove-1" class="icon icon-home section-check"><span>Setup</span></a></li>
+              <li><a href="#section-linemove-2" class="icon icon-box section-check"><span>Escalation Setup</span></a></li>
+              <!-- <li><a href="#section-linemove-3" class="icon icon-box section-check"><span>Cost Approval</span></a></li>  -->
+            </ul>
+          </nav>      
+          <%  @us = User.where('user_type IN (?)',  ["admin", "pms_admin"]).ransack(sites_id_eq: @user.current_site_id).result
+            @staff = User.where('user_type IN (?)',  ["pms_technician"]).ransack(sites_id_eq: @user.current_site_id).result 
+            @helpdesk_categories_mapped = @helpdesk_categories.map {|s| [s.name, s.id]}
+            @sstaff = @staff.map {|s| [s.full_name, s.id]}
+            admin_users = User.where(id: @us.pluck(:id)).ransack(params[:q]).result
+            @usmapped =  admin_users.map {|s| [s.full_name, s.id]}
+          %>
+
+          <div class="content-wrap">
+            <section id="section-linemove-1">
+              <div class="col-sm-12">
+                <div class='tabsholder3'>
+                
+                  <div data-tab="Category Type">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 category-tab-container">
+                      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 category-tab-menu">
+                        <div class="list-group"> <a href="#" class="list-group-item active text-center"> Category</a> <a href="#" class="list-group-item text-center"> Sub Category</a> </div>
+                      </div>
+                      <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 category-tab">
+                        <div class="category-tab-content active", style="padding: 15px 0px;">
+                          <div class="content-wrap">
+                            <div class="row help">
+
+                            <%= form_for([:manage, HelpdeskCategory.new], :url => "/pms/admin/helpdesk_categories") do |f| %>
+                              <div class="col-sm-12">
+                                  <%= f.hidden_field :society_id, :value => @user.current_site_id %>
+                                  <%= f.hidden_field :of_phase, :value => "pms" %>
+                                  <%= f.hidden_field "custom_redirect",:value =>  "/pms/admin/helpdesk_categories"  %>
+                                  <div class="col-sm-3">
+                                    <input type="text" class="form-control" name="helpdesk_category[name]" placeholder="Enter Category" required=true>
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <%= select_tag 'complaint_worker[assign_to][]', options_for_select(@sstaff),:include_blank => "Select Engineer", :class=>"form-control" %>
+                                  </div>
+                                  <div class="col-sm-3">
+                                    <input type="text" class="form-control" name="helpdesk_category[tat]" required=true maxlength= 4 onkeypress='return event.charCode >= 48 && event.charCode <= 57' placeholder="Response Time(min)">
+                                  </div>
+                              </div>
+                              <div class="col-sm-11" style="float: left; margin-left: -32%; margin-bottom: 12px;margin-top: 10px;">
+                                  <button type="submit" class="btn btn-success btn-sm add-category pull-right " style="width: 125px;"> <i class="fa fa-plus" aria-hidden="true" id="submitemail"></i> Add</button>
+                              </div>
+                            <% end %>
+                              
+                              <div class="col-sm-12">
+                                <table class="ui celled striped table" id="category-table"> 
+                                  <thead>
+                                    <tr>
+                                      <th width="5%"> S.No. </th>
+                                      <th width="20%"> Category Type </th>
+                                      <th width="20%"> Assignee </th>
+                                      <th width="20%"> Response Time (Min)</th>
+                                      <th width="15%"> Action </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <% @helpdesk_categories.each_with_index do |helpdesk_category, index| %>
+                                      <tr>
+                                        <td class="collapsing">  <%= index + 1 %>  </td>
+                                        <td class="collapsing">
+                                          <%=helpdesk_category.name%>
+                                        </td>
+                                        <td class="collapsing"><% cw = ComplaintWorker.where(category_id: helpdesk_category.id).try(:assign_to).try(:last) %>
+                                          <%= Spree::User.find_by(id: cw).try(:full_name)%></td>
+                                        <td class="collapsing">
+                                          <div class="text-center"><%=helpdesk_category.tat %></div>
+                                        </td>
+                                        <td>
+                                           <%= form_for([:manage, helpdesk_category],:url => "/pms/admin/modify_helpdesk_category/#{helpdesk_category.id}") do |f| %>
+                                           <%= f.hidden_field "custom_redirect", { :name => "custom_redirect", :value =>  "/pms/admin/helpdesk_categories" } %>
+                                            <%= f.hidden_field "active", { :value => helpdesk_category.active } %>
+                                          <a href="#" data-toggle="modal" data-target="#edit_category<%=helpdesk_category.id %>"><i class="fa fa-edit text-orange"></i> </a> <i class="fa fa-trash-o fa-times-circle delete_issue_type "></i><% end %>
+                                        </td>
+                                      </tr>
+                                    <% end %>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="category-tab-content">
+                          <div class="content-wrap">
+                            <div class="row help">
+                              <div class="col-sm-12">
+                                <%= form_for(HelpdeskSubCategory.new,url: "/pms/admin/create_helpdesk_sub_category",id: "helpdesk-sub-category-form") do |f| %>
+                                <%= f.hidden_field "custom_redirect",:value =>  "/pms/admin/helpdesk_categories"  %>
+                                  
+                                  <div class="form-group col-sm-4">
+                                    <%= select_tag "helpdesk_sub_category[helpdesk_category_id]", options_for_select(@helpdesk_categories.collect{|p| [p.name,p.id] }), :include_blank=> "Select Category", :class => "form-control pull-right",:id => 'helpdesk_category', required: true %>
+                                  </div>
+                                  <div class="form-group col-sm-4">
+                                    <%= text_area_tag 'sub_category_tags[]', nil, placeholder: "Enter Sub Category", class: 'form-control', id: 'subcategory', data: {role: 'tagsinput'} %>
+                                  </div>
+                                  <div class="col-sm-4">
+                                    <button type="submit" class="btn btn-success btn-sm pull-right "> <i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+                                  </div>
+                                <%end%>
+                              </div>
+                              <div class="col-sm-12">
+                                <table class="ui celled striped table" id="category-table">
+                                  <thead>
+                                    <tr>
+                                      <th width="5%"> S.No. </th>
+                                      <th width="20%"> Category Type </th>
+                                      <th width="40%"> Sub Category</th>
+                                      <th width="10%"> </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <% @sr = 1 %>
+                                    <% @helpdesk_sub_categories.each do |helpdesk_sub_category| %>
+                                      <tr>
+                                        <td class="collapsing">  <%= @sr %>  </td>
+                                        <td><%= select_tag 'helpdesk_sub_category[helpdesk_category_id]', options_for_select(@helpdesk_categories.collect{|p| [p.name,p.id] }, :selected => helpdesk_sub_category.helpdesk_category_id), :include_blank => "Select Category", :class=>"form-control",:id => 'helpdesk_category' %></td>
+                                        <td><input type="text" class="form-control" name="name" value="<%= helpdesk_sub_category.name %>" readonly></td>
+                                        <td class="collapsing">
+                                          <span class="tools">
+                                          <%= form_for(HelpdeskSubCategory.new, url: "/pms/admin/modify_helpdesk_sub_category") do |f| %>
+                                          <%= f.hidden_field "id", { name: "id", :value => helpdesk_sub_category.id } %>
+                                          <%= f.hidden_field "name", { name: "name", :value => helpdesk_sub_category.name } %>
+                                          <%= f.hidden_field "helpdesk_category_id", { name: "helpdesk_category_id", :value => helpdesk_sub_category.helpdesk_category_id } %>
+                                          <%= f.hidden_field "active", { name: "active", :value => helpdesk_sub_category.active } %>
+                                          <%= f.hidden_field "custom_redirect", { name: "custom_redirect", :value =>  "/pms/admin/helpdesk_categories"}  %><span class="tools"> <i class="fa fa-edit text-warning edit_sub_category"></i> <i class="fa fa-check-square text-success submit_subcat" style="display: none;" aria-hidden="true"></i> <i class="fa fa-times-circle delete_subcat"></i> 
+                                        </span><% end %></span>
+                                        </td>
+                                      </tr>
+                                      <% @sr = @sr + 1 %>
+                                    <% end %>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div data-tab="Status" class="innersection-check">
+                    <div class="row help">
+                    <%= form_for(ComplaintStatus.new, :url =>  "/pms/admin/create_complaint_statuses" ) do |f| %>
+                    <%= f.hidden_field :of_phase, :value => "pms" %>
+                    <%= f.hidden_field :society_id, :value => @user.current_site_id %>
+                      <%= f.hidden_field :custom_redirect,:value =>  "/pms/admin/helpdesk_categories"  %>
+                      <div class="col-sm-3">
+                        <div class="form-group">
+                          <input type="text" class="form-control" name="complaint_status[name]" placeholder="Enter status">
+                        </div>
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="form-group">
+                          <select class="form-control" name="complaint_status[fixed_state]">  
+                            <option value="">Select Fixed State</option>
+                            <option value="closed">Closed</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-2">
+                        <div class="form-group attachcolor">
+                          <input type="text" name="complaint_status[color_code]"  class="form-control" data-palette='["#D50000","#304FFE","#00B8D4","#00C853","#eb5768","#FF1744","#6F0564","#FFCC00","#AF4FA2","#800000","#248108","#0033CC"]' value="" placeholder="no color">
+                        </div>
+                      </div>
+                      <div class="col-sm-2">
+                        <div class="form-group">
+                          <input type="number" class="form-control" name="complaint_status[position]" placeholder="Enter order" min="1">
+                        </div>
+                      </div>
+                      <div class="form-group col-sm-2 pull-right">
+                       <button type="submit" class="btn btn-success btn-xs add-complaint"> <i class="fa fa-plus" aria-hidden="true"></i> Add</button>
+                      </div>
+                      <% end %>
+                    </div>
+                    <table class="ui celled structured table">
+                      <thead>
+                        <tr>
+                          <th width="10%"> Order </th>
+                          <th width="30%"> Status </th>
+                          <th width="30%"> Fixed State </th>
+                          <th width="20%"> Color</th>
+                          <th width="10%"> </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <% @sr = 1 %>
+                      <% @statuses.each do |escalation| %>
+                        <tr>
+                          <td class="collapsing"><input type="text" class="form-control tabs-input" name="position" value="<%= escalation.position %>" readonly> </td>
+                          <td><input type="text" class="form-control tabs-input" name="name" value="<%= escalation.name %>" readonly></td>
+                          <td><select class="form-control" name="complaint_status[fixed_state]" readonly>  
+                            <option value="">Select Fixed State</option>
+                            <option value="closed" <%= escalation.fixed_state == "closed" ? 'selected' : '' %>>Closed</option>
+                            <option value="reopen" <%= escalation.fixed_state == "reopen" ? 'selected' : '' %>>Reopen</option>
+                            <option value="complete" <%= escalation.fixed_state == "complete" ? 'selected' : '' %>>Complete</option>
+                          </select></td>
+                          <td class=" collapsing"><div class="attachcolor">
+                          <input type="text" name="color_code" class="form-control" data-palette='["#D50000","#304FFE","#00B8D4","#00C853","#eb5768","#FF1744","#6F0564","#FFCC00","#AF4FA2","#800000","#248108","#0033CC"]' value="<%= escalation.color_code %>" readonly> </div> </td>
+                          <td class="  collapsing"><%= form_for(ComplaintStatus.new, url: "/pms/admin/modify_complaint_status") do |f| %>
+                              <%= f.hidden_field "id", { name: "id", :value => escalation.id } %>
+                              <%= f.hidden_field "position", { name: "position", :value => escalation.position } %>
+                              <%= f.hidden_field "name", { name: "name", :value => escalation.name } %>
+                              <%= f.hidden_field "active", { name: "active", :value => escalation.active } %>
+                              <%= f.hidden_field "color_code", { name: "color_code", :value => escalation.active } %>  
+                               <%= f.hidden_field "fixed_state", { name: "fixed_state", :value => escalation.fixed_state } %>  
+                              <%= f.hidden_field "custom_redirect", { name: "custom_redirect", :value =>  "/pms/admin/helpdesk_categories"}  %><span class="tools"> <i class="fa fa-edit text-warning cat-edit edit_issue_type"></i> <i class="fa fa-check-square text-success submit-i-form" style="display: none;" aria-hidden="true"></i> <i class="fa fa-trash-o fa-times-circle delete_issue_type "></i><% end %> </span></td>
+                        </tr>
+                        <% @sr = @sr + 1 %>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div data-tab="Operational Days">
+                    <div class="row help">
+                    <% @soc = @user.site %>
+                         <% 
+                          @helpdesk_operations = HelpdeskOperation.where(op_of_id: @user.current_site_id)
+                         %>
+                      <% @days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]  %>
+                      <%= form_for(@soc) do |f| %>
+                        <div class="col-sm-12">
+                          <table class="ui celled structured table">
+                            <thead>
+                              <tr>
+                                <th><%= check_box_tag :selall, false, class: 'selall' %></th>
+                                <th>Operational Days</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <% @days.each do |day|
+                                @ro = @helpdesk_operations.where(dayofweek: day).try(:last) || HelpdeskOperation.new(dayofweek: day)
+                              %>
+                                <%= f.fields_for :helpdesk_operations, @ro do |ro| %> 
+                                  <% @phase = "pms" %>
+                                  <%= render 'operations_form.html' , :f => ro, :locals => {:f => ro } %>
+                                <% end %>
+                              <% end %>
+                            </tbody>
+                          </table>
+                        </div>
+                        <input type="hidden" name="redirect_url" value="/pms/admin/helpdesk_categories">
+                        <div class="col-sm-12">
+                          <button type="submit" class="btn btn-success btn-sm">Submit</button>
+                        </div>
+                      <% end %>
+                    </div>   
+                  </div>
+
+
+
+                </div>
+              </div>
+       
+              <div class="clearfix"></div>
+            </section>
+            <!-- escalation starts -->
+            <%= render "escalation" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <% @helpdesk_categories.each do |helpdesk_category| %>
+  <div class="modal fade" id="<%= "edit_category" + helpdesk_category.id.to_s %>" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit Category</h4>
+        </div>
+        <%= form_for([:manage, helpdesk_category],:url => "/pms/admin/modify_helpdesk_category/#{helpdesk_category.id}") do |f| %>
+         <%= f.hidden_field "custom_redirect", { :name => "custom_redirect", :value =>  "/pms/admin/helpdesk_categories" } %> 
+          <div class="modal-body">
+            <div class='row'>
+              <div class='col-sm-12'>
+                <div class="form-group col-sm-6">
+                  <label>Category </label>
+                  <%= f.text_field :name, class: 'form-control', required: true %>
+                </div>
+                <div class="form-group col-sm-6">
+                   <label>Engineer</label>
+                  <%= select_tag 'complaint_worker[assign_to][]', options_for_select(@sstaff, :selected => ComplaintWorker.pms.where(category_id: helpdesk_category.id).try(:assign_to).try(:last)),:include_blank => "Select Engineer", :class=>"form-control" %>
+                </div>
+                <div class="form-group col-sm-6">
+                        <% if @user.available_site.try(:complaint_urgency_enabled?) %>
+                           <div class="divTable">
+                            <div class="divTableHeading">
+                              <div class="divTableRow">
+                                <div class="divTableCell width5">Urgency</div>
+                                <div class="divTableCell width40">Response Time(min)</div>
+                              </div>
+                            </div>
+                            <div class="divTableBody">
+                              <div class="divTableRow">
+                                <div class="divTableCell">High</div>
+                                <div class="divTableCell">
+                                  <input type="text" class="form-control response_tat" name="response_tat[high]" required=true maxlength= 4 onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="<%= helpdesk_category.resp_tat('high') %>" >
+                                </div>
+                                
+                              </div>
+                              <div class="divTableRow">
+                                <div class="divTableCell">Medium</div>
+                                <div class="divTableCell">
+                                  <input type="text" class="form-control response_tat" name="response_tat[medium]" required=true maxlength= 4 onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="<%= helpdesk_category.resp_tat('medium') %>" >
+                                </div>
+                                
+                              </div>
+                              <div class="divTableRow">
+                                <div class="divTableCell">Low</div>
+                                <div class="divTableCell">
+                                  <input type="text" class="form-control response_tat" name="response_tat[low]" required=true maxlength= 4 onkeypress='return event.charCode >= 48 && event.charCode <= 57' value="<%= helpdesk_category.resp_tat('low') %>" >
+                                </div>
+                                
+                              </div>
+                                
+                              </div>
+                          </div>
+                        <% else %>
+                          <label>Response Time(min)</label>
+                          <%= f.text_field :tat, class: 'form-control', required: true %>
+                        <% end %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <%= f.submit "Submit", class: "btn btn-success update-category" %>
+          </div>
+        <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+<%= link_to 'Back', setup_path %>
+<script type='text/javascript'>
+  (function() {
+    [].slice.call( document.querySelectorAll( '.tabs' ) ).forEach( function( el ) {
+      new CBPFWTabs( el );
+    });
+  })();
+  $('.tabsholder3').cardTabs({theme: 'graygreen'});
+  $('.menu .item').tab();
+  $('.inline.label').popup({ inline: true });
+  $(function () {
+    $('.attachcolor [name="complaint_status[color_code]"]').paletteColorPicker({
+          clear_btn: 'last',
+          close_all_but_this: true
+        });
+    $('.attachcolor [name="color_code"]').paletteColorPicker({
+          clear_btn: 'last',
+          close_all_but_this: true 
+        });
+  });
+
+  $(document).ready(function() {
+    $("div.solutions-tab-menu>div.list-group>a").click(function(e) {
+        e.preventDefault();
+        $(this).siblings('a.active').removeClass("active");
+        $(this).addClass("active");
+        var index = $(this).index();
+        $("div.solutions-tab>div.solutions-tab-content").removeClass("active");
+        $("div.solutions-tab>div.solutions-tab-content").eq(index).addClass("active");
+    });
+  });
+
+  $(document).ready(function() {
+    $("div.category-tab-menu>div.list-group>a").click(function(e) {
+        e.preventDefault();
+        $(this).siblings('a.active').removeClass("active");
+        $(this).addClass("active");
+        var index = $(this).index();
+        $("div.category-tab>div.category-tab-content").removeClass("active");
+        $("div.category-tab>div.category-tab-content").eq(index).addClass("active");
+    });
+
+    $("#selall").click(function(e){
+      if($(this).is(':checked') ){
+        $(this).parents("table").find('.operational-days').each(function() {
+            $(this).prop("checked", true);
+        });
+      } else{
+        $(this).parents("table").find('.operational-days').each(function() {
+          $(this).prop("checked", false);
+        });
+      }
+     });
+
+    $(".operational-days").click(function(e){
+      if(!$(this).is(':checked')){
+        var selall = $(this).parents("table").find('#selall');
+        if (selall.is(':checked')){
+          selall.prop("checked", false);
+        }
+      }
+    });
+  });
+
+  $(".rule_unit").change(function(){
+    // alert("aaaaaaaaaaaaaaaaaaaaaa")
+    $(".from_value").val("")   
+    $(".to_value").val("")   
+    $(".value").val("")
+    if($(".rule_unit").val() == "between"){
+      $(".between-div").show()
+      $('.other-div').hide()
+    }
+    else{
+      $(".between-div").hide()
+      $('.other-div').show()
+    }
+  });
+
+  // $("#helpdesk-sub-category-form").onkeypress = function(e) {
+  //   var key = e.charCode || e.keyCode || 0;     
+  //   if (key == 13) {
+  //     alert("I told you not to, why did you do it?");
+  //     e.preventDefault();
+  //     return false
+  //   }
+  // }
+  
+  function stopRKey(evt) {
+  var evt = (evt) ? evt : ((event) ? event : null);
+  var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+  if ((evt.which == 13) && (node.type == "text")) {
+    return false;
+  }
+}
+
+document.onkeypress = stopRKey;
+
+
+
+  $('#subcategory').tagsinput({
+    // tagClass: 'big'
+  });
+
+
+//   $.each(obj, function(index, value) {
+//     $('#looking_for_job_titles').tagsinput('add', value);
+//     console.log(value);
+// });
+
+
+  // $("#location_tower").change(function(){
+  //   pms_wings_from_tower($(this), $("#location_wings")) 
+  // });
+
+  $("#location_level1").change(function(){
+    location_level2_from_level1($(this), $("#location_level2")) 
+  });
+
+ 
+  $(".add-category").click(function(e){
+    e.preventDefault();
+    frm = $(this).parents("form");
+    submitCategory(frm);
+  });
+
+  $(".update-category").click(function(e){
+    e.preventDefault();
+    frm = $(this).parents("form");
+    submitCategory(frm);
+    
+  });
+
+  function submitCategory(form){
+
+    vl = frm.find('[name="helpdesk_category[name]"]').val();
+      if(vl == "")
+      {
+        toastr.error("Please enter category type");
+        return;
+      }
+      var a =[]
+      frm.find('.response_tat').each(function() {
+        if($(this).val() == ""){
+          a.push(1);
+        }
+      });
+      if (a.length > 2){
+        toastr.error("Please Provide Response Time");
+        return false;
+      }
+      tat = frm.find('[name="helpdesk_category[tat]"]').val();
+      if(tat == "")
+      {
+        toastr.error("Please enter Response Time");
+        return;
+      }
+      form.submit();
+  }
+  $(".add-complaint").click(function(e){
+    e.preventDefault();
+    frm = $(this).parents("form");
+    vl = frm.find('[name="complaint_status[name]"]').val();
+      if(vl == "")
+      {
+        alert("Please enter status");
+        return;
+      }
+    vl1 = frm.find('[name="complaint_status[position]"]').val();      
+      if (vl1 == "")
+      {
+        alert("Please enter order number");
+        return;
+      }  
+      frm.submit();
+  });
+
+  $(".reopen-ticket-btn").click(function(e){
+    e.preventDefault();
+    form = $(this).parents("form");
+    vl = form.find('[name="period_type"]').val();
+    if(vl == "")   
+    {
+      
+      toastr.error("Please Provide Period Type");
+      return;
+    }
+    vl = form.find('[name="time_period"]').val();
+    if(vl == "")
+    {
+  
+      toastr.error("Please Provide Time Format");
+      return;
+    }
+
+    form.submit();
+  });
+  
+  $(".updatecomplaintmodal").click(function(){
+    form = $(this).parents("form");
+    form.submit();
+  });
+  $(".edit_issue_type").click(function(){
+    $(this).css("display", "none");
+    $(this).siblings(".submit-i-form").css("display", "inline");
+    $(this).parents("tr").find("input").removeAttr("readonly");
+  });
+  $(".submit-i-form").click(function(){
+    form = $(this).parents("form");
+    console.log(form)
+    tr = form.parents("tr")
+    vl = tr.find('[name="name"]').val();
+    if(vl == "")
+    {
+      alert("Please provide name");
+      return;
+    }
+    cc = tr.find('[name="color_code"]').val();
+    po = tr.find('[name="position"]').val();
+
+    tat = tr.find('[name="tat"]').val();
+    issue_type_id = tr.find('[name="helpdesk_category[issue_type_id]"]').val();
+    cwassign = tr.find(".cwassign").val()
+    form.find('[name="name"]').val(vl);
+    form.find('[name="fixed_state"]').val(tr.find('[name="complaint_status[fixed_state]"]').val());
+    form.find('[name="color_code"]').val(cc);
+    form.find('[name="position"]').val(po);
+    form.find('[name="helpdesk_category[name]"]').val(vl);
+    form.find('[name="helpdesk_category[issue_type_id]"]').val(issue_type_id);
+    form.find('[name="helpdesk_category[tat]"]').val(tat);
+    form.find(".cwassign").val(cwassign);
+    form.submit();
+  });
+
+  $(".edit_sub_category").click(function(){
+    $(this).css("display", "none");
+    $(this).siblings(".submit_subcat").css("display", "inline");
+    $(this).parents("tr").find("input").removeAttr("readonly");
+  });
+
+
+  $(".submit_subcat").click(function(){
+    form = $(this).parents("form");
+    console.log(form)
+    tr = form.parents("tr")
+    vl = tr.find('[name="name"]').val();
+    if(vl == "")
+    {
+      alert("Please provide name");
+      return;
+    }
+    issue_type_id = tr.find('[name="helpdesk_sub_category[issue_type_id]"]').val();
+    helpdesk_category_id = tr.find('[name="helpdesk_sub_category[helpdesk_category_id]"]').val();
+    form.find('[name="name"]').val(vl);
+    form.find('[name="helpdesk_sub_category[issue_type_id]"]').val(issue_type_id);
+    form.find('[name="helpdesk_sub_category[helpdesk_category_id]"]').val(helpdesk_category_id);
+    form.submit();
+  });
+
+  $(".delete_subcat").click(function(){
+    var txt;
+    var r = confirm("Are you sure you want to delete?");
+    if (r == true) {
+        form = $(this).parents("form");
+        form.find('[name="active"]').val(0);
+        form.find('[name="helpdesk_sub_category[active]"]').val(0);
+        $(this).parents("form").submit();
+    } else {
+    }
+  });
+
+  $(".submit_issue_type").click(function(e){
+    e.preventDefault();
+    form = $(this).parents("form");
+        vl = form.parents("tr").find('[name="name"]').val();
+        if(vl == "")
+        {
+          alert("Please provide name");
+        }
+        else{
+          form.find('[name="name"]').val(vl);
+          form.submit();
+        }
+  });
+  $(".delete_issue_type").click(function(){
+    var txt;
+    var r = confirm("Are you sure you want to delete?");
+    if (r == true) {
+        form = $(this).parents("form");
+        form.find('[name="active"]').val(0);
+        form.find('[name="helpdesk_category[active]"]').val(0);
+        $(this).parents("form").submit();
+    } else {
+    }
+  });
+  $('.ui.dropdown').dropdown();
+  $('[name="q[issue_type_id]"]').change(function(){
+    issue_categories($(this), $(this).parents("form").find('[name="q[category_id]"]'));
+  });
+</script>
+    <%# @jn = Hash.new
+      @helpdesk_categories.each do |hc|
+        @jn[hc.id] = hc.tat
+      end
+      %>
+    <script type="text/javascript">
+      // var wo = '<#%= @jn.to_json %>';
+      // var wos = JSON.parse(wo.replace(/&quot;/g,'"'));
+      // $('[name="complaint_worker[category_id]"]').change(function(){
+      //   var ops = wos[$(this).val()];
+      //   console.log(ops);
+      //   sel = $(this).parents(".row").find(".tatselect");
+      //   console.log(sel);
+      //   sel.html("");
+      //   var str = "<option>" + ops + "</option>";
+      //   sel.html($(str));
+      // });
+      $(".delete-cw").click(function(){
+        var txt;
+        var r = confirm("Are you sure you want to delete?");
+        if (r == true) {
+            $(this).parents("form").submit();
+        } else {
+        }
+      });
+
+      $(".delete-escre").click(function(){
+        var txt;
+        var r = confirm("Are you sure you want to delete the Response escalation?");
+        if (r == true) {
+            $(this).parents("form").submit();
+        } else {
+        }
+      });
+
+      $(".delete-esc").click(function(){
+        var txt;
+        var r = confirm("Are you sure you want to delete the Resolution escalation?");
+        if (r == true) {
+            $(this).parents("form").submit();
+        } else {
+        }
+      });
+
+      $(".delete-cm").click(function(){
+        var txt;
+        var r = confirm("Are you sure you want to delete the complaint mode?");
+        if (r == true) {
+            $(this).parents("form").submit();
+        } else {
+        }
+      });
+
+      $(".delete-pms-wing").click(function(){
+        var txt;
+        var r = confirm("Are you sure you want to delete?");
+        if (r == true) {
+            $(this).parents("form").submit();
+        } else {
+        }
+      });
+
+      $(".delete-pms-area").click(function(){
+        var txt;
+        var r = confirm("Are you sure you want to delete?");
+        if (r == true) {
+            $(this).parents("form").submit();
+        } else {
+        }
+      });
+
+      $(".delete-society-location").click(function(){
+        var txt;
+        var r = confirm("Are you sure you want to delete?");
+        if (r == true) {
+            $(this).parents("form").submit();
+        } else {
+        }
+      });
+
+      $(".delete-aging-rule").click(function(){
+        var txt;
+        var r = confirm("Are you sure you want to delete?");
+        if (r == true) {
+            $(this).parents("form").submit();
+        } else {
+        }
+      });
+
+
+
+
+      $(".setup-btn").click(function(e){
+        e.preventDefault();
+        form = $(this).parents("form");
+        if(form.find('[name="complaint_worker[issue_type_id]"]').val() == ""){
+          alert("Please select issue type");
+          return;
+        }
+        if(form.find('[name="complaint_worker[category_id]"]').val() == ""){
+          alert("Please select category type");
+          return;
+        }
+        var em = [];
+        form.find('.escalation_matrix').each(function(){
+          thisrow = $(this).parents(".divTableRow");
+          em.push(thisrow.find(".label.transition").text());
+        });
+        em = em.filter(function(x){
+          return (x !== (undefined || null || ''));
+        });
+        if (em.length < 1) {
+          alert("Please select members");
+          return;
+        }
+        form.submit();
+      });
+
+      $('.section-check').click(function(e){
+        Cookies.set('pmshdsetupsection', $(this).attr("href"));
+      });
+      $('.list-group-item').click(function(e){
+        Cookies.set('insec', $(this).text());
+      });
+    </script>
+
+    <script type="text/javascript">
+      
+      $(".submode").click(function(e){
+       e.preventDefault();    
+      form = $(this).parents("form");
+      var cmode =  $(".compmode").val();
+      if(cmode == "")
+      {
+         toastr.error("Please enter a complaint mode.");
+         return false; 
+      }      
+      form.submit();
+     });
+
+    </script>
+    <script type="text/javascript">
+      $('#submitemail').click(function(e){
+          e.preventDefault();
+          var errr = false;
+          $(".label-info").each(function() {
+            var email = $(this).text();
+            var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if(email.match(mailformat))
+            {
+            }  
+            else
+            {
+              toastr.error("" + email + " is not valid Email");
+              errr = true;
+              return;
+            }
+          });   
+          if (errr == false){
+            $('#new_helpdesk_category').submit();
+          }
+        });
+
+      $(document).ready(function() {
+        $(".project_emails").hide();        
+        $('#vendor-email-chk').change(function() {
+            if(this.checked){
+              $(".project_emails").show();        
+            }
+            else{
+              $(".project_emails").hide();        
+              // $(".cat-val").val('');        
+            }
+        });
+
+        $(".attached.tabular.menu a").click(function(e){
+          Cookies.set('pmshdtabs', $(this).attr("data-tab"));
+        });
+        $('.card-tabs-bar.graygreen a').click(function(e){
+          Cookies.set('pmshdinnsetupsection', $(this).text());
+        });
+        
+        $(".res").click(function(e){
+           Cookies.set('pmsescsetupsection', $(this).text());
+        });   
+
+        curtab = Cookies.get('pmshdsetupsection');
+        intab = Cookies.get('pmshdtabs');
+        if (curtab == "#section-linemove-1" || curtab == undefined) {
+          curtabin = Cookies.get('pmshdinnsetupsection');
+          if (curtabin == "Category Type"){
+            if(Cookies.get('insec') == " Sub Category"){
+              $('[data-tab="Category Type"] .list-group-item').eq(1).click();
+            }
+            $('.card-tabs-bar.graygreen a').eq(0).click();
+          }else if(curtabin == " Sub Category"){
+            $('.card-tabs-bar.graygreen a').eq(0).click();
+          }
+          else if(curtabin == "Status"){
+            $('.card-tabs-bar.graygreen a').eq(1).click();
+          }else if(curtabin == "Operational Days"){
+            $('.card-tabs-bar.graygreen a').eq(2).click();
+          }else if(curtabin == "Complaint Mode"){
+            $('.card-tabs-bar.graygreen a').eq(3).click();
+          }
+          else if(curtabin == "Aging Rule"){
+            $('.card-tabs-bar.graygreen a').eq(4).click();
+          }
+        } else{
+          $('[href="'+curtab+'"]').eq(0).click();
+          $('[data-tab="'+intab+'"]').eq(0).click();
+        }
+          
+      if (curtab == "#section-linemove-2" || curtab == undefined) {
+          $('[href="#section-linemove-2"]')[0].click();        
+          curtabin = Cookies.get('pmsescsetupsection');   
+         if(curtabin == " Resolution Assignment") {
+           // $(".res").eq(1).click();
+         }
+         else if(curtabin == "Resolution Escalation"){
+          $(".res").eq(1).click();
+         }
+         else if(curtabin == "Response Escalation"){
+          $(".res").eq(0).click();
+         }else if(curtabin == "Cost Approval"){
+          $(".res").eq(2).click();
+         }         
+         else{
+            $('[href="'+curtab+'"]').eq(0).click();
+            $('[data-tab="'+intab+'"]').eq(0).click(); 
+         }
+
+      }
+      if (curtab == "#section-linemove-3" || curtab == undefined) {
+            $('[href="#section-linemove-3"]')[0].click();        
+      }
+
+      });
+
+  $("#time").change(function(){
+    
+    if($("#time").val() == "days"){
+      $("#exp-value").attr("min",1)
+      $("#exp-value").attr("max",31)
+      if ( parseInt($("#exp-value").val()) > 31){
+        $("#exp-value").val(31)
+      }
+    }
+    if($("#time").val() == "hours"){
+      $("#exp-value").attr("min",1)
+      $("#exp-value").attr("max",24)
+      if ( parseInt($("#exp-value").val()) > 24){
+        $("#exp-value").val(24)
+      }
+    }
+    if($("#time").val() == "minutes"){
+      $("#exp-value").attr("min",1)
+      $("#exp-value").attr("max",60)
+      if ( parseInt($("#exp-value").val()) > 60){
+        $("#exp-value").val(60)
+      }
+    }
+    if($("#time").val() == ""){
+      $("#exp-value").removeAttr("min",null)
+      $("#exp-value").attr("max",null)
+      $("#exp-value").val("")
+    }
+  });
+    </script>

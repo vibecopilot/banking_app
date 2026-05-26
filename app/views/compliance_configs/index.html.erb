@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Compliance Configs</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Frequency</th>
+      <th>Due in days</th>
+      <th>Priority</th>
+      <th>Description</th>
+      <th>Assign to</th>
+      <th>Reviewer</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>Site</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @compliance_configs.each do |compliance_config| %>
+      <tr>
+        <td><%= compliance_config.name %></td>
+        <td><%= compliance_config.frequency %></td>
+        <td><%= compliance_config.due_in_days %></td>
+        <td><%= compliance_config.priority %></td>
+        <td><%= compliance_config.description %></td>
+        <td><%= compliance_config.assign_to_id %></td>
+        <td><%= compliance_config.reviewer_id %></td>
+        <td><%= compliance_config.start_date %></td>
+        <td><%= compliance_config.end_date %></td>
+        <td><%= compliance_config.site_id %></td>
+        <td><%= link_to 'Show', compliance_config %></td>
+        <td><%= link_to 'Edit', edit_compliance_config_path(compliance_config) %></td>
+        <td><%= link_to 'Destroy', compliance_config, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Compliance Config', new_compliance_config_path %>

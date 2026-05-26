@@ -1,0 +1,42 @@
+<%= form_with(model: hazard_category, local: true) do |form| %>
+  <% if hazard_category.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(hazard_category.errors.count, "error") %> prohibited this hazard_category from being saved:</h2>
+
+      <ul>
+      <% hazard_category.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :hazard_category_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description, id: :hazard_category_description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sub_activity_id %>
+    <%= form.number_field :sub_activity_id, id: :hazard_category_sub_activity_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :activity_id %>
+    <%= form.number_field :activity_id, id: :hazard_category_activity_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :site_id %>
+    <%= form.number_field :site_id, id: :hazard_category_site_id %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @parking_configuration.name %>
+</p>
+
+<p>
+  <strong>Building:</strong>
+  <%= @parking_configuration.building_id %>
+</p>
+
+<p>
+  <strong>Floor:</strong>
+  <%= @parking_configuration.floor_id %>
+</p>
+
+<p>
+  <strong>Vehicle type:</strong>
+  <%= @parking_configuration.vehicle_type %>
+</p>
+
+<%= link_to 'Edit', edit_parking_configuration_path(@parking_configuration) %> |
+<%= link_to 'Back', parking_configurations_path %>

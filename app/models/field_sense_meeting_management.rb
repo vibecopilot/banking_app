@@ -1,0 +1,2 @@
+class FieldSenseMeetingManagement < ApplicationRecord
+end

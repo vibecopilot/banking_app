@@ -1,0 +1,35 @@
+wb = xlsx_package.workbook
+rows = ['Sr No', 'Task Id', 'Task',	'Schedule On', 'Current Status', 'Assigned To', 'Aging Days', 'Site', 'Asset/Service Name', 'Asset/Service']
+wb.add_worksheet(name: 'Report') do |sheet|
+	wb.styles do |style|
+		sheet.add_row rows
+		@user_allowed_sites.each do |user_site|
+			@total_tasks_ids = eval($redis_site_wise.get("task_occurrence_of_#{user_site}"))[:open_task_ids] + eval($redis_site_wise.get("task_occurrence_of_#{user_site}"))[:overdue_task_ids] + eval($redis_site_wise.get("task_occurrence_of_#{user_site}"))[:in_progress_task_ids] + eval($redis_site_wise.get("task_occurrence_of_#{user_site}"))[:scheduled_task_ids] 
+			@total_tasks = Pms::AssetTaskOccurrence.where(id: @total_tasks_ids)
+			@total_tasks.each_with_index do |occurrence, i|
+				begin
+					@sr_no = i + 1
+					@task_id = occurrence.try(:task).try(:id)
+					@task = occurrence.try(:task).try(:custom_form).try(:form_name)
+					@schedule_on = occurrence.start_date.present? ? occurrence.start_date.strftime("%d/%m/%Y") : " "
+					@current_status = occurrence.task_status
+					
+					@aging_days = occurrence.start_date.present? ? (Date.parse(Date.today.to_s) - Date.parse(occurrence.start_date.to_s)).to_i : 0
+					task_assignment = Pms::TaskAssignment.active.where(task_id: occurrence.task_id) 
+					users = Spree::User.where(id: task_assignment.pluck(:assigned_to_id))
+					@assigned_to = users.present? ? users.map{|p| "#{p.full_name}"}.compact.join(", ") : "-"
+					@site = occurrence.try(:custom_form).try(:pms_site).try(:name)
+					@asset_name = occurrence.try(:asset).try(:name)
+					@asset_code = occurrence.try(:asset).try(:asset_code)
+
+					this_row = [@sr_no, @task_id, @task, @schedule_on, @current_status, @assigned_to, @aging_days, @site, @asset_name, @asset_code]
+
+		    		sheet.add_row this_row
+	    		rescue => e
+	    			PmsHelpdeskReportLog.create({resource_id: occurrence.id, resource_type: "Occurrence", message: e.message})
+	    			next
+	    		end
+			end
+		end
+	end
+end

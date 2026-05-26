@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  site_id: 1
+  start_hr: 1
+  start_min: 1
+  end_hr: 1
+  end_min: 1
+
+two:
+  site_id: 1
+  start_hr: 1
+  start_min: 1
+  end_hr: 1
+  end_min: 1
