@@ -1,4 +1,7 @@
 class AttachfilesController < ApplicationController
+  include UserExt
+  before_action :api_user, except: [:index, :show, :new, :edit]
+  before_action :set_user, except: [:index, :show, :new, :edit]
   before_action :set_attachfile, only: [:show, :edit, :update, :destroy]
 
   # GET /attachfiles
@@ -29,7 +32,7 @@ class AttachfilesController < ApplicationController
     respond_to do |format|
       if @attachfile.save
         format.html { redirect_to @attachfile, notice: 'Attachfile was successfully created.' }
-        format.json { render :show, status: :created, location: @attachfile }
+        format.json { render json: @attachfile, status: :created }
       else
         format.html { render :new }
         format.json { render json: @attachfile.errors, status: :unprocessable_entity }
@@ -43,7 +46,7 @@ class AttachfilesController < ApplicationController
     respond_to do |format|
       if @attachfile.update(attachfile_params)
         format.html { redirect_to @attachfile, notice: 'Attachfile was successfully updated.' }
-        format.json { render :show, status: :ok, location: @attachfile }
+        format.json { render json: @attachfile, status: :ok }
       else
         format.html { render :edit }
         format.json { render json: @attachfile.errors, status: :unprocessable_entity }
